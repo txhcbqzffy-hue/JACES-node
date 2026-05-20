@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Accessoires | JACES</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="collection-page-body accessoires-page">
+
+  <div class="topbar">Livraison offerte dès 79 € | Retours offerts</div>
+
+  <header class="header">
+    <div class="header-top">
+      <div class="header-left">
+        <button class="search-trigger" id="search-trigger" type="button" aria-expanded="false" aria-controls="header-search-panel">Recherche</button>
+        <form class="search-panel" id="header-search-panel" role="search" action="#" method="get">
+          <input type="search" name="q" placeholder="Rechercher un produit..." aria-label="Rechercher">
+          <button class="search-submit" type="submit">↗</button>
+          <button class="search-panel-close" type="button" id="search-panel-close" aria-label="Fermer">×</button>
+        </form>
+      </div>
+
+      <a href="index.html" class="logo">JACES</a>
+
+      <div class="header-right">
+        <div class="language-picker" id="language-picker">
+          <button class="language-button" id="language-button" type="button" aria-label="Choisir la langue" aria-expanded="false">
+            <img src="https://flagcdn.com/w40/fr.png" class="icon-flag" id="current-flag" alt="Français">
+            <span class="language-caret" aria-hidden="true"></span>
+          </button>
+          <div class="language-menu" id="language-menu" role="menu" aria-label="Langues">
+            <button type="button" class="language-option" data-lang="fr" data-flag="https://flagcdn.com/w40/fr.png" role="menuitem"><img src="https://flagcdn.com/w40/fr.png" alt="Français"><span>Français</span></button>
+            <button type="button" class="language-option" data-lang="en" data-flag="https://flagcdn.com/w40/gb.png" role="menuitem"><img src="https://flagcdn.com/w40/gb.png" alt="English"><span>English</span></button>
+            <button type="button" class="language-option" data-lang="es" data-flag="https://flagcdn.com/w40/es.png" role="menuitem"><img src="https://flagcdn.com/w40/es.png" alt="Español"><span>Español</span></button>
+            <button type="button" class="language-option" data-lang="it" data-flag="https://flagcdn.com/w40/it.png" role="menuitem"><img src="https://flagcdn.com/w40/it.png" alt="Italiano"><span>Italiano</span></button>
+          </div>
+        </div>
+        <button class="icon-button" id="fav-trigger" aria-label="Favoris" type="button" style="position:relative">
+          <svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+          <span class="fav-count" id="fav-count" style="display:none">0</span>
+        </button>
+        <button class="icon-button" aria-label="Compte" type="button"><svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></button>
+        <button class="icon-button cart" aria-label="Panier" type="button"><svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M9 2L6.12 9H1l2.5 7.5v5h15v-5l2.5-7.5H17.88L15 2"/></svg><span class="cart-count">0</span></button>
+      </div>
+    </div>
+
+    <nav class="nav">
+      <div class="nav-item">
+        <a href="nouveautes.html">Nouveautés</a>
+        <div class="submenu">
+          <div>
+            <p class="submenu-title">NOUVEAUTÉS</p>
+            <p class="submenu-copy">Nouvelles pièces,<br>exclusivité<br>et robe signature.</p>
+            <a href="nouveautes.html">Drop été</a>
+            <a href="nouveautes.html">Édition limitée</a>
+            <a href="nouveautes.html">Pièces signature</a>
+            <a href="nouveautes.html?category=all" class="underline-link">Voir tout les nouveautés</a>
+          </div>
+          <div class="submenu-categories">
+            <p class="submenu-title">FEMME</p>
+            <a href="nouveautes.html">Robes</a>
+            <a href="nouveautes.html">Tops</a>
+            <a href="nouveautes.html">Jupes</a>
+            <a href="nouveautes.html">Pantalons</a>
+            <a href="nouveautes.html">Vestes</a>
+            <a href="nouveautes.html">Accessoires</a>
+          </div>
+        </div>
+      </div>
+      <div class="nav-item">
+        <a href="collection.html">Collections</a>
+        <div class="submenu">
+          <div>
+            <a href="collection.html?collection=ss26">Printemps–Été 2026</a>
+            <a href="collection.html?collection=aw26">Automne–Hiver 2026</a>
+            <a href="collection.html?category=all" class="underline-link">Toutes les collections</a>
+          </div>
+          <div class="submenu-categories">
+            <a href="collection.html?category=robes">Robes</a>
+            <a href="collection.html?category=tops">Tops</a>
+            <a href="collection.html?category=jupes">Jupes</a>
+            <a href="collection.html?category=pantalons">Pantalons</a>
+            <a href="collection.html?category=vestes">Vestes</a>
+            <a href="collection.html?category=accessoires">Accessoires</a>
+          </div>
+        </div>
+      </div>
+      <div class="nav-item">
+        <a href="collaborations.html">Collaborations</a>
+        <div class="submenu">
+            <div>
+              <a href="collaborations.html?collabView=exclusives&category=all">Créations exclusives</a>
+              <a href="collaborations.html?collabView=popup&category=all">Pop-up stores</a>
+              <a href="collaborations.html?collabView=events&category=all">Événements</a>
+              <a href="collaborations.html?collabView=all&category=all" class="underline-link">Toutes les collaborations</a>
+            </div>
+            <div class="submenu-categories">
+            <a href="collaborations.html?category=nike">JACES × Nike</a>
+            <a href="collaborations.html?category=chloe">JACES × Chloé</a>
+            <a href="collaborations.html?category=jacquemus">JACES × Jacquemus</a>
+            <a href="collaborations.html?category=dior">JACES × Dior</a>
+            <a href="collaborations.html?category=saint-laurent">JACES × Saint Laurent</a>
+          </div>
+        </div>
+      </div>
+      <div class="nav-item">
+        <a href="accessoires.html" class="active">Accessoires</a>
+        <div class="submenu">
+          <div>
+            <p class="submenu-title">COLLECTION</p>
+            <a href="collection.html?category=all" class="underline-link">Toutes les collections</a>
+          </div>
+          <div class="submenu-categories">
+            <a href="accessoires.html?category=sacs">Sacs</a>
+            <a href="accessoires.html?category=bijoux">Bijoux</a>
+            <a href="accessoires.html?category=ceintures">Ceintures</a>
+            <a href="accessoires.html?category=foulards">Foulards</a>
+          </div>
+        </div>
+      </div>
+      <div class="nav-item">
+        <a href="defile.html"><em>Défilé</em></a>
+        <div class="submenu">
+          <div>
+            <p class="submenu-title">DÉFILÉ</p>
+            <a href="#">Dernier show</a>
+            <a href="#">Collection prêt-à-porter</a>
+            <a href="#" class="underline-link">Voir le défilé</a>
+          </div>
+          <div>
+            <p class="submenu-title">Coulisses</p>
+            <a href="#">Design studio</a>
+            <a href="#">Inspiration</a>
+          </div>
+        </div>
+      </div>
+      <div class="nav-item">
+        <a href="univers.html"><em>Univers</em></a>
+        <div class="submenu">
+          <div>
+            <p class="submenu-title">MAISON</p>
+            <a href="#">Notre histoire</a>
+            <a href="#">Savoir-faire</a>
+            <a href="#" class="underline-link">Services VIP</a>
+          </div>
+          <div>
+            <p class="submenu-title">DÉCOUVERTE</p>
+            <a href="#">Ateliers</a>
+            <a href="#">Boutiques</a>
+          </div>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <main class="collection-page">
+    <section class="category-nav-strip" aria-label="Catégories accessoires">
+      <div class="category-nav-track" id="category-nav-track">
+        <a href="#product-grid" class="cat-nav-item active" data-category="all">
+          <div class="cat-nav-circle">
+            <img src="https://images.unsplash.com/photo-1551488831-00ddcb6c6bd3?q=80&w=400" alt="Voir tout" loading="eager">
+          </div>
+          <span>Voir tout</span>
+        </a>
+        <a href="#cat-sacs" class="cat-nav-item" data-category="sacs">
+          <div class="cat-nav-circle">
+            <img src="https://images.unsplash.com/photo-1548036328-c9fa89d128fa?q=80&w=400" alt="Sacs" loading="lazy">
+          </div>
+          <span>Sacs</span>
+        </a>
+        <a href="#cat-bijoux" class="cat-nav-item" data-category="bijoux">
+          <div class="cat-nav-circle">
+            <img src="https://images.unsplash.com/photo-1617038220319-276d3cfab638?q=80&w=400" alt="Bijoux" loading="lazy">
+          </div>
+          <span>Bijoux</span>
+        </a>
+        <a href="#cat-ceintures" class="cat-nav-item" data-category="ceintures">
+          <div class="cat-nav-circle">
+            <img src="https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?q=80&w=400" alt="Ceintures" loading="lazy">
+          </div>
+          <span>Ceintures</span>
+        </a>
+        <a href="#cat-foulards" class="cat-nav-item" data-category="foulards">
+          <div class="cat-nav-circle">
+            <img src="https://images.unsplash.com/photo-1529139574466-a303027c1d8b?q=80&w=400" alt="Foulards" loading="lazy">
+          </div>
+          <span>Foulards</span>
+        </a>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-intro">
+        <h2 id="collection-page-title">Nos accessoires</h2>
+      </div>
+
+      <div class="filter-bar-luxury" id="collection-filter-bar">
+        <div class="filter-bar-top">
+          <div class="filter-pills">
+            <div class="filter-pill-wrap">
+              <button class="filter-pill" data-filter="matiere">Matière <span class="pill-arrow">∨</span></button>
+              <div class="filter-dropdown">
+                <label><input type="checkbox" name="matiere" value="cuir"> Cuir</label>
+                <label><input type="checkbox" name="matiere" value="metal"> Métal</label>
+                <label><input type="checkbox" name="matiere" value="soie"> Soie</label>
+                <label><input type="checkbox" name="matiere" value="laine"> Laine</label>
+                <label><input type="checkbox" name="matiere" value="coton"> Coton</label>
+              </div>
+            </div>
+            <div class="filter-pill-wrap">
+              <button class="filter-pill" data-filter="couleur">Couleur <span class="pill-arrow">∨</span></button>
+              <div class="filter-dropdown">
+                <label><input type="checkbox" name="couleur" value="noir"> Noir</label>
+                <label><input type="checkbox" name="couleur" value="camel"> Camel</label>
+                <label><input type="checkbox" name="couleur" value="dore"> Doré</label>
+                <label><input type="checkbox" name="couleur" value="ivoire"> Ivoire</label>
+                <label><input type="checkbox" name="couleur" value="ecaille"> Écaille</label>
+              </div>
+            </div>
+          </div>
+
+          <div class="product-sort-row">
+            <select id="product-sort" name="product-sort">
+              <option value="default">Trier</option>
+              <option value="price-asc">Prix croissant</option>
+              <option value="price-desc">Prix décroissant</option>
+              <option value="name-asc">Nom A-Z</option>
+            </select>
+          </div>
+        </div>
+        <div class="filter-bar-meta">
+          <button class="filter-reset-pill" id="filter-reset-pill">Réinitialiser</button>
+          <span class="filter-count" id="filter-count">5 produits</span>
+        </div>
+      </div>
+
+      <div class="product-grid" id="product-grid">
+        <article class="product-card collection-card" id="cat-sacs" data-category="sacs all" data-material="cuir" data-color="noir">
+          <div class="product-media">
+            <button class="product-favorite" type="button" aria-label="Ajouter aux favoris"><svg class="heart-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
+            <img src="https://images.unsplash.com/photo-1548036328-c9fa89d128fa?q=80&w=1400" alt="Sac camera matelassé" loading="eager" fetchpriority="high" class="product-image-primary">
+            <img src="https://images.unsplash.com/photo-1584917865442-de89df76afd3?q=80&w=1400" alt="Sac camera matelassé vue 2" loading="lazy" class="product-image-secondary">
+          </div>
+          <div class="product-info">
+            <h3>Sac camera matelassé</h3>
+            <p class="product-price">320€</p>
+          </div>
+        </article>
+
+        <article class="product-card collection-card" id="cat-bijoux" data-category="bijoux all" data-material="metal" data-color="dore">
+          <div class="product-media">
+            <button class="product-favorite" type="button" aria-label="Ajouter aux favoris"><svg class="heart-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
+            <img src="https://images.unsplash.com/photo-1617038220319-276d3cfab638?q=80&w=1400" alt="Créoles torsadées" loading="eager" class="product-image-primary">
+            <img src="https://images.unsplash.com/photo-1611652022419-a9419f74343d?q=80&w=1400" alt="Créoles torsadées vue 2" loading="lazy" class="product-image-secondary">
+          </div>
+          <div class="product-info">
+            <h3>Créoles torsadées</h3>
+            <p class="product-price">95€</p>
+          </div>
+        </article>
+
+        <article class="product-card collection-card" id="cat-ceintures" data-category="ceintures all" data-material="cuir metal" data-color="noir camel">
+          <div class="product-media">
+            <button class="product-favorite" type="button" aria-label="Ajouter aux favoris"><svg class="heart-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
+            <img src="https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?q=80&w=1400" alt="Ceinture signature cuir" loading="lazy" class="product-image-primary">
+            <img src="https://images.unsplash.com/photo-1622560480605-d83c853bc5c3?q=80&w=1400" alt="Ceinture signature cuir vue 2" loading="lazy" class="product-image-secondary">
+          </div>
+          <div class="product-info">
+            <h3>Ceinture signature cuir</h3>
+            <p class="product-price">110€</p>
+          </div>
+        </article>
+
+        <article class="product-card collection-card" id="cat-foulards" data-category="foulards all" data-material="soie" data-color="ivoire">
+          <div class="product-media">
+            <button class="product-favorite" type="button" aria-label="Ajouter aux favoris"><svg class="heart-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
+            <img src="https://images.unsplash.com/photo-1529139574466-a303027c1d8b?q=80&w=1400" alt="Carré de soie imprimé" loading="lazy" class="product-image-primary">
+            <img src="https://images.unsplash.com/photo-1601924994987-69e26d50dc26?q=80&w=1400" alt="Carré de soie imprimé vue 2" loading="lazy" class="product-image-secondary">
+          </div>
+          <div class="product-info">
+            <h3>Carré de soie imprimé</h3>
+            <p class="product-price">85€</p>
+          </div>
+        </article>
+
+        <article class="product-card collection-card" data-category="sacs all" data-material="cuir" data-color="ivoire camel">
+          <div class="product-media">
+            <button class="product-favorite" type="button" aria-label="Ajouter aux favoris"><svg class="heart-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
+            <img src="https://images.unsplash.com/photo-1584917865442-de89df76afd3?q=80&w=1400" alt="Sac hobo camel" loading="lazy" class="product-image-primary">
+            <img src="https://images.unsplash.com/photo-1594223274512-ad4803739b7c?q=80&w=1400" alt="Sac hobo camel vue 2" loading="lazy" class="product-image-secondary">
+          </div>
+          <div class="product-info">
+            <h3>Sac hobo camel</h3>
+            <p class="product-price">295€</p>
+          </div>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <div class="back-to-top-bar">
+    <a href="#" class="back-to-top-link" aria-label="Retour au haut de la page">
+      <svg width="22" height="14" viewBox="0 0 22 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 13 11 3 21 13"/></svg>
+      <span>RETOUR AU HAUT DE LA PAGE</span>
+    </a>
+  </div>
+
+  <footer class="footer">
+    <div class="footer-main">
+      <div class="footer-cols">
+        <div class="footer-col"><p class="footer-col-title">Service client</p><a href="#">Suivre ma commande</a><a href="#">Faire un retour</a><a href="#">Livraison et Retour</a><a href="#">FAQ</a><a href="#">Contact</a></div>
+        <div class="footer-col"><p class="footer-col-title">JACES</p><a href="#">Notre concept</a><a href="#">Parrainez</a><a href="#">Nos boutiques</a><a href="#">Nous rejoindre</a></div>
+        <div class="footer-col"><p class="footer-col-title">Mentions légales</p><a href="#">CGV</a><a href="#">Politique de confidentialité</a><a href="#">Plan de site</a><a href="#">Retours Gratuits</a><a href="#">Conditions de l'offre en cours</a></div>
+      </div>
+      <div class="footer-newsletter">
+        <h3>Restez connecté avec JACES</h3>
+        <p>Recevez en avant-première nos nouvelles collections et invitations à nos évènements.</p>
+        <form class="footer-newsletter-form" action="#" method="post">
+          <label for="footer-nl-email-access" class="visually-hidden">Votre e-mail</label>
+          <input id="footer-nl-email-access" name="email" type="email" placeholder="Votre e-mail" required>
+          <button type="submit" aria-label="S'inscrire">→</button>
+        </form>
+      </div>
+    </div>
+    <p class="footer-note">Copyright © 2026 Chloé. Tous droits réservés.</p>
+  </footer>
+
+  <script src="admin-products.js"></script>
+  <script>
+    (function () {
+      function updateHeaderState() {
+        document.body.classList.toggle('header-scrolled', window.scrollY > 8);
+      }
+
+      updateHeaderState();
+      window.addEventListener('scroll', updateHeaderState, { passive: true });
+
+      const searchTrigger = document.getElementById('search-trigger');
+      const searchPanel = document.getElementById('header-search-panel');
+      const searchClose = document.getElementById('search-panel-close');
+
+      if (searchTrigger && searchPanel) {
+        const searchInput = searchPanel.querySelector('input[type="search"]');
+        const closeSearch = () => {
+          searchPanel.classList.remove('open');
+          searchTrigger.setAttribute('aria-expanded', 'false');
+        };
+
+        searchTrigger.addEventListener('click', (event) => {
+          event.stopPropagation();
+          const willOpen = !searchPanel.classList.contains('open');
+          searchPanel.classList.toggle('open', willOpen);
+          searchTrigger.setAttribute('aria-expanded', String(willOpen));
+          if (willOpen && searchInput) {
+            searchInput.focus();
+          }
+        });
+
+        if (searchClose) {
+          searchClose.addEventListener('click', closeSearch);
+        }
+
+        searchPanel.addEventListener('click', (event) => event.stopPropagation());
+
+        document.addEventListener('keydown', (event) => {
+          if (event.key === 'Escape') {
+            closeSearch();
+          }
+        });
+
+        document.addEventListener('click', (event) => {
+          if (!searchPanel.contains(event.target) && !searchTrigger.contains(event.target)) {
+            closeSearch();
+          }
+        });
+      }
+
+      const languagePicker = document.getElementById('language-picker');
+      const languageButton = document.getElementById('language-button');
+      const currentFlag = document.getElementById('current-flag');
+
+      if (languagePicker && languageButton && currentFlag) {
+        const storageKey = 'jaces-selected-language';
+        const languageOptions = Array.from(languagePicker.querySelectorAll('.language-option'));
+
+        function applyLanguageOption(option) {
+          const flag = option.dataset.flag;
+          const lang = option.dataset.lang;
+          const label = option.querySelector('span') ? option.querySelector('span').textContent : 'Langue';
+
+          if (flag) {
+            currentFlag.src = flag;
+            currentFlag.alt = label;
+          }
+
+          if (lang) {
+            document.documentElement.lang = lang;
+            try {
+              localStorage.setItem(storageKey, lang);
+            } catch (error) {
+            }
+          }
+        }
+
+        try {
+          const savedLang = localStorage.getItem(storageKey);
+          if (savedLang) {
+            const savedOption = languageOptions.find((option) => option.dataset.lang === savedLang);
+            if (savedOption) {
+              applyLanguageOption(savedOption);
+            }
+          }
+        } catch (error) {
+        }
+
+        languageButton.addEventListener('click', () => {
+          const isOpen = languagePicker.classList.toggle('open');
+          languageButton.setAttribute('aria-expanded', String(isOpen));
+        });
+
+        languageOptions.forEach((option) => {
+          option.addEventListener('click', () => {
+            applyLanguageOption(option);
+            languagePicker.classList.remove('open');
+            languageButton.setAttribute('aria-expanded', 'false');
+          });
+        });
+
+        document.addEventListener('click', (event) => {
+          if (!languagePicker.contains(event.target)) {
+            languagePicker.classList.remove('open');
+            languageButton.setAttribute('aria-expanded', 'false');
+          }
+        });
+      }
+
+      const filterBar = document.getElementById('collection-filter-bar');
+      const filterPills = Array.from(document.querySelectorAll('#collection-filter-bar .filter-pill'));
+      const filterInputs = Array.from(document.querySelectorAll('#collection-filter-bar input'));
+      const resetPill = document.getElementById('filter-reset-pill');
+      const countNode = document.getElementById('filter-count');
+      const productGrid = document.getElementById('product-grid');
+      const productSort = document.getElementById('product-sort');
+      const allCards = productGrid ? Array.from(productGrid.querySelectorAll('.collection-card')) : [];
+      const categoryNavItems = Array.from(document.querySelectorAll('.cat-nav-item'));
+      let activeCategory = 'all';
+      let isAutoSyncingVariantFilters = false;
+      const validCategories = new Set(['all', 'sacs', 'bijoux', 'ceintures', 'foulards']);
+
+      function formatMaterialLabel(token) {
+        const labels = {
+          cuir: 'Cuir',
+          metal: 'Métal',
+          soie: 'Soie',
+          laine: 'Laine',
+          acetate: 'Acétate'
+        };
+        return labels[token] || token;
+      }
+
+      allCards.forEach((card) => {
+        const productOptions = card.querySelector('.product-options');
+        const materialTokens = (card.dataset.material || '').split(' ').filter(Boolean);
+        if (!productOptions || !materialTokens.length) return;
+        const existingMaterialRow = Array.from(productOptions.querySelectorAll('.option-row')).find((row) => row.querySelector('span')?.textContent?.trim() === 'Matière');
+        if (existingMaterialRow) return;
+        const materialRow = document.createElement('div');
+        materialRow.className = 'option-row';
+        materialRow.innerHTML = '<span>Matière</span>' + materialTokens.map((token) => '<button>' + formatMaterialLabel(token) + '</button>').join('');
+        productOptions.appendChild(materialRow);
+      });
+
+      filterPills.forEach((pill) => {
+        const baseLabel = pill.childNodes[0] ? pill.childNodes[0].textContent.trim() : pill.textContent.replace('∨', '').trim();
+        pill.dataset.baseLabel = baseLabel;
+      });
+
+      function getCheckedValues(name) {
+        return filterInputs.filter((input) => input.name === name && input.checked).map((input) => input.value);
+      }
+
+      function cardMatches(card, values, dataKey) {
+        if (!values.length) {
+          return true;
+        }
+        const tokens = (card.dataset[dataKey] || '').split(' ').filter(Boolean);
+        return values.some((value) => tokens.includes(value));
+      }
+
+      function getVisibleCards() {
+        const selectedCategories = getCheckedValues('categorie');
+        const selectedMaterials = getCheckedValues('matiere');
+        const selectedColors = getCheckedValues('couleur');
+
+        return allCards.filter((card) => {
+          const navCategories = (card.dataset.category || '').split(' ').filter(Boolean);
+          const matchesNav = activeCategory === 'all' || navCategories.includes(activeCategory);
+          const matchesCategory = cardMatches(card, selectedCategories, 'category');
+          const matchesMaterial = cardMatches(card, selectedMaterials, 'material');
+          const matchesColor = cardMatches(card, selectedColors, 'color');
+          return matchesNav && matchesCategory && matchesMaterial && matchesColor;
+        });
+      }
+
+      function syncColorAvailability(visibleCards) {
+        const colorInputs = Array.from(document.querySelectorAll('#collection-filter-bar input[name="couleur"]'));
+        let shouldResync = false;
+
+        colorInputs.forEach((input) => {
+          const token = input.value;
+          const available = visibleCards.some((card) => {
+            const cardColors = String(card.dataset.color || '').split(' ').filter(Boolean);
+            return cardColors.includes(token);
+          });
+          input.disabled = !available && !input.checked;
+          input.closest('label')?.classList.toggle('is-unavailable', !available && !input.checked);
+        });
+
+        if (!isAutoSyncingVariantFilters) {
+          const activeColor = colorInputs.find((input) => input.checked && !input.disabled);
+          if (!activeColor) {
+            const fallbackColor = colorInputs.find((input) => !input.disabled);
+            if (fallbackColor) {
+              isAutoSyncingVariantFilters = true;
+              colorInputs.forEach((input) => { input.checked = input === fallbackColor; });
+              shouldResync = true;
+            }
+          }
+        }
+
+        return shouldResync;
+      }
+
+      function getCardPrice(card) {
+        const priceText = card.querySelector('.product-price') ? card.querySelector('.product-price').textContent : '0';
+        return Number(priceText.replace(/[^0-9]/g, '')) || 0;
+      }
+
+      function getCardName(card) {
+        return card.querySelector('h3') ? card.querySelector('h3').textContent.trim() : '';
+      }
+
+      function updateFilterUi() {
+        const hasActive = filterInputs.some((input) => input.checked);
+        if (resetPill) {
+          resetPill.classList.toggle('visible', hasActive);
+        }
+
+        filterPills.forEach((pill) => {
+          const wrap = pill.closest('.filter-pill-wrap');
+          const checkedCount = wrap ? wrap.querySelectorAll('input:checked').length : 0;
+          const baseLabel = pill.dataset.baseLabel || 'Filtre';
+          if (pill.childNodes[0]) {
+            pill.childNodes[0].textContent = checkedCount > 0 ? baseLabel + ' (' + checkedCount + ') ' : baseLabel + ' ';
+          }
+          pill.classList.toggle('active', checkedCount > 0);
+        });
+      }
+
+      function renderGrid() {
+        if (!productGrid) {
+          return;
+        }
+
+        let visibleCards = getVisibleCards();
+
+        if (productSort) {
+          if (productSort.value === 'price-asc') {
+            visibleCards = visibleCards.slice().sort((a, b) => getCardPrice(a) - getCardPrice(b));
+          }
+          if (productSort.value === 'price-desc') {
+            visibleCards = visibleCards.slice().sort((a, b) => getCardPrice(b) - getCardPrice(a));
+          }
+          if (productSort.value === 'name-asc') {
+            visibleCards = visibleCards.slice().sort((a, b) => getCardName(a).localeCompare(getCardName(b), 'fr'));
+          }
+          if (productSort.value === 'default') {
+            visibleCards = allCards.filter((card) => visibleCards.includes(card));
+          }
+        }
+
+        allCards.forEach((card) => {
+          card.classList.add('hidden');
+        });
+
+        visibleCards.forEach((card) => {
+          card.classList.remove('hidden');
+          productGrid.appendChild(card);
+        });
+
+        if (syncColorAvailability(visibleCards)) {
+          isAutoSyncingVariantFilters = false;
+          renderGrid();
+          return;
+        }
+
+        isAutoSyncingVariantFilters = false;
+
+        if (countNode) {
+          countNode.textContent = visibleCards.length + (visibleCards.length > 1 ? ' produits' : ' produit');
+        }
+      }
+
+      function scrollToFilterBar() {
+        const filterBarTarget = document.getElementById('collection-filter-bar');
+        if (!filterBarTarget) return;
+
+        requestAnimationFrame(() => {
+          const header = document.querySelector('.header');
+          const headerBottom = header ? header.getBoundingClientRect().bottom : 120;
+          const filterTop = filterBarTarget.getBoundingClientRect().top + window.scrollY;
+          const offset = filterTop - headerBottom + 10;
+          window.scrollTo({ top: Math.max(0, offset), behavior: 'smooth' });
+        });
+      }
+
+      function setAccessoriesCategory(category, shouldScroll) {
+        if (!validCategories.has(category)) return;
+
+        activeCategory = category;
+
+        const targetSearch = '?category=' + encodeURIComponent(category);
+        if (window.location.search !== targetSearch) {
+          history.replaceState({}, '', 'accessoires.html' + targetSearch);
+        }
+
+        categoryNavItems.forEach((navItem) => {
+          navItem.classList.toggle('active', (navItem.dataset.category || 'all') === category);
+        });
+
+        updateFilterUi();
+        renderGrid();
+
+        if (shouldScroll) {
+          scrollToFilterBar();
+        }
+      }
+
+      filterPills.forEach((pill) => {
+        pill.addEventListener('click', (event) => {
+          event.stopPropagation();
+          const wrap = pill.closest('.filter-pill-wrap');
+          const isOpen = pill.classList.contains('open');
+
+          filterPills.forEach((otherPill) => otherPill.classList.remove('open'));
+          document.querySelectorAll('.filter-dropdown').forEach((dropdown) => dropdown.classList.remove('open'));
+
+          if (!isOpen && wrap) {
+            pill.classList.add('open');
+            const dropdown = wrap.querySelector('.filter-dropdown');
+            if (dropdown) {
+              dropdown.classList.add('open');
+            }
+          }
+        });
+      });
+
+      document.querySelectorAll('.filter-dropdown').forEach((dropdown) => {
+        dropdown.addEventListener('click', (event) => event.stopPropagation());
+      });
+
+      document.addEventListener('click', (event) => {
+        if (filterBar && !filterBar.contains(event.target)) {
+          filterPills.forEach((pill) => pill.classList.remove('open'));
+          document.querySelectorAll('.filter-dropdown').forEach((dropdown) => dropdown.classList.remove('open'));
+        }
+      });
+
+      filterInputs.forEach((input) => {
+        input.addEventListener('change', () => {
+          updateFilterUi();
+          renderGrid();
+        });
+      });
+
+      if (resetPill) {
+        resetPill.addEventListener('click', () => {
+          filterInputs.forEach((input) => {
+            input.checked = false;
+          });
+          updateFilterUi();
+          renderGrid();
+        });
+      }
+
+      if (productSort) {
+        productSort.addEventListener('change', renderGrid);
+      }
+
+      categoryNavItems.forEach((item) => {
+        item.addEventListener('click', (event) => {
+          event.preventDefault();
+          filterInputs.forEach((input) => {
+            input.checked = false;
+          });
+          setAccessoriesCategory(item.dataset.category || 'all', true);
+        });
+      });
+
+      document.querySelectorAll('a[href^="accessoires.html?category="]').forEach((link) => {
+        link.addEventListener('click', (event) => {
+          if (!window.location.pathname.endsWith('accessoires.html')) return;
+
+          event.preventDefault();
+          const category = new URL(link.getAttribute('href'), window.location.href).searchParams.get('category') || 'all';
+          const shouldScroll = window.scrollY <= 120;
+          setAccessoriesCategory(category, shouldScroll);
+        });
+      });
+
+      const requestedCategory = new URLSearchParams(window.location.search).get('category');
+      if (requestedCategory && validCategories.has(requestedCategory)) {
+        setAccessoriesCategory(requestedCategory, false);
+      }
+
+      updateFilterUi();
+      renderGrid();
+    })();
+  </script>
+
+  <div class="fav-overlay" id="fav-overlay"></div>
+  <div class="fav-panel" id="fav-panel" role="dialog" aria-label="Mes favoris">
+    <div class="fav-panel-header">
+      <h2 id="fav-panel-title">Mes Favoris (0)</h2>
+      <button class="fav-panel-close-btn" id="fav-panel-close" aria-label="Fermer" type="button">×</button>
+    </div>
+    <div class="fav-panel-list" id="fav-panel-list"></div>
+  </div>
+  <script src="catalog.js"></script>
+  <script src="cart.js"></script>
+  <script src="favorites.js"></script>
+  <script src="auth.js"></script>
+</body>
+</html>

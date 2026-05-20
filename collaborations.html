@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Collaborations | JACES</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="collection-page-body collaboration-page">
+  <div class="topbar">Livraison offerte dès 79 € | Retours offerts</div>
+
+  <header class="header">
+    <div class="header-top">
+      <div class="header-left">
+        <button class="search-trigger" id="search-trigger" type="button" aria-expanded="false" aria-controls="header-search-panel">Recherche</button>
+        <form class="search-panel" id="header-search-panel" role="search" action="#" method="get">
+          <input type="search" name="q" placeholder="Rechercher un produit..." aria-label="Rechercher">
+          <button class="search-submit" type="submit">↗</button>
+          <button class="search-panel-close" type="button" id="search-panel-close" aria-label="Fermer">×</button>
+        </form>
+      </div>
+      <a href="index.html" class="logo">JACES</a>
+      <div class="header-right">
+        <div class="language-picker" id="language-picker">
+          <button class="language-button" id="language-button" type="button" aria-label="Choisir la langue" aria-expanded="false">
+            <img src="https://flagcdn.com/w40/fr.png" class="icon-flag" id="current-flag" alt="Francais">
+            <span class="language-caret" aria-hidden="true"></span>
+          </button>
+          <div class="language-menu" id="language-menu" role="menu" aria-label="Langues">
+            <button type="button" class="language-option" data-lang="fr" data-flag="https://flagcdn.com/w40/fr.png" role="menuitem"><img src="https://flagcdn.com/w40/fr.png" alt="Francais"><span>Francais</span></button>
+            <button type="button" class="language-option" data-lang="en" data-flag="https://flagcdn.com/w40/gb.png" role="menuitem"><img src="https://flagcdn.com/w40/gb.png" alt="English"><span>English</span></button>
+          </div>
+        </div>
+        <button class="icon-button" id="fav-trigger" aria-label="Favoris" type="button" style="position:relative"><svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg><span class="fav-count" id="fav-count" style="display:none">0</span></button>
+        <button class="icon-button" aria-label="Compte" type="button"><svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></button>
+        <button class="icon-button cart" aria-label="Panier" type="button"><svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M9 2L6.12 9H1l2.5 7.5v5h15v-5l2.5-7.5H17.88L15 2"/></svg><span class="cart-count">0</span></button>
+      </div>
+    </div>
+
+    <nav class="nav">
+      <div class="nav-item">
+        <a href="nouveautes.html">Nouveautés</a>
+        <div class="submenu">
+          <div>
+            <p class="submenu-title">NOUVEAUTÉS</p>
+            <p class="submenu-copy">Nouvelles pièces,<br>exclusivité<br>et robe signature.</p>
+            <a href="nouveautes.html">Drop été</a>
+            <a href="nouveautes.html">Édition limitée</a>
+            <a href="nouveautes.html">Pièces signature</a>
+            <a href="nouveautes.html?category=all" class="underline-link">Voir tout les nouveautés</a>
+          </div>
+          <div class="submenu-categories">
+            <p class="submenu-title">FEMME</p>
+            <a href="nouveautes.html">Robes</a>
+            <a href="nouveautes.html">Tops</a>
+            <a href="nouveautes.html">Jupes</a>
+            <a href="nouveautes.html">Pantalons</a>
+            <a href="nouveautes.html">Vestes</a>
+            <a href="nouveautes.html">Accessoires</a>
+          </div>
+        </div>
+      </div>
+      <div class="nav-item">
+        <a href="collection.html">Collections</a>
+        <div class="submenu">
+          <div>
+            <a href="collection.html?collection=ss26">Printemps–Été 2026</a>
+            <a href="collection.html?collection=aw26">Automne–Hiver 2026</a>
+            <a href="collection.html?category=all" class="underline-link">Toutes les collections</a>
+          </div>
+          <div class="submenu-categories">
+            <a href="collection.html?category=robes">Robes</a>
+            <a href="collection.html?category=tops">Tops</a>
+            <a href="collection.html?category=jupes">Jupes</a>
+            <a href="collection.html?category=pantalons">Pantalons</a>
+            <a href="collection.html?category=vestes">Vestes</a>
+            <a href="collection.html?category=accessoires">Accessoires</a>
+          </div>
+        </div>
+      </div>
+      <div class="nav-item">
+        <a href="collaborations.html" class="active">Collaborations</a>
+        <div class="submenu">
+          <div>
+            <a href="collaborations.html?collabView=exclusives&category=all">Créations exclusives</a>
+            <a href="collaborations.html?collabView=popup&category=all">Pop-up stores</a>
+            <a href="collaborations.html?collabView=events&category=all">Événements</a>
+            <a href="collaborations.html?collabView=all&category=all" class="underline-link">Toutes les collaborations</a>
+          </div>
+          <div class="submenu-categories">
+            <a href="collaborations.html?category=nike">JACES × Nike</a>
+            <a href="collaborations.html?category=chloe">JACES × Chloé</a>
+            <a href="collaborations.html?category=jacquemus">JACES × Jacquemus</a>
+            <a href="collaborations.html?category=dior">JACES × Dior</a>
+            <a href="collaborations.html?category=saint-laurent">JACES × Saint Laurent</a>
+          </div>
+        </div>
+      </div>
+      <div class="nav-item">
+        <a href="accessoires.html">Accessoires</a>
+        <div class="submenu">
+          <div>
+            <p class="submenu-title">COLLECTION</p>
+            <a href="collection.html?category=all" class="underline-link">Toutes les collections</a>
+          </div>
+          <div class="submenu-categories">
+            <a href="accessoires.html?category=sacs">Sacs</a>
+            <a href="accessoires.html?category=bijoux">Bijoux</a>
+            <a href="accessoires.html?category=ceintures">Ceintures</a>
+            <a href="accessoires.html?category=foulards">Foulards</a>
+          </div>
+        </div>
+      </div>
+      <div class="nav-item">
+        <a href="defile.html"><em>Défilé</em></a>
+        <div class="submenu">
+          <div>
+            <p class="submenu-title">DÉFILÉ</p>
+            <a href="#">Dernier show</a>
+            <a href="#">Collection prêt-à-porter</a>
+            <a href="#" class="underline-link">Voir le défilé</a>
+          </div>
+          <div>
+            <p class="submenu-title">Coulisses</p>
+            <a href="#">Design studio</a>
+            <a href="#">Inspiration</a>
+          </div>
+        </div>
+      </div>
+      <div class="nav-item">
+        <a href="univers.html"><em>Univers</em></a>
+        <div class="submenu">
+          <div>
+            <p class="submenu-title">MAISON</p>
+            <a href="#">Notre histoire</a>
+            <a href="#">Savoir-faire</a>
+            <a href="#" class="underline-link">Services VIP</a>
+          </div>
+          <div>
+            <p class="submenu-title">DÉCOUVERTE</p>
+            <a href="#">Ateliers</a>
+            <a href="#">Boutiques</a>
+          </div>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <main class="collection-page">
+    <section class="category-nav-strip" aria-label="Partenaires collaboration">
+      <div class="category-nav-track" id="category-nav-track">
+        <a href="#collection-page-title" class="cat-nav-item active" data-category="all"><div class="cat-nav-circle"><img src="https://images.unsplash.com/photo-1483985988355-763728e1935b?q=80&w=400" alt="Tout voir"></div><span>Tout voir</span></a>
+        <a href="#collab-nike" class="cat-nav-item" data-category="nike"><div class="cat-nav-circle"><img src="https://images.unsplash.com/photo-1551488831-00ddcb6c6bd3?q=80&w=800" alt="JACES x Nike"></div><span>JACES × Nike</span></a>
+        <a href="#collab-chloe" class="cat-nav-item" data-category="chloe"><div class="cat-nav-circle"><img src="https://images.unsplash.com/photo-1485230895905-ec40ba36b9bc?q=80&w=800" alt="JACES x Chloe"></div><span>JACES × Chloe</span></a>
+        <a href="#collab-jacquemus" class="cat-nav-item" data-category="jacquemus"><div class="cat-nav-circle"><img src="https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?q=80&w=800" alt="JACES x Jacquemus"></div><span>JACES × Jacquemus</span></a>
+        <a href="#collab-dior" class="cat-nav-item" data-category="dior"><div class="cat-nav-circle"><img src="https://images.unsplash.com/photo-1496747611176-843222e1e57c?q=80&w=800" alt="JACES x Dior"></div><span>JACES × Dior</span></a>
+        <a href="#collab-saint-laurent" class="cat-nav-item" data-category="saint-laurent"><div class="cat-nav-circle"><img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=800" alt="JACES x Saint Laurent"></div><span>JACES × Saint Laurent</span></a>
+      </div>
+    </section>
+
+    <section class="section" aria-label="Produits collaborations">
+      <div class="section-intro"><h2 id="collection-page-title">Pieces collaborations</h2></div>
+      <div class="filter-bar-luxury" id="collection-filter-bar"><div class="filter-bar-meta"><button class="filter-reset-pill" id="filter-reset-pill">Reinitialiser</button><span class="filter-count" id="filter-count">5 produits</span></div></div>
+      <section class="collab-experience-view" id="collab-experience-view" hidden aria-label="Informations collaborations">
+        <div class="collab-experience-grid" id="collab-experience-grid"></div>
+        <article class="collab-experience-detail" id="collab-experience-detail" hidden></article>
+      </section>
+      <div class="product-grid" id="product-grid">
+        <article class="product-card collection-card" id="collab-nike" data-category="nike all" data-collab-view="all exclusives">
+          <div class="product-media">
+            <button class="product-favorite" type="button" aria-label="Ajouter aux favoris"><svg class="heart-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
+            <img src="https://images.unsplash.com/photo-1551488831-00ddcb6c6bd3?q=80&w=1200" alt="Bomber JACES x Nike" loading="eager" class="product-image-primary">
+            <img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?q=80&w=1200" alt="Bomber JACES x Nike vue 2" loading="lazy" class="product-image-secondary">
+            <div class="hover-sizes" aria-hidden="true"><p class="quick-buy-title"><strong>Achat rapide</strong> (Selectionnez votre taille)</p><div class="quick-buy-grid"><button type="button">34</button><button type="button">36</button><button type="button">38</button><button type="button">40</button><button type="button">42</button><button type="button">44</button></div></div>
+          </div>
+          <div class="product-info"><h3>Bomber JACES x Nike</h3><p class="product-price">295€</p></div>
+        </article>
+
+        <article class="product-card collection-card" id="collab-chloe" data-category="chloe all" data-collab-view="all exclusives">
+          <div class="product-media">
+            <button class="product-favorite" type="button" aria-label="Ajouter aux favoris"><svg class="heart-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
+            <img src="https://images.unsplash.com/photo-1485230895905-ec40ba36b9bc?q=80&w=1200" alt="Sweat signature JACES x Chloe" loading="eager" class="product-image-primary">
+            <img src="https://images.unsplash.com/photo-1496747611176-843222e1e57c?q=80&w=1200" alt="Sweat signature JACES x Chloe vue 2" loading="lazy" class="product-image-secondary">
+            <div class="hover-sizes" aria-hidden="true"><p class="quick-buy-title"><strong>Achat rapide</strong> (Selectionnez votre taille)</p><div class="quick-buy-grid"><button type="button">34</button><button type="button">36</button><button type="button">38</button><button type="button">40</button><button type="button">42</button><button type="button">44</button></div></div>
+          </div>
+          <div class="product-info"><h3>Sweat signature JACES x Chloe</h3><p class="product-price">265€</p></div>
+        </article>
+
+        <article class="product-card collection-card" id="collab-jacquemus" data-category="jacquemus all" data-collab-view="all popup">
+          <div class="product-media">
+            <button class="product-favorite" type="button" aria-label="Ajouter aux favoris"><svg class="heart-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
+            <img src="https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?q=80&w=1200" alt="Robe capsule JACES x Jacquemus" loading="eager" class="product-image-primary">
+            <img src="https://images.unsplash.com/photo-1464863979621-258859e62245?q=80&w=1200" alt="Robe capsule JACES x Jacquemus vue 2" loading="lazy" class="product-image-secondary">
+            <div class="hover-sizes" aria-hidden="true"><p class="quick-buy-title"><strong>Achat rapide</strong> (Selectionnez votre taille)</p><div class="quick-buy-grid"><button type="button">34</button><button type="button">36</button><button type="button">38</button><button type="button">40</button><button type="button">42</button><button type="button">44</button></div></div>
+          </div>
+          <div class="product-info"><h3>Robe capsule JACES x Jacquemus</h3><p class="product-price">345€</p></div>
+        </article>
+
+        <article class="product-card collection-card" id="collab-dior" data-category="dior all" data-collab-view="all popup">
+          <div class="product-media">
+            <button class="product-favorite" type="button" aria-label="Ajouter aux favoris"><svg class="heart-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
+            <img src="https://images.unsplash.com/photo-1496747611176-843222e1e57c?q=80&w=1200" alt="Robe drapee JACES x Dior" loading="lazy" class="product-image-primary">
+            <img src="https://images.unsplash.com/photo-1529139574466-a303027c1d8b?q=80&w=1200" alt="Robe drapee JACES x Dior vue 2" loading="lazy" class="product-image-secondary">
+            <div class="hover-sizes" aria-hidden="true"><p class="quick-buy-title"><strong>Achat rapide</strong> (Selectionnez votre taille)</p><div class="quick-buy-grid"><button type="button">34</button><button type="button">36</button><button type="button">38</button><button type="button">40</button><button type="button">42</button><button type="button">44</button></div></div>
+          </div>
+          <div class="product-info"><h3>Robe drapee JACES x Dior</h3><p class="product-price">390€</p></div>
+        </article>
+
+        <article class="product-card collection-card" id="collab-saint-laurent" data-category="saint-laurent all" data-collab-view="all events">
+          <div class="product-media">
+            <button class="product-favorite" type="button" aria-label="Ajouter aux favoris"><svg class="heart-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
+            <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=1200" alt="Top monochrome JACES x Saint Laurent" loading="lazy" class="product-image-primary">
+            <img src="https://images.unsplash.com/photo-1483985988355-763728e1935b?q=80&w=1200" alt="Top monochrome JACES x Saint Laurent vue 2" loading="lazy" class="product-image-secondary">
+            <div class="hover-sizes" aria-hidden="true"><p class="quick-buy-title"><strong>Achat rapide</strong> (Selectionnez votre taille)</p><div class="quick-buy-grid"><button type="button">34</button><button type="button">36</button><button type="button">38</button><button type="button">40</button><button type="button">42</button><button type="button">44</button></div></div>
+          </div>
+          <div class="product-info"><h3>Top monochrome JACES x Saint Laurent</h3><p class="product-price">275€</p></div>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer"><p class="footer-note">Copyright © 2026 Chloé. Tous droits reserves.</p></footer>
+
+  <script>
+    (function () {
+      const cards = Array.from(document.querySelectorAll('#product-grid .collection-card'));
+      const count = document.getElementById('filter-count');
+      const sectionTitle = document.getElementById('collection-page-title');
+      const filterBar = document.getElementById('collection-filter-bar');
+      const productGrid = document.getElementById('product-grid');
+      const categoryNavStrip = document.querySelector('.category-nav-strip');
+      const experienceView = document.getElementById('collab-experience-view');
+      const experienceGrid = document.getElementById('collab-experience-grid');
+      const experienceDetail = document.getElementById('collab-experience-detail');
+      let countdownTimer = null;
+      const valid = new Set(['all', 'nike', 'chloe', 'jacquemus', 'dior', 'saint-laurent']);
+      const params = new URLSearchParams(window.location.search);
+      const fromUrl = params.get('category');
+      const fromView = params.get('collabView');
+      const validViews = new Set(['all', 'exclusives', 'popup', 'events']);
+      let currentView = validViews.has(fromView || '') ? fromView : 'all';
+      let current = fromUrl && valid.has(fromUrl) ? fromUrl : 'all';
+
+      function getViewMeta(view) {
+        if (view === 'exclusives') return { heading: 'Créations exclusives', documentTitle: 'Créations exclusives | JACES' };
+        if (view === 'popup') return { heading: 'Pop-up stores', documentTitle: 'Pop-up stores | JACES' };
+        if (view === 'events') return { heading: 'Événements', documentTitle: 'Événements | JACES' };
+        return { heading: 'Pieces collaborations', documentTitle: 'Pieces collaborations | JACES' };
+      }
+
+      function syncPageTitle() {
+        const meta = getViewMeta(currentView);
+        if (sectionTitle) {
+          sectionTitle.textContent = meta.heading;
+        }
+        document.title = meta.documentTitle;
+      }
+
+      function getExperienceContent(view) {
+        if (view === 'popup') {
+          return {
+            cards: [
+              {
+                id: 'popup-paris',
+                title: 'Pop-up Paris Rive Droite',
+                date: '08 juin 2026',
+                openDateIso: '2026-06-08T10:00:00+02:00',
+                location: 'Le Marais, Paris 3e',
+                period: 'Du 08 au 14 juin 2026',
+                articleCount: '18 silhouettes',
+                visual: 'https://images.unsplash.com/photo-1523381210434-271e8be1f52b?q=80&w=1600&auto=format&fit=crop',
+                cityTag: 'Paris',
+                ambience: 'Édition galerie couture',
+                featured: [
+                  {
+                    name: 'Robe capsule JACES × Jacquemus',
+                    look: 'Look 01',
+                    note: 'Volume sculptural et taille marquée.',
+                    image: 'https://images.unsplash.com/photo-1496747611176-843222e1e57c?q=80&w=1200&auto=format&fit=crop'
+                  },
+                  {
+                    name: 'Top monochrome JACES × Saint Laurent',
+                    look: 'Look 07',
+                    note: 'Silhouette noire précise, esprit soirée.',
+                    image: 'https://images.unsplash.com/photo-1483985988355-763728e1935b?q=80&w=1200&auto=format&fit=crop'
+                  },
+                  {
+                    name: 'Bomber JACES × Nike',
+                    look: 'Look 12',
+                    note: 'Tailoring sport et finition satinée.',
+                    image: 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?q=80&w=1200&auto=format&fit=crop'
+                  }
+                ]
+              },
+              {
+                id: 'popup-lyon',
+                title: 'Pop-up Lyon Presqu\'ile',
+                date: '22 juin 2026',
+                openDateIso: '2026-06-22T10:00:00+02:00',
+                location: 'Rue Edouard Herriot, Lyon 2e',
+                period: 'Du 22 au 27 juin 2026',
+                articleCount: '12 silhouettes',
+                visual: 'https://images.unsplash.com/photo-1464863979621-258859e62245?q=80&w=1600&auto=format&fit=crop',
+                cityTag: 'Lyon',
+                ambience: 'Sélection rive urbaine',
+                featured: [
+                  {
+                    name: 'Sweat signature JACES × Chloé',
+                    look: 'Look 03',
+                    note: 'Équilibre street et romantisme soft.',
+                    image: 'https://images.unsplash.com/photo-1529139574466-a303027c1d8b?q=80&w=1200&auto=format&fit=crop'
+                  },
+                  {
+                    name: 'Robe drapée JACES × Dior',
+                    look: 'Look 09',
+                    note: 'Drapé colonne et tombé couture.',
+                    image: 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?q=80&w=1200&auto=format&fit=crop'
+                  },
+                  {
+                    name: 'Sélection accessoires exclusifs',
+                    look: 'Look 11',
+                    note: 'Capsule sacs, ceintures et bijoux métal.',
+                    image: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?q=80&w=1200&auto=format&fit=crop'
+                  }
+                ]
+              }
+            ]
+          };
+        }
+
+        if (view === 'events') {
+          return {
+            cards: [
+              {
+                id: 'event-preview',
+                title: 'Soirée Preview Collaborations',
+                date: '03 juillet 2026',
+                openDateIso: '2026-07-03T18:30:00+02:00',
+                location: 'Galerie JACES, Paris',
+                period: '18h30 - 23h00',
+                articleCount: '10 tenues présentées',
+                visual: 'https://images.unsplash.com/photo-1509631179647-0177331693ae?q=80&w=1600&auto=format&fit=crop',
+                cityTag: 'Paris',
+                ambience: 'Nuit preview privée',
+                featured: [
+                  {
+                    name: 'Ouverture look JACES × Dior',
+                    look: 'Ouverture',
+                    note: 'Entrée couture en monochrome ivoire.',
+                    image: 'https://images.unsplash.com/photo-1485230895905-ec40ba36b9bc?q=80&w=1200&auto=format&fit=crop'
+                  },
+                  {
+                    name: 'Capsule JACES × Nike performance',
+                    look: 'Acte II',
+                    note: 'Pièces mobiles, coupe athlétique luxe.',
+                    image: 'https://images.unsplash.com/photo-1551488831-00ddcb6c6bd3?q=80&w=1200&auto=format&fit=crop'
+                  },
+                  {
+                    name: 'Finale JACES × Saint Laurent',
+                    look: 'Finale',
+                    note: 'Silhouette smoking, ligne ultra nette.',
+                    image: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=1200&auto=format&fit=crop'
+                  }
+                ]
+              },
+              {
+                id: 'event-runway',
+                title: 'Événement Runway Édition Limitée',
+                date: '14 juillet 2026',
+                openDateIso: '2026-07-14T20:00:00+02:00',
+                location: 'Hangar Lumière, Bordeaux',
+                period: '20h00 - 00h00',
+                articleCount: '16 tenues en rotation',
+                visual: 'https://images.unsplash.com/photo-1469371670807-013ccf25f16a?q=80&w=1600&auto=format&fit=crop',
+                cityTag: 'Bordeaux',
+                ambience: 'Runway immersif',
+                featured: [
+                  {
+                    name: 'Vestiaire JACES × Jacquemus',
+                    look: 'Séquence 01',
+                    note: 'Volumes soleil et couleurs sable.',
+                    image: 'https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?q=80&w=1200&auto=format&fit=crop'
+                  },
+                  {
+                    name: 'Silhouettes JACES × Chloé',
+                    look: 'Séquence 02',
+                    note: 'Fluidité romantique et maille douce.',
+                    image: 'https://images.unsplash.com/photo-1495385794356-15371f348c31?q=80&w=1200&auto=format&fit=crop'
+                  },
+                  {
+                    name: 'Look final exclusif JACES × Dior',
+                    look: 'Final',
+                    note: 'Construction corset et jupe aérienne.',
+                    image: 'https://images.unsplash.com/photo-1514996937319-344454492b37?q=80&w=1200&auto=format&fit=crop'
+                  }
+                ]
+              }
+            ]
+          };
+        }
+
+        return { cards: [] };
+      }
+
+      function escapeHtml(value) {
+        return String(value || '')
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/\"/g, '&quot;')
+          .replace(/'/g, '&#39;');
+      }
+
+      function formatCountdown(openDateIso) {
+        if (!openDateIso) {
+          return { text: 'Date à confirmer', state: 'unknown' };
+        }
+
+        const target = new Date(openDateIso).getTime();
+        if (Number.isNaN(target)) {
+          return { text: 'Date à confirmer', state: 'unknown' };
+        }
+
+        const diff = target - Date.now();
+        if (diff <= 0) {
+          return { text: 'Ouvert maintenant', state: 'open' };
+        }
+
+        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+        const minutes = Math.floor((diff / (1000 * 60)) % 60);
+        return {
+          text: days + 'j ' + hours + 'h ' + minutes + 'min avant ouverture',
+          state: 'countdown'
+        };
+      }
+
+      function updateCountdowns() {
+        if (!experienceGrid) return;
+        experienceGrid.querySelectorAll('[data-open-date]').forEach((node) => {
+          const info = formatCountdown(node.getAttribute('data-open-date'));
+          node.textContent = info.text;
+          node.classList.toggle('is-open', info.state === 'open');
+          node.classList.toggle('is-countdown', info.state === 'countdown');
+          node.classList.toggle('is-unknown', info.state === 'unknown');
+        });
+      }
+
+      function renderExperienceView(view) {
+        if (!experienceView || !experienceGrid || !experienceDetail) return;
+
+        const data = getExperienceContent(view);
+        if (!data.cards.length) {
+          if (countdownTimer) {
+            clearInterval(countdownTimer);
+            countdownTimer = null;
+          }
+          experienceView.hidden = true;
+          experienceDetail.hidden = true;
+          experienceDetail.innerHTML = '';
+          return;
+        }
+
+        experienceGrid.innerHTML = data.cards.map((item) => {
+          const countdown = formatCountdown(item.openDateIso);
+          return ''
+            + '<article class="collab-experience-card">'
+            + '  <div class="collab-experience-visual" style="background-image:url(\'' + escapeHtml(item.visual) + '\')">'
+            + '    <span class="collab-experience-city">' + escapeHtml(item.cityTag) + '</span>'
+            + '    <p class="collab-experience-kicker">' + escapeHtml(item.date) + '</p>'
+            + '    <h3>' + escapeHtml(item.title) + '</h3>'
+            + '  </div>'
+            + '  <div class="collab-experience-content">'
+            + '    <p class="collab-experience-ambience">' + escapeHtml(item.ambience) + '</p>'
+            + '    <p><strong>Lieu:</strong> ' + escapeHtml(item.location) + '</p>'
+            + '    <p><strong>Période:</strong> ' + escapeHtml(item.period) + '</p>'
+            + '    <p><strong>Nombre d\'articles:</strong> ' + escapeHtml(item.articleCount) + '</p>'
+            + '    <p class="collab-open-countdown ' + countdown.state + '" data-open-date="' + escapeHtml(item.openDateIso) + '">' + countdown.text + '</p>'
+            + '    <button class="collab-experience-detail-btn" type="button" data-detail-id="' + escapeHtml(item.id) + '">Détail</button>'
+            + '  </div>'
+            + '</article>';
+        }).join('');
+
+        updateCountdowns();
+        if (countdownTimer) clearInterval(countdownTimer);
+        countdownTimer = setInterval(updateCountdowns, 30000);
+
+        experienceView.hidden = false;
+        experienceDetail.hidden = true;
+        experienceDetail.innerHTML = '';
+
+        experienceGrid.querySelectorAll('.collab-experience-detail-btn').forEach((button) => {
+          button.addEventListener('click', () => {
+            const detailId = button.getAttribute('data-detail-id') || '';
+            const selected = data.cards.find((card) => card.id === detailId);
+            if (!selected) return;
+            experienceDetail.innerHTML = ''
+              + '<p class="collab-experience-kicker">Détails silhouettes</p>'
+              + '<h4>' + escapeHtml(selected.title) + '</h4>'
+              + '<p class="collab-experience-detail-meta">Direction: ' + escapeHtml(selected.ambience) + ' · ' + escapeHtml(selected.location) + '</p>'
+              + '<div class="collab-experience-looks">'
+              + selected.featured.map((look) => {
+                return ''
+                  + '<article class="collab-look-card">'
+                  + '  <img src="' + escapeHtml(look.image) + '" alt="' + escapeHtml(look.name) + '" loading="lazy">'
+                  + '  <div class="collab-look-copy">'
+                  + '    <p class="collab-look-kicker">' + escapeHtml(look.look) + '</p>'
+                  + '    <h5>' + escapeHtml(look.name) + '</h5>'
+                  + '    <p>' + escapeHtml(look.note) + '</p>'
+                  + '  </div>'
+                  + '</article>';
+              }).join('')
+              + '</div>';
+            experienceDetail.hidden = false;
+            experienceDetail.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+          });
+        });
+      }
+
+      function apply() {
+        const isEditorialView = currentView === 'popup' || currentView === 'events';
+
+        if (categoryNavStrip) categoryNavStrip.style.display = isEditorialView ? 'none' : '';
+        if (filterBar) filterBar.style.display = isEditorialView ? 'none' : '';
+        if (productGrid) productGrid.style.display = isEditorialView ? 'none' : '';
+        if (experienceView) experienceView.hidden = !isEditorialView;
+
+        if (isEditorialView) {
+          renderExperienceView(currentView);
+          return;
+        }
+
+        let visible = 0;
+        cards.forEach((card) => {
+          const categories = (card.getAttribute('data-category') || '').split(' ');
+          const primary = categories.find((v) => v && v !== 'all') || '';
+          const viewTokens = (card.getAttribute('data-collab-view') || 'all').split(' ').filter(Boolean);
+          const matchesCategory = current === 'all' || primary === current;
+          const matchesView = currentView === 'all' || viewTokens.indexOf(currentView) !== -1 || viewTokens.indexOf('all') !== -1;
+          const show = matchesCategory && matchesView;
+          card.classList.toggle('hidden', !show);
+          if (show) visible += 1;
+        });
+        if (count) count.textContent = visible + (visible > 1 ? ' produits' : ' produit');
+        document.querySelectorAll('.cat-nav-item').forEach((item) => {
+          item.classList.toggle('active', (item.getAttribute('data-category') || 'all') === current);
+        });
+      }
+
+      function scrollToCollaborationResults() {
+        const filterBarTarget = (currentView === 'popup' || currentView === 'events')
+          ? document.getElementById('collab-experience-view')
+          : document.getElementById('collection-filter-bar');
+        if (!filterBarTarget) return;
+        if (window.scrollY > 120) return;
+
+        requestAnimationFrame(() => {
+          const header = document.querySelector('.header');
+          const headerBottom = header ? header.getBoundingClientRect().bottom : 120;
+          const filterTop = filterBarTarget.getBoundingClientRect().top + window.scrollY;
+          const offset = filterTop - headerBottom + 10;
+          const targetY = Math.max(0, offset);
+          if (Math.abs(window.scrollY - targetY) <= 80) return;
+          window.scrollTo({ top: targetY, behavior: 'smooth' });
+        });
+      }
+
+      window.scrollToCollaborationResults = scrollToCollaborationResults;
+
+      function setCategory(category, shouldScroll, resetFilters) {
+        if (!valid.has(category)) return;
+        if (resetFilters) {
+          document.querySelectorAll('#collection-filter-bar input').forEach((input) => { input.checked = false; });
+        }
+        current = category;
+        const nextParams = new URLSearchParams();
+        nextParams.set('category', category);
+        if (currentView !== 'all') {
+          nextParams.set('collabView', currentView);
+        }
+        const next = '?' + nextParams.toString();
+        if (window.location.search !== next) {
+          history.replaceState({}, '', 'collaborations.html' + next);
+        }
+        apply();
+        if (shouldScroll) {
+          scrollToCollaborationResults();
+        }
+      }
+
+      document.querySelectorAll('.category-nav-strip .cat-nav-item').forEach((item) => {
+        item.addEventListener('click', (event) => {
+          event.preventDefault();
+          const shouldScroll = window.scrollY <= 120;
+          setCategory((item.getAttribute('data-category') || 'all').trim(), shouldScroll, true);
+        });
+      });
+
+      document.querySelectorAll('a[href^="collaborations.html?category="]').forEach((link) => {
+        link.addEventListener('click', (event) => {
+          if (!window.location.pathname.endsWith('collaborations.html')) return;
+          event.preventDefault();
+          const linkParams = new URL(link.getAttribute('href'), window.location.href).searchParams;
+          const category = linkParams.get('category') || 'all';
+          const viewFromLink = linkParams.get('collabView');
+          if (validViews.has(viewFromLink || '')) {
+            currentView = viewFromLink;
+          } else {
+            currentView = 'all';
+          }
+          syncPageTitle();
+          setCategory(category, true, false);
+        });
+      });
+
+      document.querySelectorAll('a[href*="collaborations.html?collabView="]').forEach((link) => {
+        link.addEventListener('click', (event) => {
+          if (!window.location.pathname.endsWith('collaborations.html')) return;
+          event.preventDefault();
+          const linkParams = new URL(link.getAttribute('href'), window.location.href).searchParams;
+          const view = linkParams.get('collabView') || 'all';
+          const category = linkParams.get('category') || 'all';
+          currentView = validViews.has(view) ? view : 'all';
+          syncPageTitle();
+          setCategory(category, true, false);
+        });
+      });
+
+      const reset = document.getElementById('filter-reset-pill');
+      if (reset) {
+        reset.addEventListener('click', () => {
+          document.querySelectorAll('#collection-filter-bar input').forEach((input) => { input.checked = false; });
+        });
+      }
+
+      syncPageTitle();
+      const hasRequestedState = params.has('category') || params.has('collabView');
+      if (hasRequestedState) {
+        setCategory(current, true, false);
+      } else {
+        apply();
+      }
+    })();
+  </script>
+  <script src="catalog.js"></script>
+  <script src="cart.js"></script>
+  <script src="favorites.js"></script>
+  <script src="auth.js"></script>
+  <script>
+    (function () {
+      function navigateToProduct(card) {
+        var name = (card.querySelector('h3') || {}).textContent || '';
+        name = name.trim();
+        var price = (card.querySelector('.product-price') || {}).textContent || '';
+        price = price.trim();
+        var imgEl = card.querySelector('.product-image-primary');
+        var img = imgEl ? imgEl.getAttribute('src') || '' : '';
+        var secEl = card.querySelector('.product-image-secondary');
+        var secondaryImg = secEl ? secEl.getAttribute('src') || '' : '';
+        if (!name) return;
+        var url;
+        try {
+          url = (window.JacesCatalog && typeof window.JacesCatalog.getProductUrl === 'function')
+            ? window.JacesCatalog.getProductUrl({ name: name, price: price, img: img, secondaryImg: secondaryImg }, 'collaboration')
+            : null;
+        } catch (err) { url = null; }
+        if (!url) {
+          url = 'detail-produit.html?id=' + encodeURIComponent(name.toLowerCase().replace(/\s+/g, '-')) + '&name=' + encodeURIComponent(name) + '&price=' + encodeURIComponent(price) + '&img=' + encodeURIComponent(img) + '&origin=collaboration&originLabel=Collaboration&originUrl=collaborations.html&originNav=collaboration';
+        }
+        window.location.href = url;
+      }
+
+      document.querySelectorAll('.product-card').forEach(function (card) {
+        card.style.cursor = 'pointer';
+        card.addEventListener('click', function (e) {
+          if (e.target.closest('.product-favorite') || e.target.closest('.quick-buy-grid') || e.target.closest('.hover-sizes')) return;
+          navigateToProduct(card);
+        });
+      });
+    })();
+  </script>
+</body>
+</html>

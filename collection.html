@@ -1,0 +1,1191 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nos collections | JACES</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="collection-page-body">
+
+  <div class="topbar">Livraison offerte dès 79 € | Retours offerts</div>
+
+  <header class="header">
+    <div class="header-top">
+      <div class="header-left">
+        <button class="search-trigger" id="search-trigger" type="button" aria-expanded="false" aria-controls="header-search-panel">Recherche</button>
+        <form class="search-panel" id="header-search-panel" role="search" action="#" method="get">
+          <input type="search" name="q" placeholder="Rechercher un produit..." aria-label="Rechercher">
+          <button class="search-submit" type="submit">↗</button>
+          <button class="search-panel-close" type="button" id="search-panel-close" aria-label="Fermer">×</button>
+        </form>
+      </div>
+
+      <a href="index.html" class="logo">JACES</a>
+
+      <div class="header-right">
+        <div class="language-picker" id="language-picker">
+          <button class="language-button" id="language-button" type="button" aria-label="Choisir la langue" aria-expanded="false">
+            <img src="https://flagcdn.com/w40/fr.png" class="icon-flag" id="current-flag" alt="Français">
+            <span class="language-caret" aria-hidden="true"></span>
+          </button>
+          <div class="language-menu" id="language-menu" role="menu" aria-label="Langues">
+            <button type="button" class="language-option" data-lang="fr" data-flag="https://flagcdn.com/w40/fr.png" role="menuitem"><img src="https://flagcdn.com/w40/fr.png" alt="Français"><span>Français</span></button>
+            <button type="button" class="language-option" data-lang="en" data-flag="https://flagcdn.com/w40/gb.png" role="menuitem"><img src="https://flagcdn.com/w40/gb.png" alt="English"><span>English</span></button>
+            <button type="button" class="language-option" data-lang="es" data-flag="https://flagcdn.com/w40/es.png" role="menuitem"><img src="https://flagcdn.com/w40/es.png" alt="Español"><span>Español</span></button>
+            <button type="button" class="language-option" data-lang="it" data-flag="https://flagcdn.com/w40/it.png" role="menuitem"><img src="https://flagcdn.com/w40/it.png" alt="Italiano"><span>Italiano</span></button>
+          </div>
+        </div>
+        <button class="icon-button" id="fav-trigger" aria-label="Favoris" type="button" style="position:relative">
+          <svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+          <span class="fav-count" id="fav-count" style="display:none">0</span>
+        </button>
+        <button class="icon-button" aria-label="Compte" type="button"><svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></button>
+        <button class="icon-button cart" aria-label="Panier" type="button"><svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M9 2L6.12 9H1l2.5 7.5v5h15v-5l2.5-7.5H17.88L15 2"/></svg><span class="cart-count">0</span></button>
+      </div>
+    </div>
+
+<nav class="nav">
+    <div class="nav-item">
+      <a href="nouveautes.html">Nouveautés</a>
+      <div class="submenu">
+        <div>
+          <p class="submenu-title">NOUVEAUTÉS</p>
+          <p class="submenu-copy">Nouvelles pièces,<br>exclusivité<br>et robe signature.</p>
+          <a href="nouveautes.html">Drop été</a>
+          <a href="nouveautes.html">Édition limitée</a>
+          <a href="nouveautes.html">Pièces signature</a>
+          <a href="nouveautes.html?category=all" class="underline-link">Voir tout les nouveautés</a>
+        </div>
+        <div class="submenu-categories">
+          <p class="submenu-title">FEMME</p>
+          <a href="nouveautes.html">Robes</a>
+          <a href="nouveautes.html">Tops</a>
+          <a href="nouveautes.html">Jupes</a>
+          <a href="nouveautes.html">Pantalons</a>
+          <a href="nouveautes.html">Vestes</a>
+          <a href="nouveautes.html">Accessoires</a>
+        </div>
+      </div>
+    </div>
+    <div class="nav-item">
+      <a href="collection.html" class="active">Collections</a>
+      <div class="submenu">
+        <div>
+          <a href="collection.html?collection=ss26">Printemps–Été 2026</a>
+          <a href="collection.html?collection=aw26">Automne–Hiver 2026</a>
+          <a href="collection.html?category=all" class="underline-link">Toutes les collections</a>
+        </div>
+        <div class="submenu-categories">
+          <a href="collection.html?category=robes">Robes</a>
+          <a href="collection.html?category=tops">Tops</a>
+          <a href="collection.html?category=jupes">Jupes</a>
+          <a href="collection.html?category=pantalons">Pantalons</a>
+          <a href="collection.html?category=vestes">Vestes</a>
+          <a href="collection.html?category=accessoires">Accessoires</a>
+        </div>
+      </div>
+    </div>
+    <div class="nav-item">
+      <a href="collaborations.html">Collaborations</a>
+      <div class="submenu">
+        <div>
+          <a href="collaborations.html?collabView=exclusives&category=all">Créations exclusives</a>
+          <a href="collaborations.html?collabView=popup&category=all">Pop-up stores</a>
+          <a href="collaborations.html?collabView=events&category=all">Événements</a>
+          <a href="collaborations.html?collabView=all&category=all" class="underline-link">Toutes les collaborations</a>
+        </div>
+        <div class="submenu-categories">
+            <a href="collaborations.html?category=nike">JACES × Nike</a>
+            <a href="collaborations.html?category=chloe">JACES × Chloé</a>
+            <a href="collaborations.html?category=jacquemus">JACES × Jacquemus</a>
+            <a href="collaborations.html?category=dior">JACES × Dior</a>
+            <a href="collaborations.html?category=saint-laurent">JACES × Saint Laurent</a>
+          </div>
+      </div>
+    </div>
+    <div class="nav-item">
+      <a href="accessoires.html">Accessoires</a>
+      <div class="submenu">
+        <div>
+            <p class="submenu-title">COLLECTION</p>
+            <a href="collection.html?category=all" class="underline-link">Toutes les collections</a>
+          </div>
+          <div class="submenu-categories">
+            <a href="accessoires.html?category=sacs">Sacs</a>
+            <a href="accessoires.html?category=bijoux">Bijoux</a>
+            <a href="accessoires.html?category=ceintures">Ceintures</a>
+            <a href="accessoires.html?category=foulards">Foulards</a>
+          </div>
+      </div>
+    </div>
+    <div class="nav-item">
+      <a href="defile.html"><em>Défilé</em></a>
+      <div class="submenu">
+        <div>
+          <p class="submenu-title">DÉFILÉ</p>
+          <a href="#">Dernier show</a>
+          <a href="#">Collection prêt-à-porter</a>
+          <a href="#" class="underline-link">Voir le défilé</a>
+        </div>
+        <div>
+          <p class="submenu-title">Coulisses</p>
+          <a href="#">Design studio</a>
+          <a href="#">Inspiration</a>
+        </div>
+      </div>
+    </div>
+    <div class="nav-item">
+      <a href="univers.html"><em>Univers</em></a>
+      <div class="submenu">
+        <div>
+          <p class="submenu-title">MAISON</p>
+          <a href="#">Notre histoire</a>
+          <a href="#">Savoir-faire</a>
+          <a href="#" class="underline-link">Services VIP</a>
+        </div>
+        <div>
+          <p class="submenu-title">DÉCOUVERTE</p>
+          <a href="#">Ateliers</a>
+          <a href="#">Boutiques</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+</header>
+
+  <main class="collection-page">
+    <section class="category-nav-strip" aria-label="Catégories collection femme">
+      <div class="category-nav-track" id="category-nav-track">
+        <a href="#collection-page-title" class="cat-nav-item active" data-category="all">
+          <div class="cat-nav-circle">
+            <img src="https://images.unsplash.com/photo-1483985988355-763728e1935b?q=80&w=400" alt="Tout voir" loading="lazy">
+          </div>
+          <span>Tout voir</span>
+        </a>
+        <a href="#cat-robe" class="cat-nav-item" data-category="robes">
+          <div class="cat-nav-circle">
+            <img src="https://images.unsplash.com/photo-1566174053879-31528523f8ae?q=80&w=400" alt="Robes" loading="lazy">
+          </div>
+          <span>Robes</span>
+        </a>
+        <a href="#cat-tops" class="cat-nav-item" data-category="tops">
+          <div class="cat-nav-circle">
+            <img src="https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?q=80&w=400" alt="Tops" loading="lazy">
+          </div>
+          <span>Tops</span>
+        </a>
+        <a href="#cat-jupes" class="cat-nav-item" data-category="jupes">
+          <div class="cat-nav-circle">
+            <img src="https://images.unsplash.com/photo-1483985988355-763728e1935b?q=80&w=400" alt="Jupes" loading="lazy">
+          </div>
+          <span>Jupes</span>
+        </a>
+        <a href="#cat-pantalons" class="cat-nav-item" data-category="pantalons">
+          <div class="cat-nav-circle">
+            <img src="https://images.unsplash.com/photo-1509631179647-0177331693ae?q=80&w=400" alt="Pantalons" loading="lazy">
+          </div>
+          <span>Pantalons</span>
+        </a>
+        <a href="#cat-vestes" class="cat-nav-item" data-category="vestes">
+          <div class="cat-nav-circle">
+            <img src="https://images.unsplash.com/photo-1598033129183-c4f50c736f10?q=80&w=400" alt="Vestes" loading="lazy">
+          </div>
+          <span>Vestes</span>
+        </a>
+        <a href="#cat-accessoires" class="cat-nav-item" data-category="accessoires">
+          <div class="cat-nav-circle">
+            <img src="https://images.unsplash.com/photo-1591047139829-d91aecb6caea?q=80&w=400" alt="Accessoires" loading="lazy">
+          </div>
+          <span>Accessoires</span>
+        </a>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-intro">
+        <h2 id="collection-page-title">Nos collections</h2>
+      </div>
+
+      <div class="filter-bar-luxury" id="collection-filter-bar">
+        <div class="filter-bar-top">
+          <div class="filter-pills">
+            <div class="filter-pill-wrap">
+              <button class="filter-pill" data-filter="taille">Taille <span class="pill-arrow">∨</span></button>
+              <div class="filter-dropdown">
+                <label><input type="checkbox" name="taille" value="34"> 34</label>
+                <label><input type="checkbox" name="taille" value="36"> 36</label>
+                <label><input type="checkbox" name="taille" value="38"> 38</label>
+                <label><input type="checkbox" name="taille" value="40"> 40</label>
+                <label><input type="checkbox" name="taille" value="42"> 42</label>
+                <label><input type="checkbox" name="taille" value="44"> 44</label>
+                <p class="filter-dropdown-note">Guide des tailles disponible dans chaque fiche produit.</p>
+              </div>
+            </div>
+            <div class="filter-pill-wrap">
+              <button class="filter-pill" data-filter="couleur">Couleur <span class="pill-arrow">∨</span></button>
+              <div class="filter-dropdown">
+                <label><input type="checkbox" name="couleur" value="noir"> Noir</label>
+                <label><input type="checkbox" name="couleur" value="ivoire"> Ivoire</label>
+                <label><input type="checkbox" name="couleur" value="beige"> Beige</label>
+                <label><input type="checkbox" name="couleur" value="bordeaux"> Bordeaux</label>
+              </div>
+            </div>
+          </div>
+
+          <div class="product-sort-row">
+            <select id="product-sort" name="product-sort">
+              <option value="default">Trier</option>
+              <option value="price-asc">Prix croissant</option>
+              <option value="price-desc">Prix decroissant</option>
+              <option value="name-asc">Nom A-Z</option>
+            </select>
+          </div>
+        </div>
+        <div class="filter-bar-meta">
+          <button class="filter-reset-pill" id="filter-reset-pill">Réinitialiser</button>
+          <span class="filter-count">30 produits</span>
+        </div>
+      </div>
+
+      <div class="product-grid" id="product-grid">
+        <article class="product-card collection-card" id="cat-robe" data-category="robes all" data-collection="ss26">
+          <div class="product-media">
+            <button class="product-favorite" type="button" aria-label="Ajouter aux favoris"><svg class="heart-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
+            <img src="https://dl.dropboxusercontent.com/scl/fi/50wz53pj517xjx0pwqx7x/TopRose1-1.png?rlkey=qxlv8mlbcox3hx90kytrqf30q&st=x5sibfwd" alt="Robe noire satinée" loading="eager" fetchpriority="high" class="product-image-primary">
+            <img src="https://dl.dropboxusercontent.com/scl/fi/2v91thz03ep6q3pvy6gfr/TopRose2.png?rlkey=cglo69lnilc8wrapqh95trpu2&st=vattioqz" alt="Robe noire satinée vue 2" loading="lazy" class="product-image-secondary">
+            <div class="hover-sizes" aria-hidden="true">
+              <span>34</span><span>36</span><span>38</span><span>40</span>
+            </div>
+          </div>
+          <div class="product-info">
+            <h3>Robe noire satinée</h3>
+            <p class="product-price">195€</p>
+          </div>
+        </article>
+        <article class="product-card collection-card" id="cat-tops" data-category="tops all" data-collection="ss26">
+          <div class="product-media">
+            <button class="product-favorite" type="button" aria-label="Ajouter aux favoris"><svg class="heart-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
+            <img src="https://dl.dropboxusercontent.com/scl/fi/fc4shvxkkb1eko5m5tmac/TopBeige1.png?rlkey=8qdqh08h89qhmijwp618lwpzh&st=c4awnnse" alt="Top ivoire structure" loading="eager" class="product-image-primary">
+            <img src="https://dl.dropboxusercontent.com/scl/fi/5h3z8kcka8a2sb2ptoz0u/TopBeige2.png?rlkey=ufyv8lqna2w50pel7vwomkmmy&st=4iavl5yh" alt="Top ivoire structure vue 2" loading="lazy" class="product-image-secondary">
+            <div class="hover-sizes" aria-hidden="true">
+              <span>34</span><span>36</span><span>38</span><span>40</span>
+            </div>
+          </div>
+          <div class="product-info">
+            <h3>Top ivoire structure</h3>
+            <p class="product-price">320€</p>
+          </div>
+        </article>
+        <article class="product-card collection-card" id="cat-vestes" data-category="vestes all" data-collection="aw26">
+          <div class="product-media">
+            <button class="product-favorite" type="button" aria-label="Ajouter aux favoris"><svg class="heart-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
+            <img src="https://dl.dropboxusercontent.com/scl/fi/emo5s8z20mwthy1hf2br5/Manteau-structur-rose-1.png?rlkey=59zrt7yjwhb261r9szl6xoq7c&st=iw286vmm" alt="Veste structurée" loading="lazy" class="product-image-primary">
+            <img src="https://dl.dropboxusercontent.com/scl/fi/ifjzjv9xrghvhabjornqt/Manteau-structur-bleu-1.png?rlkey=bxpbng7nr15ddg4g929rlfu99&st=iif9bz80" alt="Veste structurée vue 2" loading="lazy" class="product-image-secondary">
+            <div class="hover-sizes" aria-hidden="true">
+              <span>34</span><span>36</span><span>38</span><span>40</span>
+            </div>
+          </div>
+          <div class="product-info">
+            <h3>Veste structurée</h3>
+            <p class="product-price">410€</p>
+          </div>
+        </article>
+        <article class="product-card collection-card" id="cat-essentielles" data-product-id="blouse-fluide" data-category="tops all" data-collection="ss26">
+          <div class="product-info">
+            <h3>Top fluide</h3>
+            <p class="product-price">125€</p>
+          </div>
+        </article>
+        <article class="product-card collection-card" id="cat-jupes" data-category="jupes all" data-collection="ss26">
+          <div class="product-info">
+            <h3>Jupe plissée</h3>
+            <p class="product-price">155€</p>
+          </div>
+        </article>
+        <article class="product-card collection-card" data-category="tops all" data-collection="ss26">
+          <div class="product-info">
+            <h3>Top blanc</h3>
+            <p class="product-price">98€</p>
+          </div>
+        </article>
+        <article class="product-card collection-card" data-category="tops all" data-collection="ss26">
+          <div class="product-info">
+            <h3>Top en soie</h3>
+            <p class="product-price">135€</p>
+          </div>
+        </article>
+        <article class="product-card collection-card" data-category="vestes all" data-collection="aw26">
+          <div class="product-info">
+            <h3>Veste en cuir</h3>
+            <p class="product-price">265€</p>
+          </div>
+        </article>
+        <article class="product-card collection-card" id="cat-pantalons-signature" data-category="pantalons all" data-collection="ss26">
+          <div class="product-info">
+            <h3>Short structure</h3>
+            <p class="product-price">140€</p>
+          </div>
+        </article>
+        <article class="product-card collection-card" id="cat-pantalons" data-category="pantalons all" data-collection="aw26">
+          <div class="product-info">
+            <h3>Pantalon droit</h3>
+            <p class="product-price">130€</p>
+          </div>
+        </article>
+        <article class="product-card collection-card" id="cat-vestes-signature" data-category="vestes all" data-collection="aw26">
+          <div class="product-info">
+            <h3>Veste oversize</h3>
+            <p class="product-price">245€</p>
+          </div>
+        </article>
+        <article class="product-card collection-card" data-category="vestes all" data-collection="aw26">
+          <div class="product-info">
+            <h3>Veste en laine</h3>
+            <p class="product-price">420€</p>
+          </div>
+        </article>
+        <article class="product-card collection-card" data-category="robes all" data-collection="ss26">
+          <div class="product-info">
+            <h3>Robe midi</h3>
+            <p class="product-price">175€</p>
+          </div>
+        </article>
+        <article class="product-card collection-card" data-category="tops all" data-collection="aw26">
+          <div class="product-info">
+            <h3>Top col montant</h3>
+            <p class="product-price">115€</p>
+          </div>
+        </article>
+        <article class="product-card collection-card" data-category="tops all" data-collection="ss26">
+          <div class="product-info">
+            <h3>Top oversize</h3>
+            <p class="product-price">118€</p>
+          </div>
+        </article>
+        <article class="product-card collection-card" data-category="robes all" data-collection="aw26">
+          <div class="product-info">
+            <h3>Robe texturee</h3>
+            <p class="product-price">160€</p>
+          </div>
+        </article>
+        <article class="product-card collection-card" data-category="pantalons all" data-collection="ss26">
+          <div class="product-info">
+            <h3>Pantalon large</h3>
+            <p class="product-price">125€</p>
+          </div>
+        </article>
+        <article class="product-card collection-card" data-category="tops all" data-collection="aw26">
+          <div class="product-info">
+            <h3>Top texture</h3>
+            <p class="product-price">105€</p>
+          </div>
+        </article>
+        <article class="product-card collection-card" data-category="robes all" data-collection="aw26">
+          <div class="product-info">
+            <h3>Robe chic</h3>
+            <p class="product-price">215€</p>
+          </div>
+        </article>
+        <article class="product-card collection-card" data-category="tops all" data-collection="ss26">
+          <div class="product-info">
+            <h3>Top décolleté</h3>
+            <p class="product-price">89€</p>
+          </div>
+        </article>
+        <article class="product-card collection-card" id="cat-accessoires" data-category="accessoires all" data-collection="ss26">
+          <div class="product-info">
+            <h3>Sac à bandoulière</h3>
+            <p class="product-price">138€</p>
+          </div>
+        </article>
+        <article class="product-card collection-card" data-category="accessoires all" data-collection="ss26">
+          <div class="product-info">
+            <h3>Accessoire élégant</h3>
+            <p class="product-price">150€</p>
+          </div>
+        </article>
+        <article class="product-card collection-card" data-category="tops all" data-collection="ss26">
+          <div class="product-info">
+            <h3>Ceinture fine</h3>
+            <p class="product-price">65€</p>
+          </div>
+        </article>
+        <article class="product-card collection-card" data-category="accessoires all" data-collection="aw26">
+          <div class="product-info">
+            <h3>Boucles d’oreilles</h3>
+            <p class="product-price">75€</p>
+          </div>
+        </article>
+        <article class="product-card collection-card" data-category="tops all" data-collection="ss26">
+          <div class="product-info">
+            <h3>Top minimaliste</h3>
+            <p class="product-price">68€</p>
+          </div>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <div class="back-to-top-bar">
+    <a href="#" class="back-to-top-link" aria-label="Retour au haut de la page">
+      <svg width="22" height="14" viewBox="0 0 22 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 13 11 3 21 13"/></svg>
+      <span>RETOUR AU HAUT DE LA PAGE</span>
+    </a>
+  </div>
+
+  <footer class="footer">
+    <div class="footer-main">
+      <div class="footer-cols">
+        <div class="footer-col"><p class="footer-col-title">Service client</p><a href="#">Suivre ma commande</a><a href="#">Faire un retour</a><a href="#">Livraison et Retour</a><a href="#">FAQ</a><a href="#">Contact</a></div>
+        <div class="footer-col"><p class="footer-col-title">JACES</p><a href="#">Notre concept</a><a href="#">Parrainez</a><a href="#">Nos boutiques</a><a href="#">Nous rejoindre</a></div>
+        <div class="footer-col"><p class="footer-col-title">Mentions légales</p><a href="#">CGV</a><a href="#">Politique de confidentialité</a><a href="#">Plan de site</a><a href="#">Retours Gratuits</a><a href="#">Conditions de l'offre en cours</a></div>
+      </div>
+      <div class="footer-newsletter">
+        <h3>Restez connecté avec JACES</h3>
+        <p>Recevez en avant-première nos nouvelles collections et invitations à nos évènements.</p>
+        <form class="footer-newsletter-form" action="#" method="post">
+          <label for="footer-nl-email-collection" class="visually-hidden">Votre e-mail</label>
+          <input id="footer-nl-email-collection" name="email" type="email" placeholder="Votre e-mail" required>
+          <button type="submit" aria-label="S'inscrire">→</button>
+        </form>
+      </div>
+    </div>
+    <p class="footer-note">Copyright © 2026 Chloé. Tous droits réservés.</p>
+  </footer>
+
+  <script src="admin-products.js"></script>
+  <script>
+    function updateHeaderState() {
+      document.body.classList.toggle('header-scrolled', window.scrollY > 8);
+    }
+
+    updateHeaderState();
+    window.addEventListener('scroll', updateHeaderState, { passive: true });
+
+    const searchTrigger = document.getElementById('search-trigger');
+    const searchPanel = document.getElementById('header-search-panel');
+    const searchClose = document.getElementById('search-panel-close');
+
+    if (searchTrigger && searchPanel) {
+      const searchInput = searchPanel.querySelector('input[type="search"]');
+      const closeSearch = () => {
+        searchPanel.classList.remove('open');
+        searchTrigger.setAttribute('aria-expanded', 'false');
+      };
+
+      searchTrigger.addEventListener('click', (event) => {
+        event.stopPropagation();
+        const willOpen = !searchPanel.classList.contains('open');
+        searchPanel.classList.toggle('open', willOpen);
+        searchTrigger.setAttribute('aria-expanded', String(willOpen));
+        if (willOpen && searchInput) {
+          searchInput.focus();
+        }
+      });
+
+      if (searchClose) {
+        searchClose.addEventListener('click', () => {
+          closeSearch();
+        });
+      }
+
+      searchPanel.addEventListener('click', (event) => {
+        event.stopPropagation();
+      });
+
+      document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape') {
+          closeSearch();
+        }
+      });
+
+      document.addEventListener('click', (event) => {
+        if (!searchPanel.contains(event.target) && !searchTrigger.contains(event.target)) {
+          closeSearch();
+        }
+      });
+    }
+
+    const languagePicker = document.getElementById('language-picker');
+    const languageButton = document.getElementById('language-button');
+    const languageMenu = document.getElementById('language-menu');
+    const currentFlag = document.getElementById('current-flag');
+
+    if (languagePicker && languageButton && languageMenu && currentFlag) {
+      const STORAGE_KEY = 'jaces-selected-language';
+      const languageOptions = Array.from(languagePicker.querySelectorAll('.language-option'));
+
+      function applyLanguageOption(option) {
+        const flag = option.dataset.flag;
+        const lang = option.dataset.lang;
+        const label = option.querySelector('span')?.textContent || 'Langue';
+
+        if (flag) {
+          currentFlag.src = flag;
+          currentFlag.alt = label;
+        }
+
+        if (lang) {
+          document.documentElement.lang = lang;
+        }
+
+        try {
+          if (lang) {
+            localStorage.setItem(STORAGE_KEY, lang);
+          }
+        } catch (error) {
+          // Ignore storage errors (private mode, blocked storage, etc.)
+        }
+      }
+
+      try {
+        const savedLang = localStorage.getItem(STORAGE_KEY);
+        if (savedLang) {
+          const savedOption = languageOptions.find((option) => option.dataset.lang === savedLang);
+          if (savedOption) {
+            applyLanguageOption(savedOption);
+          }
+        }
+      } catch (error) {
+        // Ignore storage read errors
+      }
+
+      languageButton.addEventListener('click', () => {
+        const isOpen = languagePicker.classList.toggle('open');
+        languageButton.setAttribute('aria-expanded', String(isOpen));
+      });
+
+      languageOptions.forEach((option) => {
+        option.addEventListener('click', () => {
+          applyLanguageOption(option);
+
+          languagePicker.classList.remove('open');
+          languageButton.setAttribute('aria-expanded', 'false');
+        });
+      });
+
+      document.addEventListener('click', (event) => {
+        if (!languagePicker.contains(event.target)) {
+          languagePicker.classList.remove('open');
+          languageButton.setAttribute('aria-expanded', 'false');
+        }
+      });
+    }
+
+    const filterForm = document.getElementById('collection-filter-form');
+    const resetRow = document.getElementById('filter-reset-row');
+    if (filterForm && resetRow) {
+      const selects = Array.from(filterForm.querySelectorAll('select'));
+      const initialValues = selects.map(select => select.value);
+      function updateResetVisibility() {
+        const dirty = selects.some((select, index) => select.value !== initialValues[index]);
+        resetRow.classList.toggle('visible', dirty);
+      }
+      selects.forEach(select => { select.addEventListener('change', updateResetVisibility); });
+      filterForm.addEventListener('reset', () => { setTimeout(() => { resetRow.classList.remove('visible'); }, 0); });
+    }
+
+    // Filter reset pill
+    const resetPill = document.getElementById('filter-reset-pill');
+    const filterPills = Array.from(document.querySelectorAll('#collection-filter-bar .filter-pill'));
+    const filterInputs = Array.from(document.querySelectorAll('#collection-filter-bar input'));
+
+    filterPills.forEach((pill) => {
+      const baseLabel = pill.childNodes[0] ? pill.childNodes[0].textContent.trim() : pill.textContent.replace('∨', '').trim();
+      pill.dataset.baseLabel = baseLabel;
+    });
+
+    function updateFilterUI() {
+      const hasActive = document.querySelectorAll('#collection-filter-bar input:checked').length > 0;
+      resetPill.classList.toggle('visible', hasActive);
+
+      filterPills.forEach((pill) => {
+        const wrap = pill.closest('.filter-pill-wrap');
+        const checkedCount = wrap ? wrap.querySelectorAll('input:checked').length : 0;
+        const baseLabel = pill.dataset.baseLabel || 'Filtre';
+
+        if (pill.childNodes[0]) {
+          pill.childNodes[0].textContent = checkedCount > 0 ? `${baseLabel} (${checkedCount}) ` : `${baseLabel} `;
+        }
+        pill.classList.toggle('active', checkedCount > 0);
+      });
+    }
+
+    filterInputs.forEach((input) => {
+      input.addEventListener('change', () => {
+        updateFilterUI();
+        applyCollectionView();
+      });
+    });
+
+    resetPill.addEventListener('click', () => {
+      document.querySelectorAll('#collection-filter-bar input').forEach(input => { input.checked = false; });
+      updateFilterUI();
+      applyCollectionView();
+    });
+
+    updateFilterUI();
+
+    // Filter pills toggle
+    const filterBar = document.getElementById('collection-filter-bar');
+    document.querySelectorAll('.filter-pill').forEach(pill => {
+      pill.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const wrap = pill.closest('.filter-pill-wrap');
+        const isOpen = pill.classList.contains('open');
+        // Close all
+        document.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('open'));
+        document.querySelectorAll('.filter-dropdown').forEach(d => d.classList.remove('open'));
+        if (!isOpen) {
+          pill.classList.add('open');
+          wrap.querySelector('.filter-dropdown').classList.add('open');
+        }
+      });
+    });
+
+    document.querySelectorAll('.filter-dropdown').forEach(dropdown => {
+      dropdown.addEventListener('click', (e) => {
+        e.stopPropagation();
+      });
+    });
+
+    document.addEventListener('click', (e) => {
+      if (filterBar && !filterBar.contains(e.target)) {
+        document.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('open'));
+        document.querySelectorAll('.filter-dropdown').forEach(d => d.classList.remove('open'));
+      }
+    });
+
+    // INDEX = ordre dans la grille produits (0 = Robe noire satinée, 1 = Top ivoire structure, etc.)
+    const collectionImagePairs = [
+      /* 00 - Robe noire satinée */
+      { primary: 'https://dl.dropboxusercontent.com/scl/fi/50wz53pj517xjx0pwqx7x/TopRose1-1.png?rlkey=qxlv8mlbcox3hx90kytrqf30q&st=x5sibfwd', secondary: 'https://dl.dropboxusercontent.com/scl/fi/2v91thz03ep6q3pvy6gfr/TopRose2.png?rlkey=cglo69lnilc8wrapqh95trpu2&st=vattioqz' },
+      /* 01 - Top ivoire structure */
+      { primary: 'https://dl.dropboxusercontent.com/scl/fi/fc4shvxkkb1eko5m5tmac/TopBeige1.png?rlkey=8qdqh08h89qhmijwp618lwpzh&st=c4awnnse', secondary: 'https://dl.dropboxusercontent.com/scl/fi/5h3z8kcka8a2sb2ptoz0u/TopBeige2.png?rlkey=ufyv8lqna2w50pel7vwomkmmy&st=4iavl5yh' },
+      /* 02 - Manteau structuré */
+      { primary: 'https://dl.dropboxusercontent.com/scl/fi/emo5s8z20mwthy1hf2br5/Manteau-structur-rose-1.png?rlkey=59zrt7yjwhb261r9szl6xoq7c&st=iw286vmm', secondary: 'https://dl.dropboxusercontent.com/scl/fi/ifjzjv9xrghvhabjornqt/Manteau-structur-bleu-1.png?rlkey=bxpbng7nr15ddg4g929rlfu99&st=iif9bz80' },
+      /* 03 - Top fluide */
+      { primary: 'https://dl.dropboxusercontent.com/scl/fi/kf4rmja6pww8ucxg91b9j/Blouse-fluide-rose-1.png?rlkey=lo5jotwk32ckia3xdpk4pt6rh&st=z3yp196u', secondary: 'https://dl.dropboxusercontent.com/scl/fi/nr8qiv5qcjqn0rmjie3cd/Blouse-fluide-rose-2.png?rlkey=g051g871misgomhj06rxdbwqz&st=5rehs96t' },
+      /* 04 - Jupe plissée */
+      { primary: 'https://dl.dropboxusercontent.com/scl/fi/310o2fcd7yfh627l2c7uw/Jupe-pliss-e-1.png?rlkey=teizgj4yl92kelczg1fpy0jo3&st=273ayo92', secondary: 'https://dl.dropboxusercontent.com/scl/fi/vvqiygluesu13k9se9iws/Jupe-pliss-e-2.png?rlkey=u0dr8k7m6hr9qypf2df46rx24&st=la17m3gg' },
+      /* 05 - Top blanc */
+      { primary: 'https://dl.dropboxusercontent.com/scl/fi/ys9utrg5mbfmkh2a4scjf/Chemise-blanche-1.png?rlkey=lv1g0ggq8v9cuavib802zbt1k&st=9qrgnhf6', secondary: 'https://dl.dropboxusercontent.com/scl/fi/h309cqgwsyyg66joupcwu/Chemise-blanche-2.png?rlkey=wkpdqbk3037lycasy137lk3ui&st=cqd9qclp' },
+      /* 06 - Top en soie */
+      { primary: 'https://dl.dropboxusercontent.com/scl/fi/upog0a1mp9oyspggwxtsz/Top-en-soie-3.png?rlkey=cx3ebfsblpko54v4jced65fwo&st=5v464xwu', secondary: 'https://dl.dropboxusercontent.com/scl/fi/rkttysoyw1m7n3hroxaj7/Top-en-soie-2.png?rlkey=skss7qm4dur29yxnd1p6myz3l&st=uwmc9kh9' },
+      /* 07 - Veste en cuir */
+      { primary: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?q=80&w=1400', secondary: 'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?q=80&w=1400' },
+      /* 08 - Short structure */
+      { primary: 'https://dl.dropboxusercontent.com/scl/fi/5ijmmdiop23svgmkil0g1/Short-tailleur-1.png?rlkey=al1v5597goz8z2zb6ptsi52na&st=anykptyn', secondary: 'https://dl.dropboxusercontent.com/scl/fi/oy3sp6gbt0xy9qtdakb1a/Short-tailleur-2.png?rlkey=hc127ghcpafv7mw8yxz8qv5ub&st=izar8elz' },
+      /* 09 - Pantalon droit */
+      { primary: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=1400', secondary: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?q=80&w=1400' },
+      /* 10 - Veste oversize */
+      { primary: 'https://images.unsplash.com/photo-1485230895905-ec40ba36b9bc?q=80&w=1400', secondary: 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?q=80&w=1400' },
+      /* 11 - Veste en laine */
+      { primary: 'https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?q=80&w=1400', secondary: 'https://images.unsplash.com/photo-1464863979621-258859e62245?q=80&w=1400' },
+      /* 12 - Robe midi */
+      { primary: 'https://images.unsplash.com/photo-1566174053879-31528523f8ae?q=80&w=1400', secondary: 'https://images.unsplash.com/photo-1551488831-00ddcb6c6bd3?q=80&w=1400' },
+      /* 13 - Top col montant */
+      { primary: 'https://images.unsplash.com/photo-1434389677669-e08b4cac3105?q=80&w=1400', secondary: 'https://images.unsplash.com/photo-1539109136881-3be0616acf4b?q=80&w=1400' },
+      /* 14 - Top oversize */
+      { primary: 'https://images.unsplash.com/photo-1598033129183-c4f50c736f10?q=80&w=1400', secondary: 'https://images.unsplash.com/photo-1489987707025-afc232f7ea0f?q=80&w=1400' },
+      /* 15 - Robe texturee */
+      { primary: 'https://images.unsplash.com/photo-1496747611176-843222e1e57c?q=80&w=1400', secondary: 'https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?q=80&w=1400' },
+      /* 16 - Pantalon large */
+      { primary: 'https://images.unsplash.com/photo-1509631179647-0177331693ae?q=80&w=1400', secondary: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=1400' },
+      /* 17 - Top texture */
+      { primary: 'https://images.unsplash.com/photo-1551488831-00ddcb6c6bd3?q=80&w=1400', secondary: 'https://images.unsplash.com/photo-1434389677669-e08b4cac3105?q=80&w=1400' },
+      /* 18 - Robe chic */
+      { primary: 'https://images.unsplash.com/photo-1483985988355-763728e1935b?q=80&w=1400', secondary: 'https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?q=80&w=1400' },
+      /* 19 - Top décolleté */
+      { primary: 'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?q=80&w=1400', secondary: 'https://images.unsplash.com/photo-1485968579580-b6d095142e6e?q=80&w=1400' },
+      /* 20 - Sac à bandoulière */
+      { primary: 'https://images.unsplash.com/photo-1591047139829-d91aecb6caea?q=80&w=1400', secondary: 'https://images.unsplash.com/photo-1598033129183-c4f50c736f10?q=80&w=1400' },
+      /* 21 - Accessoire élégant */
+      { primary: 'https://images.unsplash.com/photo-1539109136881-3be0616acf4b?q=80&w=1400', secondary: 'https://images.unsplash.com/photo-1566174053879-31528523f8ae?q=80&w=1400' },
+      /* 22 - Ceinture fine */
+      { primary: 'https://images.unsplash.com/photo-1503341455253-b2e723bb3dbb?q=80&w=1400', secondary: 'https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?q=80&w=1400' },
+      /* 23 - Boucles d'oreilles */
+      { primary: 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?q=80&w=1400', secondary: 'https://images.unsplash.com/photo-1509631179647-0177331693ae?q=80&w=1400' },
+      /* 24 - Top minimaliste */
+      { primary: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?q=80&w=1400', secondary: 'https://images.unsplash.com/photo-1489987707025-afc232f7ea0f?q=80&w=1400' }
+    ];
+
+    // Images 3 et 4 pour la page de détail (détail matière + transformation)
+    const collectionDetailImages = [
+      /* 00 - Robe noire satinée */ { tertiary: '', quaternary: '' },
+      /* 01 - Top ivoire structure */    { tertiary: '', quaternary: '' },
+      /* 02 - Manteau structuré */  { tertiary: 'https://dl.dropboxusercontent.com/scl/fi/xx28t04wue1p6sd6gij8z/Manteau-structur-noir-1.png?rlkey=b0k8qqgskm8dqosjxzktjwe49&st=4i480qua', quaternary: 'https://dl.dropboxusercontent.com/scl/fi/71oo8i1myymuyx9s3c6wq/Manteau-structur-blanc-1.png?rlkey=s8nhhs9cf92wrmiug447qblcl&st=drj4x4zv' },
+      /* 03 - Top fluide */      { tertiary: 'https://dl.dropboxusercontent.com/scl/fi/ipwcwna5ajzesfthb1f7k/Blouse-fluide-rose-3.png?rlkey=x4gx3o6er7ix0kox0jbaz8754&st=fdlxyrta', quaternary: 'https://dl.dropboxusercontent.com/scl/fi/loe7z9q1piz66vgwdfdyd/Blouse-fluide-rose-4.png?rlkey=3dzgmapfk3s3qbjmpryisg2by&st=bpvxf0p8' },
+      /* 04 - Jupe plissée */       { tertiary: 'https://dl.dropboxusercontent.com/scl/fi/927nymrn1oec4px2ik18f/Jupe-pliss-e-3.png?rlkey=t6978j5s38luglotatunsknes&st=dhodwwvu', quaternary: 'https://dl.dropboxusercontent.com/scl/fi/0pvrpugq80avriz7xr6fk/Jupe-pliss-e-4.png?rlkey=0nsah8sk91wzal2wnbkh2zpg0&st=gy8nsdg5' },
+      /* 05 - Top blanc */    { tertiary: 'https://dl.dropboxusercontent.com/scl/fi/3w8ebspb7zdolebnql238/Chemise-blanche-3.png?rlkey=2iz7ix5cxa3bdqraooqb02qbe&st=khwy9e1q', quaternary: 'https://dl.dropboxusercontent.com/scl/fi/1l5uwhdhbsngkzfbd2vad/Chemise-blanche-4.png?rlkey=exs4vhcy952q6m0ps8ux9b94i&st=9xm7xy3j' },
+      /* 06 - Top en soie */        { tertiary: 'https://dl.dropboxusercontent.com/scl/fi/tqtlnale3zjchfm8wryo5/Top-en-soie-1.png?rlkey=uf9u69vtzlkz5qsubipxxm5dx&st=no36umip', quaternary: 'https://dl.dropboxusercontent.com/scl/fi/f50900xkv7z673lxksdoo/Top-en-soie-4.png?rlkey=dzxrqzmzntg9cvmmbascjz291&st=mts6dgn0' },
+      /* 07 - Veste en cuir */      { tertiary: '', quaternary: '' },
+      /* 08 - Short structure */     { tertiary: 'https://dl.dropboxusercontent.com/scl/fi/ag99cu13era96di0r82qv/Short-tailleur-3.png?rlkey=5fw1aly9mqzb75n8mbqwjby36&st=gc002v9z', quaternary: 'https://dl.dropboxusercontent.com/scl/fi/elv8200sf26bwon8qrmup/Short-tailleur-4.png?rlkey=1gqntefzxjln2nf5mfspsl34p&st=h7z9zk69' },
+      /* 09 - Pantalon droit */     { tertiary: '', quaternary: '' },
+      /* 10 - Veste oversize */    { tertiary: '', quaternary: '' },
+      /* 11 - Veste en laine */   { tertiary: '', quaternary: '' },
+      /* 12 - Robe midi */          { tertiary: '', quaternary: '' },
+      /* 13 - Top col montant */   { tertiary: '', quaternary: '' },
+      /* 14 - Top oversize */   { tertiary: '', quaternary: '' },
+      /* 15 - Robe texturee */     { tertiary: '', quaternary: '' },
+      /* 16 - Pantalon large */     { tertiary: '', quaternary: '' },
+      /* 17 - Top texture */    { tertiary: '', quaternary: '' },
+      /* 18 - Robe chic */   { tertiary: '', quaternary: '' },
+      /* 19 - Top décolleté */      { tertiary: '', quaternary: '' },
+      /* 20 - Sac à bandoulière */  { tertiary: '', quaternary: '' },
+      /* 21 - Accessoire élégant */    { tertiary: '', quaternary: '' },
+      /* 22 - Ceinture fine */      { tertiary: '', quaternary: '' },
+      /* 23 - Boucles d'oreilles */ { tertiary: '', quaternary: '' },
+      /* 24 - Top minimaliste */{ tertiary: '', quaternary: '' }
+    ];
+
+    const collectionCards = Array.from(document.querySelectorAll('.collection-card'));
+    const productGrid = document.querySelector('.product-grid');
+    const productSort = document.getElementById('product-sort');
+    const originalCards = productGrid ? Array.from(productGrid.querySelectorAll('.collection-card')) : [];
+
+    function getCardPrice(card) {
+      const priceText = card.querySelector('.product-price')?.textContent || '0';
+      return Number(priceText.replace(/[^0-9]/g, '')) || 0;
+    }
+
+    function getCardName(card) {
+      return card.querySelector('h3')?.textContent?.trim() || '';
+    }
+
+    if (productGrid && productSort) {
+      productSort.addEventListener('change', () => {
+        const currentCards = Array.from(productGrid.querySelectorAll('.collection-card'));
+        let sortedCards = currentCards;
+
+        if (productSort.value === 'default') {
+          sortedCards = originalCards.slice();
+        }
+
+        if (productSort.value === 'price-asc') {
+          sortedCards = currentCards.slice().sort((a, b) => getCardPrice(a) - getCardPrice(b));
+        }
+
+        if (productSort.value === 'price-desc') {
+          sortedCards = currentCards.slice().sort((a, b) => getCardPrice(b) - getCardPrice(a));
+        }
+
+        if (productSort.value === 'name-asc') {
+          sortedCards = currentCards.slice().sort((a, b) => getCardName(a).localeCompare(getCardName(b), 'fr'));
+        }
+
+        sortedCards.forEach((card) => {
+          productGrid.appendChild(card);
+        });
+      });
+    }
+
+    collectionCards.forEach((card, index) => {
+      const pair = collectionImagePairs[Math.min(index, collectionImagePairs.length - 1)];
+      const detail = collectionDetailImages[Math.min(index, collectionDetailImages.length - 1)];
+      card.dataset.primaryImg = pair.primary;
+      card.dataset.secondaryImg = pair.secondary;
+      if (detail.tertiary) card.dataset.tertiaryImg = detail.tertiary;
+      if (detail.quaternary) card.dataset.quaternaryImg = detail.quaternary;
+      const productName = card.querySelector('h3')?.textContent?.trim() || 'Produit femme';
+      let media = card.querySelector('.product-media');
+      const quickBuyMarkup = '<p class="quick-buy-title"><strong>Achat rapide</strong> (Selectionnez votre taille)</p><div class="quick-buy-grid"><button type="button">34</button><button type="button">36</button><button type="button">38</button><button type="button">40</button><button type="button">42</button><button type="button">44</button></div>';
+      const favoriteMarkup = '<button class="product-favorite" type="button" aria-label="Ajouter aux favoris"><svg class="heart-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button>';
+
+      if (!media) {
+        media = document.createElement('div');
+        media.className = 'product-media';
+        media.innerHTML = favoriteMarkup + '<img class="product-image-primary" loading="lazy" alt=""><img class="product-image-secondary" loading="lazy" alt=""><div class="hover-sizes" aria-hidden="true">' + quickBuyMarkup + '</div>';
+        card.insertBefore(media, card.firstElementChild);
+      }
+
+      if (!media.querySelector('.product-favorite')) {
+        media.insertAdjacentHTML('afterbegin', favoriteMarkup);
+      }
+
+      // Ensure both primary and secondary images exist
+      if (!media.querySelector('.product-image-primary')) {
+        const secImg = media.querySelector('.product-image-secondary');
+        const primaryEl = document.createElement('img');
+        primaryEl.className = 'product-image-primary';
+        primaryEl.loading = 'lazy';
+        primaryEl.alt = '';
+        if (secImg) {
+          media.insertBefore(primaryEl, secImg);
+        } else {
+          media.appendChild(primaryEl);
+        }
+      }
+      if (!media.querySelector('.product-image-secondary')) {
+        const secEl = document.createElement('img');
+        secEl.className = 'product-image-secondary';
+        secEl.loading = 'lazy';
+        secEl.alt = '';
+        media.appendChild(secEl);
+      }
+
+      const hoverSizes = media.querySelector('.hover-sizes');
+      if (hoverSizes) {
+        hoverSizes.innerHTML = quickBuyMarkup;
+      }
+
+      const primaryImage = media.querySelector('.product-image-primary');
+      const secondaryImage = media.querySelector('.product-image-secondary');
+
+      if (primaryImage) {
+        primaryImage.src = pair.primary;
+        primaryImage.alt = productName;
+      }
+
+      if (secondaryImage) {
+        secondaryImage.src = pair.secondary;
+        secondaryImage.alt = productName + ' vue 2';
+      }
+
+      if (!card.dataset.hoverSwapBound) {
+        card.dataset.hoverSwapBound = '1';
+        const activateHoverState = () => card.classList.add('is-hovered');
+        const deactivateHoverState = () => card.classList.remove('is-hovered');
+
+        card.addEventListener('mouseenter', activateHoverState);
+        card.addEventListener('mouseleave', deactivateHoverState);
+        card.addEventListener('focusin', activateHoverState);
+        card.addEventListener('focusout', (event) => {
+          if (!card.contains(event.relatedTarget)) {
+            deactivateHoverState();
+          }
+        });
+      }
+    });
+
+  /* ---------- Category nav strip ---------- */
+  const track = document.getElementById('category-nav-track');
+  const nextBtn = document.getElementById('cat-nav-next');
+
+  if (track && nextBtn) {
+    nextBtn.addEventListener('click', () => {
+      track.scrollBy({ left: 280, behavior: 'smooth' });
+    });
+
+    /* hide arrow when fully scrolled */
+    track.addEventListener('scroll', () => {
+      const atEnd = track.scrollLeft + track.clientWidth >= track.scrollWidth - 4;
+      nextBtn.style.opacity = atEnd ? '0' : '1';
+      nextBtn.style.pointerEvents = atEnd ? 'none' : '';
+    });
+  }
+
+  let isAutoSyncingVariantFilters = false;
+
+  /* favorite button handler handled by favorites.js */
+
+  /* active state on click + filter */
+  const collectionPageTitle = document.getElementById('collection-page-title');
+  const collectionParams = new URLSearchParams(window.location.search);
+  const requestedCollection = collectionParams.get('collection');
+  const requestedCategory = collectionParams.get('category');
+  const validCategories = new Set(['all', 'robes', 'tops', 'jupes', 'pantalons', 'vestes', 'accessoires']);
+  const collectionMeta = {
+    all: { heading: 'Nos collections', documentTitle: 'Nos collections | JACES' },
+    ss26: { heading: 'Printemps–Été 2026', documentTitle: 'Printemps–Été 2026 | JACES' },
+    aw26: { heading: 'Automne–Hiver 2026', documentTitle: 'Automne–Hiver 2026 | JACES' }
+  };
+  let currentCategoryFilter = null;
+
+  function normalizeVariantToken(value) {
+    return String(value || '')
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/^-+|-+$/g, '');
+  }
+
+  function getCardVariantData(card) {
+    const name = card.querySelector('h3')?.textContent?.trim() || '';
+    const scope = normalizeVariantToken([name, card.getAttribute('data-category') || '', card.getAttribute('data-collection') || ''].join(' '));
+    const isAccessory = /accessoire|sac|ceinture|boucle|oreille|foulard/.test(scope);
+    let colors = ['noir', 'ivoire', 'beige', 'bordeaux'];
+
+    if (/rose/.test(scope)) colors = ['rose', 'ivoire', 'beige'];
+    else if (/bleu|marine/.test(scope)) colors = ['bleu', 'ivoire', 'beige'];
+    else if (/noir|encre|graphite|cigarette|satin/.test(scope)) colors = ['noir', 'ivoire', 'beige'];
+    else if (/blanc|craie|latte/.test(scope)) colors = ['ivoire', 'blanc', 'beige'];
+    else if (/beige|sable|taupe|camel|creme/.test(scope)) colors = ['beige', 'ivoire', 'camel'];
+    else if (/dor|argent/.test(scope)) colors = ['or', 'argent'];
+    else if (/nike/.test(scope)) colors = ['noir', 'bleu', 'beige'];
+    else if (/chloe/.test(scope)) colors = ['rose', 'ivoire', 'beige'];
+    else if (/jacquemus/.test(scope)) colors = ['beige', 'ivoire', 'camel'];
+    else if (/dior/.test(scope)) colors = ['ivoire', 'noir', 'beige'];
+    else if (/saint-laurent|saint-laurent/.test(scope)) colors = ['noir', 'bleu', 'graphite'];
+
+    return {
+      colors: colors,
+      sizes: isAccessory ? [] : ['34', '36', '38', '40', '42', '44']
+    };
+  }
+
+  function getCheckedTokens(name) {
+    return Array.from(document.querySelectorAll('#collection-filter-bar input[name="' + name + '"]:checked')).map((input) => normalizeVariantToken(input.value));
+  }
+
+  function syncFilterAvailability(visibleCards) {
+    const colorInputs = Array.from(document.querySelectorAll('#collection-filter-bar input[name="couleur"]'));
+    let shouldResync = false;
+
+    ['taille', 'couleur'].forEach((name) => {
+      const inputs = Array.from(document.querySelectorAll('#collection-filter-bar input[name="' + name + '"]'));
+      inputs.forEach((input) => {
+        const token = normalizeVariantToken(input.value);
+        const available = visibleCards.some((card) => {
+          const variantData = getCardVariantData(card);
+          const pool = name === 'taille' ? variantData.sizes : variantData.colors;
+          return pool.some((value) => normalizeVariantToken(value) === token);
+        });
+        input.disabled = !available && !input.checked;
+        input.closest('label')?.classList.toggle('is-unavailable', !available && !input.checked);
+      });
+    });
+
+    if (!isAutoSyncingVariantFilters) {
+      const activeColor = colorInputs.find((input) => input.checked && !input.disabled);
+      if (!activeColor) {
+        const fallbackColor = colorInputs.find((input) => !input.disabled);
+        if (fallbackColor) {
+          isAutoSyncingVariantFilters = true;
+          colorInputs.forEach((input) => { input.checked = input === fallbackColor; });
+          shouldResync = true;
+        }
+      }
+    }
+
+    return shouldResync;
+  }
+
+  // Dynamically get collectionView from current URL params
+  function getCollectionView() {
+    const currentParams = new URLSearchParams(window.location.search);
+    const collection = currentParams.get('collection');
+    return collection === 'ss26' || collection === 'aw26' ? collection : 'all';
+  }
+
+  window.scrollToCollectionResults = function () {
+    const filterBarTarget = document.getElementById('collection-filter-bar');
+    if (!filterBarTarget) return;
+    if (window.scrollY > 120) return;
+
+    requestAnimationFrame(() => {
+      const header = document.querySelector('.header');
+      const headerBottom = header ? header.getBoundingClientRect().bottom : 120;
+      const filterTop = filterBarTarget.getBoundingClientRect().top + window.scrollY;
+      const offset = filterTop - headerBottom + 10;
+      const targetY = Math.max(0, offset);
+      if (Math.abs(window.scrollY - targetY) <= 80) return;
+      window.scrollTo({ top: targetY, behavior: 'smooth' });
+    });
+  };
+
+  function syncCollectionHeadingFromURL() {
+    if (!collectionPageTitle) return;
+    const view = getCollectionView();
+    collectionPageTitle.textContent = collectionMeta[view].heading;
+    document.title = collectionMeta[view].documentTitle;
+  }
+
+  function applyCollectionView() {
+    const collectionView = getCollectionView();
+    const productGridEl = document.getElementById('product-grid');
+    const allCards = Array.from(document.querySelectorAll('#product-grid .collection-card'));
+    const selectedSizes = getCheckedTokens('taille');
+    const selectedColors = getCheckedTokens('couleur');
+    let visible = 0;
+    const visibleCards = [];
+
+    if (productGridEl) {
+      const hasCategoryFilter = !!currentCategoryFilter && currentCategoryFilter !== 'all';
+      productGridEl.classList.toggle('is-category-filtered', hasCategoryFilter);
+    }
+
+    allCards.forEach((card) => {
+      const categoryTokens = (card.getAttribute('data-category') || '').split(' ').filter(Boolean);
+      const primaryCategory = categoryTokens.find((token) => token !== 'all') || '';
+      const cardCollection = card.getAttribute('data-collection') || 'all';
+      const matchesCollection = collectionView === 'all' || cardCollection === collectionView;
+      const matchesCategory = !currentCategoryFilter || currentCategoryFilter === 'all' || primaryCategory === currentCategoryFilter;
+      const variantData = getCardVariantData(card);
+      const matchesSize = !selectedSizes.length || variantData.sizes.some((size) => selectedSizes.includes(normalizeVariantToken(size)));
+      const matchesColor = !selectedColors.length || variantData.colors.some((color) => selectedColors.includes(normalizeVariantToken(color)));
+      const show = matchesCollection && matchesCategory && matchesSize && matchesColor;
+
+      card.classList.toggle('hidden', !show);
+      if (show) {
+        visible += 1;
+        visibleCards.push(card);
+      }
+    });
+
+    if (syncFilterAvailability(visibleCards)) {
+      isAutoSyncingVariantFilters = false;
+      applyCollectionView();
+      return;
+    }
+
+    isAutoSyncingVariantFilters = false;
+
+    const countNode = document.querySelector('.filter-count');
+    if (countNode) {
+      countNode.textContent = visible + (visible > 1 ? ' produits' : ' produit');
+    }
+  }
+
+  function setCollectionCategory(category, shouldScroll, options) {
+    if (!category || !validCategories.has(category)) return;
+
+    const preserveSeason = !!(options && options.preserveSeason);
+
+    const currentParams = new URLSearchParams(window.location.search);
+    const currentSeason = currentParams.get('collection');
+    const targetParams = new URLSearchParams();
+
+    if (preserveSeason && (currentSeason === 'ss26' || currentSeason === 'aw26')) {
+      targetParams.set('collection', currentSeason);
+    }
+
+    targetParams.set('category', category);
+
+    const targetSearch = '?' + targetParams.toString();
+
+    if (window.location.search !== targetSearch) {
+      history.replaceState({}, '', 'collection.html' + targetSearch);
+      syncCollectionHeadingFromURL();
+    }
+
+    currentCategoryFilter = category;
+
+    const productGridEl = document.getElementById('product-grid');
+    if (productGridEl) {
+      productGridEl.classList.toggle('is-category-filtered', currentCategoryFilter !== 'all');
+    }
+
+    document.querySelectorAll('.category-nav-strip .cat-nav-item').forEach((item) => {
+      item.classList.toggle('active', (item.getAttribute('data-category') || 'all') === category);
+    });
+
+    applyCollectionView();
+
+    if (shouldScroll) {
+      window.scrollToCollectionResults();
+    }
+  }
+
+  syncCollectionHeadingFromURL();
+  applyCollectionView();
+
+  document.querySelectorAll('a[href^="collection.html?category="]').forEach((link) => {
+    link.addEventListener('click', (event) => {
+      if (!window.location.pathname.endsWith('collection.html')) return;
+
+      event.preventDefault();
+      const category = new URL(link.getAttribute('href'), window.location.href).searchParams.get('category') || 'all';
+      const shouldScroll = window.scrollY <= 120;
+      setCollectionCategory(category, shouldScroll, { preserveSeason: false });
+    });
+  });
+
+
+  function activateCategoryFromURL() {
+    if (!requestedCategory || !validCategories.has(requestedCategory)) return;
+    setCollectionCategory(requestedCategory, window.scrollY <= 120, { preserveSeason: true });
+  }
+
+  if (requestedCategory && validCategories.has(requestedCategory)) {
+    activateCategoryFromURL();
+  } else {
+    currentCategoryFilter = 'all';
+    document.querySelectorAll('.category-nav-strip .cat-nav-item').forEach((item) => {
+      item.classList.toggle('active', (item.getAttribute('data-category') || 'all') === 'all');
+    });
+    applyCollectionView();
+  }
+
+  document.querySelectorAll('.category-nav-strip .cat-nav-item').forEach(item => {
+    item.addEventListener('click', (e) => {
+      e.preventDefault();
+
+      document.querySelectorAll('#collection-filter-bar input').forEach((input) => {
+        input.checked = false;
+      });
+
+      const category = (item.getAttribute('data-category') || '').trim();
+      const shouldScroll = window.scrollY <= 120;
+      setCollectionCategory(category, shouldScroll, { preserveSeason: true });
+    });
+  });
+  </script>
+
+  <div class="fav-overlay" id="fav-overlay"></div>
+  <div class="fav-panel" id="fav-panel" role="dialog" aria-label="Mes favoris">
+    <div class="fav-panel-header">
+      <h2 id="fav-panel-title">Mes Favoris (0)</h2>
+      <button class="fav-panel-close-btn" id="fav-panel-close" aria-label="Fermer" type="button">×</button>
+    </div>
+    <div class="fav-panel-list" id="fav-panel-list"></div>
+  </div>
+  <script src="catalog.js"></script>
+  <script src="cart.js"></script>
+  <script src="favorites.js"></script>
+  <script src="auth.js"></script>
+  <script>
+    function scrollToCollectionResults() {
+      const filterBarTarget = document.getElementById('collection-filter-bar');
+      if (!filterBarTarget) return;
+      if (window.scrollY > 120) return;
+
+      requestAnimationFrame(function () {
+        var header = document.querySelector('.header');
+        var headerBottom = header ? header.getBoundingClientRect().bottom : 120;
+        var filterTop = filterBarTarget.getBoundingClientRect().top + window.scrollY;
+        var offset = filterTop - headerBottom + 10;
+        var targetY = Math.max(0, offset);
+        if (Math.abs(window.scrollY - targetY) <= 80) return;
+        window.scrollTo({ top: targetY, behavior: 'smooth' });
+      });
+    }
+    window.scrollToCollectionResults = scrollToCollectionResults;
+
+    (function () {
+      function navigateToProduct(card) {
+        var name = (card.querySelector('h3') || {}).textContent || '';
+        name = name.trim();
+        var price = (card.querySelector('.product-price') || {}).textContent || '';
+        price = price.trim();
+        var selectedSize = (document.querySelector('#collection-filter-bar input[name="taille"]:checked') || {}).value || '';
+        var selectedColor = (document.querySelector('#collection-filter-bar input[name="couleur"]:checked') || {}).value || '';
+        var imgEl = card.querySelector('.product-image-primary');
+        var img = imgEl ? imgEl.getAttribute('src') || '' : '';
+        var secEl = card.querySelector('.product-image-secondary');
+        var secondaryImg = secEl ? secEl.getAttribute('src') || '' : '';
+        if (!name) return;
+        var url;
+        try {
+          url = (window.JacesCatalog && typeof window.JacesCatalog.getProductUrl === 'function')
+            ? window.JacesCatalog.getProductUrl({ name: name, price: price, img: img, secondaryImg: secondaryImg, selectedSize: selectedSize, selectedColor: selectedColor }, 'collection')
+            : null;
+        } catch (err) { url = null; }
+        if (!url) {
+          url = 'detail-produit.html?id=' + encodeURIComponent(name.toLowerCase().replace(/\s+/g, '-')) + '&name=' + encodeURIComponent(name) + '&price=' + encodeURIComponent(price) + '&img=' + encodeURIComponent(img) + '&selectedSize=' + encodeURIComponent(selectedSize) + '&selectedColor=' + encodeURIComponent(selectedColor) + '&origin=collection&originLabel=Collection&originUrl=collection.html&originNav=collection';
+        }
+        window.location.href = url;
+      }
+      document.querySelectorAll('.product-card').forEach(function (card) {
+        card.style.cursor = 'pointer';
+        card.addEventListener('click', function (e) {
+          if (e.target.closest('.product-favorite') || e.target.closest('.quick-buy-grid') || e.target.closest('.hover-sizes')) return;
+          navigateToProduct(card);
+        });
+      });
+    })();
+  </script>
+</body>
+</html>

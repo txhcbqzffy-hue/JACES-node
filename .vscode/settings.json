@@ -1,0 +1,18 @@
+{
+    "chat.tools.terminal.autoApprove": {
+        "/^cd '/Users/benjamin/Desktop/App Jaces' && perl -0pi -e 's@\\(<h3>Top minimaliste</h3>\\\\s\\*<p class=\"product-price\">68€</p>\\\\s\\*</div>\\\\s\\*</article>\\)@__TMP__\\$1@s' collection\\.html && perl -0pi -e 's@<article class=\"product-card collection-card\" data-category=\"accessoires all\" data-collection=\"ss26\">\\\\s\\*<div class=\"product-info\">\\\\s\\*<h3>Top minimaliste</h3>\\\\s\\*<p class=\"product-price\">68€</p>\\\\s\\*</div>\\\\s\\*</article>@<article class=\"product-card collection-card\" data-category=\"tops all\" data-collection=\"ss26\">\\\\n          <div class=\"product-info\">\\\\n            <h3>Top minimaliste</h3>\\\\n            <p class=\"product-price\">68€</p>\\\\n          </div>\\\\n        </article>@s' collection\\.html && perl -0pi -e 's@__TMP__@@g' collection\\.html && nl -ba collection\\.html \\| sed -n '434,440p'$/": {
+            "approve": true,
+            "matchCommandLine": true
+        },
+        "/^cd '/Users/benjamin/Desktop/App Jaces' && perl -0777 -i '' -pe \"s@applyCollectionView\\\\\\(\\\\\\);\\\\n\\\\s\\*window\\\\\\.scrollBy\\\\\\(\\\\\\{ top: 140, behavior: 'smooth' \\\\\\}\\\\\\);@applyCollectionView\\(\\);\\\\n      const filterBarTarget = document\\.getElementById\\('collection-filter-bar'\\);\\\\n      if \\(filterBarTarget\\) \\{\\\\n        requestAnimationFrame\\(\\(\\) => \\{\\\\n          const header = document\\.querySelector\\('\\.header'\\);\\\\n          const headerBottom = header \\? header\\.getBoundingClientRect\\(\\)\\.bottom : 120;\\\\n          const filterTop = filterBarTarget\\.getBoundingClientRect\\(\\)\\.top \\+ window\\.scrollY;\\\\n          const offset = filterTop - headerBottom \\+ 16;\\\\n          window\\.scrollTo\\(\\{ top: Math\\.max\\(0, offset\\), behavior: 'smooth' \\}\\);\\\\n        \\}\\);\\\\n      \\}@s; s@applyStrictCategory\\\\\\(category\\\\\\);\\\\n\\\\s\\*window\\\\\\.scrollBy\\\\\\(\\\\\\{ top: 140, behavior: 'smooth' \\\\\\}\\\\\\);@applyStrictCategory\\(category\\);\\\\n          const filterBarTarget = document\\.getElementById\\('collection-filter-bar'\\);\\\\n          if \\(filterBarTarget\\) \\{\\\\n            requestAnimationFrame\\(\\(\\) => \\{\\\\n              const header = document\\.querySelector\\('\\.header'\\);\\\\n              const headerBottom = header \\? header\\.getBoundingClientRect\\(\\)\\.bottom : 120;\\\\n              const filterTop = filterBarTarget\\.getBoundingClientRect\\(\\)\\.top \\+ window\\.scrollY;\\\\n              const offset = filterTop - headerBottom \\+ 16;\\\\n              window\\.scrollTo\\(\\{ top: Math\\.max\\(0, offset\\), behavior: 'smooth' \\}\\);\\\\n            \\}\\);\\\\n          \\}@s\" collection\\.html$/": {
+            "approve": true,
+            "matchCommandLine": true
+        },
+        "/^perl -0pi -e \"s/const visible = effectiveCategory === 'all'\\\\n\\\\s\\*\\\\\\|\\\\\\| primaryCategory === effectiveCategory;/const visible = currentCategoryFilter === 'all'\\\\n          \\|\\| primaryCategory === currentCategoryFilter;/g\" nouveautes\\.html$/": {
+            "approve": true,
+            "matchCommandLine": true
+        },
+        "set": true,
+        "mv": true
+    }
+}

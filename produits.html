@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Produits | JACES</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="products-page">
+
+  <div class="topbar">
+    Livraison offerte dès 79 € | Retours offerts
+  </div>
+
+  <header class="header">
+    <div class="header-top">
+      <div class="header-left">
+        <button class="search-trigger" id="search-trigger" type="button" aria-expanded="false" aria-controls="header-search-panel">Recherche</button>
+        <form class="search-panel" id="header-search-panel" role="search" action="#" method="get">
+          <input type="search" name="q" placeholder="Rechercher un produit..." aria-label="Rechercher">
+          <button class="search-submit" type="submit">↗</button>
+          <button class="search-panel-close" type="button" id="search-panel-close" aria-label="Fermer">×</button>
+        </form>
+      </div>
+
+      <a href="index.html" class="logo">JACES</a>
+
+      <div class="header-right">
+        <div class="language-picker" id="language-picker">
+          <button class="language-button" id="language-button" type="button" aria-label="Choisir la langue" aria-expanded="false">
+            <img src="https://flagcdn.com/w40/fr.png" class="icon-flag" id="current-flag" alt="Français">
+            <span class="language-caret" aria-hidden="true"></span>
+          </button>
+          <div class="language-menu" id="language-menu" role="menu" aria-label="Langues">
+            <button type="button" class="language-option" data-lang="fr" data-flag="https://flagcdn.com/w40/fr.png" role="menuitem">
+              <img src="https://flagcdn.com/w40/fr.png" alt="Français"><span>Français</span>
+            </button>
+            <button type="button" class="language-option" data-lang="en" data-flag="https://flagcdn.com/w40/gb.png" role="menuitem">
+              <img src="https://flagcdn.com/w40/gb.png" alt="English"><span>English</span>
+            </button>
+            <button type="button" class="language-option" data-lang="es" data-flag="https://flagcdn.com/w40/es.png" role="menuitem">
+              <img src="https://flagcdn.com/w40/es.png" alt="Español"><span>Español</span>
+            </button>
+            <button type="button" class="language-option" data-lang="it" data-flag="https://flagcdn.com/w40/it.png" role="menuitem">
+              <img src="https://flagcdn.com/w40/it.png" alt="Italiano"><span>Italiano</span>
+            </button>
+          </div>
+        </div>
+        <button class="icon-button" id="fav-trigger" aria-label="Favoris" type="button" style="position:relative">
+          <svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+          <span class="fav-count" id="fav-count" style="display:none">0</span>
+        </button>
+        <button class="icon-button" aria-label="Compte" type="button">
+          <svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        </button>
+        <button class="icon-button cart" aria-label="Panier" type="button">
+          <svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M9 2L6.12 9H1l2.5 7.5v5h15v-5l2.5-7.5H17.88L15 2"/></svg>
+          <span class="cart-count">0</span>
+        </button>
+      </div>
+    </div>
+
+    <nav class="nav">
+      <div class="nav-item">
+        <a href="nouveautes.html">Nouveautés</a>
+        <div class="submenu">
+          <div>
+            <p class="submenu-title">NOUVEAUTÉS</p>
+            <p class="submenu-copy">Nouvelles pièces,<br>exclusivité<br>et robe signature.</p>
+            <a href="nouveautes.html">Drop été</a>
+            <a href="nouveautes.html">Édition limitée</a>
+            <a href="nouveautes.html">Pièces signature</a>
+          <a href="nouveautes.html?category=all" class="underline-link">Voir tout les nouveautés</a>
+          </div>
+          <div class="submenu-categories">
+            <p class="submenu-title">FEMME</p>
+            <a href="collection.html?category=robes">Robes</a>
+            <a href="collection.html?category=tops">Tops</a>
+            <a href="collection.html?category=jupes">Jupes</a>
+            <a href="collection.html?category=pantalons">Pantalons</a>
+            <a href="collection.html?category=vestes">Vestes</a>
+            <a href="collection.html?category=accessoires">Accessoires</a>
+          </div>
+        </div>
+      </div>
+      <div class="nav-item">
+        <a href="collection.html">Collections</a>
+        <div class="submenu">
+          <div>
+            <a href="collection.html?collection=ss26">Printemps–Été 2026</a>
+            <a href="collection.html?collection=aw26">Automne–Hiver 2026</a>
+            <a href="collection.html?category=all" class="underline-link">Toutes les collections</a>
+          </div>
+          <div class="submenu-categories">
+            <a href="collection.html?category=robes">Robes</a>
+            <a href="collection.html?category=tops">Tops</a>
+            <a href="collection.html?category=jupes">Jupes</a>
+            <a href="collection.html?category=pantalons">Pantalons</a>
+            <a href="collection.html?category=vestes">Vestes</a>
+            <a href="collection.html?category=accessoires">Accessoires</a>
+          </div>
+        </div>
+      </div>
+      <div class="nav-item">
+        <a href="collaborations.html">Collaborations</a>
+        <div class="submenu">
+            <div>
+              <a href="collaborations.html?collabView=exclusives&category=all">Créations exclusives</a>
+              <a href="collaborations.html?collabView=popup&category=all">Pop-up stores</a>
+              <a href="collaborations.html?collabView=events&category=all">Événements</a>
+              <a href="collaborations.html?collabView=all&category=all" class="underline-link">Toutes les collaborations</a>
+            </div>
+            <div class="submenu-categories">
+            <a href="collaborations.html?category=nike">JACES × Nike</a>
+            <a href="collaborations.html?category=chloe">JACES × Chloé</a>
+            <a href="collaborations.html?category=jacquemus">JACES × Jacquemus</a>
+            <a href="collaborations.html?category=dior">JACES × Dior</a>
+            <a href="collaborations.html?category=saint-laurent">JACES × Saint Laurent</a>
+          </div>
+        </div>
+      </div>
+      <div class="nav-item">
+        <a href="accessoires.html">Accessoires</a>
+        <div class="submenu">
+          <div>
+            <p class="submenu-title">COLLECTION</p>
+            <a href="collection.html?category=all" class="underline-link">Toutes les collections</a>
+          </div>
+          <div class="submenu-categories">
+            <a href="accessoires.html?category=sacs">Sacs</a>
+            <a href="accessoires.html?category=bijoux">Bijoux</a>
+            <a href="accessoires.html?category=ceintures">Ceintures</a>
+            <a href="accessoires.html?category=foulards">Foulards</a>
+          </div>
+        </div>
+      </div>
+      <div class="nav-item">
+        <a href="defile.html"><em>Défilé</em></a>
+        <div class="submenu">
+          <div>
+            <p class="submenu-title">DÉFILÉ</p>
+            <a href="#">Dernier show</a>
+            <a href="#">Collection prêt-à-porter</a>
+            <a href="#" class="underline-link">Voir le défilé</a>
+          </div>
+          <div>
+            <p class="submenu-title">Coulisses</p>
+            <a href="#">Design studio</a>
+            <a href="#">Inspiration</a>
+          </div>
+        </div>
+      </div>
+      <div class="nav-item">
+        <a href="univers.html"><em>Univers</em></a>
+        <div class="submenu">
+          <div>
+            <p class="submenu-title">MAISON</p>
+            <a href="#">Notre histoire</a>
+            <a href="#">Savoir-faire</a>
+            <a href="#" class="underline-link">Services VIP</a>
+          </div>
+          <div>
+            <p class="submenu-title">DÉCOUVERTE</p>
+            <a href="#">Ateliers</a>
+            <a href="#">Boutiques</a>
+          </div>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+
+  <div class="catalog-pagination" aria-label="Pagination">
+    <a href="#" class="page-num is-active" aria-current="page">1</a>
+    <a href="#" class="page-num">2</a>
+    <a href="#" class="page-next">Suivant <span aria-hidden="true">&#8594;</span></a>
+  </div>
+
+  <div class="back-to-top-bar">
+    <a href="#" class="back-to-top-link" aria-label="Retour au haut de la page">
+      <svg width="22" height="14" viewBox="0 0 22 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 13 11 3 21 13"/></svg>
+      <span>RETOUR AU HAUT DE LA PAGE</span>
+    </a>
+  </div>
+
+  <div class="fav-overlay" id="fav-overlay"></div>
+  <div class="fav-panel" id="fav-panel" role="dialog" aria-label="Mes favoris">
+    <div class="fav-panel-header">
+      <h2 id="fav-panel-title">Mes Favoris (0)</h2>
+      <button class="fav-panel-close-btn" id="fav-panel-close" aria-label="Fermer" type="button">×</button>
+    </div>
+    <div class="fav-panel-list" id="fav-panel-list"></div>
+  </div>
+    <section class="hero">
+      <div class="hero-content">
+        <p class="hero-kicker">Catalogue</p>
+        <h1>Une sélection de 30 pièces essentielles</h1>
+        <p class="hero-text">Parcourez notre collection complète de silhouettes contemporaines, pensées pour un luxe discret et intemporel.</p>
+        <a href="collection.html" class="btn">Découvrir la collection</a>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-intro">
+        <span class="section-label">Catalogue produit</span>
+        <h2>30 pièces à découvrir</h2>
+        <p>Un assortiment de robes, pantalons, vestes et accessoires, présenté avec un style épuré et des matières nobles.</p>
+      </div>
+
+      <div class="filter-bar">
+        <div class="filter-pill">Catégorie : Robes</div>
+        <div class="filter-pill">Couleur : Noir</div>
+        <div class="filter-pill">Collection : Printemps</div>
+        <div class="filter-pill">Trier par : Nouveautés</div>
+      </div>
+
+      <div class="product-grid">
+        <article class="product-card">
+          <img src="https://images.unsplash.com/photo-1503341455253-b2e723bb3dbb?q=80&w=900" alt="Robe noire en satin" loading="lazy">
+          <div class="product-info">
+            <h3>Robe noire satinée</h3>
+            <p>195€</p>
+          </div>
+        </article>
+        <article class="product-card">
+          <img src="https://images.unsplash.com/photo-1512436991641-6745cdb1723f?q=80&w=900" alt="Top ivoire structuré" loading="lazy">
+          <div class="product-info">
+            <h3>Top ivoire structure</h3>
+            <p>320€</p>
+          </div>
+        </article>
+        <article class="product-card">
+          <img src="https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?q=80&w=900" alt="Veste structurée" loading="lazy">
+          <div class="product-info">
+            <h3>Veste structurée</h3>
+            <p>410€</p>
+          </div>
+        </article>
+        <article class="product-card">
+          <img src="https://images.unsplash.com/photo-1495121605193-b116b5b9c2b9?q=80&w=900" alt="Top fluide" loading="lazy">
+          <div class="product-info">
+            <h3>Top fluide</h3>
+            <p>125€</p>
+          </div>
+        </article>
+        <article class="product-card lookbook-card">
+          <img src="https://images.unsplash.com/photo-1464863979621-258859e62245?q=80&w=1200" alt="Tenue du moment" loading="lazy">
+          <div class="lookbook-copy">
+            <p>Tenue du moment</p>
+          </div>
+        </article>
+        <article class="product-card">
+          <img src="https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?q=80&w=900" alt="Jupe plissee" loading="lazy">
+          <div class="product-info">
+            <h3>Jupe plissée</h3>
+            <p>155€</p>
+          </div>
+        </article>
+        <article class="product-card">
+          <img src="https://images.unsplash.com/photo-1495121605193-b116b5b9c2b9?auto=format&fit=crop&w=900&q=80" alt="Top blanc" loading="lazy">
+          <div class="product-info">
+            <h3>Top blanc</h3>
+            <p>98€</p>
+          </div>
+        </article>
+        <article class="product-card">
+          <img src="https://images.unsplash.com/photo-1463100099107-aa0980c362e6?q=80&w=900" alt="Top en soie" loading="lazy">
+          <div class="product-info">
+            <h3>Top en soie</h3>
+            <p>135€</p>
+          </div>
+        </article>
+        <article class="product-card">
+          <img src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?q=80&w=900" alt="Veste cuir" loading="lazy">
+          <div class="product-info">
+            <h3>Veste en cuir</h3>
+            <p>265€</p>
+          </div>
+        </article>
+        <article class="product-card">
+          <img src="https://images.unsplash.com/photo-1503341455253-b2e723bb3dbb?auto=format&fit=crop&w=900&q=80" alt="Short structure" loading="lazy">
+          <div class="product-info">
+            <h3>Short structure</h3>
+            <p>140€</p>
+          </div>
+        </article>
+        <article class="product-card">
+          <img src="https://images.unsplash.com/photo-1512436991641-6745cdb1723f?auto=format&fit=crop&w=900&q=80" alt="Pantalon droit" loading="lazy">
+          <div class="product-info">
+            <h3>Pantalon droit</h3>
+            <p>130€</p>
+          </div>
+        </article>
+        <article class="product-card">
+          <img src="https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=900&q=80" alt="Veste oversize" loading="lazy">
+          <div class="product-info">
+            <h3>Veste oversize</h3>
+            <p>245€</p>
+          </div>
+        </article>
+        <article class="product-card">
+          <img src="https://images.unsplash.com/photo-1495121605193-b116b5b9c2b9?auto=format&fit=crop&w=900&q=80" alt="Veste en laine" loading="lazy">
+          <div class="product-info">
+            <h3>Veste en laine</h3>
+            <p>420€</p>
+          </div>
+        </article>
+        <article class="product-card">
+          <img src="https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?auto=format&fit=crop&w=900&q=80" alt="Robe midi" loading="lazy">
+          <div class="product-info">
+            <h3>Robe midi</h3>
+            <p>175€</p>
+          </div>
+        </article>
+        <article class="product-card">
+          <img src="https://images.unsplash.com/photo-1463100099107-aa0980c362e6?auto=format&fit=crop&w=900&q=80" alt="Top col montant" loading="lazy">
+          <div class="product-info">
+            <h3>Top col montant</h3>
+            <p>115€</p>
+          </div>
+        </article>
+        <article class="product-card">
+          <img src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=900&q=80" alt="Top oversize" loading="lazy">
+          <div class="product-info">
+            <h3>Top oversize</h3>
+            <p>118€</p>
+          </div>
+        </article>
+        <article class="product-card">
+          <img src="https://images.unsplash.com/photo-1503341455253-b2e723bb3dbb?auto=format&fit=crop&w=900&q=80" alt="Robe texturee" loading="lazy">
+          <div class="product-info">
+            <h3>Robe texturee</h3>
+            <p>160€</p>
+          </div>
+        </article>
+        <article class="product-card">
+          <img src="https://images.unsplash.com/photo-1512436991641-6745cdb1723f?auto=format&fit=crop&w=900&q=80" alt="Pantalon large" loading="lazy">
+          <div class="product-info">
+            <h3>Pantalon large</h3>
+            <p>125€</p>
+          </div>
+        </article>
+        <article class="product-card">
+          <img src="https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=900&q=80" alt="Top texture" loading="lazy">
+          <div class="product-info">
+            <h3>Top texture</h3>
+            <p>105€</p>
+          </div>
+        </article>
+        <article class="product-card">
+          <img src="https://images.unsplash.com/photo-1495121605193-b116b5b9c2b9?auto=format&fit=crop&w=900&q=80" alt="Robe chic" loading="lazy">
+          <div class="product-info">
+            <h3>Robe chic</h3>
+            <p>215€</p>
+          </div>
+        </article>
+        <article class="product-card">
+          <img src="https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?auto=format&fit=crop&w=900&q=80" alt="Top décolleté" loading="lazy">
+          <div class="product-info">
+            <h3>Top décolleté</h3>
+            <p>89€</p>
+          </div>
+        </article>
+        <article class="product-card">
+          <img src="https://images.unsplash.com/photo-1463100099107-aa0980c362e6?auto=format&fit=crop&w=900&q=80" alt="Sac à bandoulière" loading="lazy">
+          <div class="product-info">
+            <h3>Sac à bandoulière</h3>
+            <p>138€</p>
+          </div>
+        </article>
+        <article class="product-card">
+          <img src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=900&q=80" alt="Accessoire élégant" loading="lazy">
+          <div class="product-info">
+            <h3>Accessoire élégant</h3>
+            <p>150€</p>
+          </div>
+        </article>
+        <article class="product-card">
+          <img src="https://images.unsplash.com/photo-1503341455253-b2e723bb3dbb?auto=format&fit=crop&w=900&q=80" alt="Ceinture fine" loading="lazy">
+          <div class="product-info">
+            <h3>Ceinture fine</h3>
+            <p>65€</p>
+          </div>
+        </article>
+        <article class="product-card">
+          <img src="https://images.unsplash.com/photo-1512436991641-6745cdb1723f?auto=format&fit=crop&w=900&q=80" alt="Boucles d’oreilles" loading="lazy">
+          <div class="product-info">
+            <h3>Boucles d’oreilles</h3>
+            <p>75€</p>
+          </div>
+        </article>
+        <article class="product-card">
+          <img src="https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=900&q=80" alt="Top minimaliste" loading="lazy">
+          <div class="product-info">
+            <h3>Top minimaliste</h3>
+            <p>68€</p>
+          </div>
+        </article>
+        <article class="product-card">
+          <img src="https://images.unsplash.com/photo-1495121605193-b116b5b9c2b9?auto=format&fit=crop&w=900&q=80" alt="Parka légère" loading="lazy">
+          <div class="product-info">
+            <h3>Parka légère</h3>
+            <p>240€</p>
+          </div>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-main">
+      <div class="footer-cols">
+        <div class="footer-col"><p class="footer-col-title">Service client</p><a href="#">Suivre ma commande</a><a href="#">Faire un retour</a><a href="#">Livraison et Retour</a><a href="#">FAQ</a><a href="#">Contact</a></div>
+        <div class="footer-col"><p class="footer-col-title">JACES</p><a href="#">Notre concept</a><a href="#">Parrainez</a><a href="#">Nos boutiques</a><a href="#">Nous rejoindre</a></div>
+        <div class="footer-col"><p class="footer-col-title">Mentions légales</p><a href="#">CGV</a><a href="#">Politique de confidentialité</a><a href="#">Plan de site</a><a href="#">Retours Gratuits</a><a href="#">Conditions de l'offre en cours</a></div>
+      </div>
+      <div class="footer-newsletter">
+        <h3>Restez connecté avec JACES</h3>
+        <p>Recevez en avant-première nos nouvelles collections et invitations à nos évènements.</p>
+        <form class="footer-newsletter-form" action="#" method="post">
+          <label for="footer-nl-email-produits" class="visually-hidden">Votre e-mail</label>
+          <input id="footer-nl-email-produits" name="email" type="email" placeholder="Votre e-mail" required>
+          <button type="submit" aria-label="S'inscrire">→</button>
+        </form>
+      </div>
+    </div>
+
+    <p class="footer-note">Copyright © 2026 Chloé. Tous droits réservés.</p>
+  </footer>
+
+  <script src="catalog.js"></script>
+  <script type="module" src="products-page.js"></script>
+  <script src="cart.js"></script>
+  <script src="favorites.js"></script>
+  <script src="auth.js"></script>
+  <script src="admin-products.js"></script>
+  <script>
+    (function () {
+      function updateHeaderState() {
+        document.body.classList.toggle('header-scrolled', window.scrollY > 8);
+      }
+
+      updateHeaderState();
+      window.addEventListener('scroll', updateHeaderState, { passive: true });
+
+      const searchTrigger = document.getElementById('search-trigger');
+      const searchPanel = document.getElementById('header-search-panel');
+      const searchClose = document.getElementById('search-panel-close');
+
+      if (searchTrigger && searchPanel) {
+        const searchInput = searchPanel.querySelector('input[type="search"]');
+        const closeSearch = () => {
+          searchPanel.classList.remove('open');
+          searchTrigger.setAttribute('aria-expanded', 'false');
+        };
+
+        searchTrigger.addEventListener('click', (event) => {
+          event.stopPropagation();
+          const willOpen = !searchPanel.classList.contains('open');
+          searchPanel.classList.toggle('open', willOpen);
+          searchTrigger.setAttribute('aria-expanded', String(willOpen));
+          if (willOpen && searchInput) {
+            searchInput.focus();
+          }
+        });
+
+        if (searchClose) {
+          searchClose.addEventListener('click', () => {
+            closeSearch();
+          });
+        }
+
+        searchPanel.addEventListener('click', (event) => {
+          event.stopPropagation();
+        });
+
+        document.addEventListener('keydown', (event) => {
+          if (event.key === 'Escape') {
+            closeSearch();
+          }
+        });
+
+        document.addEventListener('click', (event) => {
+          if (!searchPanel.contains(event.target) && !searchTrigger.contains(event.target)) {
+            closeSearch();
+          }
+        });
+      }
+
+      const languagePicker = document.getElementById('language-picker');
+      const languageButton = document.getElementById('language-button');
+      const languageMenu = document.getElementById('language-menu');
+      const currentFlag = document.getElementById('current-flag');
+
+      if (languagePicker && languageButton && languageMenu && currentFlag) {
+        const STORAGE_KEY = 'jaces-selected-language';
+        const languageOptions = Array.from(languagePicker.querySelectorAll('.language-option'));
+
+        function applyLanguageOption(option) {
+          const flag = option.dataset.flag;
+          const lang = option.dataset.lang;
+          const label = option.querySelector('span')?.textContent || 'Langue';
+
+          if (flag) {
+            currentFlag.src = flag;
+            currentFlag.alt = label;
+          }
+
+          if (lang) {
+            document.documentElement.lang = lang;
+          }
+
+          try {
+            if (lang) {
+              localStorage.setItem(STORAGE_KEY, lang);
+            }
+          } catch (error) {
+            // Ignore storage errors (private mode, blocked storage, etc.)
+          }
+        }
+
+        try {
+          const savedLang = localStorage.getItem(STORAGE_KEY);
+          if (savedLang) {
+            const savedOption = languageOptions.find((option) => option.dataset.lang === savedLang);
+            if (savedOption) {
+              applyLanguageOption(savedOption);
+            }
+          }
+        } catch (error) {
+          // Ignore storage read errors
+        }
+
+        languageButton.addEventListener('click', () => {
+          const isOpen = languagePicker.classList.toggle('open');
+          languageButton.setAttribute('aria-expanded', String(isOpen));
+        });
+
+        languageOptions.forEach((option) => {
+          option.addEventListener('click', () => {
+            applyLanguageOption(option);
+
+            languagePicker.classList.remove('open');
+            languageButton.setAttribute('aria-expanded', 'false');
+          });
+        });
+
+        document.addEventListener('click', (event) => {
+          if (!languagePicker.contains(event.target)) {
+            languagePicker.classList.remove('open');
+            languageButton.setAttribute('aria-expanded', 'false');
+          }
+        });
+      }
+
+      const productCards = Array.from(document.querySelectorAll('.product-card:not(.lookbook-card)'));
+      const primarySources = productCards
+        .map((card) => card.querySelector('img')?.getAttribute('src') || '')
+        .filter(Boolean);
+
+      productCards.forEach((card) => {
+        const index = productCards.indexOf(card);
+        const image = card.querySelector('.product-media img:not(.product-image-secondary)') || card.querySelector('img');
+        if (!image) {
+          return;
+        }
+
+        let media = card.querySelector('.product-media');
+        if (!media) {
+          media = document.createElement('div');
+          media.className = 'product-media';
+          image.parentNode.insertBefore(media, image);
+          media.appendChild(image);
+        }
+
+        image.classList.add('product-image-primary');
+
+        let secondaryImage = media.querySelector('.product-image-secondary');
+        if (!secondaryImage) {
+          secondaryImage = document.createElement('img');
+          secondaryImage.className = 'product-image-secondary';
+          secondaryImage.loading = 'lazy';
+          secondaryImage.alt = (image.alt || 'Produit') + ' vue 2';
+          media.appendChild(secondaryImage);
+        }
+
+        const fallbackSecondary = primarySources[(index + 1) % primarySources.length] || image.src;
+        secondaryImage.src = fallbackSecondary;
+
+        if (!media.querySelector('.hover-sizes')) {
+          const sizes = document.createElement('div');
+          sizes.className = 'hover-sizes';
+          sizes.setAttribute('aria-hidden', 'true');
+          sizes.innerHTML = '<p class="quick-buy-title"><strong>Achat rapide</strong> (Selectionnez votre taille)</p><div class="quick-buy-grid"><button type="button">34</button><button type="button">36</button><button type="button">38</button><button type="button">40</button><button type="button">42</button><button type="button">44</button></div>';
+          media.appendChild(sizes);
+        }
+      });
+    })();
+  </script>
+
+</body>
+</html>

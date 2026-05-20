@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Défilé | JACES</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="collection-page-body defile-page">
+
+  <div class="topbar">Livraison offerte dès 79 € | Retours offerts</div>
+
+  <header class="header">
+    <div class="header-top">
+      <div class="header-left">
+        <button class="search-trigger" id="search-trigger" type="button" aria-expanded="false" aria-controls="header-search-panel">Recherche</button>
+        <form class="search-panel" id="header-search-panel" role="search" action="#" method="get">
+          <input type="search" name="q" placeholder="Rechercher un produit..." aria-label="Rechercher">
+          <button class="search-submit" type="submit">↗</button>
+          <button class="search-panel-close" type="button" id="search-panel-close" aria-label="Fermer">×</button>
+        </form>
+      </div>
+
+      <a href="index.html" class="logo">JACES</a>
+
+      <div class="header-right">
+        <div class="language-picker" id="language-picker">
+          <button class="language-button" id="language-button" type="button" aria-label="Choisir la langue" aria-expanded="false">
+            <img src="https://flagcdn.com/w40/fr.png" class="icon-flag" id="current-flag" alt="Français">
+            <span class="language-caret" aria-hidden="true"></span>
+          </button>
+          <div class="language-menu" id="language-menu" role="menu" aria-label="Langues">
+            <button type="button" class="language-option" data-lang="fr" data-flag="https://flagcdn.com/w40/fr.png" role="menuitem"><img src="https://flagcdn.com/w40/fr.png" alt="Français"><span>Français</span></button>
+            <button type="button" class="language-option" data-lang="en" data-flag="https://flagcdn.com/w40/gb.png" role="menuitem"><img src="https://flagcdn.com/w40/gb.png" alt="English"><span>English</span></button>
+            <button type="button" class="language-option" data-lang="es" data-flag="https://flagcdn.com/w40/es.png" role="menuitem"><img src="https://flagcdn.com/w40/es.png" alt="Español"><span>Español</span></button>
+            <button type="button" class="language-option" data-lang="it" data-flag="https://flagcdn.com/w40/it.png" role="menuitem"><img src="https://flagcdn.com/w40/it.png" alt="Italiano"><span>Italiano</span></button>
+          </div>
+        </div>
+        <button class="icon-button" id="fav-trigger" aria-label="Favoris" type="button" style="position:relative"><svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg><span class="fav-count" id="fav-count" style="display:none">0</span></button>
+        <button class="icon-button" aria-label="Compte" type="button"><svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></button>
+        <button class="icon-button cart" aria-label="Panier" type="button"><svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M9 2L6.12 9H1l2.5 7.5v5h15v-5l2.5-7.5H17.88L15 2"/></svg><span class="cart-count">0</span></button>
+      </div>
+    </div>
+
+    <nav class="nav">
+      <div class="nav-item">
+        <a href="nouveautes.html">Nouveautés</a>
+        <div class="submenu">
+          <div>
+            <p class="submenu-title">NOUVEAUTÉS</p>
+            <p class="submenu-copy">Nouvelles pièces,<br>exclusivité<br>et robe signature.</p>
+            <a href="nouveautes.html">Drop été</a>
+            <a href="nouveautes.html">Édition limitée</a>
+            <a href="nouveautes.html">Pièces signature</a>
+            <a href="nouveautes.html?category=all" class="underline-link">Voir tout les nouveautés</a>
+          </div>
+          <div class="submenu-categories">
+            <p class="submenu-title">FEMME</p>
+            <a href="nouveautes.html">Robes</a>
+            <a href="nouveautes.html">Tops</a>
+            <a href="nouveautes.html">Jupes</a>
+            <a href="nouveautes.html">Pantalons</a>
+            <a href="nouveautes.html">Vestes</a>
+            <a href="nouveautes.html">Accessoires</a>
+          </div>
+        </div>
+      </div>
+      <div class="nav-item">
+        <a href="collection.html">Collections</a>
+        <div class="submenu">
+          <div>
+            <a href="collection.html?collection=ss26">Printemps–Été 2026</a>
+            <a href="collection.html?collection=aw26">Automne–Hiver 2026</a>
+            <a href="collection.html?category=all" class="underline-link">Toutes les collections</a>
+          </div>
+          <div class="submenu-categories">
+            <a href="collection.html?category=robes">Robes</a>
+            <a href="collection.html?category=tops">Tops</a>
+            <a href="collection.html?category=jupes">Jupes</a>
+            <a href="collection.html?category=pantalons">Pantalons</a>
+            <a href="collection.html?category=vestes">Vestes</a>
+            <a href="collection.html?category=accessoires">Accessoires</a>
+          </div>
+        </div>
+      </div>
+      <div class="nav-item">
+        <a href="collaborations.html">Collaborations</a>
+        <div class="submenu">
+            <div>
+              <a href="collaborations.html?collabView=exclusives&category=all">Créations exclusives</a>
+              <a href="collaborations.html?collabView=popup&category=all">Pop-up stores</a>
+              <a href="collaborations.html?collabView=events&category=all">Événements</a>
+              <a href="collaborations.html?collabView=all&category=all" class="underline-link">Toutes les collaborations</a>
+            </div>
+            <div class="submenu-categories">
+            <a href="collaborations.html?category=nike">JACES × Nike</a>
+            <a href="collaborations.html?category=chloe">JACES × Chloé</a>
+            <a href="collaborations.html?category=jacquemus">JACES × Jacquemus</a>
+            <a href="collaborations.html?category=dior">JACES × Dior</a>
+            <a href="collaborations.html?category=saint-laurent">JACES × Saint Laurent</a>
+          </div>
+        </div>
+      </div>
+      <div class="nav-item">
+        <a href="accessoires.html">Accessoires</a>
+        <div class="submenu">
+          <div>
+            <p class="submenu-title">COLLECTION</p>
+            <a href="collection.html?category=all" class="underline-link">Toutes les collections</a>
+          </div>
+          <div class="submenu-categories">
+            <a href="accessoires.html?category=sacs">Sacs</a>
+            <a href="accessoires.html?category=bijoux">Bijoux</a>
+            <a href="accessoires.html?category=ceintures">Ceintures</a>
+            <a href="accessoires.html?category=foulards">Foulards</a>
+          </div>
+        </div>
+      </div>
+      <div class="nav-item">
+        <a href="defile.html" class="active"><em>Défilé</em></a>
+        <div class="submenu">
+          <div>
+            <p class="submenu-title">DÉFILÉ</p>
+            <a href="#">Dernier show</a>
+            <a href="#">Collection prêt-à-porter</a>
+            <a href="#" class="underline-link">Voir le défilé</a>
+          </div>
+          <div>
+            <p class="submenu-title">Coulisses</p>
+            <a href="#">Design studio</a>
+            <a href="#">Inspiration</a>
+          </div>
+        </div>
+      </div>
+      <div class="nav-item">
+        <a href="univers.html"><em>Univers</em></a>
+        <div class="submenu">
+          <div>
+            <p class="submenu-title">MAISON</p>
+            <a href="#">Notre histoire</a>
+            <a href="#">Savoir-faire</a>
+            <a href="#" class="underline-link">Services VIP</a>
+          </div>
+          <div>
+            <p class="submenu-title">DÉCOUVERTE</p>
+            <a href="#">Ateliers</a>
+            <a href="#">Boutiques</a>
+          </div>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <main class="brand-page">
+    <section class="collab-countdown" aria-label="Compte a rebours defile">
+      <p class="collab-countdown-date">20 avril 2026 - 20:00 · Paris</p>
+      <p class="collab-countdown-kicker">Showroom JACES · 24 rue du Faubourg Saint-Honore, Paris 8e</p>
+      <div class="collab-countdown-timer" id="collab-countdown" data-target-date="2026-04-20T20:00:00">
+        <article class="collab-countdown-unit">
+          <strong data-countdown-days>00</strong>
+          <span>Jours</span>
+        </article>
+        <article class="collab-countdown-unit">
+          <strong data-countdown-hours>00</strong>
+          <span>Heures</span>
+        </article>
+        <article class="collab-countdown-unit">
+          <strong data-countdown-minutes>00</strong>
+          <span>Minutes</span>
+        </article>
+        <article class="collab-countdown-unit">
+          <strong data-countdown-seconds>00</strong>
+          <span>Secondes</span>
+        </article>
+      </div>
+    </section>
+
+    <section class="brand-timeline">
+      <article><p class="time">18:30</p><h3>Ouverture des portes</h3></article>
+      <article><p class="time">19:00</p><h3>Passage des 32 looks</h3></article>
+      <article><p class="time">19:40</p><h3>Rencontre atelier</h3></article>
+      <article><p class="time">20:15</p><h3>After show privé</h3></article>
+    </section>
+
+    <section class="brand-section" id="looks-defile-avril">
+      <div class="brand-section-head">
+        <h2>Défilé avril 2026</h2>
+      </div>
+      <div class="runway-grid">
+        <article class="runway-card runway-spoiler">
+          <img src="https://images.unsplash.com/photo-1495385794356-15371f348c31?q=80&w=1400" alt="Look avril 1" loading="lazy">
+          <div class="runway-note"><span>Look 01</span></div>
+        </article>
+        <article class="runway-card runway-spoiler">
+          <img src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?q=80&w=1400" alt="Look avril 2" loading="lazy">
+          <div class="runway-note"><span>Look 02</span></div>
+        </article>
+        <article class="runway-card runway-spoiler">
+          <img src="https://images.unsplash.com/photo-1509631179647-0177331693ae?q=80&w=1400" alt="Look avril 3" loading="lazy">
+          <div class="runway-note"><span>Look 03</span></div>
+        </article>
+        <article class="runway-card runway-spoiler">
+          <img src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?q=80&w=1400" alt="Look avril 4" loading="lazy">
+          <div class="runway-note"><span>Look 04</span></div>
+        </article>
+        <article class="runway-card runway-spoiler">
+          <img src="https://images.unsplash.com/photo-1483985988355-763728e1935b?q=80&w=1400" alt="Look avril 5" loading="lazy">
+          <div class="runway-note"><span>Look 05</span></div>
+        </article>
+        <article class="runway-card runway-spoiler">
+          <img src="https://images.unsplash.com/photo-1529139574466-a303027c1d8b?q=80&w=1400" alt="Look avril 6" loading="lazy">
+          <div class="runway-note"><span>Look 06</span></div>
+        </article>
+      </div>
+    </section>
+
+    <section class="brand-section" id="looks-defile">
+      <div class="brand-section-head">
+        <h2>Défilé mars 2026</h2>
+      </div>
+      <div class="runway-grid">
+        <article class="runway-card">
+          <img src="https://images.unsplash.com/photo-1495385794356-15371f348c31?q=80&w=1400" alt="Look défilé principal" loading="lazy">
+          <div class="runway-note"><span>Look 01</span><strong>Tailleur graphite<br>drapé</strong></div>
+        </article>
+        <article class="runway-card">
+          <img src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?q=80&w=1400" alt="Look défilé 2" loading="lazy">
+          <div class="runway-note"><span>Look 02</span><strong>Robe asymétrique<br>sable</strong></div>
+        </article>
+        <article class="runway-card">
+          <img src="https://images.unsplash.com/photo-1483985988355-763728e1935b?q=80&w=1400" alt="Look défilé 3" loading="lazy">
+          <div class="runway-note"><span>Look 03</span><strong>Cape courte<br>noire</strong></div>
+        </article>
+        <article class="runway-card">
+          <img src="https://images.unsplash.com/photo-1509631179647-0177331693ae?q=80&w=1400" alt="Look défilé 4" loading="lazy">
+          <div class="runway-note"><span>Look 04</span><strong>Ensemble ivoire<br>satiné</strong></div>
+        </article>
+        <article class="runway-card">
+          <img src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?q=80&w=1400" alt="Look défilé 5" loading="lazy">
+          <div class="runway-note"><span>Look 05</span><strong>Smoking crème<br>structuré</strong></div>
+        </article>
+        <article class="runway-card">
+          <img src="https://images.unsplash.com/photo-1529139574466-a303027c1d8b?q=80&w=1400" alt="Look défilé 6" loading="lazy">
+          <div class="runway-note"><span>Look 06</span><strong>Final rouge<br>atelier</strong></div>
+        </article>
+        <article class="runway-card">
+          <img src="https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?q=80&w=1400" alt="Look défilé 7" loading="lazy">
+          <div class="runway-note"><span>Look 07</span><strong>Veste noire<br>allongé</strong></div>
+        </article>
+        <article class="runway-card">
+          <img src="https://images.unsplash.com/photo-1496747611176-843222e1e57c?q=80&w=1400" alt="Look défilé 8" loading="lazy">
+          <div class="runway-note"><span>Look 08</span><strong>Robe nude<br>fluide</strong></div>
+        </article>
+        <article class="runway-card">
+          <img src="https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?q=80&w=1400" alt="Look défilé 9" loading="lazy">
+          <div class="runway-note"><span>Look 09</span><strong>Silhouette denim<br>brute</strong></div>
+        </article>
+        <article class="runway-card">
+          <img src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?q=80&w=1400" alt="Look défilé 10" loading="lazy">
+          <div class="runway-note"><span>Look 10</span><strong>Manteau craie<br>couture</strong></div>
+        </article>
+        <article class="runway-card">
+          <img src="https://images.unsplash.com/photo-1512436991641-6745cdb1723f?q=80&w=1400" alt="Look défilé 11" loading="lazy">
+          <div class="runway-note"><span>Look 11</span><strong>Maille ivoire<br>seconde peau</strong></div>
+        </article>
+        <article class="runway-card">
+          <img src="https://images.unsplash.com/photo-1483985988355-763728e1935b?q=80&w=1400" alt="Look défilé 12" loading="lazy">
+          <div class="runway-note"><span>Look 12</span><strong>Final noir<br>brillant</strong></div>
+        </article>
+      </div>
+    </section>
+
+    <section class="brand-section" id="looks-defile-jan">
+      <div class="brand-section-head">
+        <h2>Défilé janvier 2026</h2>
+      </div>
+      <div class="runway-grid">
+        <article class="runway-card">
+          <img src="https://images.unsplash.com/photo-1469334031218-e382a71b716b?q=80&w=1400" alt="Look janvier 1" loading="lazy">
+          <div class="runway-note"><span>Look 01</span><strong>Manteau oversize<br>écru</strong></div>
+        </article>
+        <article class="runway-card">
+          <img src="https://images.unsplash.com/photo-1485968579580-b6d095142e6e?q=80&w=1400" alt="Look janvier 2" loading="lazy">
+          <div class="runway-note"><span>Look 02</span><strong>Robe midi<br>plissée</strong></div>
+        </article>
+        <article class="runway-card">
+          <img src="https://images.unsplash.com/photo-1517841905240-472988babdf9?q=80&w=1400" alt="Look janvier 3" loading="lazy">
+          <div class="runway-note"><span>Look 03</span><strong>Tailleur pantalon<br>ivoire</strong></div>
+        </article>
+        <article class="runway-card">
+          <img src="https://images.unsplash.com/photo-1529139574466-a303027c1d8b?q=80&w=1400" alt="Look janvier 4" loading="lazy">
+          <div class="runway-note"><span>Look 04</span><strong>Ensemble bordeaux<br>structuré</strong></div>
+        </article>
+        <article class="runway-card">
+          <img src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?q=80&w=1400" alt="Look janvier 5" loading="lazy">
+          <div class="runway-note"><span>Look 05</span><strong>Robe asymétrique<br>nuit</strong></div>
+        </article>
+        <article class="runway-card">
+          <img src="https://images.unsplash.com/photo-1495385794356-15371f348c31?q=80&w=1400" alt="Look janvier 6" loading="lazy">
+          <div class="runway-note"><span>Look 06</span><strong>Cape graphite<br>longue</strong></div>
+        </article>
+        <article class="runway-card">
+          <img src="https://images.unsplash.com/photo-1483985988355-763728e1935b?q=80&w=1400" alt="Look janvier 7" loading="lazy">
+          <div class="runway-note"><span>Look 07</span><strong>Trench caramel<br>ceinturé</strong></div>
+        </article>
+        <article class="runway-card">
+          <img src="https://images.unsplash.com/photo-1496747611176-843222e1e57c?q=80&w=1400" alt="Look janvier 8" loading="lazy">
+          <div class="runway-note"><span>Look 08</span><strong>Robe fourreau<br>champagne</strong></div>
+        </article>
+        <article class="runway-card">
+          <img src="https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?q=80&w=1400" alt="Look janvier 9" loading="lazy">
+          <div class="runway-note"><span>Look 09</span><strong>Veste structurée<br>ardoise</strong></div>
+        </article>
+        <article class="runway-card">
+          <img src="https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?q=80&w=1400" alt="Look janvier 10" loading="lazy">
+          <div class="runway-note"><span>Look 10</span><strong>Silhouette blanche<br>épurée</strong></div>
+        </article>
+        <article class="runway-card">
+          <img src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?q=80&w=1400" alt="Look janvier 11" loading="lazy">
+          <div class="runway-note"><span>Look 11</span><strong>Smoking nacre<br>mat</strong></div>
+        </article>
+        <article class="runway-card">
+          <img src="https://images.unsplash.com/photo-1512436991641-6745cdb1723f?q=80&w=1400" alt="Look janvier 12" loading="lazy">
+          <div class="runway-note"><span>Look 12</span><strong>Final velours<br>nuit</strong></div>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <div class="back-to-top-bar">
+    <a href="#" class="back-to-top-link" aria-label="Retour au haut de la page">
+      <svg width="22" height="14" viewBox="0 0 22 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 13 11 3 21 13"/></svg>
+      <span>RETOUR AU HAUT DE LA PAGE</span>
+    </a>
+  </div>
+
+  <footer class="footer">
+    <div class="footer-main">
+      <div class="footer-cols">
+        <div class="footer-col"><p class="footer-col-title">Service client</p><a href="#">Suivre ma commande</a><a href="#">Faire un retour</a><a href="#">Livraison et Retour</a><a href="#">FAQ</a><a href="#">Contact</a></div>
+        <div class="footer-col"><p class="footer-col-title">JACES</p><a href="#">Notre concept</a><a href="#">Parrainez</a><a href="#">Nos boutiques</a><a href="#">Nous rejoindre</a></div>
+        <div class="footer-col"><p class="footer-col-title">Mentions légales</p><a href="#">CGV</a><a href="#">Politique de confidentialité</a><a href="#">Plan de site</a><a href="#">Retours Gratuits</a><a href="#">Conditions de l'offre en cours</a></div>
+      </div>
+      <div class="footer-newsletter">
+        <h3>Restez connecté avec JACES</h3>
+        <p>Recevez en avant-première nos nouvelles collections et invitations à nos évènements.</p>
+        <form class="footer-newsletter-form" action="#" method="post">
+          <label for="footer-nl-email-defile" class="visually-hidden">Votre e-mail</label>
+          <input id="footer-nl-email-defile" name="email" type="email" placeholder="Votre e-mail" required>
+          <button type="submit" aria-label="S'inscrire">→</button>
+        </form>
+      </div>
+    </div>
+    <p class="footer-note">Copyright © 2026 Chloé. Tous droits réservés.</p>
+  </footer>
+
+  <div class="fav-overlay" id="fav-overlay"></div>
+  <div class="fav-panel" id="fav-panel" role="dialog" aria-label="Mes favoris">
+    <div class="fav-panel-header">
+      <h2 id="fav-panel-title">Mes Favoris (0)</h2>
+      <button class="fav-panel-close-btn" id="fav-panel-close" aria-label="Fermer" type="button">×</button>
+    </div>
+    <div class="fav-panel-list" id="fav-panel-list"></div>
+  </div>
+
+  <script>
+    (function () {
+      function updateHeaderState() {
+        document.body.classList.toggle('header-scrolled', window.scrollY > 8);
+      }
+      updateHeaderState();
+      window.addEventListener('scroll', updateHeaderState, { passive: true });
+
+      const searchTrigger = document.getElementById('search-trigger');
+      const searchPanel = document.getElementById('header-search-panel');
+      const searchClose = document.getElementById('search-panel-close');
+      if (searchTrigger && searchPanel) {
+        const searchInput = searchPanel.querySelector('input[type="search"]');
+        const closeSearch = () => {
+          searchPanel.classList.remove('open');
+          searchTrigger.setAttribute('aria-expanded', 'false');
+        };
+        searchTrigger.addEventListener('click', (event) => {
+          event.stopPropagation();
+          const willOpen = !searchPanel.classList.contains('open');
+          searchPanel.classList.toggle('open', willOpen);
+          searchTrigger.setAttribute('aria-expanded', String(willOpen));
+          if (willOpen && searchInput) searchInput.focus();
+        });
+        if (searchClose) searchClose.addEventListener('click', closeSearch);
+        searchPanel.addEventListener('click', (event) => event.stopPropagation());
+        document.addEventListener('keydown', (event) => { if (event.key === 'Escape') closeSearch(); });
+        document.addEventListener('click', (event) => {
+          if (!searchPanel.contains(event.target) && !searchTrigger.contains(event.target)) closeSearch();
+        });
+      }
+
+      const languagePicker = document.getElementById('language-picker');
+      const languageButton = document.getElementById('language-button');
+      const currentFlag = document.getElementById('current-flag');
+      if (languagePicker && languageButton && currentFlag) {
+        const STORAGE_KEY = 'jaces-selected-language';
+        const languageOptions = Array.from(languagePicker.querySelectorAll('.language-option'));
+        function applyLanguageOption(option) {
+          const flag = option.dataset.flag;
+          const lang = option.dataset.lang;
+          const label = option.querySelector('span')?.textContent || 'Langue';
+          if (flag) {
+            currentFlag.src = flag;
+            currentFlag.alt = label;
+          }
+          if (lang) {
+            document.documentElement.lang = lang;
+            try { localStorage.setItem(STORAGE_KEY, lang); } catch (error) {}
+          }
+        }
+        try {
+          const savedLang = localStorage.getItem(STORAGE_KEY);
+          if (savedLang) {
+            const savedOption = languageOptions.find((option) => option.dataset.lang === savedLang);
+            if (savedOption) applyLanguageOption(savedOption);
+          }
+        } catch (error) {}
+        languageButton.addEventListener('click', () => {
+          const isOpen = languagePicker.classList.toggle('open');
+          languageButton.setAttribute('aria-expanded', String(isOpen));
+        });
+        languageOptions.forEach((option) => {
+          option.addEventListener('click', () => {
+            applyLanguageOption(option);
+            languagePicker.classList.remove('open');
+            languageButton.setAttribute('aria-expanded', 'false');
+          });
+        });
+        document.addEventListener('click', (event) => {
+          if (!languagePicker.contains(event.target)) {
+            languagePicker.classList.remove('open');
+            languageButton.setAttribute('aria-expanded', 'false');
+          }
+        });
+      }
+
+      const countdownRoot = document.getElementById('collab-countdown');
+      if (countdownRoot) {
+        const targetDateRaw = countdownRoot.dataset.targetDate;
+        const targetDate = targetDateRaw ? new Date(targetDateRaw) : null;
+        const daysEl = countdownRoot.querySelector('[data-countdown-days]');
+        const hoursEl = countdownRoot.querySelector('[data-countdown-hours]');
+        const minutesEl = countdownRoot.querySelector('[data-countdown-minutes]');
+        const secondsEl = countdownRoot.querySelector('[data-countdown-seconds]');
+
+        function pad(value) {
+          return String(value).padStart(2, '0');
+        }
+
+        function renderCountdown() {
+          if (!targetDate || Number.isNaN(targetDate.getTime())) return;
+          const now = new Date();
+          const diff = targetDate.getTime() - now.getTime();
+          const safeDiff = diff > 0 ? diff : 0;
+
+          const totalSeconds = Math.floor(safeDiff / 1000);
+          const days = Math.floor(totalSeconds / 86400);
+          const hours = Math.floor((totalSeconds % 86400) / 3600);
+          const minutes = Math.floor((totalSeconds % 3600) / 60);
+          const seconds = totalSeconds % 60;
+
+          if (daysEl) daysEl.textContent = pad(days);
+          if (hoursEl) hoursEl.textContent = pad(hours);
+          if (minutesEl) minutesEl.textContent = pad(minutes);
+          if (secondsEl) secondsEl.textContent = pad(seconds);
+        }
+
+        renderCountdown();
+        setInterval(renderCountdown, 1000);
+      }
+    })();
+  </script>
+  <script src="catalog.js"></script>
+  <script src="cart.js"></script>
+  <script src="favorites.js"></script>
+  <script src="auth.js"></script>
+
+</body>
+</html>

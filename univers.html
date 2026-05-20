@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Univers | JACES</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="collection-page-body univers-page">
+
+  <div class="topbar">Livraison offerte dès 79 € | Retours offerts</div>
+
+  <header class="header">
+    <div class="header-top">
+      <div class="header-left">
+        <button class="search-trigger" id="search-trigger" type="button" aria-expanded="false" aria-controls="header-search-panel">Recherche</button>
+        <form class="search-panel" id="header-search-panel" role="search" action="#" method="get">
+          <input type="search" name="q" placeholder="Rechercher un produit..." aria-label="Rechercher">
+          <button class="search-submit" type="submit">↗</button>
+          <button class="search-panel-close" type="button" id="search-panel-close" aria-label="Fermer">×</button>
+        </form>
+      </div>
+
+      <a href="index.html" class="logo">JACES</a>
+
+      <div class="header-right">
+        <div class="language-picker" id="language-picker">
+          <button class="language-button" id="language-button" type="button" aria-label="Choisir la langue" aria-expanded="false">
+            <img src="https://flagcdn.com/w40/fr.png" class="icon-flag" id="current-flag" alt="Français">
+            <span class="language-caret" aria-hidden="true"></span>
+          </button>
+          <div class="language-menu" id="language-menu" role="menu" aria-label="Langues">
+            <button type="button" class="language-option" data-lang="fr" data-flag="https://flagcdn.com/w40/fr.png" role="menuitem"><img src="https://flagcdn.com/w40/fr.png" alt="Français"><span>Français</span></button>
+            <button type="button" class="language-option" data-lang="en" data-flag="https://flagcdn.com/w40/gb.png" role="menuitem"><img src="https://flagcdn.com/w40/gb.png" alt="English"><span>English</span></button>
+            <button type="button" class="language-option" data-lang="es" data-flag="https://flagcdn.com/w40/es.png" role="menuitem"><img src="https://flagcdn.com/w40/es.png" alt="Español"><span>Español</span></button>
+            <button type="button" class="language-option" data-lang="it" data-flag="https://flagcdn.com/w40/it.png" role="menuitem"><img src="https://flagcdn.com/w40/it.png" alt="Italiano"><span>Italiano</span></button>
+          </div>
+        </div>
+        <button class="icon-button" id="fav-trigger" aria-label="Favoris" type="button" style="position:relative"><svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg><span class="fav-count" id="fav-count" style="display:none">0</span></button>
+        <button class="icon-button" aria-label="Compte" type="button"><svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></button>
+        <button class="icon-button cart" aria-label="Panier" type="button"><svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M9 2L6.12 9H1l2.5 7.5v5h15v-5l2.5-7.5H17.88L15 2"/></svg><span class="cart-count">0</span></button>
+      </div>
+    </div>
+
+    <nav class="nav">
+      <div class="nav-item">
+        <a href="nouveautes.html">Nouveautés</a>
+        <div class="submenu">
+          <div>
+            <p class="submenu-title">NOUVEAUTÉS</p>
+            <p class="submenu-copy">Nouvelles pièces,<br>exclusivité<br>et robe signature.</p>
+            <a href="nouveautes.html">Drop été</a>
+            <a href="nouveautes.html">Édition limitée</a>
+            <a href="nouveautes.html">Pièces signature</a>
+            <a href="nouveautes.html?category=all" class="underline-link">Voir tout les nouveautés</a>
+          </div>
+          <div class="submenu-categories">
+            <p class="submenu-title">FEMME</p>
+            <a href="nouveautes.html">Robes</a>
+            <a href="nouveautes.html">Tops</a>
+            <a href="nouveautes.html">Jupes</a>
+            <a href="nouveautes.html">Pantalons</a>
+            <a href="nouveautes.html">Vestes</a>
+            <a href="nouveautes.html">Accessoires</a>
+          </div>
+        </div>
+      </div>
+      <div class="nav-item">
+        <a href="collection.html">Collections</a>
+        <div class="submenu">
+          <div>
+            <a href="collection.html?collection=ss26">Printemps–Été 2026</a>
+            <a href="collection.html?collection=aw26">Automne–Hiver 2026</a>
+            <a href="collection.html?category=all" class="underline-link">Toutes les collections</a>
+          </div>
+          <div class="submenu-categories">
+            <a href="collection.html?category=robes">Robes</a>
+            <a href="collection.html?category=tops">Tops</a>
+            <a href="collection.html?category=jupes">Jupes</a>
+            <a href="collection.html?category=pantalons">Pantalons</a>
+            <a href="collection.html?category=vestes">Vestes</a>
+            <a href="collection.html?category=accessoires">Accessoires</a>
+          </div>
+        </div>
+      </div>
+      <div class="nav-item">
+        <a href="collaborations.html">Collaborations</a>
+        <div class="submenu">
+            <div>
+              <a href="collaborations.html?collabView=exclusives&category=all">Créations exclusives</a>
+              <a href="collaborations.html?collabView=popup&category=all">Pop-up stores</a>
+              <a href="collaborations.html?collabView=events&category=all">Événements</a>
+              <a href="collaborations.html?collabView=all&category=all" class="underline-link">Toutes les collaborations</a>
+            </div>
+            <div class="submenu-categories">
+            <a href="collaborations.html?category=nike">JACES × Nike</a>
+            <a href="collaborations.html?category=chloe">JACES × Chloé</a>
+            <a href="collaborations.html?category=jacquemus">JACES × Jacquemus</a>
+            <a href="collaborations.html?category=dior">JACES × Dior</a>
+            <a href="collaborations.html?category=saint-laurent">JACES × Saint Laurent</a>
+          </div>
+        </div>
+      </div>
+      <div class="nav-item">
+        <a href="accessoires.html">Accessoires</a>
+        <div class="submenu">
+          <div>
+            <p class="submenu-title">COLLECTION</p>
+            <a href="collection.html?category=all" class="underline-link">Toutes les collections</a>
+          </div>
+          <div class="submenu-categories">
+            <a href="accessoires.html?category=sacs">Sacs</a>
+            <a href="accessoires.html?category=bijoux">Bijoux</a>
+            <a href="accessoires.html?category=ceintures">Ceintures</a>
+            <a href="accessoires.html?category=foulards">Foulards</a>
+          </div>
+        </div>
+      </div>
+      <div class="nav-item">
+        <a href="defile.html"><em>Défilé</em></a>
+        <div class="submenu">
+          <div>
+            <p class="submenu-title">DÉFILÉ</p>
+            <a href="#">Dernier show</a>
+            <a href="#">Collection prêt-à-porter</a>
+            <a href="#" class="underline-link">Voir le défilé</a>
+          </div>
+          <div>
+            <p class="submenu-title">Coulisses</p>
+            <a href="#">Design studio</a>
+            <a href="#">Inspiration</a>
+          </div>
+        </div>
+      </div>
+      <div class="nav-item">
+        <a href="univers.html" class="active"><em>Univers</em></a>
+        <div class="submenu">
+          <div>
+            <p class="submenu-title">MAISON</p>
+            <a href="#">Notre histoire</a>
+            <a href="#">Savoir-faire</a>
+            <a href="#" class="underline-link">Services VIP</a>
+          </div>
+          <div>
+            <p class="submenu-title">DÉCOUVERTE</p>
+            <a href="#">Ateliers</a>
+            <a href="#">Boutiques</a>
+          </div>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <main class="brand-page">
+    <section class="brand-section" id="maison">
+      <div class="brand-section-head">
+        <h2>Moins de gaspillage, plus de valeur durable</h2>
+      </div>
+      <div class="universe-grid">
+        <article>
+          <h3>Anti-gaspillage matière</h3>
+          <p>Nos coupes sont optimisées pour limiter les chutes, et nos stocks sont produits en volumes justes.</p>
+        </article>
+        <article>
+          <h3>Matières européennes durables</h3>
+          <p>Lin, laine et coton issus de filières européennes traçables, privilégiant qualité, durée et impact réduit.</p>
+        </article>
+        <article>
+          <h3>Confection responsable</h3>
+          <p>Assemblage en ateliers partenaires en Europe, avec contrôle qualité rigoureux et conditions de production suivies.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="brand-band">
+      <div class="brand-band-copy">
+        <h2>Notre charte matière 2026</h2>
+        <p>Chaque pièce JACES doit répondre à trois critères: durer, être réparable, et provenir d'une chaîne d'approvisionnement claire.</p>
+      </div>
+      <div class="brand-band-products">
+        <article><h3>Production raisonnée</h3><p>Collections calibrées pour éviter la surproduction.</p></article>
+        <article><h3>Traçabilité active</h3><p>Origine matière et atelier documentées par lot.</p></article>
+        <article><h3>Longévité vêtement</h3><p>Coupe, montage et finitions pensées pour durer.</p></article>
+      </div>
+    </section>
+
+    <section class="brand-timeline" aria-label="Méthode responsable JACES">
+      <article><p class="time">01</p><h3>Sourcer en Europe</h3></article>
+      <article><p class="time">02</p><h3>Couper avec précision</h3></article>
+      <article><p class="time">03</p><h3>Assembler durablement</h3></article>
+      <article><p class="time">04</p><h3>Prolonger la durée de vie</h3></article>
+    </section>
+
+    <section class="brand-split" id="histoire-jaces">
+      <div class="brand-split-copy">
+        <p class="brand-mini">Histoire de JACES</p>
+        <h2>Une marque née en 2025 avec une vision claire</h2>
+        <p>Sarah Bato a créé JACES en 2025, à l'obtention de son bac+3, après avoir observé un manque: des pièces premium, désirables, mais vraiment pensées pour durer.</p>
+        <p>Son idée de départ: proposer une mode plus juste, avec moins de gaspillage, des matières européennes durables et une fabrication suivie de bout en bout.</p>
+        <p>Aujourd'hui, JACES continue d'évoluer autour de cette même promesse: style fort, qualité réelle et responsabilité concrète.</p>
+      </div>
+      <div class="brand-split-image">
+        <img src="https://images.unsplash.com/photo-1483985988355-763728e1935b?q=80&w=1400" alt="Naissance de la maison JACES" loading="lazy">
+      </div>
+    </section>
+
+    <section class="brand-section universe-articles" id="en-savoir-plus">
+      <div class="brand-section-head">
+        <h2>En savoir plus</h2>
+      </div>
+      <div class="universe-articles-grid">
+        <article class="universe-article-card">
+          <div class="universe-article-top">
+            <p class="universe-article-meta">Matières</p>
+            <p class="universe-article-date">06 avril 2026</p>
+          </div>
+          <h3>Comment nous réduisons les chutes de coupe en atelier</h3>
+          <p class="universe-article-excerpt">Une méthode de patronage pensée pour optimiser chaque mètre de matière sans compromettre la silhouette.</p>
+          <div class="universe-article-foot">
+            <p>Par Équipe Produit · 4 min</p>
+            <a href="#" class="text-link">En savoir plus</a>
+          </div>
+        </article>
+        <article class="universe-article-card">
+          <div class="universe-article-top">
+            <p class="universe-article-meta">Traçabilité</p>
+            <p class="universe-article-date">03 avril 2026</p>
+          </div>
+          <h3>Pourquoi nous privilégions les filières européennes</h3>
+          <p class="universe-article-excerpt">Traçabilité plus claire, délais plus justes et partenaires engagés dans une exigence de qualité durable.</p>
+          <div class="universe-article-foot">
+            <p>Par Studio JACES · 5 min</p>
+            <a href="#" class="text-link">En savoir plus</a>
+          </div>
+        </article>
+        <article class="universe-article-card">
+          <div class="universe-article-top">
+            <p class="universe-article-meta">Entretien</p>
+            <p class="universe-article-date">31 mars 2026</p>
+          </div>
+          <h3>Entretenir une pièce JACES pour la garder des années</h3>
+          <p class="universe-article-excerpt">Nos conseils concrets pour prolonger la tenue, la couleur et la structure de vos vêtements au quotidien.</p>
+          <div class="universe-article-foot">
+            <p>Par Service Style · 3 min</p>
+            <a href="#" class="text-link">En savoir plus</a>
+          </div>
+        </article>
+        <article class="universe-article-card">
+          <div class="universe-article-top">
+            <p class="universe-article-meta">Ateliers</p>
+            <p class="universe-article-date">28 mars 2026</p>
+          </div>
+          <h3>Comment nous sélectionnons nos ateliers partenaires en Europe</h3>
+          <p class="universe-article-excerpt">Audit qualité, capacité de réparation et transparence de production: nos critères avant toute collaboration.</p>
+          <div class="universe-article-foot">
+            <p>Par Équipe Qualité · 6 min</p>
+            <a href="#" class="text-link">En savoir plus</a>
+          </div>
+        </article>
+        <article class="universe-article-card">
+          <div class="universe-article-top">
+            <p class="universe-article-meta">Matières</p>
+            <p class="universe-article-date">25 mars 2026</p>
+          </div>
+          <h3>La différence entre une laine durable et une laine standard</h3>
+          <p class="universe-article-excerpt">Origine de la fibre, teinture, résistance: les indicateurs concrets qui changent la durée de vie du vêtement.</p>
+          <div class="universe-article-foot">
+            <p>Par Pôle Matières · 5 min</p>
+            <a href="#" class="text-link">En savoir plus</a>
+          </div>
+        </article>
+        <article class="universe-article-card">
+          <div class="universe-article-top">
+            <p class="universe-article-meta">Impact</p>
+            <p class="universe-article-date">22 mars 2026</p>
+          </div>
+          <h3>Pourquoi produire moins peut créer plus de valeur</h3>
+          <p class="universe-article-excerpt">Moins de volume, plus de précision: notre approche pour limiter les invendus et augmenter la qualité réelle.</p>
+          <div class="universe-article-foot">
+            <p>Par Direction Produit · 4 min</p>
+            <a href="#" class="text-link">En savoir plus</a>
+          </div>
+        </article>
+        <article class="universe-article-card">
+          <div class="universe-article-top">
+            <p class="universe-article-meta">Traçabilité</p>
+            <p class="universe-article-date">19 mars 2026</p>
+          </div>
+          <h3>Du rouleau de tissu à la pièce finie: notre traçabilité</h3>
+          <p class="universe-article-excerpt">Comment nous suivons chaque lot matière et chaque étape de confection pour garantir une chaîne claire.</p>
+          <div class="universe-article-foot">
+            <p>Par Studio JACES · 5 min</p>
+            <a href="#" class="text-link">En savoir plus</a>
+          </div>
+        </article>
+        <article class="universe-article-card">
+          <div class="universe-article-top">
+            <p class="universe-article-meta">Conseils</p>
+            <p class="universe-article-date">16 mars 2026</p>
+          </div>
+          <h3>5 gestes simples pour prolonger la tenue de vos pièces</h3>
+          <p class="universe-article-excerpt">Lavage, séchage, rangement: des habitudes concrètes pour conserver coupe, main et couleur sur le long terme.</p>
+          <div class="universe-article-foot">
+            <p>Par Service Style · 4 min</p>
+            <a href="#" class="text-link">En savoir plus</a>
+          </div>
+        </article>
+        <article class="universe-article-card">
+          <div class="universe-article-top">
+            <p class="universe-article-meta">Innovation</p>
+            <p class="universe-article-date">12 mars 2026</p>
+          </div>
+          <h3>Nos tests de résistance avant mise en collection</h3>
+          <p class="universe-article-excerpt">Abrasion, solidité des coutures, tenue des couleurs: les contrôles qui valident chaque modèle avant lancement.</p>
+          <div class="universe-article-foot">
+            <p>Par Laboratoire Produit · 5 min</p>
+            <a href="#" class="text-link">En savoir plus</a>
+          </div>
+        </article>
+        <article class="universe-article-card">
+          <div class="universe-article-top">
+            <p class="universe-article-meta">Approvisionnement</p>
+            <p class="universe-article-date">09 mars 2026</p>
+          </div>
+          <h3>Comment nous planifions les volumes pour éviter le surplus</h3>
+          <p class="universe-article-excerpt">Prévisions en petites séries, réassorts contrôlés et pilotage fin des stocks pour éviter le gaspillage.</p>
+          <div class="universe-article-foot">
+            <p>Par Équipe Supply · 4 min</p>
+            <a href="#" class="text-link">En savoir plus</a>
+          </div>
+        </article>
+        <article class="universe-article-card">
+          <div class="universe-article-top">
+            <p class="universe-article-meta">Design</p>
+            <p class="universe-article-date">06 mars 2026</p>
+          </div>
+          <h3>Créer des pièces désirables qui traversent les saisons</h3>
+          <p class="universe-article-excerpt">Une direction artistique qui privilégie les coupes durables et limite l'obsolescence des silhouettes.</p>
+          <div class="universe-article-foot">
+            <p>Par Direction Créative · 3 min</p>
+            <a href="#" class="text-link">En savoir plus</a>
+          </div>
+        </article>
+        <article class="universe-article-card">
+          <div class="universe-article-top">
+            <p class="universe-article-meta">Engagement</p>
+            <p class="universe-article-date">02 mars 2026</p>
+          </div>
+          <h3>Nos objectifs 2026 pour une mode plus responsable</h3>
+          <p class="universe-article-excerpt">Objectifs matière, qualité et traçabilité: les jalons que nous suivons pour progresser de saison en saison.</p>
+          <div class="universe-article-foot">
+            <p>Par Maison JACES · 4 min</p>
+            <a href="#" class="text-link">En savoir plus</a>
+          </div>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <div class="back-to-top-bar">
+    <a href="#" class="back-to-top-link" aria-label="Retour au haut de la page">
+      <svg width="22" height="14" viewBox="0 0 22 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 13 11 3 21 13"/></svg>
+      <span>RETOUR AU HAUT DE LA PAGE</span>
+    </a>
+  </div>
+
+  <footer class="footer">
+    <div class="footer-main">
+      <div class="footer-cols">
+        <div class="footer-col"><p class="footer-col-title">Service client</p><a href="#">Suivre ma commande</a><a href="#">Faire un retour</a><a href="#">Livraison et Retour</a><a href="#">FAQ</a><a href="#">Contact</a></div>
+        <div class="footer-col"><p class="footer-col-title">JACES</p><a href="#">Notre concept</a><a href="#">Parrainez</a><a href="#">Nos boutiques</a><a href="#">Nous rejoindre</a></div>
+        <div class="footer-col"><p class="footer-col-title">Mentions légales</p><a href="#">CGV</a><a href="#">Politique de confidentialité</a><a href="#">Plan de site</a><a href="#">Retours Gratuits</a><a href="#">Conditions de l'offre en cours</a></div>
+      </div>
+      <div class="footer-newsletter">
+        <h3>Restez connecté avec JACES</h3>
+        <p>Recevez en avant-première nos nouvelles collections et invitations à nos évènements.</p>
+        <form class="footer-newsletter-form" action="#" method="post">
+          <label for="footer-nl-email-univers" class="visually-hidden">Votre e-mail</label>
+          <input id="footer-nl-email-univers" name="email" type="email" placeholder="Votre e-mail" required>
+          <button type="submit" aria-label="S'inscrire">→</button>
+        </form>
+      </div>
+    </div>
+    <p class="footer-note">Copyright © 2026 Chloé. Tous droits réservés.</p>
+  </footer>
+
+  <div class="fav-overlay" id="fav-overlay"></div>
+  <div class="fav-panel" id="fav-panel" role="dialog" aria-label="Mes favoris">
+    <div class="fav-panel-header">
+      <h2 id="fav-panel-title">Mes Favoris (0)</h2>
+      <button class="fav-panel-close-btn" id="fav-panel-close" aria-label="Fermer" type="button">×</button>
+    </div>
+    <div class="fav-panel-list" id="fav-panel-list"></div>
+  </div>
+
+  <script>
+    (function () {
+      function updateHeaderState() {
+        document.body.classList.toggle('header-scrolled', window.scrollY > 8);
+      }
+      updateHeaderState();
+      window.addEventListener('scroll', updateHeaderState, { passive: true });
+
+      const searchTrigger = document.getElementById('search-trigger');
+      const searchPanel = document.getElementById('header-search-panel');
+      const searchClose = document.getElementById('search-panel-close');
+      if (searchTrigger && searchPanel) {
+        const searchInput = searchPanel.querySelector('input[type="search"]');
+        const closeSearch = () => {
+          searchPanel.classList.remove('open');
+          searchTrigger.setAttribute('aria-expanded', 'false');
+        };
+        searchTrigger.addEventListener('click', (event) => {
+          event.stopPropagation();
+          const willOpen = !searchPanel.classList.contains('open');
+          searchPanel.classList.toggle('open', willOpen);
+          searchTrigger.setAttribute('aria-expanded', String(willOpen));
+          if (willOpen && searchInput) searchInput.focus();
+        });
+        if (searchClose) searchClose.addEventListener('click', closeSearch);
+        searchPanel.addEventListener('click', (event) => event.stopPropagation());
+        document.addEventListener('keydown', (event) => { if (event.key === 'Escape') closeSearch(); });
+        document.addEventListener('click', (event) => {
+          if (!searchPanel.contains(event.target) && !searchTrigger.contains(event.target)) closeSearch();
+        });
+      }
+
+      const languagePicker = document.getElementById('language-picker');
+      const languageButton = document.getElementById('language-button');
+      const currentFlag = document.getElementById('current-flag');
+      if (languagePicker && languageButton && currentFlag) {
+        const STORAGE_KEY = 'jaces-selected-language';
+        const languageOptions = Array.from(languagePicker.querySelectorAll('.language-option'));
+        function applyLanguageOption(option) {
+          const flag = option.dataset.flag;
+          const lang = option.dataset.lang;
+          const label = option.querySelector('span')?.textContent || 'Langue';
+          if (flag) {
+            currentFlag.src = flag;
+            currentFlag.alt = label;
+          }
+          if (lang) {
+            document.documentElement.lang = lang;
+            try { localStorage.setItem(STORAGE_KEY, lang); } catch (error) {}
+          }
+        }
+        try {
+          const savedLang = localStorage.getItem(STORAGE_KEY);
+          if (savedLang) {
+            const savedOption = languageOptions.find((option) => option.dataset.lang === savedLang);
+            if (savedOption) applyLanguageOption(savedOption);
+          }
+        } catch (error) {}
+        languageButton.addEventListener('click', () => {
+          const isOpen = languagePicker.classList.toggle('open');
+          languageButton.setAttribute('aria-expanded', String(isOpen));
+        });
+        languageOptions.forEach((option) => {
+          option.addEventListener('click', () => {
+            applyLanguageOption(option);
+            languagePicker.classList.remove('open');
+            languageButton.setAttribute('aria-expanded', 'false');
+          });
+        });
+        document.addEventListener('click', (event) => {
+          if (!languagePicker.contains(event.target)) {
+            languagePicker.classList.remove('open');
+            languageButton.setAttribute('aria-expanded', 'false');
+          }
+        });
+      }
+    })();
+  </script>
+  <script src="catalog.js"></script>
+  <script src="cart.js"></script>
+  <script src="favorites.js"></script>
+  <script src="auth.js"></script>
+
+</body>
+</html>
