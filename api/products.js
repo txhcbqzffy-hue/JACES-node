@@ -31,7 +31,7 @@ module.exports = async function handler(req, res) {
 
     const mapped = products.map((product) => {
       const productImages = images
-        .filter((img) => String(img.product_id) === String(product.identifiant))
+        .filter((img) => String(img.product_id) === String(product.id))
         .sort((a, b) => a.position - b.position);
 
       return {
