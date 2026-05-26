@@ -1,13 +1,14 @@
-console.log("NOUVELLE VERSION PRODUCTS PAGE");
 import { getProducts } from './api/productsApi.js';
 
 async function loadPageProducts() {
   const productGrid = document.querySelector('.product-grid');
   if (!productGrid) return;
 
+  let products = [];
+
   try {
-    const products = await getProducts();
-    console.log(products);
+    const apiProducts = await getProducts();
+    products = Array.isArray(apiProducts) ? apiProducts : [];
 
     // Si peu de produits API, garder les cartes statiques
     // Sinon, remplacer par les produits API
@@ -90,30 +91,43 @@ async function loadPageProducts() {
     }
 
     window.dispatchEvent(new CustomEvent('jaces:products-loaded', { detail: { products } }));
-    attachProductCardNavigation(productGrid, products);
   } catch (error) {
     console.error('Impossible de charger les produits API:', error);
   }
+
+  attachProductCardNavigation(productGrid, products);
 }
 
 function attachProductCardNavigation(productGrid, products) {
+  const productsByName = new Map(
+    (Array.isArray(products) ? products : []).map((product) => [product?.name, product])
+  );
+
   function navigateToProduct(card) {
     const name = card.querySelector('h3')?.textContent?.trim() || '';
     const price = card.querySelector('.product-price')?.textContent?.trim() || '';
     const img = card.querySelector('.product-image-primary')?.getAttribute('src') || '';
-    const id = products.find((product) => product.name === name)?.id || normalizeId(name);
+    const secondaryImg = card.querySelector('.product-image-secondary')?.getAttribute('src') || '';
+    const matchedProduct = productsByName.get(name);
+    const productPayload = matchedProduct || {
+      id: normalizeId(name),
+      name,
+      price,
+      img,
+      secondaryImg
+    };
+
+    if (window.JacesCatalog && typeof window.JacesCatalog.getProductUrl === 'function') {
+      window.location.href = window.JacesCatalog.getProductUrl(productPayload, true);
+      return;
+    }
 
     const params = new URLSearchParams();
-    params.set('id', id);
+    params.set('id', productPayload.id || normalizeId(name));
     if (name) params.set('name', name);
     if (price) params.set('price', price);
     if (img) params.set('img', img);
-
-    params.set('origin', document.body.classList.contains('nouveautes-page') ? 'nouveautes' : 'produits');
-    params.set('originLabel', document.body.classList.contains('nouveautes-page') ? 'Nouveautes' : 'Produits');
-    params.set('originUrl', window.location.pathname.split('/').pop());
-    params.set('originNav', document.body.classList.contains('nouveautes-page') ? 'nouveautes' : 'produits');
-
+    if (secondaryImg) params.set('secondaryImg', secondaryImg);
     window.location.href = `detail-produit.html?${params.toString()}`;
   }
 
