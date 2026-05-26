@@ -8,12 +8,12 @@ const supabase = createClient(
 module.exports = async function handler(req, res) {
   try {
     const { data: products, error: productsError } = await supabase
-      .from('produits')
+      .from('products')
       .select('*');
 
     if (productsError) {
       return res.status(500).json({
-        source: 'produits',
+        source: 'products',
         error: productsError.message
       });
     }
