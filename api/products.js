@@ -19,19 +19,19 @@ module.exports = async function handler(req, res) {
     }
 
     const { data: images, error: imagesError } = await supabase
-      .from('images_produit')
+      .from('product_images')
       .select('*');
 
     if (imagesError) {
       return res.status(500).json({
-        source: 'images_produit',
+        source: 'product_images',
         error: imagesError.message
       });
     }
 
     const mapped = products.map((product) => {
       const productImages = images
-        .filter((img) => img.produit_id === product.identifiant)
+        .filter((img) => img.product_id === product.id)
         .sort((a, b) => a.position - b.position);
 
       return {
