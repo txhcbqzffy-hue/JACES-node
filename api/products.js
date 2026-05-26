@@ -31,12 +31,11 @@ module.exports = async function handler(req, res) {
 
     const mapped = products.map((product) => {
       const productImages = images
-        .filter((img) => img.product_id === product.id)
+        .filter((img) => img.product_id === product.identifiant)
         .sort((a, b) => a.position - b.position);
 
       return {
         ...product,
-        images: productImages,
         image_url: productImages[0]?.url || '',
         hover_image_url: productImages[1]?.url || productImages[0]?.url || ''
       };
