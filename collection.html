@@ -11,86 +11,9 @@
   <div class="topbar">Livraison offerte dès 79 € | Retours offerts</div>
 
   <header class="header">
-    <div class="header-top">
-      <div class="header-left">
-        <button class="search-trigger" id="search-trigger" type="button" aria-expanded="false" aria-controls="header-search-panel">Recherche</button>
-        <form class="search-panel" id="header-search-panel" role="search" action="#" method="get">
-          <input type="search" name="q" placeholder="Rechercher un produit..." aria-label="Rechercher">
-          <button class="search-submit" type="submit">↗</button>
-          <button class="search-panel-close" type="button" id="search-panel-close" aria-label="Fermer">×</button>
-        </form>
+      <div class="product-grid" id="product-grid">
+        <!-- Grille vide pour injection dynamique produit JS -->
       </div>
-
-      <a href="index.html" class="logo">JACES</a>
-
-      <div class="header-right">
-        <div class="language-picker" id="language-picker">
-          <button class="language-button" id="language-button" type="button" aria-label="Choisir la langue" aria-expanded="false">
-            <img src="https://flagcdn.com/w40/fr.png" class="icon-flag" id="current-flag" alt="Français">
-            <span class="language-caret" aria-hidden="true"></span>
-          </button>
-          <div class="language-menu" id="language-menu" role="menu" aria-label="Langues">
-            <button type="button" class="language-option" data-lang="fr" data-flag="https://flagcdn.com/w40/fr.png" role="menuitem"><img src="https://flagcdn.com/w40/fr.png" alt="Français"><span>Français</span></button>
-            <button type="button" class="language-option" data-lang="en" data-flag="https://flagcdn.com/w40/gb.png" role="menuitem"><img src="https://flagcdn.com/w40/gb.png" alt="English"><span>English</span></button>
-            <button type="button" class="language-option" data-lang="es" data-flag="https://flagcdn.com/w40/es.png" role="menuitem"><img src="https://flagcdn.com/w40/es.png" alt="Español"><span>Español</span></button>
-            <button type="button" class="language-option" data-lang="it" data-flag="https://flagcdn.com/w40/it.png" role="menuitem"><img src="https://flagcdn.com/w40/it.png" alt="Italiano"><span>Italiano</span></button>
-          </div>
-        </div>
-        <button class="icon-button" id="fav-trigger" aria-label="Favoris" type="button" style="position:relative">
-          <svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-          <span class="fav-count" id="fav-count" style="display:none">0</span>
-        </button>
-        <button class="icon-button" aria-label="Compte" type="button"><svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></button>
-        <button class="icon-button cart" aria-label="Panier" type="button"><svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M9 2L6.12 9H1l2.5 7.5v5h15v-5l2.5-7.5H17.88L15 2"/></svg><span class="cart-count">0</span></button>
-      </div>
-    </div>
-
-<nav class="nav">
-    <div class="nav-item">
-      <a href="nouveautes.html">Nouveautés</a>
-      <div class="submenu">
-        <div>
-          <p class="submenu-title">NOUVEAUTÉS</p>
-          <p class="submenu-copy">Nouvelles pièces,<br>exclusivité<br>et robe signature.</p>
-          <a href="nouveautes.html">Drop été</a>
-          <a href="nouveautes.html">Édition limitée</a>
-          <a href="nouveautes.html">Pièces signature</a>
-          <a href="nouveautes.html?category=all" class="underline-link">Voir tout les nouveautés</a>
-        </div>
-        <div class="submenu-categories">
-          <p class="submenu-title">FEMME</p>
-          <a href="nouveautes.html">Robes</a>
-          <a href="nouveautes.html">Tops</a>
-          <a href="nouveautes.html">Jupes</a>
-          <a href="nouveautes.html">Pantalons</a>
-          <a href="nouveautes.html">Vestes</a>
-          <a href="nouveautes.html">Accessoires</a>
-        </div>
-      </div>
-    </div>
-    <div class="nav-item">
-      <a href="collection.html" class="active">Collections</a>
-      <div class="submenu">
-        <div>
-          <a href="collection.html?collection=ss26">Printemps–Été 2026</a>
-          <a href="collection.html?collection=aw26">Automne–Hiver 2026</a>
-          <a href="collection.html?category=all" class="underline-link">Toutes les collections</a>
-        </div>
-        <div class="submenu-categories">
-          <a href="collection.html?category=robes">Robes</a>
-          <a href="collection.html?category=tops">Tops</a>
-          <a href="collection.html?category=jupes">Jupes</a>
-          <a href="collection.html?category=pantalons">Pantalons</a>
-          <a href="collection.html?category=vestes">Vestes</a>
-          <a href="collection.html?category=accessoires">Accessoires</a>
-        </div>
-      </div>
-    </div>
-    <div class="nav-item">
-      <a href="collaborations.html">Collaborations</a>
-      <div class="submenu">
-        <div>
-          <a href="collaborations.html?collabView=exclusives&category=all">Créations exclusives</a>
           <a href="collaborations.html?collabView=popup&category=all">Pop-up stores</a>
           <a href="collaborations.html?collabView=events&category=all">Événements</a>
           <a href="collaborations.html?collabView=all&category=all" class="underline-link">Toutes les collaborations</a>

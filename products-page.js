@@ -116,4 +116,6 @@ function attachProductCardNavigation(productGrid, products) {
   });
 }
 
-loadPageProducts();
+document.addEventListener('DOMContentLoaded', () => {
+  loadPageProducts();
+});
