@@ -1,5 +1,8 @@
 async function loadPageProducts() {
-  const productGrid = document.querySelector('.product-grid');
+  const productGrid =
+    document.querySelector('main .product-grid') ||
+    document.getElementById('product-grid') ||
+    document.querySelector('.product-grid');
   if (!productGrid) return;
 
   let products = [];
