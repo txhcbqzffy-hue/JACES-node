@@ -646,6 +646,26 @@
 
       const visibleCount = cards.filter((card) => !card.classList.contains('hidden')).length;
       if (filterCount) filterCount.textContent = `${visibleCount} produits`;
+
+      // Safety: si plus aucune carte visible, afficher une note explicite au lieu d’une page "vide"
+      try {
+        const grid = document.getElementById('product-grid') || document.querySelector('.product-grid');
+        if (grid) {
+          const existing = grid.querySelector('.filter-empty-note');
+          if (visibleCount === 0) {
+            if (!existing) {
+              const note = document.createElement('p');
+              note.className = 'filter-empty-note';
+              note.textContent = 'Aucun produit ne correspond aux filtres actuels.';
+              grid.appendChild(note);
+            }
+          } else if (existing) {
+            existing.remove();
+          }
+        }
+      } catch (e) {
+        // ignore UI note errors
+      }
     }
 
     function scrollToFilterBar() {
