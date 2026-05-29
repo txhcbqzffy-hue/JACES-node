@@ -508,10 +508,13 @@
     let currentNouveauteTagFilter = '';
     let isAutoSyncingVariantFilters = false;
 
+    function removeDiacritics(str) {
+      const input = String(str || '');
+      try { return input.normalize('NFD').replace(/\p{M}+/gu, ''); }
+      catch (e) { return input.normalize('NFD').replace(/[\u0300-\u036F]/g, ''); }
+    }
     function normalizeVariantToken(value) {
-      return String(value || '')
-        .normalize('NFD')
-        .replace(/[\u0300-\u036f]/g, '')
+      return removeDiacritics(value)
         .toLowerCase()
         .replace(/[^a-z0-9]+/g, '-')
         .replace(/^-+|-+$/g, '');

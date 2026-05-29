@@ -553,5 +553,7 @@ function normalizeId(value) {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+  if (window.__JACES_PRODUCTS_PAGE_INIT) return;
+  window.__JACES_PRODUCTS_PAGE_INIT = true;
   loadPageProducts();
 });
