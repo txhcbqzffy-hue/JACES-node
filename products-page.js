@@ -322,6 +322,7 @@ function buildProductCard(product) {
   }
 
   const quickBuyMarkup = buildQuickBuyMarkup(variants.sizes);
+  const fallbackImg = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==';
   card.innerHTML = `
     <div class="product-media">
       <button class="product-favorite" type="button" aria-label="Ajouter aux favoris">
@@ -329,8 +330,8 @@ function buildProductCard(product) {
           <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
         </svg>
       </button>
-      ${images.main ? `<img src="${images.main}" alt="${product.name || 'Produit JACES'}" loading="lazy" class="product-image-primary">` : ''}
-      ${images.hover ? `<img src="${images.hover}" alt="${product.name || 'Produit JACES'}" loading="lazy" class="product-image-secondary">` : ''}
+      ${images.main ? `<img src="${images.main}" alt="${product.name || 'Produit JACES'}" loading="lazy" class="product-image-primary" data-fallback="${fallbackImg}" onerror="this.onerror=null;this.src=this.dataset.fallback;">` : ''}
+      ${images.hover ? `<img src="${images.hover}" alt="${product.name || 'Produit JACES'}" loading="lazy" class="product-image-secondary" data-fallback="${images.main || fallbackImg}" onerror="this.onerror=null;this.src=this.dataset.fallback;">` : ''}
       ${quickBuyMarkup}
     </div>
     <div class="product-info">
