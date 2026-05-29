@@ -352,6 +352,18 @@ async function loadPageProducts() {
     console.error('Conteneur .product-grid introuvable sur la page.');
     return;
   }
+  console.log('before render');
+
+  try {
+    const mo = new MutationObserver(() => {
+      try {
+        console.log('product grid HTML (mutation)', productGrid.innerHTML.length);
+      } catch (e) {}
+    });
+    mo.observe(productGrid, { childList: true, subtree: false });
+  } catch (e) {
+    // ignore observer errors
+  }
 
   const pageName = getCurrentPageName();
   const apiPage = getApiPage(pageName);
@@ -413,6 +425,7 @@ async function loadPageProducts() {
     console.log('Produits apres filtrage:', products);
 
     productGrid.innerHTML = '';
+    console.log('product grid HTML', productGrid.innerHTML.length);
 
     if (!products.length) {
       const empty = document.createElement('p');
@@ -425,6 +438,8 @@ async function loadPageProducts() {
         empty.textContent = 'Aucun produit disponible pour le moment.';
       }
       productGrid.appendChild(empty);
+      console.log('after render');
+      console.log('product grid HTML', productGrid.innerHTML.length);
       window.dispatchEvent(new CustomEvent('jaces:products-loaded', {
         detail: {
           products,
@@ -434,12 +449,18 @@ async function loadPageProducts() {
           pageFilters
         }
       }));
+      setTimeout(() => {
+        console.log('after filters');
+        console.log('product grid HTML', productGrid.innerHTML.length);
+      }, 0);
       return;
     }
 
     products.forEach((product) => {
       productGrid.appendChild(buildProductCard(product));
     });
+    console.log('after render');
+    console.log('product grid HTML', productGrid.innerHTML.length);
 
     window.dispatchEvent(new CustomEvent('jaces:products-loaded', {
       detail: {
@@ -450,6 +471,10 @@ async function loadPageProducts() {
         pageFilters
       }
     }));
+    setTimeout(() => {
+      console.log('after filters');
+      console.log('product grid HTML', productGrid.innerHTML.length);
+    }, 0);
   } catch (error) {
     console.error('Impossible de charger les produits API:', error);
     productGrid.innerHTML = '';

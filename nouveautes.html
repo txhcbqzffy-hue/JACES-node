@@ -844,8 +844,14 @@
       applyStrictCategoryFilter();
     });
     window.addEventListener('jaces:products-loaded', () => {
+      console.log('[nouveautes] products-loaded handler: before filters');
+      const grid = document.getElementById('product-grid') || document.querySelector('.product-grid');
+      if (grid) console.log('[nouveautes] product grid HTML (before filters)', grid.innerHTML.length);
       seedInitialCardOrder();
       applyStrictCategoryFilter();
+      const gridAfter = document.getElementById('product-grid') || document.querySelector('.product-grid');
+      if (gridAfter) console.log('[nouveautes] product grid HTML (after filters)', gridAfter.innerHTML.length);
+      console.log('[nouveautes] products-loaded handler: after filters applied');
     });
   </script>
 
