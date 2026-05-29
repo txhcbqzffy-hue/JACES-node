@@ -705,10 +705,20 @@
         });
       }
 
+      window.addEventListener('jaces:products-loaded', () => {
+        if (requestedCategory && validCategories.has(requestedCategory)) {
+          setCollaborationCategory(requestedCategory, false);
+          return;
+        }
+        applyCollaborationView();
+      });
+
       updateFilterUI();
     })();
   </script>
   <script src="catalog.js"></script>
+  <script src="filters.js"></script>
+  <script type="module" src="products-page.js"></script>
   <script src="cart.js"></script>
   <script src="favorites.js"></script>
   <script src="auth.js"></script>

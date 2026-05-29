@@ -714,6 +714,11 @@
         setAccessoriesCategory(requestedCategory, false);
       }
 
+      window.addEventListener('jaces:products-loaded', () => {
+        updateFilterUi();
+        renderGrid();
+      });
+
       updateFilterUi();
       renderGrid();
     })();
@@ -728,6 +733,8 @@
     <div class="fav-panel-list" id="fav-panel-list"></div>
   </div>
   <script src="catalog.js"></script>
+  <script src="filters.js"></script>
+  <script type="module" src="products-page.js"></script>
   <script src="cart.js"></script>
   <script src="favorites.js"></script>
   <script src="auth.js"></script>

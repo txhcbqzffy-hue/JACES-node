@@ -66,6 +66,71 @@
       .replace(/^-+|-+$/g, '');
   }
 
+  function asPriceLabel(value) {
+    if (value === null || value === undefined) return '';
+    const raw = String(value).trim();
+    if (!raw) return '';
+    if (/€|eur/i.test(raw)) return raw;
+    const numeric = Number(raw);
+    if (Number.isFinite(numeric)) {
+      return `${Math.round(numeric)}€`;
+    }
+    return raw;
+  }
+
+  function normalizeApiProduct(product) {
+    if (!product || typeof product !== 'object') return null;
+
+    const images = Array.isArray(product.all_images)
+      ? product.all_images
+      : ((Array.isArray(product.images) ? product.images.map((entry) => entry?.url) : []));
+    const imageUrls = images.map((url) => normalizeMediaUrl(url)).filter(Boolean);
+    const variants = Array.isArray(product.available_variants) && product.available_variants.length
+      ? product.available_variants
+      : (Array.isArray(product.variants) ? product.variants : []);
+
+    const sizes = Array.isArray(product.sizes) && product.sizes.length
+      ? product.sizes
+      : variants.map((variant) => String(variant?.size || '').trim()).filter(Boolean);
+    const colors = Array.isArray(product.colors) && product.colors.length
+      ? product.colors
+      : variants.map((variant) => String(variant?.color || '').trim()).filter(Boolean);
+
+    const firstImage = imageUrls[0] || normalizeMediaUrl(product.image_url || product.img || '');
+    const secondImage = imageUrls[1] || normalizeMediaUrl(product.hover_image_url || product.secondaryImg || firstImage);
+
+    return {
+      ...product,
+      id: String(product.id || product.name || '').trim(),
+      price: asPriceLabel(product.price),
+      img: firstImage,
+      secondaryImg: secondImage,
+      tertiaryImg: imageUrls[2] || secondImage,
+      quaternaryImg: imageUrls[3] || imageUrls[2] || secondImage,
+      sizes: [...new Set(sizes.map((value) => String(value).trim()).filter(Boolean))],
+      colors: [...new Set(colors.map((value) => String(value).trim()).filter(Boolean))],
+      variants,
+      all_images: imageUrls
+    };
+  }
+
+  async function fetchApiProducts(id) {
+    try {
+      const params = new URLSearchParams();
+      if (id) params.set('id', id);
+      const endpoint = params.toString() ? `/api/products?${params.toString()}` : '/api/products';
+      const response = await fetch(endpoint);
+      if (!response.ok) {
+        throw new Error(`Erreur HTTP ${response.status}`);
+      }
+      const data = await response.json();
+      return Array.isArray(data) ? data : [];
+    } catch (error) {
+      console.warn('Chargement API produits indisponible pour la fiche produit:', error);
+      return [];
+    }
+  }
+
   function getOriginContext() {
     if (window.JacesCatalog && typeof window.JacesCatalog.getOriginContextFromSearch === 'function') {
       return window.JacesCatalog.getOriginContextFromSearch(window.location.search);
@@ -764,12 +829,17 @@
     return leftValues.reduce((count, value) => count + (rightValues.has(String(value).toLowerCase()) ? 1 : 0), 0);
   }
 
-  function getRelatedProducts(product, origin) {
-    if (!window.JacesCatalog || typeof window.JacesCatalog.getAllProducts !== 'function') return [];
+  function getRelatedProducts(product, origin, sourceProducts) {
+    const productSource = Array.isArray(sourceProducts) && sourceProducts.length
+      ? sourceProducts
+      : (window.JacesCatalog && typeof window.JacesCatalog.getAllProducts === 'function'
+        ? window.JacesCatalog.getAllProducts()
+        : []);
+    if (!productSource.length) return [];
 
     const currentFamily = getProductFamily(product);
     const currentIsUnique = hasUniqueSize(product);
-    return window.JacesCatalog.getAllProducts()
+    return productSource
       .filter((candidate) => candidate.id !== product.id)
       .map((candidate) => {
         let score = 0;
@@ -1202,17 +1272,33 @@
     return map[normalized] || '#cccccc';
   }
 
-  function renderDetailPage() {
+  async function renderDetailPage() {
     const shell = document.getElementById('product-detail-shell');
-    if (!shell || !window.JacesCatalog || typeof window.JacesCatalog.getProductById !== 'function') return;
+    if (!shell || !window.JacesCatalog || typeof window.JacesCatalog.buildProduct !== 'function') return;
 
     ensureHeaderSubmenus();
 
     const queryParams = new URLSearchParams(window.location.search);
+    const requestedId = getProductId();
     const queryProduct = getProductFromQuery();
     const queryName = queryParams.get('name') || queryProduct?.name || '';
     const origin = getOriginContext();
-    const catalogProduct = window.JacesCatalog.getProductById(getProductId());
+    const apiProducts = await fetchApiProducts(requestedId);
+    const apiProductById = requestedId
+      ? apiProducts.find((entry) => String(entry?.id || '') === String(requestedId))
+      : null;
+    const apiProductByName = !apiProductById && queryName
+      ? apiProducts.find((entry) => {
+        const nameMatch = normalizeProductKey(entry?.name) === normalizeProductKey(queryName);
+        const idMatch = normalizeProductKey(entry?.id) === normalizeProductKey(queryName);
+        return nameMatch || idMatch;
+      })
+      : null;
+    const apiProduct = normalizeApiProduct(apiProductById || apiProductByName);
+
+    const catalogProduct = typeof window.JacesCatalog.getProductById === 'function'
+      ? window.JacesCatalog.getProductById(requestedId)
+      : null;
     const catalogProductByName = !catalogProduct && queryName && typeof window.JacesCatalog.getAllProducts === 'function'
       ? window.JacesCatalog.getAllProducts().find((candidate) => {
         const nameMatch = normalizeProductKey(candidate?.name) === normalizeProductKey(queryName);
@@ -1220,9 +1306,17 @@
         return nameMatch || idMatch;
       })
       : null;
+
+    const sourceProduct = apiProduct || catalogProduct || catalogProductByName || null;
     const product = queryProduct
-      ? window.JacesCatalog.buildProduct(Object.assign({}, catalogProduct || catalogProductByName || {}, queryProduct))
-      : (catalogProduct || catalogProductByName);
+      ? window.JacesCatalog.buildProduct(Object.assign({}, sourceProduct, queryProduct))
+      : (sourceProduct ? window.JacesCatalog.buildProduct(sourceProduct) : null);
+
+    const relatedSourceProducts = (Array.isArray(apiProducts) && apiProducts.length
+      ? apiProducts.map((entry) => normalizeApiProduct(entry)).filter(Boolean)
+      : (typeof window.JacesCatalog.getAllProducts === 'function' ? window.JacesCatalog.getAllProducts() : []))
+      .map((entry) => window.JacesCatalog.buildProduct(entry));
+
     if (!product) {
       applyOriginContext(origin, 'Produit');
       shell.innerHTML = [
@@ -1288,7 +1382,7 @@
         return `<button class="product-detail-size-chip${selectedClass}${recommendedClass}${disabledClass}" type="button" data-size="${size}"${disabledAttr}>${size}</button>`;
       }).join('')
       : '';
-    const relatedProducts = getRelatedProducts(product, origin);
+    const relatedProducts = getRelatedProducts(product, origin, relatedSourceProducts);
     const rawReviewData = getProductReviewData(product);
     const reviewBreakdown = getReviewBreakdown(rawReviewData);
     const hasCustomRating = String(product?.ratingValue ?? '').trim() !== '';

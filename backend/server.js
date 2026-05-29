@@ -4,6 +4,9 @@ const express = require('express');
 const cors = require('cors');
 const { createClient } = require('@supabase/supabase-js');
 const path = require('path');
+const productsHandler = require('../api/products');
+const filtersHandler = require('../api/filters');
+const healthHandler = require('../api/health');
 
 const app = express();
 
@@ -26,28 +29,15 @@ app.get('/api/images-test', async (req, res) => {
 });
 
 app.get('/api/products', async (req, res) => {
-  const { data: products, error: productsError } = await supabase.from('products').select('*');
-  if (productsError) return res.status(500).json(productsError);
+  return productsHandler(req, res);
+});
 
-  const { data: images, error: imagesError } = await supabase.from('product_images').select('*');
-  if (imagesError) return res.status(500).json(imagesError);
+app.get('/api/filters', async (req, res) => {
+  return filtersHandler(req, res);
+});
 
-  const mapped = products.map((product) => {
-    const productImages = images
-      .filter((img) => img.product_id === product.id)
-      .sort((a, b) => a.position - b.position);
-
-    const uniqueUrls = [...new Set(productImages.map((img) => img.url))];
-
-    return {
-      ...product,
-      images: productImages,
-      image_url: uniqueUrls[0] || '',
-      hover_image_url: uniqueUrls[1] || uniqueUrls[0] || ''
-    };
-  });
-
-  res.json(mapped);
+app.get('/api/health', async (req, res) => {
+  return healthHandler(req, res);
 });
 
 const staticRoot = path.join(__dirname, '..');
