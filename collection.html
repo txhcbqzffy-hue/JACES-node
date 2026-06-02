@@ -55,7 +55,7 @@
           <a href="nouveautes.html">Drop été</a>
           <a href="nouveautes.html">Édition limitée</a>
           <a href="nouveautes.html">Pièces signature</a>
-          <a href="nouveautes.html?category=all" class="underline-link">Voir tout les nouveautés</a>
+          <a href="nouveautes.html?category=all" class="underline-link">Tout voir</a>
         </div>
         <div class="submenu-categories">
           <p class="submenu-title">FEMME</p>
@@ -248,7 +248,7 @@
         </div>
       </div>
 
-      <div class="product-grid" id="product-grid">
+      <div class="product-grid" id="product-grid" hidden>
         <article class="product-card collection-card" id="cat-robe" data-category="robes all" data-collection="ss26">
           <div class="product-media">
             <button class="product-favorite" type="button" aria-label="Ajouter aux favoris"><svg class="heart-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
@@ -740,10 +740,10 @@
       /* 24 - Top minimaliste */{ tertiary: '', quaternary: '' }
     ];
 
-    const collectionCards = Array.from(document.querySelectorAll('.collection-card'));
+    let collectionCards = Array.from(document.querySelectorAll('.collection-card'));
     const productGrid = document.querySelector('.product-grid');
     const productSort = document.getElementById('product-sort');
-    const originalCards = productGrid ? Array.from(productGrid.querySelectorAll('.collection-card')) : [];
+    let originalCards = productGrid ? Array.from(productGrid.querySelectorAll('.collection-card')) : [];
 
     function getCardPrice(card) {
       const priceText = card.querySelector('.product-price')?.textContent || '0';
@@ -753,6 +753,11 @@
     function getCardName(card) {
       return card.querySelector('h3')?.textContent?.trim() || '';
     }
+
+    window.addEventListener('jaces:products-loaded', () => {
+      collectionCards = Array.from(document.querySelectorAll('.collection-card'));
+      originalCards = productGrid ? Array.from(productGrid.querySelectorAll('.collection-card')) : [];
+    });
 
     if (productGrid && productSort) {
       productSort.addEventListener('change', () => {
@@ -1133,6 +1138,7 @@
     <div class="fav-panel-list" id="fav-panel-list"></div>
   </div>
   <script src="catalog.js"></script>
+  <script type="module" src="products-page.js"></script>
   <script src="cart.js"></script>
   <script src="favorites.js"></script>
   <script src="auth.js"></script>
@@ -1155,36 +1161,6 @@
     window.scrollToCollectionResults = scrollToCollectionResults;
 
     (function () {
-      function navigateToProduct(card) {
-        var name = (card.querySelector('h3') || {}).textContent || '';
-        name = name.trim();
-        var price = (card.querySelector('.product-price') || {}).textContent || '';
-        price = price.trim();
-        var selectedSize = (document.querySelector('#collection-filter-bar input[name="taille"]:checked') || {}).value || '';
-        var selectedColor = (document.querySelector('#collection-filter-bar input[name="couleur"]:checked') || {}).value || '';
-        var imgEl = card.querySelector('.product-image-primary');
-        var img = imgEl ? imgEl.getAttribute('src') || '' : '';
-        var secEl = card.querySelector('.product-image-secondary');
-        var secondaryImg = secEl ? secEl.getAttribute('src') || '' : '';
-        if (!name) return;
-        var url;
-        try {
-          url = (window.JacesCatalog && typeof window.JacesCatalog.getProductUrl === 'function')
-            ? window.JacesCatalog.getProductUrl({ name: name, price: price, img: img, secondaryImg: secondaryImg, selectedSize: selectedSize, selectedColor: selectedColor }, 'collection')
-            : null;
-        } catch (err) { url = null; }
-        if (!url) {
-          url = 'detail-produit.html?id=' + encodeURIComponent(name.toLowerCase().replace(/\s+/g, '-')) + '&name=' + encodeURIComponent(name) + '&price=' + encodeURIComponent(price) + '&img=' + encodeURIComponent(img) + '&selectedSize=' + encodeURIComponent(selectedSize) + '&selectedColor=' + encodeURIComponent(selectedColor) + '&origin=collection&originLabel=Collection&originUrl=collection.html&originNav=collection';
-        }
-        window.location.href = url;
-      }
-      document.querySelectorAll('.product-card').forEach(function (card) {
-        card.style.cursor = 'pointer';
-        card.addEventListener('click', function (e) {
-          if (e.target.closest('.product-favorite') || e.target.closest('.quick-buy-grid') || e.target.closest('.hover-sizes')) return;
-          navigateToProduct(card);
-        });
-      });
     })();
   </script>
 </body>

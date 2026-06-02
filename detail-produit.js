@@ -29,6 +29,38 @@
     }
   }
 
+  async function fetchProductsFromApi() {
+    const response = await fetch('/api/products', { cache: 'no-store' });
+    if (!response.ok) {
+      throw new Error('Impossible de charger les produits Supabase');
+    }
+
+    return await response.json();
+  }
+
+  async function fetchProductFromApi(id) {
+    const productId = String(id || '').trim();
+    if (!productId) return null;
+
+    const response = await fetch(`/api/products/${encodeURIComponent(productId)}`, { cache: 'no-store' });
+    if (response.status === 404) return null;
+    if (!response.ok) {
+      throw new Error('Impossible de charger le produit Supabase');
+    }
+
+    return await response.json();
+  }
+
+  function normalizeApiProduct(product) {
+    const images = Array.isArray(product?.images) ? product.images : [];
+    return Object.assign({}, product, {
+      img: product?.img || product?.image_url || images[0]?.url || '',
+      secondaryImg: product?.secondaryImg || product?.hover_image_url || images[1]?.url || '',
+      tertiaryImg: product?.tertiaryImg || images[2]?.url || '',
+      quaternaryImg: product?.quaternaryImg || images[3]?.url || ''
+    });
+  }
+
   function getProductFromQuery() {
     const params = new URLSearchParams(window.location.search);
     const id = params.get('id') || '';
@@ -67,10 +99,6 @@
   }
 
   function getOriginContext() {
-    if (window.JacesCatalog && typeof window.JacesCatalog.getOriginContextFromSearch === 'function') {
-      return window.JacesCatalog.getOriginContextFromSearch(window.location.search);
-    }
-
     const params = new URLSearchParams(window.location.search);
     const originUrl = params.get('originUrl') || 'collection.html';
     const originLabel = params.get('originLabel') || 'Collection';
@@ -131,7 +159,7 @@
         '  <a href="nouveautes.html">Drop ete</a>',
         '  <a href="nouveautes.html">Edition limitee</a>',
         '  <a href="nouveautes.html">Pieces signature</a>',
-        '  <a href="nouveautes.html" class="underline-link">Voir toute la collection</a>',
+        '  <a href="nouveautes.html" class="underline-link">Tout voir</a>',
         '</div>',
         '<div class="submenu-categories">',
         '  <p class="submenu-title">FEMME</p>',
@@ -167,7 +195,7 @@
         '</div>',
         '<div class="submenu-categories">',
         '  <a href="collaborations.html">JACES x Nike</a>',
-        '  <a href="collaborations.html">JACES x Chloe</a>',
+        '  <a href="collaborations.html">JACES x Chloé</a>',
         '  <a href="collaborations.html">JACES x Jacquemus</a>',
         '  <a href="collaborations.html">JACES x Dior</a>',
         '  <a href="collaborations.html">JACES x Saint Laurent</a>',
@@ -175,15 +203,11 @@
       ].join(''),
       'accessoires.html': [
         '<div>',
-        '  <p class="submenu-title">SELECTION</p>',
-        '  <a href="#">Sacs</a>',
-        '  <a href="#">Chaussures</a>',
-        '  <a href="#">Bijoux</a>',
-        '</div>',
-        '<div>',
-        '  <p class="submenu-title">NOUVEAUTES</p>',
-        '  <a href="#">Pieces a venir</a>',
-        '  <a href="#" class="underline-link">Explorer accessoires</a>',
+        '  <p class="submenu-title">ACCESSOIRES</p>',
+        '  <a href="accessoires.html">Sacs</a>',
+        '  <a href="accessoires.html">Bijoux</a>',
+        '  <a href="accessoires.html">Ceintures</a>',
+        '  <a href="accessoires.html">Foulards</a>',
         '</div>'
       ].join(''),
       'defile.html': [
@@ -764,12 +788,39 @@
     return leftValues.reduce((count, value) => count + (rightValues.has(String(value).toLowerCase()) ? 1 : 0), 0);
   }
 
-  function getRelatedProducts(product, origin) {
-    if (!window.JacesCatalog || typeof window.JacesCatalog.getAllProducts !== 'function') return [];
+  function buildProductUrl(product, origin) {
+    const params = new URLSearchParams();
+    params.set('id', product.id || '');
+    if (product.name) params.set('name', product.name);
+    if (product.price) params.set('price', product.price);
+    if (product.subtitle) params.set('subtitle', product.subtitle);
+    if (product.img) params.set('img', product.img);
+    if (product.secondaryImg) params.set('secondaryImg', product.secondaryImg);
+    if (product.tertiaryImg) params.set('tertiaryImg', product.tertiaryImg);
+    if (product.quaternaryImg) params.set('quaternaryImg', product.quaternaryImg);
+    if (product.imageCaption) params.set('imageCaption', product.imageCaption);
+    if (Array.isArray(product.colors) && product.colors.length) params.set('colors', product.colors.join(','));
+    if (Array.isArray(product.sizes) && product.sizes.length) params.set('sizes', product.sizes.join(','));
+    if (product.selectedSize) params.set('selectedSize', product.selectedSize);
+    if (product.selectedColor) params.set('selectedColor', product.selectedColor);
+    if (product.ratingValue !== undefined && product.ratingValue !== null) params.set('ratingValue', String(product.ratingValue));
+    if (product.ratingCount !== undefined && product.ratingCount !== null) params.set('ratingCount', String(product.ratingCount));
+
+    const originKey = origin?.key || 'collection';
+    params.set('origin', originKey);
+    params.set('originLabel', origin?.label || 'Collection');
+    params.set('originUrl', origin?.url || 'collection.html');
+    params.set('originNav', origin?.navKey || originKey);
+
+    return `detail-produit.html?${params.toString()}`;
+  }
+
+  function getRelatedProducts(product, origin, allProducts) {
+    const sourceProducts = Array.isArray(allProducts) ? allProducts : [];
 
     const currentFamily = getProductFamily(product);
     const currentIsUnique = hasUniqueSize(product);
-    return window.JacesCatalog.getAllProducts()
+    return sourceProducts
       .filter((candidate) => candidate.id !== product.id)
       .map((candidate) => {
         let score = 0;
@@ -781,7 +832,7 @@
         return {
           product: candidate,
           score,
-          url: window.JacesCatalog.getProductUrl(candidate, origin || 'collection')
+          url: buildProductUrl(candidate, origin || { key: 'collection', label: 'Collection', url: 'collection.html', navKey: 'collection' })
         };
       })
       .sort((left, right) => right.score - left.score || left.product.name.localeCompare(right.product.name, 'fr'))
@@ -1202,9 +1253,9 @@
     return map[normalized] || '#cccccc';
   }
 
-  function renderDetailPage() {
+  async function renderDetailPage() {
     const shell = document.getElementById('product-detail-shell');
-    if (!shell || !window.JacesCatalog || typeof window.JacesCatalog.getProductById !== 'function') return;
+    if (!shell) return;
 
     ensureHeaderSubmenus();
 
@@ -1212,17 +1263,49 @@
     const queryProduct = getProductFromQuery();
     const queryName = queryParams.get('name') || queryProduct?.name || '';
     const origin = getOriginContext();
-    const catalogProduct = window.JacesCatalog.getProductById(getProductId());
-    const catalogProductByName = !catalogProduct && queryName && typeof window.JacesCatalog.getAllProducts === 'function'
-      ? window.JacesCatalog.getAllProducts().find((candidate) => {
-        const nameMatch = normalizeProductKey(candidate?.name) === normalizeProductKey(queryName);
-        const idMatch = normalizeProductKey(candidate?.id) === normalizeProductKey(queryName);
-        return nameMatch || idMatch;
-      })
-      : null;
-    const product = queryProduct
-      ? window.JacesCatalog.buildProduct(Object.assign({}, catalogProduct || catalogProductByName || {}, queryProduct))
-      : (catalogProduct || catalogProductByName);
+    shell.innerHTML = [
+      '<div class="product-detail-empty">',
+      '  <p class="favorites-empty-kicker">Chargement du produit</p>',
+      '  <h1>Merci de patienter…</h1>',
+      '  <p>Le produit est en cours de chargement depuis Supabase.</p>',
+      '</div>'
+    ].join('');
+
+    let allProducts = [];
+    let product = null;
+
+    try {
+      const [apiProducts, apiProduct] = await Promise.all([
+        fetchProductsFromApi(),
+        fetchProductFromApi(getProductId())
+      ]);
+
+      allProducts = Array.isArray(apiProducts) ? apiProducts.map(normalizeApiProduct) : [];
+      const normalizedApiProduct = apiProduct ? normalizeApiProduct(apiProduct) : null;
+
+      const productByName = !normalizedApiProduct && queryName
+        ? allProducts.find((candidate) => {
+          const nameMatch = normalizeProductKey(candidate?.name) === normalizeProductKey(queryName);
+          const idMatch = normalizeProductKey(candidate?.id) === normalizeProductKey(queryName);
+          return nameMatch || idMatch;
+        })
+        : null;
+
+      product = normalizedApiProduct || productByName;
+      if (product && queryProduct) {
+        product = Object.assign({}, product, queryProduct, {
+          img: queryProduct.img || product.img,
+          secondaryImg: queryProduct.secondaryImg || product.secondaryImg,
+          tertiaryImg: queryProduct.tertiaryImg || product.tertiaryImg,
+          quaternaryImg: queryProduct.quaternaryImg || product.quaternaryImg,
+          colors: queryProduct.colors && queryProduct.colors.length ? queryProduct.colors : product.colors,
+          sizes: queryProduct.sizes && queryProduct.sizes.length ? queryProduct.sizes : product.sizes
+        });
+      }
+    } catch (error) {
+      console.error('Impossible de charger le produit Supabase:', error);
+    }
+
     if (!product) {
       applyOriginContext(origin, 'Produit');
       shell.innerHTML = [
@@ -1288,7 +1371,7 @@
         return `<button class="product-detail-size-chip${selectedClass}${recommendedClass}${disabledClass}" type="button" data-size="${size}"${disabledAttr}>${size}</button>`;
       }).join('')
       : '';
-    const relatedProducts = getRelatedProducts(product, origin);
+    const relatedProducts = getRelatedProducts(product, origin, allProducts);
     const rawReviewData = getProductReviewData(product);
     const reviewBreakdown = getReviewBreakdown(rawReviewData);
     const hasCustomRating = String(product?.ratingValue ?? '').trim() !== '';

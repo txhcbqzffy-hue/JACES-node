@@ -1,5 +1,107 @@
-console.log("NOUVELLE VERSION PRODUCTS PAGE");
 import { getProducts } from './api/productsApi.js';
+
+function getPageType() {
+  const body = document.body;
+  const path = window.location.pathname.split('/').pop() || '';
+
+  if (body?.classList.contains('nouveautes-page')) return 'nouveautes';
+  if (body?.classList.contains('accessoires-page')) return 'accessoires';
+  if (body?.classList.contains('collaboration-page')) return 'collaboration';
+  if (path === 'collection.html') return 'collection';
+  return '';
+}
+
+function getProductCategoryTokens(product) {
+  const tokens = ['all'];
+  const scope = String([product?.name, product?.description].filter(Boolean).join(' '))
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '');
+
+  if (/robe/.test(scope)) tokens.unshift('robes');
+  if (/top/.test(scope)) tokens.unshift('tops');
+  if (/jupe/.test(scope)) tokens.unshift('jupes');
+  if (/pantalon|jean/.test(scope)) tokens.unshift('pantalons');
+  if (/veste|manteau|blazer/.test(scope)) tokens.unshift('vestes');
+  if (/sac/.test(scope)) tokens.unshift('sacs');
+  if (/bijou|boucle|collier|bracelet/.test(scope)) tokens.unshift('bijoux');
+  if (/ceinture/.test(scope)) tokens.unshift('ceintures');
+  if (/foulard|echarpe/.test(scope)) tokens.unshift('foulards');
+  return Array.from(new Set(tokens)).join(' ');
+}
+
+function normalizeMediaUrl(value) {
+  const raw = String(value || '').trim();
+  if (!raw) return '';
+
+  try {
+    const parsed = new URL(raw, window.location.href);
+    const host = parsed.hostname.toLowerCase();
+    const isDropbox = host === 'dropbox.com' || host === 'www.dropbox.com' || host === 'dl.dropbox.com' || host === 'dl.dropboxusercontent.com';
+
+    if (isDropbox) {
+      parsed.hostname = 'dl.dropboxusercontent.com';
+      parsed.searchParams.delete('dl');
+      parsed.searchParams.set('raw', '1');
+    }
+
+    return parsed.toString();
+  } catch (error) {
+    return raw;
+  }
+}
+
+function buildProductCard(product, pageType) {
+  const card = document.createElement('article');
+  const images = Array.isArray(product.images) ? product.images : [];
+  const mainImage = normalizeMediaUrl(images[0]?.url || product.image_url || product.img || '');
+  const hoverImage = normalizeMediaUrl(images[1]?.url || product.hover_image_url || product.secondaryImg || mainImage);
+  const colors = Array.isArray(product.colors) ? product.colors.map((color) => String(color || '').trim()).filter(Boolean) : [];
+  const sizes = Array.isArray(product.sizes) ? product.sizes.map((size) => String(size || '').trim()).filter(Boolean) : [];
+
+  card.className = 'product-card collection-card product-card-linkable';
+  card.dataset.productId = String(product.id || '');
+  card.dataset.category = getProductCategoryTokens(product);
+  card.dataset.collection = String(product.collectionSeason || 'all').toLowerCase() || 'all';
+  card.dataset.collabView = product.collaborationView ? `all ${String(product.collaborationView).toLowerCase()}` : 'all';
+  card.dataset.nouveauteTags = Array.isArray(product.nouveauteTags) ? product.nouveauteTags.join(' ') : '';
+  card.dataset.material = String(product.material || '').toLowerCase();
+  card.dataset.color = colors.join(' ').toLowerCase();
+  card.dataset.size = sizes.join(' ');
+  card.dataset.pageType = pageType || String(product.type || '').toLowerCase();
+
+  card.innerHTML = `
+    <div class="product-media">
+      <button class="product-favorite" type="button" aria-label="Ajouter aux favoris">
+        <svg class="heart-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+        </svg>
+      </button>
+      ${mainImage ? `<img src="${mainImage}" alt="${product.name || 'Produit JACES'}" loading="lazy" class="product-image-primary">` : '<div class="favorites-card-placeholder"></div>'}
+      ${hoverImage ? `<img src="${hoverImage}" alt="${product.name || 'Produit JACES'}" loading="lazy" class="product-image-secondary">` : ''}
+    </div>
+    <div class="product-info">
+      <h3>${product.name || 'Produit JACES'}</h3>
+      <p class="product-price">${product.price || ''}</p>
+    </div>
+  `;
+
+  return card;
+}
+
+function buildEmptyState(message) {
+  return `
+    <div class="product-grid-empty">
+      <p class="favorites-empty-kicker">${message}</p>
+      <h1>Aucun produit à afficher</h1>
+      <p>Essayez une autre sélection ou revenez plus tard.</p>
+    </div>
+  `;
+}
+
+function getVisibleProducts(products, pageType) {
+  return Array.isArray(products) ? products : [];
+}
 
 async function loadPageProducts() {
   const productGrid = document.querySelector('.product-grid');
@@ -7,137 +109,34 @@ async function loadPageProducts() {
 
   try {
     const products = await getProducts();
-    console.log(products);
+    window.__JACES_PRODUCTS_CACHE = Array.isArray(products) ? products : [];
+    const pageType = getPageType();
+    const visibleProducts = getVisibleProducts(products, pageType);
 
-    // Si peu de produits API, garder les cartes statiques
-    // Sinon, remplacer par les produits API
-    if (products.length < 5) {
-      // Ajouter les produits API au début de la grille
-      const cards = products.map((product) => {
-        const card = document.createElement('article');
-        card.className = 'product-card collection-card';
-        card.setAttribute('data-category', `${product.category || 'all'} all`);
+    productGrid.hidden = false;
+    productGrid.innerHTML = '';
 
-        if (product.subcategory) {
-          card.setAttribute('data-subcategory', product.subcategory);
-        }
-
-        const images = Array.isArray(product.images) ? product.images : [];
-        const mainImage = images[0]?.url || product.image_url || product.img || '';
-        const hoverImage = images[1]?.url || product.hover_image_url || mainImage;
-
-        card.innerHTML = `
-          <div class="product-media">
-            <button class="product-favorite" type="button" aria-label="Ajouter aux favoris">
-              <svg class="heart-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
-              </svg>
-            </button>
-
-            <img src="${mainImage}" alt="${product.name || 'Produit JACES'}" loading="lazy" class="product-image-primary">
-            <img src="${hoverImage}" alt="${product.name || 'Produit JACES'}" loading="lazy" class="product-image-secondary">
-          </div>
-
-          <div class="product-info">
-            <h3>${product.name || 'Produit JACES'}</h3>
-            <p class="product-price">${product.price || ''}</p>
-          </div>
-        `;
-
-        return card;
-      });
-
-      // Insérer les cartes API au début
-      cards.reverse().forEach((card) => productGrid.insertBefore(card, productGrid.firstChild));
-    } else {
-      // Remplacer la grille si on a assez de produits
-      const cards = products.map((product) => {
-        const card = document.createElement('article');
-        card.className = 'product-card collection-card';
-        card.setAttribute('data-category', `${product.category || 'all'} all`);
-
-        if (product.subcategory) {
-          card.setAttribute('data-subcategory', product.subcategory);
-        }
-
-        const images = Array.isArray(product.images) ? product.images : [];
-        const mainImage = images[0]?.url || product.image_url || product.img || '';
-        const hoverImage = images[1]?.url || product.hover_image_url || mainImage;
-
-        card.innerHTML = `
-          <div class="product-media">
-            <button class="product-favorite" type="button" aria-label="Ajouter aux favoris">
-              <svg class="heart-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
-              </svg>
-            </button>
-
-            <img src="${mainImage}" alt="${product.name || 'Produit JACES'}" loading="lazy" class="product-image-primary">
-            <img src="${hoverImage}" alt="${product.name || 'Produit JACES'}" loading="lazy" class="product-image-secondary">
-          </div>
-
-          <div class="product-info">
-            <h3>${product.name || 'Produit JACES'}</h3>
-            <p class="product-price">${product.price || ''}</p>
-          </div>
-        `;
-
-        return card;
-      });
-
-      productGrid.innerHTML = '';
-      cards.forEach((card) => productGrid.appendChild(card));
+    if (!visibleProducts.length) {
+      productGrid.innerHTML = buildEmptyState('Aucun produit disponible pour cette sélection');
+      window.dispatchEvent(new CustomEvent('jaces:products-loaded', { detail: { products: [], pageType } }));
+      return;
     }
 
-    window.dispatchEvent(new CustomEvent('jaces:products-loaded', { detail: { products } }));
-    attachProductCardNavigation(productGrid, products);
+    visibleProducts.forEach((product) => {
+      productGrid.appendChild(buildProductCard(product, pageType));
+    });
+
+    const countNode = document.querySelector('.filter-count');
+    if (countNode) {
+      countNode.textContent = `${visibleProducts.length} produits`;
+    }
+
+    window.dispatchEvent(new CustomEvent('jaces:products-loaded', { detail: { products: visibleProducts, pageType } }));
   } catch (error) {
     console.error('Impossible de charger les produits API:', error);
+    productGrid.hidden = false;
+    productGrid.innerHTML = buildEmptyState('Impossible de charger le catalogue Supabase');
   }
-}
-
-function attachProductCardNavigation(productGrid, products) {
-  function navigateToProduct(card) {
-    const name = card.querySelector('h3')?.textContent?.trim() || '';
-    const price = card.querySelector('.product-price')?.textContent?.trim() || '';
-    const img = card.querySelector('.product-image-primary')?.getAttribute('src') || '';
-    const id = products.find((product) => product.name === name)?.id || normalizeId(name);
-
-    const params = new URLSearchParams();
-    params.set('id', id);
-    if (name) params.set('name', name);
-    if (price) params.set('price', price);
-    if (img) params.set('img', img);
-
-    params.set('origin', document.body.classList.contains('nouveautes-page') ? 'nouveautes' : 'produits');
-    params.set('originLabel', document.body.classList.contains('nouveautes-page') ? 'Nouveautes' : 'Produits');
-    params.set('originUrl', window.location.pathname.split('/').pop());
-    params.set('originNav', document.body.classList.contains('nouveautes-page') ? 'nouveautes' : 'produits');
-
-    window.location.href = `detail-produit.html?${params.toString()}`;
-  }
-
-  productGrid.querySelectorAll('.product-card').forEach((card) => {
-    card.style.cursor = 'pointer';
-    card.addEventListener('click', (event) => {
-      if (
-        event.target.closest('.product-favorite') ||
-        event.target.closest('.quick-buy-grid') ||
-        event.target.closest('.hover-sizes')
-      ) return;
-
-      navigateToProduct(card);
-    });
-  });
-}
-
-function normalizeId(value) {
-  return String(value || '')
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '')
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-+|-+$/g, '');
 }
 
 loadPageProducts();

@@ -55,7 +55,7 @@
             <a href="nouveautes.html">Drop été</a>
             <a href="nouveautes.html">Édition limitée</a>
             <a href="nouveautes.html">Pièces signature</a>
-            <a href="nouveautes.html?category=all" class="underline-link">Voir tout les nouveautés</a>
+            <a href="nouveautes.html?category=all" class="underline-link">Tout voir</a>
           </div>
           <div class="submenu-categories">
             <p class="submenu-title">FEMME</p>
@@ -159,9 +159,9 @@
       <div class="category-nav-track" id="category-nav-track">
         <a href="#product-grid" class="cat-nav-item active" data-category="all">
           <div class="cat-nav-circle">
-            <img src="https://images.unsplash.com/photo-1551488831-00ddcb6c6bd3?q=80&w=400" alt="Voir tout" loading="eager">
+            <img src="https://images.unsplash.com/photo-1551488831-00ddcb6c6bd3?q=80&w=400" alt="Tout voir" loading="eager">
           </div>
-          <span>Voir tout</span>
+          <span>Tout voir</span>
         </a>
         <a href="#cat-sacs" class="cat-nav-item" data-category="sacs">
           <div class="cat-nav-circle">
@@ -235,7 +235,7 @@
         </div>
       </div>
 
-      <div class="product-grid" id="product-grid">
+      <div class="product-grid" id="product-grid" hidden>
         <article class="product-card collection-card" id="cat-sacs" data-category="sacs all" data-material="cuir" data-color="noir">
           <div class="product-media">
             <button class="product-favorite" type="button" aria-label="Ajouter aux favoris"><svg class="heart-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
@@ -326,7 +326,6 @@
     <p class="footer-note">Copyright © 2026 Chloé. Tous droits réservés.</p>
   </footer>
 
-  <script src="admin-products.js"></script>
   <script>
     (function () {
       function updateHeaderState() {
@@ -442,7 +441,7 @@
       const countNode = document.getElementById('filter-count');
       const productGrid = document.getElementById('product-grid');
       const productSort = document.getElementById('product-sort');
-      const allCards = productGrid ? Array.from(productGrid.querySelectorAll('.collection-card')) : [];
+      let allCards = productGrid ? Array.from(productGrid.querySelectorAll('.collection-card')) : [];
       const categoryNavItems = Array.from(document.querySelectorAll('.cat-nav-item'));
       let activeCategory = 'all';
       let isAutoSyncingVariantFilters = false;
@@ -458,6 +457,11 @@
         };
         return labels[token] || token;
       }
+
+      window.addEventListener('jaces:products-loaded', () => {
+        allCards = productGrid ? Array.from(productGrid.querySelectorAll('.collection-card')) : [];
+        renderGrid();
+      });
 
       allCards.forEach((card) => {
         const productOptions = card.querySelector('.product-options');
@@ -728,6 +732,7 @@
     <div class="fav-panel-list" id="fav-panel-list"></div>
   </div>
   <script src="catalog.js"></script>
+  <script type="module" src="products-page.js"></script>
   <script src="cart.js"></script>
   <script src="favorites.js"></script>
   <script src="auth.js"></script>

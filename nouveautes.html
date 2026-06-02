@@ -70,7 +70,7 @@
           <a href="nouveautes.html?category=all&nouveauteTag=drop-ete">Drop été</a>
           <a href="nouveautes.html?category=all&nouveauteTag=edition-limitee">Édition limitée</a>
           <a href="nouveautes.html?category=all&nouveauteTag=pieces-signature">Pièces signature</a>
-          <a href="nouveautes.html?category=all" class="underline-link">Voir tout les nouveautés</a>
+          <a href="nouveautes.html?category=all" class="underline-link">Tout voir</a>
         </div>
         <div class="submenu-categories">
           <p class="submenu-title">FEMME</p>
@@ -263,7 +263,7 @@
         </div>
       </div>
 
-      <div class="product-grid" id="product-grid">
+      <div class="product-grid" id="product-grid" hidden>
         <article class="product-card collection-card" data-category="robes all cette-semaine">
           <div class="product-info"><h3>Robe biais satiné</h3><p class="product-price">320€</p></div>
         </article>
@@ -344,7 +344,6 @@
     <p class="footer-note">Copyright © 2026 Chloé. Tous droits réservés.</p>
   </footer>
 
-  <script src="admin-products.js"></script>
   <script>
     function updateHeaderState() {
       document.body.classList.toggle('header-scrolled', window.scrollY > 8);
@@ -494,11 +493,11 @@
       { primary: 'https://images.unsplash.com/photo-1485968579580-b6d095142e6e?q=80&w=1400', secondary: 'https://images.unsplash.com/photo-1464863979621-258859e62245?q=80&w=1400' },
     ];
 
-    const collectionCards = Array.from(document.querySelectorAll('.collection-card'));
+    let collectionCards = Array.from(document.querySelectorAll('.collection-card'));
     const productGrid = document.querySelector('.product-grid');
     const productSort = document.getElementById('product-sort');
     const filterCount = document.querySelector('.filter-count');
-    const originalCards = productGrid ? Array.from(productGrid.querySelectorAll('.collection-card')) : [];
+    let originalCards = productGrid ? Array.from(productGrid.querySelectorAll('.collection-card')) : [];
     let currentCategoryFilter = 'all';
     let currentNouveauteTagFilter = '';
     let isAutoSyncingVariantFilters = false;
@@ -840,10 +839,14 @@
     activateNouveautesFromURL(false);
 
     window.addEventListener('jaces:admin-products-sync', () => {
+      collectionCards = Array.from(document.querySelectorAll('.collection-card'));
+      originalCards = productGrid ? Array.from(productGrid.querySelectorAll('.collection-card')) : [];
       seedInitialCardOrder();
       applyStrictCategoryFilter();
     });
     window.addEventListener('jaces:products-loaded', () => {
+      collectionCards = Array.from(document.querySelectorAll('.collection-card'));
+      originalCards = productGrid ? Array.from(productGrid.querySelectorAll('.collection-card')) : [];
       seedInitialCardOrder();
       applyStrictCategoryFilter();
     });
@@ -864,37 +867,6 @@
   <script src="auth.js"></script>
   <script>
     (function () {
-      function navigateToProduct(card) {
-        var name = (card.querySelector('h3') || {}).textContent || '';
-        name = name.trim();
-        var price = (card.querySelector('.product-price') || {}).textContent || '';
-        price = price.trim();
-        var selectedSize = (document.querySelector('#collection-filter-bar input[name="taille"]:checked') || {}).value || '';
-        var selectedColor = (document.querySelector('#collection-filter-bar input[name="couleur"]:checked') || {}).value || '';
-        var imgEl = card.querySelector('.product-image-primary');
-        var img = imgEl ? imgEl.getAttribute('src') || '' : '';
-        var secEl = card.querySelector('.product-image-secondary');
-        var secondaryImg = secEl ? secEl.getAttribute('src') || '' : '';
-        if (!name) return;
-        var url;
-        try {
-          url = (window.JacesCatalog && typeof window.JacesCatalog.getProductUrl === 'function')
-            ? window.JacesCatalog.getProductUrl({ name: name, price: price, img: img, secondaryImg: secondaryImg, selectedSize: selectedSize, selectedColor: selectedColor }, 'nouveautes')
-            : null;
-        } catch (err) { url = null; }
-        if (!url) {
-          url = 'detail-produit.html?id=' + encodeURIComponent(name.toLowerCase().replace(/\s+/g, '-')) + '&name=' + encodeURIComponent(name) + '&price=' + encodeURIComponent(price) + '&img=' + encodeURIComponent(img) + '&selectedSize=' + encodeURIComponent(selectedSize) + '&selectedColor=' + encodeURIComponent(selectedColor) + '&origin=nouveautes&originLabel=Nouveautes&originUrl=nouveautes.html&originNav=nouveautes';
-        }
-        window.location.href = url;
-      }
-      document.querySelectorAll('.product-card').forEach(function (card) {
-        card.style.cursor = 'pointer';
-        card.addEventListener('click', function (e) {
-          if (card.classList.contains('admin-product-card') || card.hasAttribute('data-admin-id')) return;
-          if (e.target.closest('.product-favorite') || e.target.closest('.quick-buy-grid') || e.target.closest('.hover-sizes')) return;
-          navigateToProduct(card);
-        });
-      });
     })();
   </script>
 </body>
