@@ -386,7 +386,7 @@
 
     function updateFilterUI() {
       const hasActive = document.querySelectorAll('#collection-filter-bar input:checked').length > 0;
-      resetPill.classList.toggle('visible', hasActive);
+      if (resetPill) resetPill.classList.toggle('visible', hasActive);
       filterPills.forEach(pill => {
         const wrap = pill.closest('.filter-pill-wrap');
         const checkedCount = wrap ? wrap.querySelectorAll('input:checked').length : 0;
@@ -400,11 +400,13 @@
       updateFilterUI();
       applyStrictCategoryFilter();
     }));
-    resetPill.addEventListener('click', () => {
-      document.querySelectorAll('#collection-filter-bar input').forEach(i => { i.checked = false; });
-      updateFilterUI();
-      applyStrictCategoryFilter();
-    });
+    if (resetPill) {
+      resetPill.addEventListener('click', () => {
+        document.querySelectorAll('#collection-filter-bar input').forEach(i => { i.checked = false; });
+        updateFilterUI();
+        applyStrictCategoryFilter();
+      });
+    }
     updateFilterUI();
 
     document.querySelectorAll('.filter-pill').forEach(pill => {
@@ -416,7 +418,8 @@
         document.querySelectorAll('.filter-dropdown').forEach(d => d.classList.remove('open'));
         if (!isOpen) {
           pill.classList.add('open');
-          wrap.querySelector('.filter-dropdown').classList.add('open');
+          const dropdown = wrap ? wrap.querySelector('.filter-dropdown') : null;
+          if (dropdown) dropdown.classList.add('open');
         }
       });
     });
