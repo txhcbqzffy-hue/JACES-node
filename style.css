@@ -5677,6 +5677,26 @@ body.header-scrolled .header .submenu a.submenu-link-active {
     visibility: hidden;
     pointer-events: none;
   }
+
+  .nav-item.submenu-open .submenu {
+    display: grid !important;
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 50%;
+    right: auto;
+    transform: translateX(-50%);
+    width: min(92vw, 560px);
+    padding: 16px 14px 18px;
+    grid-template-columns: 1fr;
+    column-gap: 14px;
+    row-gap: 12px;
+    border-radius: 12px;
+    z-index: 320;
+  }
+
   .submenu-categories {
     columns: 1;
     min-width: 0;

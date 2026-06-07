@@ -50,9 +50,55 @@
     }));
   }
 
+  function initMobileMegaMenu(navRoot) {
+    if (!navRoot || window.__JACES_MEGAMENU_INIT) return;
+
+    const isTouchLike = window.matchMedia('(hover: none), (pointer: coarse)').matches;
+    if (!isTouchLike) return;
+
+    window.__JACES_MEGAMENU_INIT = true;
+
+    const items = Array.from(navRoot.querySelectorAll('.nav-item'));
+
+    function closeAll(exceptItem) {
+      items.forEach((item) => {
+        if (item !== exceptItem) item.classList.remove('submenu-open');
+      });
+    }
+
+    items.forEach((item) => {
+      const trigger = item.querySelector(':scope > a');
+      const submenu = item.querySelector(':scope > .submenu');
+      if (!trigger || !submenu) return;
+
+      trigger.addEventListener('click', (event) => {
+        const isOpen = item.classList.contains('submenu-open');
+
+        // Premier tap: on ouvre le mega menu sans naviguer.
+        if (!isOpen) {
+          event.preventDefault();
+          closeAll(item);
+          item.classList.add('submenu-open');
+          return;
+        }
+
+        // Deuxieme tap: on laisse la navigation se faire normalement.
+        item.classList.remove('submenu-open');
+      });
+    });
+
+    document.addEventListener('click', (event) => {
+      if (!navRoot.contains(event.target)) {
+        closeAll(null);
+      }
+    });
+  }
+
   async function initDynamicMenus() {
     const navRoot = document.querySelector('.nav');
     if (!navRoot) return;
+
+    initMobileMegaMenu(navRoot);
 
     try {
       const response = await fetch('/api/filters');
