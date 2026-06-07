@@ -396,8 +396,13 @@ async function loadPageProducts() {
       label: filter.label || filter.name || 'Filtre'
     })));
 
-    if (pageFilters.length) {
-      setCategoryNavFromFilters(pageFilters, requestedCategory || 'all');
+    // Pour la page collection, les vignettes ne montrent que les filtres "categories"
+    // (pas "collections" qui contient les filtres de saison).
+    const navFilters = apiPage === 'collection'
+      ? pageFilters.filter((f) => normalizeToken(f.menu) === 'categories')
+      : pageFilters;
+    if (navFilters.length) {
+      setCategoryNavFromFilters(navFilters, requestedCategory || 'all');
     }
 
     const activeFilter = resolveActiveFilter(pageFilters, rawFilterId, requestedCategory);
