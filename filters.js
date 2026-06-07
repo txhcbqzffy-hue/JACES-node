@@ -43,9 +43,11 @@
     }
   }
 
-  function mapFiltersToLinks(filters, targetPage) {
+  // Génère des liens simples ?category=slug (sans filterId)
+  // pour rester compatible avec les scripts inline de chaque page
+  function mapFiltersToSimpleLinks(filters, targetPage) {
     return filters.map((f) => ({
-      href: `${targetPage}?filterId=${encodeURIComponent(f.id)}&category=${encodeURIComponent(slugify(f.slug || f.label || f.name || f.id))}`,
+      href: `${targetPage}?category=${encodeURIComponent(slugify(f.slug || f.label || f.name || f.id))}`,
       label: f.label || f.name || 'Filtre'
     }));
   }
@@ -72,24 +74,30 @@
       if (!trigger || !submenu) return;
 
       trigger.addEventListener('click', (event) => {
-        const isOpen = item.classList.contains('submenu-open');
+        const href = String(trigger.getAttribute('href') || '').trim();
+        const currentPage = (window.location.pathname.split('/').pop() || '').toLowerCase();
+        const targetPage = href.split('?')[0].toLowerCase();
+        const isSamePageLink = !!targetPage && targetPage === currentPage;
 
-        // Premier tap: on ouvre le mega menu sans naviguer.
+        // Laisser la navigation normale vers les autres pages du site.
+        // On intercepte uniquement quand on est deja sur la page cible.
+        if (!isSamePageLink) {
+          closeAll(null);
+          return;
+        }
+
+        const isOpen = item.classList.contains('submenu-open');
         if (!isOpen) {
           event.preventDefault();
           closeAll(item);
           item.classList.add('submenu-open');
           return;
         }
-
-        // Deuxieme tap: on laisse la navigation se faire normalement.
         item.classList.remove('submenu-open');
       });
 
       submenu.querySelectorAll('a').forEach((submenuLink) => {
         submenuLink.addEventListener('click', () => {
-          // Sur certaines pages (ex: collection), des handlers preventDefault
-          // gardent la page ouverte: on ferme explicitement le mega menu.
           closeAll(null);
         });
       });
@@ -114,30 +122,29 @@
       const data = await response.json();
       const filters = Array.isArray(data) ? data : [];
 
-      const groups = {
-        // "categories" seulement: pas les filtres de saison (menu "collections")
-        categories: filters.filter((f) => normalizeMenu(f.menu) === 'categories'),
-        // Nouveautes reste en HTML statique pour conserver la colonne FEMME
-        collaborations: filters.filter((f) => normalizeMenu(f.menu) === 'collaborations'),
-        accessoires: filters.filter((f) => normalizeMenu(f.menu) === 'accessoires')
-      };
-
+      // COLLECTION : remplace les catégories (Robes, Tops, etc.)
+      // On exclut "tout-voir" qui n'est pas dans le submenu hardcodé
+      const categoryFilters = filters.filter((f) =>
+        normalizeMenu(f.menu) === 'categories' &&
+        slugify(f.slug || f.label || f.name || '') !== 'tout-voir'
+      );
       const collectionsItem = findNavItemByHref(navRoot, 'collection.html');
-      if (groups.categories.length) {
-        replaceSubmenuCategoryLinks(collectionsItem, mapFiltersToLinks(groups.categories, 'collection.html'));
+      if (categoryFilters.length) {
+        replaceSubmenuCategoryLinks(collectionsItem, mapFiltersToSimpleLinks(categoryFilters, 'collection.html'));
       }
 
-      // Nouveautes: ne pas remplacer submenu-categories (liens de categorie statiques)
+      // NOUVEAUTÉS : ne pas remplacer — la colonne FEMME est hardcodée et correcte
 
-      const collaborationsItem = findNavItemByHref(navRoot, 'collaborations.html');
-      if (groups.collaborations.length) {
-        replaceSubmenuCategoryLinks(collaborationsItem, mapFiltersToLinks(groups.collaborations, 'collaborations.html'));
-      }
+      // COLLABORATIONS : ne pas remplacer — les slugs API (jaces-x-nike) ne correspondent
+      // pas aux catégories attendues par la page (nike, chloe, etc.)
 
+      // ACCESSOIRES : remplace les catégories (Sacs, Bijoux, etc.)
+      const accessoiresFilters = filters.filter((f) => normalizeMenu(f.menu) === 'accessoires');
       const accessoiresItem = findNavItemByHref(navRoot, 'accessoires.html');
-      if (groups.accessoires.length) {
-        replaceSubmenuCategoryLinks(accessoiresItem, mapFiltersToLinks(groups.accessoires, 'accessoires.html'));
+      if (accessoiresFilters.length) {
+        replaceSubmenuCategoryLinks(accessoiresItem, mapFiltersToSimpleLinks(accessoiresFilters, 'accessoires.html'));
       }
+
     } catch (error) {
       console.warn('Impossible de charger les filtres dynamiques:', error);
     }
