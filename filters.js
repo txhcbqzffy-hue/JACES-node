@@ -61,10 +61,11 @@
       const filters = Array.isArray(data) ? data : [];
 
       const groups = {
+        // "categories" seulement: pas les filtres de saison (menu "collections")
         categories: filters.filter((f) => normalizeMenu(f.menu) === 'categories'),
-        nouveautes: filters.filter((f) => ['nouveautes'].includes(normalizeMenu(f.menu))),
-        collaborations: filters.filter((f) => ['collaborations'].includes(normalizeMenu(f.menu))),
-        accessoires: filters.filter((f) => ['accessoires'].includes(normalizeMenu(f.menu)))
+        // Nouveautes reste en HTML statique pour conserver la colonne FEMME
+        collaborations: filters.filter((f) => normalizeMenu(f.menu) === 'collaborations'),
+        accessoires: filters.filter((f) => normalizeMenu(f.menu) === 'accessoires')
       };
 
       const collectionsItem = findNavItemByHref(navRoot, 'collection.html');
@@ -72,10 +73,7 @@
         replaceSubmenuCategoryLinks(collectionsItem, mapFiltersToLinks(groups.categories, 'collection.html'));
       }
 
-      const nouveautesItem = findNavItemByHref(navRoot, 'nouveautes.html');
-      if (groups.nouveautes.length) {
-        replaceSubmenuCategoryLinks(nouveautesItem, mapFiltersToLinks(groups.nouveautes, 'nouveautes.html'));
-      }
+      // Nouveautes: ne pas remplacer submenu-categories (liens de categorie statiques)
 
       const collaborationsItem = findNavItemByHref(navRoot, 'collaborations.html');
       if (groups.collaborations.length) {

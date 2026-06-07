@@ -375,8 +375,14 @@ async function loadPageProducts() {
       ? allFilters.filter((filter) => pageMenus.includes(normalizeToken(filter.menu)))
       : allFilters;
 
-    // Mettre à jour la nav — sans réécrire les images sur les pages qui les ont déjà
-    setCategoryNavFromFilters(pageFilters, requestedCategory || 'all', { preserveImages: preserveNavImages });
+    // Sur collection, les vignettes doivent afficher uniquement les categories,
+    // pas les filtres de saison (menu collections).
+    const navFilters = apiPage === 'collection'
+      ? pageFilters.filter((filter) => normalizeToken(filter.menu) === 'categories')
+      : pageFilters;
+
+    // Mettre à jour la nav — sans reécrire les images sur les pages qui les ont deja
+    setCategoryNavFromFilters(navFilters, requestedCategory || 'all', { preserveImages: preserveNavImages });
 
     const activeFilter = resolveActiveFilter(pageFilters, rawFilterId, requestedCategory);
     const pageFilterIdSet = new Set(pageFilters.map((filter) => String(filter.id)));
@@ -487,8 +493,14 @@ function normalizeId(value) {
     .replace(/^-+|-+$/g, '');
 }
 
-document.addEventListener('DOMContentLoaded', () => {
+function init() {
   if (window.__JACES_PRODUCTS_PAGE_INIT) return;
   window.__JACES_PRODUCTS_PAGE_INIT = true;
   loadPageProducts();
-});
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', init);
+} else {
+  init();
+}
