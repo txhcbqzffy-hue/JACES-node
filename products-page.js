@@ -1,18 +1,14 @@
 function removeDiacritics(str) {
   const input = String(str || '');
-  // Prefer Unicode property escapes when available; fallback to explicit combining mark ranges.
   try {
     return input.normalize('NFD').replace(/\p{M}+/gu, '');
   } catch (e) {
-    // Some engines may not support \p{M}; use explicit ranges for combining marks (uppercase F for safety)
     return input.normalize('NFD').replace(/[\u0300-\u036F]/g, '');
   }
 }
 
 function normalizeToken(value) {
-  return removeDiacritics(value)
-    .toLowerCase()
-    .trim();
+  return removeDiacritics(value).toLowerCase().trim();
 }
 
 function slugify(value) {
@@ -79,7 +75,6 @@ function resolveActiveFilter(filters, rawFilterId, requestedCategory) {
         source: 'query.filterId'
       };
     }
-
     return {
       id: String(rawFilterId),
       slug: '',
@@ -180,17 +175,6 @@ function logFilterDiagnostics(products, allFilters, pageMenus, activeFilter) {
   if (unknownIds.size) {
     console.warn('IDs de filtres presents sur des produits mais absents de /api/filters:', [...unknownIds]);
   }
-
-  const mappingPreview = safeProducts.slice(0, 15).map((product) => ({
-    product_id: String(product?.id || ''),
-    product_name: product?.name || '',
-    filter_ids: getProductFilterIds(product).join(', '),
-    filter_tokens: getProductFilterTokens(product).join(', ')
-  }));
-  console.table(mappingPreview);
-
-  console.log('Menus de page utilises pour filtrage:', pageMenus);
-  console.log('Filtre actif:', activeFilter || null);
 }
 
 function getProductImages(product) {
@@ -268,11 +252,26 @@ function buildQuickBuyMarkup(sizes) {
   return `<div class="hover-sizes" aria-hidden="true"><p class="quick-buy-title"><strong>Achat rapide</strong> (Selectionnez votre taille)</p><div class="quick-buy-grid">${buttons}</div></div>`;
 }
 
-function setCategoryNavFromFilters(filters, activeCategory) {
+// CORRECTION : ne reconstruit le HTML des vignettes que sur les pages
+// qui n'ont pas déjà leurs images hardcodées (collection, nouveautes, accessoires).
+// Pour collaborations.html, on met juste à jour l'état actif sans toucher au DOM.
+function setCategoryNavFromFilters(filters, activeCategory, options) {
   const track = document.getElementById('category-nav-track');
-  if (!track || !Array.isArray(filters) || !filters.length) return;
+  if (!track) return;
 
   const safeActive = slugify(activeCategory || 'all') || 'all';
+  const preserveImages = options && options.preserveImages;
+
+  if (preserveImages) {
+    // Juste mettre à jour l'état actif sur les vignettes existantes
+    track.querySelectorAll('.cat-nav-item').forEach((item) => {
+      item.classList.toggle('active', (item.getAttribute('data-category') || 'all') === safeActive);
+    });
+    return;
+  }
+
+  if (!Array.isArray(filters) || !filters.length) return;
+
   const links = [
     '<a href="#product-grid" class="cat-nav-item" data-category="all"><div class="cat-nav-circle"></div><span>Tout voir</span></a>',
     ...filters.map((filter) => {
@@ -310,13 +309,8 @@ function buildProductCard(product) {
   card.setAttribute('data-collection', collectionToken || 'all');
   card.setAttribute('data-collab-view', collabViews.join(' '));
 
-  if (materials.length) {
-    card.setAttribute('data-material', materials.join(' '));
-  }
-
-  if (nouveauteTags.length) {
-    card.setAttribute('data-nouveaute-tags', nouveauteTags.join(' '));
-  }
+  if (materials.length) card.setAttribute('data-material', materials.join(' '));
+  if (nouveauteTags.length) card.setAttribute('data-nouveaute-tags', nouveauteTags.join(' '));
 
   const quickBuyMarkup = buildQuickBuyMarkup(variants.sizes);
   const fallbackImg = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==';
@@ -350,18 +344,6 @@ async function loadPageProducts() {
     console.error('Conteneur .product-grid introuvable sur la page.');
     return;
   }
-  console.log('before render');
-
-  try {
-    const mo = new MutationObserver(() => {
-      try {
-        console.log('product grid HTML (mutation)', productGrid.innerHTML.length);
-      } catch (e) {}
-    });
-    mo.observe(productGrid, { childList: true, subtree: false });
-  } catch (e) {
-    // ignore observer errors
-  }
 
   const pageName = getCurrentPageName();
   const apiPage = getApiPage(pageName);
@@ -371,6 +353,10 @@ async function loadPageProducts() {
 
   const shouldLoadFromApi = shouldLoadDynamicProducts(pageName, !!rawFilterId);
   if (!shouldLoadFromApi) return;
+
+  // Pages où les vignettes ont déjà leurs images en HTML — ne pas réécrire le DOM
+  const pagesWithHardcodedImages = new Set(['collaborations.html', 'collection.html', 'nouveautes.html', 'accessoires.html']);
+  const preserveNavImages = pagesWithHardcodedImages.has(pageName);
 
   let products = [];
 
@@ -389,46 +375,25 @@ async function loadPageProducts() {
       ? allFilters.filter((filter) => pageMenus.includes(normalizeToken(filter.menu)))
       : allFilters;
 
-    console.log('Filtres recuperes depuis /api/filters:', pageFilters.map((filter) => ({
-      id: String(filter.id),
-      slug: filterSlug(filter),
-      menu: normalizeToken(filter.menu),
-      label: filter.label || filter.name || 'Filtre'
-    })));
-
-    // Pour la page collection, les vignettes ne montrent que les filtres "categories"
-    // (pas "collections" qui contient les filtres de saison).
-    const navFilters = apiPage === 'collection'
-      ? pageFilters.filter((f) => normalizeToken(f.menu) === 'categories')
-      : pageFilters;
-    if (navFilters.length) {
-      setCategoryNavFromFilters(navFilters, requestedCategory || 'all');
-    }
+    // Mettre à jour la nav — sans réécrire les images sur les pages qui les ont déjà
+    setCategoryNavFromFilters(pageFilters, requestedCategory || 'all', { preserveImages: preserveNavImages });
 
     const activeFilter = resolveActiveFilter(pageFilters, rawFilterId, requestedCategory);
     const pageFilterIdSet = new Set(pageFilters.map((filter) => String(filter.id)));
-    const endpoint = '/api/products';
 
-    console.log('Chargement des produits depuis:', endpoint);
-
-    const response = await fetch(endpoint);
-    if (!response.ok) {
-      throw new Error(`Erreur HTTP ${response.status}`);
-    }
+    const response = await fetch('/api/products');
+    if (!response.ok) throw new Error(`Erreur HTTP ${response.status}`);
 
     const data = await response.json();
     const productsFromApi = Array.isArray(data) ? data : [];
-    console.log('Produits recus depuis /api/products:', productsFromApi);
 
     products = productsFromApi
       .filter((product) => productMatchesPageMenus(product, pageMenus, pageFilterIdSet))
       .filter((product) => productMatchesActiveFilter(product, activeFilter));
 
     logFilterDiagnostics(productsFromApi, allFilters, pageMenus, activeFilter);
-    console.log('Produits apres filtrage:', products);
 
     productGrid.innerHTML = '';
-    console.log('product grid HTML', productGrid.innerHTML.length);
 
     if (!products.length) {
       const empty = document.createElement('p');
@@ -441,43 +406,16 @@ async function loadPageProducts() {
         empty.textContent = 'Aucun produit disponible pour le moment.';
       }
       productGrid.appendChild(empty);
-      console.log('after render');
-      console.log('product grid HTML', productGrid.innerHTML.length);
-      window.dispatchEvent(new CustomEvent('jaces:products-loaded', {
-        detail: {
-          products,
-          allProducts: productsFromApi,
-          activeFilter,
-          pageMenus,
-          pageFilters
-        }
-      }));
-      setTimeout(() => {
-        console.log('after filters');
-        console.log('product grid HTML', productGrid.innerHTML.length);
-      }, 0);
-      return;
+    } else {
+      products.forEach((product) => {
+        productGrid.appendChild(buildProductCard(product));
+      });
     }
 
-    products.forEach((product) => {
-      productGrid.appendChild(buildProductCard(product));
-    });
-    console.log('after render');
-    console.log('product grid HTML', productGrid.innerHTML.length);
-
     window.dispatchEvent(new CustomEvent('jaces:products-loaded', {
-      detail: {
-        products,
-        allProducts: productsFromApi,
-        activeFilter,
-        pageMenus,
-        pageFilters
-      }
+      detail: { products, allProducts: productsFromApi, activeFilter, pageMenus, pageFilters }
     }));
-    setTimeout(() => {
-      console.log('after filters');
-      console.log('product grid HTML', productGrid.innerHTML.length);
-    }, 0);
+
   } catch (error) {
     console.error('Impossible de charger les produits API:', error);
     productGrid.innerHTML = '';
@@ -510,12 +448,7 @@ function attachProductCardNavigation(productGrid, products) {
 
     const productPayload = matchedProduct || {
       id: productId || normalizeId(name),
-      name,
-      price,
-      img,
-      secondaryImg,
-      selectedSize,
-      selectedColor
+      name, price, img, secondaryImg, selectedSize, selectedColor
     };
 
     if (window.JacesCatalog && typeof window.JacesCatalog.getProductUrl === 'function') {
@@ -523,13 +456,13 @@ function attachProductCardNavigation(productGrid, products) {
       return;
     }
 
-    const params = new URLSearchParams();
-    params.set('id', productPayload.id || normalizeId(name));
-    if (name) params.set('name', name);
-    if (price) params.set('price', price);
-    if (img) params.set('img', img);
-    if (secondaryImg) params.set('secondaryImg', secondaryImg);
-    window.location.href = `detail-produit.html?${params.toString()}`;
+    const urlParams = new URLSearchParams();
+    urlParams.set('id', productPayload.id || normalizeId(name));
+    if (name) urlParams.set('name', name);
+    if (price) urlParams.set('price', price);
+    if (img) urlParams.set('img', img);
+    if (secondaryImg) urlParams.set('secondaryImg', secondaryImg);
+    window.location.href = `detail-produit.html?${urlParams.toString()}`;
   }
 
   productGrid.querySelectorAll('.product-card').forEach((card) => {
@@ -540,7 +473,6 @@ function attachProductCardNavigation(productGrid, products) {
         event.target.closest('.quick-buy-grid') ||
         event.target.closest('.hover-sizes')
       ) return;
-
       navigateToProduct(card);
     });
   });
