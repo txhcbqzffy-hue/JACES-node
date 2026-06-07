@@ -34,7 +34,6 @@ function getApiPage(pageName) {
     'collection.html': 'collection',
     'nouveautes.html': 'nouveautes',
     'collaborations.html': 'collaborations',
-    'collaboration.html': 'collaboration',
     'accessoires.html': 'accessoires'
   };
   return map[pageName] || '';
@@ -47,7 +46,6 @@ function shouldLoadDynamicProducts(pageName, hasFilter) {
     'produits.html',
     'collection.html',
     'collaborations.html',
-    'collaboration.html',
     'accessoires.html'
   ]);
   return hasFilter || pages.has(pageName);
@@ -58,7 +56,6 @@ function getPageMenusFromApiPage(apiPage) {
     collection: ['categories', 'collections'],
     nouveautes: ['nouveautes'],
     collaborations: ['collaborations'],
-    collaboration: ['collaborations'],
     accessoires: ['accessoires']
   };
   return map[normalizeToken(apiPage)] || [];

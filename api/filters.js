@@ -1,8 +1,8 @@
 const { createClient } = require('@supabase/supabase-js');
 
 const supabase = createClient(
-  'https://uxhzrobxhumreuntxrzw.supabase.co',
-  'sb_publishable_VsHXPk-y4UTt4R7aAbidXg_MtIbEAhp'
+  process.env.SUPABASE_URL || 'https://uxhzrobxhumreuntxrzw.supabase.co',
+  process.env.SUPABASE_KEY || 'sb_publishable_VsHXPk-y4UTt4R7aAbidXg_MtIbEAhp'
 );
 
 function normalizeToken(value) {
@@ -22,7 +22,7 @@ function slugify(value) {
 function getMenusForPage(pageName) {
   const map = {
     collection: ['categories', 'collections'],
-    nouveautes: ['nouveautes', 'nouveautes'],
+    nouveautes: ['nouveautes'],
     collaborations: ['collaborations'],
     collaboration: ['collaborations'],
     accessoires: ['accessoires']
@@ -39,6 +39,15 @@ function withRlsHint(source, errorMessage) {
 }
 
 module.exports = async function handler(req, res) {
+  // CORS - necessaire pour les appels depuis le frontend Vercel.
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+
+  if (req.method === 'OPTIONS') {
+    return res.status(200).end();
+  }
+
   try {
     const requestedMenu = req.query?.menu || null;
     const requestedPage = req.query?.page || null;

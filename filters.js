@@ -61,7 +61,7 @@
       const filters = Array.isArray(data) ? data : [];
 
       const groups = {
-        categories: filters.filter((f) => ['categories', 'collections'].includes(normalizeMenu(f.menu))),
+        categories: filters.filter((f) => normalizeMenu(f.menu) === 'categories'),
         nouveautes: filters.filter((f) => ['nouveautes'].includes(normalizeMenu(f.menu))),
         collaborations: filters.filter((f) => ['collaborations'].includes(normalizeMenu(f.menu))),
         accessoires: filters.filter((f) => ['accessoires'].includes(normalizeMenu(f.menu)))
@@ -77,7 +77,7 @@
         replaceSubmenuCategoryLinks(nouveautesItem, mapFiltersToLinks(groups.nouveautes, 'nouveautes.html'));
       }
 
-      const collaborationsItem = findNavItemByHref(navRoot, 'collaborations.html') || findNavItemByHref(navRoot, 'collaboration.html');
+      const collaborationsItem = findNavItemByHref(navRoot, 'collaborations.html');
       if (groups.collaborations.length) {
         replaceSubmenuCategoryLinks(collaborationsItem, mapFiltersToLinks(groups.collaborations, 'collaborations.html'));
       }
