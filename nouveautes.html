@@ -13,121 +13,111 @@
 </head>
 <body class="collection-page-body nouveautes-page">
 
-  <div class="topbar">
-    Livraison offerte dès 79 € | Retours offerts
-  </div>
+  <div class="topbar">Livraison offerte dès 79 € | Retours offerts</div>
 
-<header class="header">
-  <div class="header-top">
-    <div class="header-left">
-      <button class="search-trigger" id="search-trigger" type="button" aria-expanded="false" aria-controls="header-search-panel">Recherche</button>
-      <form class="search-panel" id="header-search-panel" role="search" action="#" method="get">
-        <input type="search" name="q" placeholder="Rechercher un produit..." aria-label="Rechercher">
-        <button class="search-submit" type="submit">↗</button>
-        <button class="search-panel-close" type="button" id="search-panel-close" aria-label="Fermer">×</button>
-      </form>
-    </div>
+  <header class="header">
+    <div class="header-top">
+      <div class="header-left">
+        <button class="search-trigger" id="search-trigger" type="button" aria-expanded="false" aria-controls="header-search-panel">Recherche</button>
+        <form class="search-panel" id="header-search-panel" role="search" action="#" method="get">
+          <input type="search" name="q" placeholder="Rechercher un produit..." aria-label="Rechercher">
+          <button class="search-submit" type="submit">↗</button>
+          <button class="search-panel-close" type="button" id="search-panel-close" aria-label="Fermer">×</button>
+        </form>
+      </div>
 
-    <a href="index.html" class="logo">JACES</a>
+      <a href="index.html" class="logo">JACES</a>
 
-    <div class="header-right">
-      <div class="language-picker" id="language-picker">
-        <button class="language-button" id="language-button" type="button" aria-label="Choisir la langue" aria-expanded="false">
-          <img src="https://flagcdn.com/w40/fr.png" class="icon-flag" id="current-flag" alt="Français">
-          <span class="language-caret" aria-hidden="true"></span>
+      <div class="header-right">
+        <div class="language-picker" id="language-picker">
+          <button class="language-button" id="language-button" type="button" aria-label="Choisir la langue" aria-expanded="false">
+            <img src="https://flagcdn.com/w40/fr.png" class="icon-flag" id="current-flag" alt="Français">
+            <span class="language-caret" aria-hidden="true"></span>
+          </button>
+          <div class="language-menu" id="language-menu" role="menu" aria-label="Langues">
+            <button type="button" class="language-option" data-lang="fr" data-flag="https://flagcdn.com/w40/fr.png" role="menuitem"><img src="https://flagcdn.com/w40/fr.png" alt="Français"><span>Français</span></button>
+            <button type="button" class="language-option" data-lang="en" data-flag="https://flagcdn.com/w40/gb.png" role="menuitem"><img src="https://flagcdn.com/w40/gb.png" alt="English"><span>English</span></button>
+            <button type="button" class="language-option" data-lang="es" data-flag="https://flagcdn.com/w40/es.png" role="menuitem"><img src="https://flagcdn.com/w40/es.png" alt="Español"><span>Español</span></button>
+            <button type="button" class="language-option" data-lang="it" data-flag="https://flagcdn.com/w40/it.png" role="menuitem"><img src="https://flagcdn.com/w40/it.png" alt="Italiano"><span>Italiano</span></button>
+          </div>
+        </div>
+        <button class="icon-button" id="fav-trigger" aria-label="Favoris" type="button" style="position:relative">
+          <svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+          <span class="fav-count" id="fav-count" style="display:none">0</span>
         </button>
-        <div class="language-menu" id="language-menu" role="menu" aria-label="Langues">
-          <button type="button" class="language-option" data-lang="fr" data-flag="https://flagcdn.com/w40/fr.png" role="menuitem">
-            <img src="https://flagcdn.com/w40/fr.png" alt="Français"><span>Français</span>
-          </button>
-          <button type="button" class="language-option" data-lang="en" data-flag="https://flagcdn.com/w40/gb.png" role="menuitem">
-            <img src="https://flagcdn.com/w40/gb.png" alt="English"><span>English</span>
-          </button>
-          <button type="button" class="language-option" data-lang="es" data-flag="https://flagcdn.com/w40/es.png" role="menuitem">
-            <img src="https://flagcdn.com/w40/es.png" alt="Español"><span>Español</span>
-          </button>
-          <button type="button" class="language-option" data-lang="it" data-flag="https://flagcdn.com/w40/it.png" role="menuitem">
-            <img src="https://flagcdn.com/w40/it.png" alt="Italiano"><span>Italiano</span>
-          </button>
-        </div>
+        <button class="icon-button" aria-label="Compte" type="button">
+          <svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        </button>
+        <button class="icon-button cart" aria-label="Panier" type="button">
+          <svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M9 2L6.12 9H1l2.5 7.5v5h15v-5l2.5-7.5H17.88L15 2"/></svg>
+          <span class="cart-count">0</span>
+        </button>
       </div>
-      <button class="icon-button" id="fav-trigger" aria-label="Favoris" type="button" style="position:relative">
-        <svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-        <span class="fav-count" id="fav-count" style="display:none">0</span>
-      </button>
-      <button class="icon-button" aria-label="Compte" type="button">
-        <svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-      </button>
-      <button class="icon-button cart" aria-label="Panier" type="button">
-        <svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M9 2L6.12 9H1l2.5 7.5v5h15v-5l2.5-7.5H17.88L15 2"/></svg>
-        <span class="cart-count">0</span>
-      </button>
     </div>
-  </div>
 
-  <nav class="nav">
-    <div class="nav-item">
-      <a href="nouveautes.html" class="active">Nouveautés</a>
-      <div class="submenu">
-        <div>
-          <p class="submenu-title">NOUVEAUTÉS</p>
-          <p class="submenu-copy">Nouvelles pièces,<br>exclusivité<br>et robe signature.</p>
-          <a href="nouveautes.html?category=all&nouveauteTag=drop-ete">Drop été</a>
-          <a href="nouveautes.html?category=all&nouveauteTag=edition-limitee">Édition limitée</a>
-          <a href="nouveautes.html?category=all&nouveauteTag=pieces-signature">Pièces signature</a>
-          <a href="nouveautes.html?category=all" class="underline-link">Voir tout les nouveautés</a>
-        </div>
-        <div class="submenu-categories">
-          <p class="submenu-title">FEMME</p>
-          <a href="nouveautes.html?category=robes">Robes</a>
-          <a href="nouveautes.html?category=tops">Tops</a>
-          <a href="nouveautes.html?category=jupes">Jupes</a>
-          <a href="nouveautes.html?category=pantalons">Pantalons</a>
-          <a href="nouveautes.html?category=vestes">Vestes</a>
-          <a href="nouveautes.html?category=accessoires">Accessoires</a>
-        </div>
-      </div>
-    </div>
-    <div class="nav-item">
-      <a href="collection.html">Collections</a>
-      <div class="submenu">
-        <div>
-          <a href="collection.html?collection=ss26">Printemps–Été 2026</a>
-          <a href="collection.html?collection=aw26">Automne–Hiver 2026</a>
-          <a href="collection.html?category=all" class="underline-link">Toutes les collections</a>
-        </div>
-        <div class="submenu-categories">
-          <a href="collection.html?category=robes">Robes</a>
-          <a href="collection.html?category=tops">Tops</a>
-          <a href="collection.html?category=jupes">Jupes</a>
-          <a href="collection.html?category=pantalons">Pantalons</a>
-          <a href="collection.html?category=vestes">Vestes</a>
-          <a href="collection.html?category=accessoires">Accessoires</a>
+    <nav class="nav">
+      <div class="nav-item">
+        <a href="nouveautes.html" class="active">Nouveautés</a>
+        <div class="submenu">
+          <div>
+            <p class="submenu-title">NOUVEAUTÉS</p>
+            <p class="submenu-copy">Nouvelles pièces,<br>exclusivité<br>et robe signature.</p>
+            <a href="nouveautes.html?category=all&nouveauteTag=drop-ete">Drop été</a>
+            <a href="nouveautes.html?category=all&nouveauteTag=edition-limitee">Édition limitée</a>
+            <a href="nouveautes.html?category=all&nouveauteTag=pieces-signature">Pièces signature</a>
+            <a href="nouveautes.html?category=all" class="underline-link">Voir tout les nouveautés</a>
+          </div>
+          <div class="submenu-categories">
+            <p class="submenu-title">FEMME</p>
+            <a href="nouveautes.html?category=robes">Robes</a>
+            <a href="nouveautes.html?category=tops">Tops</a>
+            <a href="nouveautes.html?category=jupes">Jupes</a>
+            <a href="nouveautes.html?category=pantalons">Pantalons</a>
+            <a href="nouveautes.html?category=vestes">Vestes</a>
+            <a href="nouveautes.html?category=accessoires">Accessoires</a>
+          </div>
         </div>
       </div>
-    </div>
-    <div class="nav-item">
-      <a href="collaborations.html">Collaborations</a>
-      <div class="submenu">
-        <div>
-          <a href="collaborations.html?collabView=exclusives&category=all">Créations exclusives</a>
-          <a href="collaborations.html?collabView=popup&category=all">Pop-up stores</a>
-          <a href="collaborations.html?collabView=events&category=all">Événements</a>
-          <a href="collaborations.html?collabView=all&category=all" class="underline-link">Toutes les collaborations</a>
+      <div class="nav-item">
+        <a href="collection.html">Collections</a>
+        <div class="submenu">
+          <div>
+            <a href="collection.html?collection=ss26">Printemps–Été 2026</a>
+            <a href="collection.html?collection=aw26">Automne–Hiver 2026</a>
+            <a href="collection.html?category=all" class="underline-link">Toutes les collections</a>
+          </div>
+          <div class="submenu-categories">
+            <a href="collection.html?category=robes">Robes</a>
+            <a href="collection.html?category=tops">Tops</a>
+            <a href="collection.html?category=jupes">Jupes</a>
+            <a href="collection.html?category=pantalons">Pantalons</a>
+            <a href="collection.html?category=vestes">Vestes</a>
+            <a href="collection.html?category=accessoires">Accessoires</a>
+          </div>
         </div>
-        <div class="submenu-categories">
+      </div>
+      <div class="nav-item">
+        <a href="collaborations.html">Collaborations</a>
+        <div class="submenu">
+          <div>
+            <a href="collaborations.html?collabView=exclusives&category=all">Créations exclusives</a>
+            <a href="collaborations.html?collabView=popup&category=all">Pop-up stores</a>
+            <a href="collaborations.html?collabView=events&category=all">Événements</a>
+            <a href="collaborations.html?collabView=all&category=all" class="underline-link">Toutes les collaborations</a>
+          </div>
+          <div class="submenu-categories">
             <a href="collaborations.html?category=nike">JACES × Nike</a>
             <a href="collaborations.html?category=chloe">JACES × Chloé</a>
             <a href="collaborations.html?category=jacquemus">JACES × Jacquemus</a>
             <a href="collaborations.html?category=dior">JACES × Dior</a>
             <a href="collaborations.html?category=saint-laurent">JACES × Saint Laurent</a>
           </div>
+        </div>
       </div>
-    </div>
-    <div class="nav-item">
-      <a href="accessoires.html">Accessoires</a>
-      <div class="submenu">
-        <div>
+      <div class="nav-item">
+        <a href="accessoires.html">Accessoires</a>
+        <div class="submenu">
+          <div>
             <p class="submenu-title">COLLECTION</p>
             <a href="collection.html?category=all" class="underline-link">Toutes les collections</a>
           </div>
@@ -137,42 +127,42 @@
             <a href="accessoires.html?category=ceintures">Ceintures</a>
             <a href="accessoires.html?category=foulards">Foulards</a>
           </div>
-      </div>
-    </div>
-    <div class="nav-item">
-      <a href="defile.html"><em>Défilé</em></a>
-      <div class="submenu">
-        <div>
-          <p class="submenu-title">DÉFILÉ</p>
-          <a href="#">Dernier show</a>
-          <a href="#">Collection prêt-à-porter</a>
-          <a href="#" class="underline-link">Voir le défilé</a>
-        </div>
-        <div>
-          <p class="submenu-title">Coulisses</p>
-          <a href="#">Design studio</a>
-          <a href="#">Inspiration</a>
         </div>
       </div>
-    </div>
-    <div class="nav-item">
-      <a href="univers.html"><em>Univers</em></a>
-      <div class="submenu">
-        <div>
-          <p class="submenu-title">MAISON</p>
-          <a href="#">Notre histoire</a>
-          <a href="#">Savoir-faire</a>
-          <a href="#" class="underline-link">Services VIP</a>
-        </div>
-        <div>
-          <p class="submenu-title">DÉCOUVERTE</p>
-          <a href="#">Ateliers</a>
-          <a href="#">Boutiques</a>
+      <div class="nav-item">
+        <a href="defile.html"><em>Défilé</em></a>
+        <div class="submenu">
+          <div>
+            <p class="submenu-title">DÉFILÉ</p>
+            <a href="#">Dernier show</a>
+            <a href="#">Collection prêt-à-porter</a>
+            <a href="#" class="underline-link">Voir le défilé</a>
+          </div>
+          <div>
+            <p class="submenu-title">Coulisses</p>
+            <a href="#">Design studio</a>
+            <a href="#">Inspiration</a>
+          </div>
         </div>
       </div>
-    </div>
-  </nav>
-</header>
+      <div class="nav-item">
+        <a href="univers.html"><em>Univers</em></a>
+        <div class="submenu">
+          <div>
+            <p class="submenu-title">MAISON</p>
+            <a href="#">Notre histoire</a>
+            <a href="#">Savoir-faire</a>
+            <a href="#" class="underline-link">Services VIP</a>
+          </div>
+          <div>
+            <p class="submenu-title">DÉCOUVERTE</p>
+            <a href="#">Ateliers</a>
+            <a href="#">Boutiques</a>
+          </div>
+        </div>
+      </div>
+    </nav>
+  </header>
 
   <main class="collection-page">
     <section class="category-nav-strip" aria-label="Catégories nouveautés">
@@ -213,12 +203,12 @@
           </div>
           <span>Vestes</span>
         </a>
-          <a href="#product-grid" class="cat-nav-item" data-category="accessoires">
-            <div class="cat-nav-circle">
-              <img src="https://images.unsplash.com/photo-1572635196237-14b3f281503f?q=80&w=800" alt="Accessoires" loading="lazy">
-            </div>
-            <span>Accessoires</span>
-          </a>
+        <a href="#product-grid" class="cat-nav-item" data-category="accessoires">
+          <div class="cat-nav-circle">
+            <img src="https://images.unsplash.com/photo-1572635196237-14b3f281503f?q=80&w=800" alt="Accessoires" loading="lazy">
+          </div>
+          <span>Accessoires</span>
+        </a>
       </div>
     </section>
 
@@ -252,21 +242,24 @@
               </div>
             </div>
           </div>
-
-          <div class="product-grid" id="product-grid" aria-live="polite">
-            <p class="filter-empty-note">Chargement des produits...</p>
+          <div class="product-sort-row">
+            <select id="product-sort" name="product-sort">
+              <option value="default">Trier</option>
+              <option value="price-asc">Prix croissant</option>
+              <option value="price-desc">Prix décroissant</option>
+              <option value="name-asc">Nom A-Z</option>
+            </select>
           </div>
-        </article>
-        <article class="product-card collection-card" data-category="vestes all cette-semaine">
-          <div class="product-info"><h3>Veste croisée latte</h3><p class="product-price">332€</p></div>
-        </article>
-        <article class="product-card collection-card" data-category="jupes all cette-semaine">
-          <div class="product-info"><h3>Jupe midi contour noir</h3><p class="product-price">289€</p></div>
-        </article>
-        <article class="product-card collection-card" data-category="tops all">
-          <div class="product-info"><h3>Top pointelle ivoire</h3><p class="product-price">204€</p></div>
-        </article>
+        </div>
+        <div class="filter-bar-meta">
+          <button class="filter-reset-pill" id="filter-reset-pill">Réinitialiser</button>
+          <span class="filter-count">0 produits</span>
+        </div>
+      </div>
 
+      <!-- CORRECTION : product-grid est maintenant HORS de filter-bar, sans cartes statiques -->
+      <div class="product-grid" id="product-grid" aria-live="polite">
+        <p class="filter-empty-note">Chargement des produits...</p>
       </div>
     </section>
   </main>
@@ -306,7 +299,6 @@
     updateHeaderState();
     window.addEventListener('scroll', updateHeaderState, { passive: true });
 
-    // Search panel
     const searchTrigger = document.getElementById('search-trigger');
     const searchPanel = document.getElementById('header-search-panel');
     const searchClose = document.getElementById('search-panel-close');
@@ -331,12 +323,10 @@
       });
     }
 
-    // Language picker
     const languagePicker = document.getElementById('language-picker');
     const languageButton = document.getElementById('language-button');
-    const languageMenu = document.getElementById('language-menu');
     const currentFlag = document.getElementById('current-flag');
-    if (languagePicker && languageButton && languageMenu && currentFlag) {
+    if (languagePicker && languageButton && currentFlag) {
       const STORAGE_KEY = 'jaces-selected-language';
       const languageOptions = Array.from(languagePicker.querySelectorAll('.language-option'));
       function applyLanguageOption(option) {
@@ -373,11 +363,11 @@
       });
     }
 
-    // Filter pills toggle
     const filterBar = document.getElementById('collection-filter-bar');
     const resetPill = document.getElementById('filter-reset-pill');
     const filterPills = Array.from(document.querySelectorAll('#collection-filter-bar .filter-pill'));
     const filterInputs = Array.from(document.querySelectorAll('#collection-filter-bar input'));
+    const filterCount = document.querySelector('.filter-count');
 
     filterPills.forEach(pill => {
       const baseLabel = pill.childNodes[0] ? pill.childNodes[0].textContent.trim() : pill.textContent.replace('∨','').trim();
@@ -398,15 +388,17 @@
 
     filterInputs.forEach(input => input.addEventListener('change', () => {
       updateFilterUI();
-      applyStrictCategoryFilter();
+      applyNouveautesFilter();
     }));
+
     if (resetPill) {
       resetPill.addEventListener('click', () => {
         document.querySelectorAll('#collection-filter-bar input').forEach(i => { i.checked = false; });
         updateFilterUI();
-        applyStrictCategoryFilter();
+        applyNouveautesFilter();
       });
     }
+
     updateFilterUI();
 
     document.querySelectorAll('.filter-pill').forEach(pill => {
@@ -423,6 +415,7 @@
         }
       });
     });
+
     document.querySelectorAll('.filter-dropdown').forEach(d => d.addEventListener('click', e => e.stopPropagation()));
     document.addEventListener('click', (e) => {
       if (filterBar && !filterBar.contains(e.target)) {
@@ -431,407 +424,161 @@
       }
     });
 
-    // Images & quick-buy injection
-    const collectionImagePairs = [
-      { primary: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=1400', secondary: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=1400' },
-      { primary: 'https://images.unsplash.com/photo-1551488831-00ddcb6c6bd3?q=80&w=1400', secondary: 'https://images.unsplash.com/photo-1483985988355-763728e1935b?q=80&w=1400' },
-      { primary: 'https://images.unsplash.com/photo-1496747611176-843222e1e57c?q=80&w=1400', secondary: 'https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?q=80&w=1400' },
-      { primary: 'https://images.unsplash.com/photo-1485230895905-ec40ba36b9bc?q=80&w=1400', secondary: 'https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?q=80&w=1400' },
-      { primary: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=1400', secondary: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=1400' },
-      { primary: 'https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?q=80&w=1400', secondary: 'https://images.unsplash.com/photo-1464863979621-258859e62245?q=80&w=1400' },
-      { primary: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?q=80&w=1400', secondary: 'https://images.unsplash.com/photo-1485968579580-b6d095142e6e?q=80&w=1400' },
-      { primary: 'https://images.unsplash.com/photo-1464863979621-258859e62245?q=80&w=1400', secondary: 'https://images.unsplash.com/photo-1503341455253-b2e723bb3dbb?q=80&w=1400' },
-      { primary: 'https://images.unsplash.com/photo-1503341455253-b2e723bb3dbb?q=80&w=1400', secondary: 'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?q=80&w=1400' },
-      { primary: 'https://images.unsplash.com/photo-1485968579580-b6d095142e6e?q=80&w=1400', secondary: 'https://images.unsplash.com/photo-1551488831-00ddcb6c6bd3?q=80&w=1400' },
-      { primary: 'https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?q=80&w=1400', secondary: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?q=80&w=1400' },
-      { primary: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=1400', secondary: 'https://images.unsplash.com/photo-1496747611176-843222e1e57c?q=80&w=1400' },
-      { primary: 'https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?q=80&w=1400', secondary: 'https://images.unsplash.com/photo-1483985988355-763728e1935b?q=80&w=1400' },
-      { primary: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?q=80&w=1400', secondary: 'https://images.unsplash.com/photo-1485230895905-ec40ba36b9bc?q=80&w=1400' },
-      { primary: 'https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?q=80&w=1400', secondary: 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?q=80&w=1400' },
-      { primary: 'https://images.unsplash.com/photo-1485968579580-b6d095142e6e?q=80&w=1400', secondary: 'https://images.unsplash.com/photo-1464863979621-258859e62245?q=80&w=1400' },
-    ];
-
-    const collectionCards = Array.from(document.querySelectorAll('.collection-card'));
-    const productGrid = document.querySelector('.product-grid');
-    const productSort = document.getElementById('product-sort');
-    const filterCount = document.querySelector('.filter-count');
-    const originalCards = productGrid ? Array.from(productGrid.querySelectorAll('.collection-card')) : [];
-    let currentCategoryFilter = 'all';
-    let currentNouveauteTagFilter = '';
-    let isAutoSyncingVariantFilters = false;
-
-    function removeDiacritics(str) {
-      const input = String(str || '');
-      try { return input.normalize('NFD').replace(/\p{M}+/gu, ''); }
-      catch (e) { return input.normalize('NFD').replace(/[\u0300-\u036F]/g, ''); }
-    }
-    function normalizeVariantToken(value) {
-      return removeDiacritics(value)
-        .toLowerCase()
-        .replace(/[^a-z0-9]+/g, '-')
-        .replace(/^-+|-+$/g, '');
-    }
-
-    function getCardVariantData(card) {
-      const name = card.querySelector('h3')?.textContent?.trim() || '';
-      const scope = normalizeVariantToken([name, card.getAttribute('data-category') || '', card.getAttribute('data-collection') || '', card.getAttribute('data-nouveaute-tags') || ''].join(' '));
-      const isAccessory = /accessoire|sac|ceinture|boucle|oreille|foulard/.test(scope);
-      let colors = ['noir', 'ivoire', 'beige', 'bordeaux'];
-
-      if (/rose/.test(scope)) colors = ['rose', 'ivoire', 'beige'];
-      else if (/bleu|marine/.test(scope)) colors = ['bleu', 'ivoire', 'beige'];
-      else if (/noir|encre|graphite|cigarette|satin/.test(scope)) colors = ['noir', 'ivoire', 'beige'];
-      else if (/blanc|craie|latte/.test(scope)) colors = ['ivoire', 'blanc', 'beige'];
-      else if (/beige|sable|taupe|camel|creme/.test(scope)) colors = ['beige', 'ivoire', 'camel'];
-      else if (/dor|argent/.test(scope)) colors = ['or', 'argent'];
-      else if (/nike/.test(scope)) colors = ['noir', 'bleu', 'beige'];
-      else if (/chloe/.test(scope)) colors = ['rose', 'ivoire', 'beige'];
-      else if (/jacquemus/.test(scope)) colors = ['beige', 'ivoire', 'camel'];
-      else if (/dior/.test(scope)) colors = ['ivoire', 'noir', 'beige'];
-      else if (/saint-laurent|saint-laurent/.test(scope)) colors = ['noir', 'bleu', 'graphite'];
-
-      return {
-        colors: colors,
-        sizes: isAccessory ? [] : ['34', '36', '38', '40', '42', '44']
-      };
-    }
-
-    function getCheckedTokens(name) {
-      return Array.from(document.querySelectorAll('#collection-filter-bar input[name="' + name + '"]:checked')).map((input) => normalizeVariantToken(input.value));
-    }
-
-    function syncFilterAvailability(visibleCards) {
-      const colorInputs = Array.from(document.querySelectorAll('#collection-filter-bar input[name="couleur"]'));
-      let shouldResync = false;
-
-      ['taille', 'couleur'].forEach((name) => {
-        const inputs = Array.from(document.querySelectorAll('#collection-filter-bar input[name="' + name + '"]'));
-        inputs.forEach((input) => {
-          const token = normalizeVariantToken(input.value);
-          const available = visibleCards.some((card) => {
-            const variantData = getCardVariantData(card);
-            const pool = name === 'taille' ? variantData.sizes : variantData.colors;
-            return pool.some((value) => normalizeVariantToken(value) === token);
-          });
-          input.disabled = !available && !input.checked;
-          input.closest('label')?.classList.toggle('is-unavailable', !available && !input.checked);
-        });
-      });
-
-      if (!isAutoSyncingVariantFilters) {
-        const activeColor = colorInputs.find((input) => input.checked && !input.disabled);
-        if (!activeColor) {
-          const fallbackColor = colorInputs.find((input) => !input.disabled);
-          if (fallbackColor) {
-            isAutoSyncingVariantFilters = true;
-            colorInputs.forEach((input) => { input.checked = input === fallbackColor; });
-            shouldResync = true;
-          }
-        }
-      }
-
-      return shouldResync;
-    }
-
-    function getCardPrice(card) {
-      const priceText = card.querySelector('.product-price')?.textContent || '0';
-      return Number(priceText.replace(/[^0-9]/g, '')) || 0;
-    }
-
-    function getCardName(card) {
-      return card.querySelector('h3')?.textContent?.trim() || '';
-    }
-
-    function seedInitialCardOrder() {
-      if (!productGrid || !productSort) return;
-
-      productSort.addEventListener('change', () => {
-        const currentCards = Array.from(productGrid.querySelectorAll('.collection-card'));
-        let sortedProducts = currentCards.slice();
-
-        if (productSort.value === 'default') {
-          sortedProducts = originalCards.slice();
-        } else if (productSort.value === 'price-asc') {
-          sortedProducts = currentCards.slice().sort((a, b) => getCardPrice(a) - getCardPrice(b));
-        } else if (productSort.value === 'price-desc') {
-          sortedProducts = currentCards.slice().sort((a, b) => getCardPrice(b) - getCardPrice(a));
-        } else if (productSort.value === 'name-asc') {
-          sortedProducts = currentCards.slice().sort((a, b) => getCardName(a).localeCompare(getCardName(b), 'fr'));
-        }
-
-        sortedProducts.forEach((card) => productGrid.appendChild(card));
-        applyStrictCategoryFilter();
-      });
-    }
-
-    function applyStrictCategoryFilter() {
-      const cards = Array.from(document.querySelectorAll('#product-grid .collection-card'));
-      const selectedSizes = getCheckedTokens('taille');
-      const selectedColors = getCheckedTokens('couleur');
-      const visibleCards = [];
-
-      const hasTaggedMatches = !!currentNouveauteTagFilter && cards.some((card) => {
-        const cats = (card.getAttribute('data-category') || '').split(' ').filter(Boolean);
-        const tagTokens = (card.getAttribute('data-nouveaute-tags') || '').split(' ').filter(Boolean);
-        if (tagTokens.indexOf(currentNouveauteTagFilter) !== -1) return true;
-        // Legacy static cards used "cette-semaine": treat it as drop-ete.
-        if (currentNouveauteTagFilter === 'drop-ete' && cats.indexOf('cette-semaine') !== -1) return true;
-        return false;
-      });
-
-      cards.forEach((card) => {
-        const cats = (card.getAttribute('data-category') || '').split(' ').filter(Boolean);
-        const primaryCategory = cats.find((token) => token !== 'all' && token !== 'cette-semaine') || '';
-        const tagTokens = (card.getAttribute('data-nouveaute-tags') || '').split(' ').filter(Boolean);
-        const variantData = getCardVariantData(card);
-        const matchesCategory = currentCategoryFilter === 'all' || primaryCategory === currentCategoryFilter;
-        const matchesTag = !currentNouveauteTagFilter
-          || !hasTaggedMatches
-          || tagTokens.indexOf(currentNouveauteTagFilter) !== -1
-          || (currentNouveauteTagFilter === 'drop-ete' && cats.indexOf('cette-semaine') !== -1);
-        const matchesSize = !selectedSizes.length || variantData.sizes.some((size) => selectedSizes.includes(normalizeVariantToken(size)));
-        const matchesColor = !selectedColors.length || variantData.colors.some((color) => selectedColors.includes(normalizeVariantToken(color)));
-        const visible = matchesCategory && matchesTag && matchesSize && matchesColor;
-        card.classList.toggle('hidden', !visible);
-        if (visible) visibleCards.push(card);
-      });
-
-      if (syncFilterAvailability(visibleCards)) {
-        isAutoSyncingVariantFilters = false;
-        applyStrictCategoryFilter();
-        return;
-      }
-
-      isAutoSyncingVariantFilters = false;
-
-      const visibleCount = cards.filter((card) => !card.classList.contains('hidden')).length;
-      if (filterCount) filterCount.textContent = `${visibleCount} produits`;
-
-      // Safety: si plus aucune carte visible, afficher une note explicite au lieu d’une page "vide"
-      try {
-        const grid = document.getElementById('product-grid') || document.querySelector('.product-grid');
-        if (grid) {
-          const existing = grid.querySelector('.filter-empty-note');
-          if (visibleCount === 0) {
-            if (!existing) {
-              const note = document.createElement('p');
-              note.className = 'filter-empty-note';
-              note.textContent = 'Aucun produit ne correspond aux filtres actuels.';
-              grid.appendChild(note);
-            }
-          } else if (existing) {
-            existing.remove();
-          }
-        }
-      } catch (e) {
-        // ignore UI note errors
-      }
-    }
-
-    function scrollToFilterBar() {
-      const filterBarTarget = document.getElementById('collection-filter-bar');
-      if (!filterBarTarget) return;
-
-      requestAnimationFrame(() => {
-        const header = document.querySelector('.header');
-        const headerBottom = header ? header.getBoundingClientRect().bottom : 120;
-        const filterTop = filterBarTarget.getBoundingClientRect().top + window.scrollY;
-        const offset = filterTop - headerBottom + 10;
-        const targetY = Math.max(0, offset);
-        if (Math.abs(window.scrollY - targetY) <= 80) return;
-        window.scrollTo({ top: targetY, behavior: 'smooth' });
-      });
-    }
-
-    function shouldScrollToFilterBar() {
-      const filterBarTarget = document.getElementById('collection-filter-bar');
-      if (!filterBarTarget) return false;
-      const header = document.querySelector('.header');
-      const headerBottom = header ? header.getBoundingClientRect().bottom : 120;
-      const filterTop = filterBarTarget.getBoundingClientRect().top + window.scrollY;
-      const targetY = Math.max(0, filterTop - headerBottom + 10);
-      return Math.abs(window.scrollY - targetY) > 80;
-    }
-
-    const quickBuyMarkup = '<p class="quick-buy-title"><strong>Achat rapide</strong> (Selectionnez votre taille)</p><div class="quick-buy-grid"><button type="button">34</button><button type="button">36</button><button type="button">38</button><button type="button">40</button><button type="button">42</button><button type="button">44</button></div>';
-    const favoriteMarkup = '<button class="product-favorite" type="button" aria-label="Ajouter aux favoris"><svg class="heart-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button>';
-
-    if (filterCount) {
-      filterCount.textContent = `${collectionCards.length} produits`;
-    }
-
-    collectionCards.forEach((card, index) => {
-      const pair = collectionImagePairs[index % collectionImagePairs.length];
-      const productName = card.querySelector('h3')?.textContent?.trim() || 'Produit';
-      let media = card.querySelector('.product-media');
-
-      if (!media) {
-        media = document.createElement('div');
-        media.className = 'product-media';
-        media.innerHTML = favoriteMarkup + '<img class="product-image-primary" loading="lazy" alt=""><img class="product-image-secondary" loading="lazy" alt=""><div class="hover-sizes" aria-hidden="true">' + quickBuyMarkup + '</div>';
-        card.insertBefore(media, card.firstElementChild);
-      }
-
-      if (!media.querySelector('.product-favorite')) media.insertAdjacentHTML('afterbegin', favoriteMarkup);
-
-      const hoverSizes = media.querySelector('.hover-sizes');
-      if (hoverSizes) hoverSizes.innerHTML = quickBuyMarkup;
-
-      const primaryImage = media.querySelector('.product-image-primary');
-      const secondaryImage = media.querySelector('.product-image-secondary');
-      if (primaryImage) { primaryImage.src = pair.primary; primaryImage.alt = productName; }
-      if (secondaryImage) { secondaryImage.src = pair.secondary; secondaryImage.alt = productName + ' vue 2'; }
-
-      media.querySelector('.nouv-feature-cta')?.remove();
-    });
-
-    const nouveautesPageTitle = document.getElementById('collection-page-title');
-    const validCategories = new Set(['all', 'robes', 'tops', 'jupes', 'pantalons', 'vestes', 'accessoires']);
-    const validTags = new Set(['drop-ete', 'edition-limitee', 'pieces-signature']);
     const nouveautesMeta = {
       all: { heading: 'Nos nouveautés', documentTitle: 'Nos nouveautés | JACES' },
       'drop-ete': { heading: 'Drop été', documentTitle: 'Drop été | JACES' },
       'edition-limitee': { heading: 'Édition limitée', documentTitle: 'Édition limitée | JACES' },
       'pieces-signature': { heading: 'Pièces signature', documentTitle: 'Pièces signature | JACES' }
     };
+    const validTags = new Set(Object.keys(nouveautesMeta).filter((key) => key !== 'all'));
 
-    function getNouveautesView() {
-      const params = new URLSearchParams(window.location.search);
-      const tag = params.get('nouveauteTag');
-      return validTags.has(tag) ? tag : 'all';
+    let currentCategoryFilter = 'all';
+    let currentNouveauteTagFilter = '';
+
+    function removeDiacritics(str) {
+      try { return String(str || '').normalize('NFD').replace(/\p{M}+/gu, ''); }
+      catch (e) { return String(str || '').normalize('NFD').replace(/[\u0300-\u036F]/g, ''); }
+    }
+    function normalizeVariantToken(value) {
+      return removeDiacritics(value).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+    }
+    function normalizeCategoryToken(value) {
+      const token = normalizeVariantToken(value);
+      return token || 'all';
+    }
+    function getCheckedTokens(name) {
+      return Array.from(document.querySelectorAll('#collection-filter-bar input[name="' + name + '"]:checked')).map(i => normalizeVariantToken(i.value));
     }
 
-    function syncNouveautesHeadingFromURL() {
-      const view = getNouveautesView();
-      if (nouveautesPageTitle) {
-        nouveautesPageTitle.textContent = nouveautesMeta[view].heading;
+    function updateActiveCategoryNav() {
+      document.querySelectorAll('.category-nav-strip .cat-nav-item').forEach(item => {
+        item.classList.toggle('active', (item.getAttribute('data-category') || 'all') === currentCategoryFilter);
+      });
+    }
+
+    function applyNouveautesFilter() {
+      const cards = Array.from(document.querySelectorAll('#product-grid .collection-card'));
+      const selectedSizes = getCheckedTokens('taille');
+      const selectedColors = getCheckedTokens('couleur');
+      let visible = 0;
+
+      cards.forEach(card => {
+        const cats = (card.getAttribute('data-category') || '').split(' ').filter(Boolean);
+        const tagTokens = (card.getAttribute('data-nouveaute-tags') || '').split(' ').filter(Boolean);
+        const cardSizes = (card.getAttribute('data-size') || '').split(' ').filter(Boolean);
+        const cardColors = (card.getAttribute('data-color') || '').split(' ').filter(Boolean);
+
+        const matchesCategory = currentCategoryFilter === 'all' || cats.includes(currentCategoryFilter);
+        const matchesTag = !currentNouveauteTagFilter || tagTokens.includes(currentNouveauteTagFilter);
+        const matchesSize = !selectedSizes.length || cardSizes.some(s => selectedSizes.includes(normalizeVariantToken(s)));
+        const matchesColor = !selectedColors.length || cardColors.some(c => selectedColors.includes(normalizeVariantToken(c)));
+        const show = matchesCategory && matchesTag && matchesSize && matchesColor;
+
+        card.classList.toggle('hidden', !show);
+        if (show) visible++;
+      });
+
+      if (filterCount) filterCount.textContent = visible + (visible > 1 ? ' produits' : ' produit');
+
+      const grid = document.getElementById('product-grid');
+      if (grid) {
+        const existing = grid.querySelector('.filter-empty-note');
+        if (visible === 0 && cards.length > 0) {
+          if (!existing) {
+            const note = document.createElement('p');
+            note.className = 'filter-empty-note';
+            note.textContent = 'Aucun produit ne correspond aux filtres actuels.';
+            grid.appendChild(note);
+          }
+        } else if (existing) {
+          existing.remove();
+        }
       }
+    }
+
+    function syncNouveautesHeading() {
+      const view = validTags.has(currentNouveauteTagFilter) ? currentNouveauteTagFilter : 'all';
+      const title = document.getElementById('collection-page-title');
+      if (title) title.textContent = nouveautesMeta[view].heading;
       document.title = nouveautesMeta[view].documentTitle;
     }
 
-    function activateNouveautesFromURL(shouldScroll) {
-      const params = new URLSearchParams(window.location.search);
-      const reqCat = params.get('category');
-      currentCategoryFilter = validCategories.has(reqCat) ? reqCat : 'all';
-      currentNouveauteTagFilter = getNouveautesView() === 'all' ? '' : getNouveautesView();
-
-      document.querySelectorAll('.category-nav-strip .cat-nav-item').forEach((item) => {
-        item.classList.toggle('active', (item.getAttribute('data-category') || 'all') === currentCategoryFilter);
+    function scrollToFilterBar() {
+      const target = document.getElementById('collection-filter-bar');
+      if (!target || window.scrollY > 120) return;
+      requestAnimationFrame(() => {
+        const header = document.querySelector('.header');
+        const headerBottom = header ? header.getBoundingClientRect().bottom : 120;
+        const top = target.getBoundingClientRect().top + window.scrollY;
+        const targetY = Math.max(0, top - headerBottom + 10);
+        if (Math.abs(window.scrollY - targetY) > 80) window.scrollTo({ top: targetY, behavior: 'smooth' });
       });
-
-      syncNouveautesHeadingFromURL();
-      applyStrictCategoryFilter();
-
-      if (shouldScroll && shouldScrollToFilterBar()) {
-        setTimeout(scrollToFilterBar, 100);
-      }
     }
 
-    window.__jaces_activateNouveautesCategory = activateNouveautesFromURL;
+    function setNouveautesCategory(category, tag, shouldScroll) {
+      const normalizedCategory = normalizeCategoryToken(category);
+      const normalizedTag = normalizeVariantToken(tag);
+      currentCategoryFilter = normalizedCategory;
+      currentNouveauteTagFilter = validTags.has(normalizedTag) ? normalizedTag : '';
 
-    function setNouveautesCategory(category, shouldScroll, options) {
-      if (!validCategories.has(category)) return;
+      const params = new URLSearchParams();
+      params.set('category', currentCategoryFilter);
+      if (currentNouveauteTagFilter) params.set('nouveauteTag', currentNouveauteTagFilter);
+      history.replaceState({}, '', 'nouveautes.html?' + params.toString());
 
-      const preserveTag = !!(options && options.preserveTag);
-      const currentParams = new URLSearchParams(window.location.search);
-      const currentTag = currentParams.get('nouveauteTag');
-      const targetParams = new URLSearchParams();
+      updateActiveCategoryNav();
 
-      targetParams.set('category', category);
-      if (preserveTag && validTags.has(currentTag)) {
-        targetParams.set('nouveauteTag', currentTag);
-      }
-
-      const targetSearch = '?' + targetParams.toString();
-      if (window.location.search !== targetSearch) {
-        history.replaceState({}, '', 'nouveautes.html' + targetSearch);
-      }
-
-      currentCategoryFilter = category;
-      currentNouveauteTagFilter = preserveTag && validTags.has(currentTag) ? currentTag : '';
-
-      document.querySelectorAll('.category-nav-strip .cat-nav-item').forEach((item) => {
-        item.classList.toggle('active', (item.getAttribute('data-category') || 'all') === category);
-      });
-
-      syncNouveautesHeadingFromURL();
-      applyStrictCategoryFilter();
-
-      if (shouldScroll && shouldScrollToFilterBar()) {
-        scrollToFilterBar();
-      }
+      syncNouveautesHeading();
+      applyNouveautesFilter();
+      if (shouldScroll) scrollToFilterBar();
     }
 
-    function setNouveautesMenuSelection(category, tag, shouldScroll) {
-      const safeCategory = validCategories.has(category) ? category : 'all';
-      const safeTag = validTags.has(tag) ? tag : '';
-      const targetParams = new URLSearchParams();
-
-      targetParams.set('category', safeCategory);
-      if (safeTag) {
-        targetParams.set('nouveauteTag', safeTag);
-      }
-
-      const targetSearch = '?' + targetParams.toString();
-      if (window.location.search !== targetSearch) {
-        history.replaceState({}, '', 'nouveautes.html' + targetSearch);
-      }
-
-      currentCategoryFilter = safeCategory;
-      currentNouveauteTagFilter = safeTag;
-
-      document.querySelectorAll('.category-nav-strip .cat-nav-item').forEach((item) => {
-        item.classList.toggle('active', (item.getAttribute('data-category') || 'all') === safeCategory);
-      });
-
-      syncNouveautesHeadingFromURL();
-      applyStrictCategoryFilter();
-
-      if (shouldScroll && shouldScrollToFilterBar()) {
-        scrollToFilterBar();
-      }
-    }
-
-    document.querySelectorAll('a[href^="nouveautes.html?category="]').forEach((link) => {
-      link.addEventListener('click', (event) => {
+    document.querySelectorAll('a[href^="nouveautes.html"]').forEach(link => {
+      link.addEventListener('click', event => {
         if (!window.location.pathname.endsWith('nouveautes.html')) return;
-
         event.preventDefault();
-        const linkParams = new URL(link.getAttribute('href'), window.location.href).searchParams;
-        const category = linkParams.get('category') || 'all';
-        const tag = linkParams.get('nouveauteTag') || '';
-        const shouldScroll = window.scrollY <= 120;
-        setNouveautesMenuSelection(category, tag, shouldScroll);
+        const p = new URL(link.getAttribute('href'), window.location.href).searchParams;
+        setNouveautesCategory(p.get('category') || 'all', p.get('nouveauteTag') || '', window.scrollY <= 120);
       });
     });
 
     document.querySelectorAll('.category-nav-strip .cat-nav-item').forEach(item => {
-      item.addEventListener('click', (e) => {
+      item.addEventListener('click', e => {
         e.preventDefault();
-        const category = item.getAttribute('data-category') || 'all';
-        document.querySelectorAll('#collection-filter-bar input').forEach((input) => {
-          input.checked = false;
-        });
-        setNouveautesCategory(category, true, { preserveTag: true });
+        document.querySelectorAll('#collection-filter-bar input').forEach(i => { i.checked = false; });
+        setNouveautesCategory(item.getAttribute('data-category') || 'all', currentNouveauteTagFilter, true);
       });
     });
 
-    seedInitialCardOrder();
-    activateNouveautesFromURL(false);
+    const productSort = document.getElementById('product-sort');
+    if (productSort) {
+      productSort.addEventListener('change', () => {
+        const grid = document.getElementById('product-grid');
+        if (!grid) return;
+        const cards = Array.from(grid.querySelectorAll('.collection-card'));
+        const getPrice = c => Number((c.querySelector('.product-price')?.textContent || '0').replace(/[^\d]/g, ''));
+        const getName = c => c.querySelector('h3')?.textContent?.trim().toLowerCase() || '';
+        if (productSort.value === 'price-asc') cards.sort((a, b) => getPrice(a) - getPrice(b));
+        else if (productSort.value === 'price-desc') cards.sort((a, b) => getPrice(b) - getPrice(a));
+        else if (productSort.value === 'name-asc') cards.sort((a, b) => getName(a).localeCompare(getName(b), 'fr'));
+        cards.forEach(c => grid.appendChild(c));
+        applyNouveautesFilter();
+      });
+    }
 
-    window.addEventListener('jaces:admin-products-sync', () => {
-      seedInitialCardOrder();
-      applyStrictCategoryFilter();
-    });
+    // Init depuis URL
+    (function () {
+      const p = new URLSearchParams(window.location.search);
+      const initialCategory = normalizeCategoryToken(p.get('category'));
+      const initialTag = normalizeVariantToken(p.get('nouveauteTag'));
+      currentCategoryFilter = initialCategory;
+      currentNouveauteTagFilter = validTags.has(initialTag) ? initialTag : '';
+      updateActiveCategoryNav();
+      syncNouveautesHeading();
+    })();
+
     window.addEventListener('jaces:products-loaded', () => {
-      console.log('[nouveautes] products-loaded handler: before filters');
-      const grid = document.getElementById('product-grid') || document.querySelector('.product-grid');
-      if (grid) console.log('[nouveautes] product grid HTML (before filters)', grid.innerHTML.length);
-      seedInitialCardOrder();
-      applyStrictCategoryFilter();
-      const gridAfter = document.getElementById('product-grid') || document.querySelector('.product-grid');
-      if (gridAfter) console.log('[nouveautes] product grid HTML (after filters)', gridAfter.innerHTML.length);
-      console.log('[nouveautes] products-loaded handler: after filters applied');
+      applyNouveautesFilter();
     });
   </script>
 
@@ -843,6 +590,7 @@
     </div>
     <div class="fav-panel-list" id="fav-panel-list"></div>
   </div>
+
   <script src="catalog.js"></script>
   <script src="filters.js"></script>
   <script type="module" src="products-page.js"></script>
@@ -870,14 +618,20 @@
             : null;
         } catch (err) { url = null; }
         if (!url) {
-          url = 'detail-produit.html?id=' + encodeURIComponent(name.toLowerCase().replace(/\s+/g, '-')) + '&name=' + encodeURIComponent(name) + '&price=' + encodeURIComponent(price) + '&img=' + encodeURIComponent(img) + '&selectedSize=' + encodeURIComponent(selectedSize) + '&selectedColor=' + encodeURIComponent(selectedColor) + '&origin=nouveautes&originLabel=Nouveautes&originUrl=nouveautes.html&originNav=nouveautes';
+          url = 'detail-produit.html?id=' + encodeURIComponent(name.toLowerCase().replace(/\s+/g, '-'))
+            + '&name=' + encodeURIComponent(name)
+            + '&price=' + encodeURIComponent(price)
+            + '&img=' + encodeURIComponent(img)
+            + '&selectedSize=' + encodeURIComponent(selectedSize)
+            + '&selectedColor=' + encodeURIComponent(selectedColor)
+            + '&origin=nouveautes&originLabel=Nouveautes&originUrl=nouveautes.html&originNav=nouveautes';
         }
         window.location.href = url;
       }
+
       document.querySelectorAll('.product-card').forEach(function (card) {
         card.style.cursor = 'pointer';
         card.addEventListener('click', function (e) {
-          if (card.classList.contains('admin-product-card') || card.hasAttribute('data-admin-id')) return;
           if (e.target.closest('.product-favorite') || e.target.closest('.quick-buy-grid') || e.target.closest('.hover-sizes')) return;
           navigateToProduct(card);
         });
