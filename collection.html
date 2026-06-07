@@ -712,7 +712,6 @@
   const collectionParams = new URLSearchParams(window.location.search);
   const requestedCollection = collectionParams.get('collection');
   const requestedCategory = collectionParams.get('category');
-  const validCategories = new Set(['all', 'robes', 'tops', 'jupes', 'pantalons', 'vestes', 'accessoires']);
   const collectionMeta = {
     all: { heading: 'Nos collections', documentTitle: 'Nos collections | JACES' },
     ss26: { heading: 'Printemps–Été 2026', documentTitle: 'Printemps–Été 2026 | JACES' },
@@ -730,6 +729,18 @@
       .toLowerCase()
       .replace(/[^a-z0-9]+/g, '-')
       .replace(/^-+|-+$/g, '');
+  }
+
+  function normalizeCategoryToken(value) {
+    const token = normalizeVariantToken(value);
+    return token || 'all';
+  }
+
+  function getAvailableCategories() {
+    return new Set(
+      Array.from(document.querySelectorAll('.category-nav-strip .cat-nav-item'))
+        .map((item) => normalizeCategoryToken(item.getAttribute('data-category') || 'all'))
+    );
   }
 
   function getCardVariantData(card) {
@@ -839,10 +850,9 @@
 
     allCards.forEach((card) => {
       const categoryTokens = (card.getAttribute('data-category') || '').split(' ').filter(Boolean);
-      const primaryCategory = categoryTokens.find((token) => token !== 'all') || '';
       const cardCollection = card.getAttribute('data-collection') || 'all';
       const matchesCollection = collectionView === 'all' || cardCollection === collectionView;
-      const matchesCategory = !currentCategoryFilter || currentCategoryFilter === 'all' || primaryCategory === currentCategoryFilter;
+      const matchesCategory = !currentCategoryFilter || currentCategoryFilter === 'all' || categoryTokens.includes(currentCategoryFilter);
       const variantData = getCardVariantData(card);
       const matchesSize = !selectedSizes.length || variantData.sizes.some((size) => selectedSizes.includes(normalizeVariantToken(size)));
       const matchesColor = !selectedColors.length || variantData.colors.some((color) => selectedColors.includes(normalizeVariantToken(color)));
@@ -870,7 +880,9 @@
   }
 
   function setCollectionCategory(category, shouldScroll, options) {
-    if (!category || !validCategories.has(category)) return;
+    const normalizedCategory = normalizeCategoryToken(category);
+    const availableCategories = getAvailableCategories();
+    const safeCategory = availableCategories.has(normalizedCategory) ? normalizedCategory : 'all';
 
     const preserveSeason = !!(options && options.preserveSeason);
 
@@ -882,7 +894,7 @@
       targetParams.set('collection', currentSeason);
     }
 
-    targetParams.set('category', category);
+    targetParams.set('category', safeCategory);
 
     const targetSearch = '?' + targetParams.toString();
 
@@ -891,7 +903,7 @@
       syncCollectionHeadingFromURL();
     }
 
-    currentCategoryFilter = category;
+    currentCategoryFilter = safeCategory;
 
     const productGridEl = document.getElementById('product-grid');
     if (productGridEl) {
@@ -899,7 +911,7 @@
     }
 
     document.querySelectorAll('.category-nav-strip .cat-nav-item').forEach((item) => {
-      item.classList.toggle('active', (item.getAttribute('data-category') || 'all') === category);
+      item.classList.toggle('active', (item.getAttribute('data-category') || 'all') === safeCategory);
     });
 
     applyCollectionView();
@@ -925,11 +937,11 @@
 
 
   function activateCategoryFromURL() {
-    if (!requestedCategory || !validCategories.has(requestedCategory)) return;
+    if (!requestedCategory) return;
     setCollectionCategory(requestedCategory, window.scrollY <= 120, { preserveSeason: true });
   }
 
-  if (requestedCategory && validCategories.has(requestedCategory)) {
+  if (requestedCategory) {
     activateCategoryFromURL();
   } else {
     currentCategoryFilter = 'all';
@@ -954,7 +966,7 @@
   });
 
   window.addEventListener('jaces:products-loaded', () => {
-    if (requestedCategory && validCategories.has(requestedCategory)) {
+    if (requestedCategory) {
       activateCategoryFromURL();
       return;
     }

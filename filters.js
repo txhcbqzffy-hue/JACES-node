@@ -85,6 +85,14 @@
         // Deuxieme tap: on laisse la navigation se faire normalement.
         item.classList.remove('submenu-open');
       });
+
+      submenu.querySelectorAll('a').forEach((submenuLink) => {
+        submenuLink.addEventListener('click', () => {
+          // Sur certaines pages (ex: collection), des handlers preventDefault
+          // gardent la page ouverte: on ferme explicitement le mega menu.
+          closeAll(null);
+        });
+      });
     });
 
     document.addEventListener('click', (event) => {

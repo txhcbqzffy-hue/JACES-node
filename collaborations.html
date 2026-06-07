@@ -175,7 +175,6 @@
 
   <script>
     (function () {
-      const cards = Array.from(document.querySelectorAll('#product-grid .collection-card'));
       const count = document.getElementById('filter-count');
       const sectionTitle = document.getElementById('collection-page-title');
       const filterBar = document.getElementById('collection-filter-bar');
@@ -185,13 +184,33 @@
       const experienceGrid = document.getElementById('collab-experience-grid');
       const experienceDetail = document.getElementById('collab-experience-detail');
       let countdownTimer = null;
-      const valid = new Set(['all', 'nike', 'chloe', 'jacquemus', 'dior', 'saint-laurent']);
       const params = new URLSearchParams(window.location.search);
       const fromUrl = params.get('category');
       const fromView = params.get('collabView');
       const validViews = new Set(['all', 'exclusives', 'popup', 'events']);
       let currentView = validViews.has(fromView || '') ? fromView : 'all';
-      let current = fromUrl && valid.has(fromUrl) ? fromUrl : 'all';
+
+      function normalizeCategoryToken(value) {
+        return String(value || '')
+          .toLowerCase()
+          .trim()
+          .replace(/[^a-z0-9-]+/g, '-')
+          .replace(/^-+|-+$/g, '') || 'all';
+      }
+
+      function getAvailableCategories() {
+        return new Set(
+          Array.from(document.querySelectorAll('.category-nav-strip .cat-nav-item'))
+            .map((item) => normalizeCategoryToken(item.getAttribute('data-category') || 'all'))
+        );
+      }
+
+      function getSafeCategory(value) {
+        const normalized = normalizeCategoryToken(value);
+        return getAvailableCategories().has(normalized) ? normalized : 'all';
+      }
+
+      let current = getSafeCategory(fromUrl || 'all');
 
       function getViewMeta(view) {
         if (view === 'exclusives') return { heading: 'Créations exclusives', documentTitle: 'Créations exclusives | JACES' };
@@ -482,12 +501,12 @@
           return;
         }
 
+        const cards = Array.from(document.querySelectorAll('#product-grid .collection-card'));
         let visible = 0;
         cards.forEach((card) => {
           const categories = (card.getAttribute('data-category') || '').split(' ');
-          const primary = categories.find((v) => v && v !== 'all') || '';
           const viewTokens = (card.getAttribute('data-collab-view') || 'all').split(' ').filter(Boolean);
-          const matchesCategory = current === 'all' || primary === current;
+          const matchesCategory = current === 'all' || categories.includes(current);
           const matchesView = currentView === 'all' || viewTokens.indexOf(currentView) !== -1 || viewTokens.indexOf('all') !== -1;
           const show = matchesCategory && matchesView;
           card.classList.toggle('hidden', !show);
@@ -520,13 +539,13 @@
       window.scrollToCollaborationResults = scrollToCollaborationResults;
 
       function setCategory(category, shouldScroll, resetFilters) {
-        if (!valid.has(category)) return;
+        const safeCategory = getSafeCategory(category);
         if (resetFilters) {
           document.querySelectorAll('#collection-filter-bar input').forEach((input) => { input.checked = false; });
         }
-        current = category;
+        current = safeCategory;
         const nextParams = new URLSearchParams();
-        nextParams.set('category', category);
+        nextParams.set('category', safeCategory);
         if (currentView !== 'all') {
           nextParams.set('collabView', currentView);
         }
