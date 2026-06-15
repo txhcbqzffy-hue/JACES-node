@@ -188,7 +188,6 @@
     const nav = document.querySelector('.nav');
     if (!nav) return;
 
-    const lockClass = 'submenu-just-clicked';
     const activeLinkClass = 'submenu-link-active';
     const submenuSelectionStorageKey = 'jaces-submenu-selection-v1';
 
@@ -202,6 +201,83 @@
     };
 
     const getStoredSubmenuSelections = () => readSessionJsonStorage(submenuSelectionStorageKey, {});
+
+    const parseSubmenuLink = (submenuLink) => {
+      try {
+        const parsed = new URL(submenuLink.getAttribute('href') || '', window.location.href);
+        return {
+          node: submenuLink,
+          pathname: parsed.pathname,
+          category: String(parsed.searchParams.get('category') || '').trim().toLowerCase(),
+          collabView: String(parsed.searchParams.get('collabView') || '').trim().toLowerCase(),
+          nouveauteTag: String(parsed.searchParams.get('nouveauteTag') || '').trim().toLowerCase(),
+          collection: String(parsed.searchParams.get('collection') || '').trim().toLowerCase()
+        };
+      } catch (error) {
+        return null;
+      }
+    };
+
+    const resolveActiveSubmenuLinkFromLocation = () => {
+      const currentPath = window.location.pathname;
+      const params = new URLSearchParams(window.location.search || '');
+      const pageName = (window.location.pathname.split('/').pop() || '').toLowerCase();
+      const currentCategory = String(params.get('category') || 'all').trim().toLowerCase();
+      const currentCollabView = String(params.get('collabView') || 'all').trim().toLowerCase();
+      const currentNouveauteTag = String(params.get('nouveauteTag') || '').trim().toLowerCase();
+      const currentCollection = String(params.get('collection') || '').trim().toLowerCase();
+
+      const candidates = Array.from(nav.querySelectorAll('.submenu a'))
+        .map(parseSubmenuLink)
+        .filter((link) => link && link.pathname === currentPath);
+
+      if (!candidates.length) return null;
+
+      const scored = candidates
+        .map((link) => {
+          let score = 0;
+
+          if (link.category) {
+            if (link.category !== currentCategory) return null;
+            score += 20;
+          } else if (currentCategory === 'all') {
+            score += 4;
+          }
+
+          if (pageName === 'collaborations.html') {
+            if (link.collabView) {
+              if (link.collabView !== currentCollabView) return null;
+              score += 12;
+            } else if (currentCollabView === 'all') {
+              score += 3;
+            }
+          }
+
+          if (pageName === 'nouveautes.html') {
+            if (link.nouveauteTag) {
+              if (link.nouveauteTag !== currentNouveauteTag) return null;
+              score += 12;
+            } else if (!currentNouveauteTag) {
+              score += 3;
+            }
+          }
+
+          if (pageName === 'collection.html') {
+            if (link.collection) {
+              if (link.collection !== currentCollection) return null;
+              score += 12;
+            } else if (!currentCollection) {
+              score += 3;
+            }
+          }
+
+          return { node: link.node, score };
+        })
+        .filter(Boolean)
+        .sort((a, b) => b.score - a.score);
+
+      return scored.length ? scored[0].node : null;
+    };
 
     const setStoredSubmenuSelection = (pageKey, submenuDestination) => {
       if (!pageKey) return;
@@ -230,7 +306,14 @@
 
     const syncActiveSubmenuLinksFromLocation = () => {
       const currentPageKey = `${window.location.pathname}${window.location.search || ''}`;
-      const selectedDestinationForPage = getStoredSubmenuSelections()[currentPageKey] || '';
+      const inferredLink = resolveActiveSubmenuLinkFromLocation();
+      const inferredDestination = inferredLink ? normalizeDestination(inferredLink.getAttribute('href')) : '';
+      const storedDestination = getStoredSubmenuSelections()[currentPageKey] || '';
+      const selectedDestinationForPage = inferredDestination || storedDestination;
+
+      if (inferredDestination && inferredDestination !== storedDestination) {
+        setStoredSubmenuSelection(currentPageKey, inferredDestination);
+      }
 
       nav.querySelectorAll('.nav-item').forEach((item) => {
         const submenuLinks = Array.from(item.querySelectorAll('.submenu a'));
@@ -246,16 +329,13 @@
       });
     };
 
-    nav.querySelectorAll('.nav-item').forEach((item) => {
-      item.addEventListener('mouseleave', () => {
-        item.classList.remove(lockClass);
-      });
-    });
-
-    nav.addEventListener('focusin', (event) => {
-      const item = event.target.closest('.nav-item');
-      if (item) item.classList.remove(lockClass);
-    });
+    const syncActiveSubmenuFromVignetteClick = () => {
+      document.addEventListener('click', (event) => {
+        const vignette = event.target.closest('.cat-nav-item');
+        if (!vignette) return;
+        window.setTimeout(syncActiveSubmenuLinksFromLocation, 0);
+      }, true);
+    };
 
     nav.addEventListener('click', (event) => {
       const clickedLink = event.target.closest('.submenu a, .nav-item > a');
@@ -274,8 +354,6 @@
         clearActiveSubmenuLinks(item);
       }
 
-      item.classList.add(lockClass);
-
       requestAnimationFrame(() => {
         if (document.activeElement && typeof document.activeElement.blur === 'function') {
           document.activeElement.blur();
@@ -283,12 +361,9 @@
       });
     });
 
-    document.addEventListener('pointerdown', (event) => {
-      if (nav.contains(event.target)) return;
-      nav.querySelectorAll('.' + lockClass).forEach((item) => {
-        item.classList.remove(lockClass);
-      });
-    });
+    document.addEventListener('jaces:submenu-links-updated', syncActiveSubmenuLinksFromLocation);
+    syncActiveSubmenuFromVignetteClick();
+    window.addEventListener('jaces:nav-state-changed', syncActiveSubmenuLinksFromLocation);
 
     syncActiveSubmenuLinksFromLocation();
 

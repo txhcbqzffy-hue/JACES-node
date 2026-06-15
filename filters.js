@@ -145,6 +145,8 @@
         replaceSubmenuCategoryLinks(accessoiresItem, mapFiltersToSimpleLinks(accessoiresFilters, 'accessoires.html'));
       }
 
+      document.dispatchEvent(new CustomEvent('jaces:submenu-links-updated'));
+
     } catch (error) {
       console.warn('Impossible de charger les filtres dynamiques:', error);
     }

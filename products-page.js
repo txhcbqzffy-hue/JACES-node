@@ -131,11 +131,13 @@ function getProductFilterTokens(product) {
 function productMatchesPageMenus(product, pageMenus, pageFilterIdSet) {
   if (!pageMenus.length) return true;
 
-  const safePageMenus = pageMenus.map((menu) => normalizeToken(menu));
+  const safePageMenus = pageMenus.map((menu) => slugify(menu));
   const filterMenus = product?.filter_menus;
 
   if (filterMenus && typeof filterMenus === 'object') {
-    const hasMenuMatch = Object.keys(filterMenus).some((menuKey) => safePageMenus.includes(normalizeToken(menuKey)));
+    const hasMenuMatch = Object.keys(filterMenus).some((menuKey) =>
+      safePageMenus.includes(slugify(menuKey))
+    );
     if (hasMenuMatch) return true;
   }
 
@@ -143,7 +145,7 @@ function productMatchesPageMenus(product, pageMenus, pageFilterIdSet) {
   if (ids.some((id) => pageFilterIdSet.has(id))) return true;
 
   const fromFilters = Array.isArray(product?.filters) ? product.filters : [];
-  if (fromFilters.some((filter) => safePageMenus.includes(normalizeToken(filter?.menu)))) return true;
+  if (fromFilters.some((filter) => safePageMenus.includes(slugify(filter?.menu)))) return true;
 
   return false;
 }
@@ -178,13 +180,43 @@ function logFilterDiagnostics(products, allFilters, pageMenus, activeFilter) {
 }
 
 function getProductImages(product) {
-  const primary = String(product?.image_url || '').trim();
-  const hover = String(product?.hover_image_url || '').trim();
-  const fromList = Array.isArray(product?.all_images) ? product.all_images : [];
-  const fallback = [primary, hover, product?.img, product?.secondaryImg, product?.tertiaryImg, product?.quaternaryImg]
-    .map((value) => String(value || '').trim())
-    .filter(Boolean);
-  const merged = uniqueStrings([...fromList, ...fallback]);
+  const extractUrl = (value) => {
+    if (!value) return '';
+    if (typeof value === 'string') return value.trim();
+    return String(value.url || value.URL || value.image_url || value.src || '').trim();
+  };
+
+  const primary = extractUrl(product?.image_url || product?.url || product?.URL || product?.img);
+  const hover = extractUrl(product?.hover_image_url || product?.secondaryImg);
+
+  const fromAllImages = Array.isArray(product?.all_images)
+    ? product.all_images.map(extractUrl)
+    : [];
+
+  const fromImages = Array.isArray(product?.images)
+    ? product.images.map(extractUrl)
+    : [];
+
+  const fromProductImages = Array.isArray(product?.product_images)
+    ? product.product_images.map(extractUrl)
+    : [];
+
+  const fallback = [
+    primary,
+    hover,
+    product?.img,
+    product?.secondaryImg,
+    product?.tertiaryImg,
+    product?.quaternaryImg
+  ].map(extractUrl).filter(Boolean);
+
+  const merged = uniqueStrings([
+    ...fromAllImages,
+    ...fromImages,
+    ...fromProductImages,
+    ...fallback
+  ]);
+
   return {
     main: primary || merged[0] || '',
     hover: hover || merged[1] || primary || merged[0] || '',
@@ -201,8 +233,12 @@ function getVariantOptions(product) {
 function extractFiltersForMenu(product, menuName) {
   const map = product?.filter_menus;
   if (!map || typeof map !== 'object') return [];
-  const key = normalizeToken(menuName);
-  const values = Array.isArray(map[key]) ? map[key] : [];
+
+  const wantedKey = slugify(menuName);
+  const realKey = Object.keys(map).find((key) => slugify(key) === wantedKey);
+
+  const values = realKey && Array.isArray(map[realKey]) ? map[realKey] : [];
+
   return values.map((entry) => ({
     id: entry?.id,
     label: entry?.label || '',

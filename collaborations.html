@@ -540,6 +540,66 @@
 
       window.scrollToCollaborationResults = scrollToCollaborationResults;
 
+      function syncCollaborationsMegaMenuActiveLink() {
+        const navItemLink = document.querySelector('.nav .nav-item > a[href="collaborations.html"]');
+        const navItem = navItemLink ? navItemLink.closest('.nav-item') : null;
+        if (!navItem) return;
+
+        const submenuLinks = Array.from(navItem.querySelectorAll('.submenu a'));
+        if (!submenuLinks.length) return;
+
+        const wantedCategory = String(current || 'all').trim().toLowerCase();
+        const wantedView = String(currentView || 'all').trim().toLowerCase();
+
+        let bestLink = null;
+        let bestScore = -1;
+
+        submenuLinks.forEach((submenuLink) => {
+          try {
+            const parsed = new URL(submenuLink.getAttribute('href') || '', window.location.href);
+            const path = (parsed.pathname.split('/').pop() || '').toLowerCase();
+            if (path !== 'collaborations.html') return;
+
+            const linkCategory = String(parsed.searchParams.get('category') || '').trim().toLowerCase();
+            const linkView = String(parsed.searchParams.get('collabView') || '').trim().toLowerCase();
+
+            if (linkCategory && linkCategory !== wantedCategory) return;
+            if (linkView && linkView !== wantedView) return;
+
+            let score = 0;
+            if (linkCategory === wantedCategory) score += 20;
+            if (!linkCategory && wantedCategory === 'all') score += 2;
+            if (linkView === wantedView) score += 12;
+            if (!linkView && wantedView === 'all') score += 2;
+
+            if (score > bestScore) {
+              bestScore = score;
+              bestLink = submenuLink;
+            }
+          } catch (error) {
+            // Ignore malformed links and keep matching resilient.
+          }
+        });
+
+        submenuLinks.forEach((submenuLink) => {
+          submenuLink.classList.toggle('submenu-link-active', submenuLink === bestLink);
+        });
+
+        if (!bestLink) return;
+        try {
+          const parsed = new URL(bestLink.getAttribute('href') || '', window.location.href);
+          const key = `${window.location.pathname}${window.location.search || ''}`;
+          const selectedDestination = `${parsed.pathname}${parsed.search || ''}`;
+          const storageKey = 'jaces-submenu-selection-v1';
+          const raw = window.sessionStorage.getItem(storageKey);
+          const selections = raw ? JSON.parse(raw) : {};
+          selections[key] = selectedDestination;
+          window.sessionStorage.setItem(storageKey, JSON.stringify(selections));
+        } catch (error) {
+          // Ignore storage failures to avoid blocking navigation.
+        }
+      }
+
       function setCategory(category, shouldScroll, resetFilters) {
         const safeCategory = getSafeCategory(category);
         if (resetFilters) {
@@ -555,6 +615,8 @@
         if (window.location.search !== next) {
           history.replaceState({}, '', 'collaborations.html' + next);
         }
+        window.dispatchEvent(new CustomEvent('jaces:nav-state-changed'));
+        syncCollaborationsMegaMenuActiveLink();
         apply();
         if (shouldScroll) {
           scrollToCollaborationResults();
@@ -612,10 +674,12 @@
         setCategory(current, true, false);
       } else {
         apply();
+        syncCollaborationsMegaMenuActiveLink();
       }
 
       window.addEventListener('jaces:products-loaded', () => {
         apply();
+        syncCollaborationsMegaMenuActiveLink();
       });
     })();
   </script>
