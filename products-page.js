@@ -423,7 +423,9 @@ async function loadPageProducts() {
     const activeFilter = resolveActiveFilter(pageFilters, rawFilterId, requestedCategory);
     const pageFilterIdSet = new Set(pageFilters.map((filter) => String(filter.id)));
 
-    const response = await fetch('/api/products');
+    const response = await fetch(`/api/products?page=${encodeURIComponent(apiPage)}&t=${Date.now()}`, {
+      cache: 'no-store'
+    });
     if (!response.ok) throw new Error(`Erreur HTTP ${response.status}`);
 
     const data = await response.json();

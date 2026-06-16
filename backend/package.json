@@ -4,7 +4,8 @@
   "description": "Backend minimal pour JACES (API produits)",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+    "dev": "node server.js"
   },
   "author": "",
   "license": "MIT"
