@@ -431,9 +431,7 @@ async function loadPageProducts() {
     const data = await response.json();
     const productsFromApi = Array.isArray(data) ? data : [];
 
-    products = productsFromApi
-      .filter((product) => productMatchesPageMenus(product, pageMenus, pageFilterIdSet))
-      .filter((product) => productMatchesActiveFilter(product, activeFilter));
+    products = productsFromApi;
 
     logFilterDiagnostics(productsFromApi, allFilters, pageMenus, activeFilter);
 
