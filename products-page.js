@@ -1,3 +1,8 @@
+console.log('[products-page.js] chargé');
+console.log('pageName', getCurrentPageName());
+console.log('apiPage', getApiPage(getCurrentPageName()));
+console.log('productGrid', document.querySelector('#product-grid'));
+
 function removeDiacritics(str) {
   const input = String(str || '');
   try {
@@ -382,12 +387,13 @@ async function loadPageProducts() {
     document.getElementById('product-grid') ||
     document.querySelector('.product-grid');
   if (!productGrid) {
-    console.error('Conteneur .product-grid introuvable sur la page.');
+    console.error('[products-page.js] Conteneur .product-grid introuvable sur la page.');
     return;
   }
 
   const pageName = getCurrentPageName();
   const apiPage = getApiPage(pageName);
+  console.log('[products-page.js] loadPageProducts → pageName:', pageName, '| apiPage:', apiPage, '| productGrid:', productGrid);
   const params = new URLSearchParams(window.location.search || '');
   const rawFilterId = params.get('filterId') || params.get('filter');
   const requestedCategory = params.get('category') || '';
@@ -435,6 +441,7 @@ async function loadPageProducts() {
 
     const data = await response.json();
     const productsFromApi = Array.isArray(data) ? data : [];
+    console.log('[products-page.js] API /api/products?page=' + apiPage + ' → ' + productsFromApi.length + ' produit(s)', productsFromApi.map(p => p.name));
 
     products = productsFromApi;
 
@@ -457,6 +464,7 @@ async function loadPageProducts() {
       products.forEach((product) => {
         productGrid.appendChild(buildProductCard(product));
       });
+      console.log('[products-page.js]', products.length, 'carte(s) ajoutée(s) au DOM #product-grid');
     }
 
     window.dispatchEvent(new CustomEvent('jaces:products-loaded', {
@@ -464,7 +472,7 @@ async function loadPageProducts() {
     }));
 
   } catch (error) {
-    console.error('Impossible de charger les produits API:', error);
+    console.error('[products-page.js] Impossible de charger les produits API:', error);
     productGrid.innerHTML = '';
     const errorNote = document.createElement('p');
     errorNote.className = 'filter-empty-note';
@@ -535,8 +543,12 @@ function normalizeId(value) {
 }
 
 function init() {
-  if (window.__JACES_PRODUCTS_PAGE_INIT) return;
+  if (window.__JACES_PRODUCTS_PAGE_INIT) {
+    console.warn('[products-page.js] init() ignoré car déjà initialisé');
+    return;
+  }
   window.__JACES_PRODUCTS_PAGE_INIT = true;
+  console.log('[products-page.js] init() → appel loadPageProducts()');
   loadPageProducts();
 }
 
