@@ -396,7 +396,7 @@ async function loadPageProducts() {
   if (!shouldLoadFromApi) return;
 
   // Pages où les vignettes ont déjà leurs images en HTML — ne pas réécrire le DOM
-  const pagesWithHardcodedImages = new Set(['collaborations.html', 'collection.html', 'nouveautes.html', 'accessoires.html']);
+  const pagesWithHardcodedImages = new Set(['index.html', 'collaborations.html', 'collection.html', 'nouveautes.html', 'accessoires.html']);
   const preserveNavImages = pagesWithHardcodedImages.has(pageName);
 
   let products = [];
