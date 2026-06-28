@@ -22,11 +22,15 @@ function uniqueStrings(values) {
 }
 
 function getCurrentPageName() {
-  return (window.location.pathname.split('/').pop() || '').toLowerCase();
+  // pathname.split('/').pop() retourne '' pour l'URL racine '/'
+  const raw = (window.location.pathname.split('/').pop() || '').toLowerCase();
+  return raw || 'index.html';
 }
 
 function getApiPage(pageName) {
   const map = {
+    'index.html': 'nouveautes',
+    '': 'nouveautes',
     'collection.html': 'collection',
     'nouveautes.html': 'nouveautes',
     'collaborations.html': 'collaborations',
@@ -38,6 +42,7 @@ function getApiPage(pageName) {
 function shouldLoadDynamicProducts(pageName, hasFilter) {
   const pages = new Set([
     'index.html',
+    '',
     'nouveautes.html',
     'produits.html',
     'collection.html',
