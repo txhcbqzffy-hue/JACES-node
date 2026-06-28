@@ -363,7 +363,7 @@ function buildProductCard(product) {
     </div>
     <div class="product-info">
       <h3>${product.name || 'Produit JACES'}</h3>
-      <p class="product-price">${product.price || ''}</p>
+      <p class="product-price">${product.price != null && product.price !== '' ? Math.round(Number(product.price)) + '€' : ''}</p>
       <p class="product-description">${product.description || ''}</p>
     </div>
   `;
