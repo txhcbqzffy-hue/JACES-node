@@ -1,7 +1,7 @@
-console.log('[products-page.js] chargé');
-console.log('pageName', getCurrentPageName());
-console.log('apiPage', getApiPage(getCurrentPageName()));
-console.log('productGrid', document.querySelector('#product-grid'));
+console.log("SCRIPT CHARGÉ");
+console.log("pageName", getCurrentPageName());
+console.log("apiPage", getApiPage(getCurrentPageName()));
+console.log("GRID", document.querySelector("#product-grid"));
 
 function removeDiacritics(str) {
   const input = String(str || '');
@@ -393,7 +393,6 @@ async function loadPageProducts() {
 
   const pageName = getCurrentPageName();
   const apiPage = getApiPage(pageName);
-  console.log('[products-page.js] loadPageProducts → pageName:', pageName, '| apiPage:', apiPage, '| productGrid:', productGrid);
   const params = new URLSearchParams(window.location.search || '');
   const rawFilterId = params.get('filterId') || params.get('filter');
   const requestedCategory = params.get('category') || '';
@@ -434,6 +433,7 @@ async function loadPageProducts() {
     const activeFilter = resolveActiveFilter(pageFilters, rawFilterId, requestedCategory);
     const pageFilterIdSet = new Set(pageFilters.map((filter) => String(filter.id)));
 
+    console.log("API START", "/api/products?page=" + apiPage);
     const response = await fetch(`/api/products?page=${encodeURIComponent(apiPage)}&t=${Date.now()}`, {
       cache: 'no-store'
     });
@@ -441,9 +441,8 @@ async function loadPageProducts() {
 
     const data = await response.json();
     const productsFromApi = Array.isArray(data) ? data : [];
-    console.log('[products-page.js] API /api/products?page=' + apiPage + ' → ' + productsFromApi.length + ' produit(s)', productsFromApi.map(p => p.name));
-
     products = productsFromApi;
+    console.log("PRODUCTS", products);
 
     logFilterDiagnostics(productsFromApi, allFilters, pageMenus, activeFilter);
 
@@ -464,7 +463,7 @@ async function loadPageProducts() {
       products.forEach((product) => {
         productGrid.appendChild(buildProductCard(product));
       });
-      console.log('[products-page.js]', products.length, 'carte(s) ajoutée(s) au DOM #product-grid');
+      console.log("CARTES INJECTÉES", products.length);
     }
 
     window.dispatchEvent(new CustomEvent('jaces:products-loaded', {
@@ -544,11 +543,11 @@ function normalizeId(value) {
 
 function init() {
   if (window.__JACES_PRODUCTS_PAGE_INIT) {
-    console.warn('[products-page.js] init() ignoré car déjà initialisé');
+    console.warn("INIT BLOQUÉ - déjà lancé");
     return;
   }
   window.__JACES_PRODUCTS_PAGE_INIT = true;
-  console.log('[products-page.js] init() → appel loadPageProducts()');
+  console.log("INIT OK - lancement loadPageProducts");
   loadPageProducts();
 }
 
