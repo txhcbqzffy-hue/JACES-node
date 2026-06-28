@@ -722,6 +722,7 @@ if (path === 'collection.html' || path === 'nouveautes.html' || path === 'access
   function normalizeQuickBuyPanels(scope) {
     const root = scope && typeof scope.querySelectorAll === 'function' ? scope : document;
     root.querySelectorAll('.product-card .hover-sizes').forEach((panel) => {
+      if (panel.dataset.qbDone) return;
       const card = panel.closest('.product-card');
       if (!card) return;
 
@@ -766,6 +767,7 @@ if (path === 'collection.html' || path === 'nouveautes.html' || path === 'access
         .join('');
       panel.dataset.quickSizes = quickBuySizes.join(',');
       panel.innerHTML = '<p class="quick-buy-title">' + buildQuickBuyTitleMarkup(suggestedSize) + '</p><div class="quick-buy-grid">' + buttonsHtml + '</div>';
+      panel.dataset.qbDone = '1';
     });
   }
 
@@ -878,11 +880,17 @@ if (path === 'collection.html' || path === 'nouveautes.html' || path === 'access
       .filter(Boolean);
 
     dynamicCardRoots.forEach((root) => {
+      let observerBusy = false;
       new MutationObserver(() => {
-        ensureFavoriteButtons(root);
-        normalizeQuickBuyPanels(root);
-        restoreHeartStates();
-        applyRecommendedSizeHighlights(root);
+        if (observerBusy) return;
+        observerBusy = true;
+        Promise.resolve().then(() => {
+          ensureFavoriteButtons(root);
+          normalizeQuickBuyPanels(root);
+          restoreHeartStates();
+          applyRecommendedSizeHighlights(root);
+          observerBusy = false;
+        });
       }).observe(root, { childList: true, subtree: true });
     });
 

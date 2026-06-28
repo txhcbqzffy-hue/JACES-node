@@ -382,12 +382,16 @@ function buildProductCard(product) {
 }
 
 async function loadPageProducts() {
+  if (window.__JACES_PRODUCTS_LOADING__) return;
+  window.__JACES_PRODUCTS_LOADING__ = true;
+
   const productGrid =
     document.querySelector('main .product-grid') ||
     document.getElementById('product-grid') ||
     document.querySelector('.product-grid');
   if (!productGrid) {
     console.error('[products-page.js] Conteneur .product-grid introuvable sur la page.');
+    window.__JACES_PRODUCTS_LOADING__ = false;
     return;
   }
 
@@ -466,11 +470,15 @@ async function loadPageProducts() {
       console.log("CARTES INJECTÉES", products.length);
     }
 
+    window.__JACES_PRODUCTS_LOADED__ = true;
+    window.__JACES_PRODUCTS_LOADING__ = false;
+
     window.dispatchEvent(new CustomEvent('jaces:products-loaded', {
       detail: { products, allProducts: productsFromApi, activeFilter, pageMenus, pageFilters }
     }));
 
   } catch (error) {
+    window.__JACES_PRODUCTS_LOADING__ = false;
     console.error('[products-page.js] Impossible de charger les produits API:', error);
     productGrid.innerHTML = '';
     const errorNote = document.createElement('p');
