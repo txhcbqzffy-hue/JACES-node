@@ -4,13 +4,11 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Collaborations | JACES</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,400;500;600&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,600&family=Manrope:wght@300;400;500;600;700;800&display=swap" media="print" onload="this.media='all'">
   <link rel="stylesheet" href="style.css">
 </head>
 <body class="collection-page-body collaboration-page">
   <div class="topbar">Livraison offerte dès 79 € | Retours offerts</div>
+
   <header class="header">
     <div class="header-top">
       <div class="header-left">
@@ -45,11 +43,11 @@
         <div class="submenu">
           <div>
             <p class="submenu-title">NOUVEAUTÉS</p>
-            <p class="submenu-copy">Nouvelles créations,<br>pièces exclusives<br>et collections signature.</p>
+            <p class="submenu-copy">Nouvelles pièces,<br>exclusivité<br>et robe signature.</p>
             <a href="nouveautes.html">Drop été</a>
             <a href="nouveautes.html">Édition limitée</a>
             <a href="nouveautes.html">Pièces signature</a>
-            <a href="nouveautes.html?category=all" class="underline-link">Voir toutes les nouveautés</a>
+            <a href="nouveautes.html?category=all" class="underline-link">Tout voir</a>
           </div>
           <div class="submenu-categories">
             <p class="submenu-title">FEMME</p>
@@ -153,7 +151,7 @@
       <div class="category-nav-track" id="category-nav-track">
         <a href="#collection-page-title" class="cat-nav-item active" data-category="all"><div class="cat-nav-circle"><img src="https://images.unsplash.com/photo-1483985988355-763728e1935b?q=80&w=400" alt="Tout voir"></div><span>Tout voir</span></a>
         <a href="#collab-nike" class="cat-nav-item" data-category="nike"><div class="cat-nav-circle"><img src="https://images.unsplash.com/photo-1551488831-00ddcb6c6bd3?q=80&w=800" alt="JACES x Nike"></div><span>JACES × Nike</span></a>
-        <a href="#collab-chloe" class="cat-nav-item" data-category="chloe"><div class="cat-nav-circle"><img src="https://images.unsplash.com/photo-1485230895905-ec40ba36b9bc?q=80&w=800" alt="JACES x Chloe"></div><span>JACES × Chloe</span></a>
+        <a href="#collab-chloe" class="cat-nav-item" data-category="chloe"><div class="cat-nav-circle"><img src="https://images.unsplash.com/photo-1485230895905-ec40ba36b9bc?q=80&w=800" alt="JACES x Chloé"></div><span>JACES × Chloé</span></a>
         <a href="#collab-jacquemus" class="cat-nav-item" data-category="jacquemus"><div class="cat-nav-circle"><img src="https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?q=80&w=800" alt="JACES x Jacquemus"></div><span>JACES × Jacquemus</span></a>
         <a href="#collab-dior" class="cat-nav-item" data-category="dior"><div class="cat-nav-circle"><img src="https://images.unsplash.com/photo-1496747611176-843222e1e57c?q=80&w=800" alt="JACES x Dior"></div><span>JACES × Dior</span></a>
         <a href="#collab-saint-laurent" class="cat-nav-item" data-category="saint-laurent"><div class="cat-nav-circle"><img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=800" alt="JACES x Saint Laurent"></div><span>JACES × Saint Laurent</span></a>
@@ -167,16 +165,65 @@
         <div class="collab-experience-grid" id="collab-experience-grid"></div>
         <article class="collab-experience-detail" id="collab-experience-detail" hidden></article>
       </section>
-      <div class="product-grid" id="product-grid" aria-live="polite">
-        <p class="filter-empty-note">Chargement des produits...</p>
+      <div class="product-grid" id="product-grid" hidden>
+        <article class="product-card collection-card" id="collab-nike" data-category="nike all" data-collab-view="all exclusives">
+          <div class="product-media">
+            <button class="product-favorite" type="button" aria-label="Ajouter aux favoris"><svg class="heart-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
+            <img src="https://images.unsplash.com/photo-1551488831-00ddcb6c6bd3?q=80&w=1200" alt="Bomber JACES x Nike" loading="eager" class="product-image-primary">
+            <img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?q=80&w=1200" alt="Bomber JACES x Nike vue 2" loading="lazy" class="product-image-secondary">
+            <div class="hover-sizes" aria-hidden="true"><p class="quick-buy-title"><strong>Achat rapide</strong> (Selectionnez votre taille)</p><div class="quick-buy-grid"><button type="button">34</button><button type="button">36</button><button type="button">38</button><button type="button">40</button><button type="button">42</button><button type="button">44</button></div></div>
+          </div>
+          <div class="product-info"><h3>Bomber JACES x Nike</h3><p class="product-price">295€</p></div>
+        </article>
+
+        <article class="product-card collection-card" id="collab-chloe" data-category="chloe all" data-collab-view="all exclusives">
+          <div class="product-media">
+            <button class="product-favorite" type="button" aria-label="Ajouter aux favoris"><svg class="heart-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
+            <img src="https://images.unsplash.com/photo-1485230895905-ec40ba36b9bc?q=80&w=1200" alt="Sweat signature JACES x Chloé" loading="eager" class="product-image-primary">
+            <img src="https://images.unsplash.com/photo-1496747611176-843222e1e57c?q=80&w=1200" alt="Sweat signature JACES x Chloé vue 2" loading="lazy" class="product-image-secondary">
+            <div class="hover-sizes" aria-hidden="true"><p class="quick-buy-title"><strong>Achat rapide</strong> (Selectionnez votre taille)</p><div class="quick-buy-grid"><button type="button">34</button><button type="button">36</button><button type="button">38</button><button type="button">40</button><button type="button">42</button><button type="button">44</button></div></div>
+          </div>
+          <div class="product-info"><h3>Sweat signature JACES x Chloé</h3><p class="product-price">265€</p></div>
+        </article>
+
+        <article class="product-card collection-card" id="collab-jacquemus" data-category="jacquemus all" data-collab-view="all popup">
+          <div class="product-media">
+            <button class="product-favorite" type="button" aria-label="Ajouter aux favoris"><svg class="heart-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
+            <img src="https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?q=80&w=1200" alt="Robe capsule JACES x Jacquemus" loading="eager" class="product-image-primary">
+            <img src="https://images.unsplash.com/photo-1464863979621-258859e62245?q=80&w=1200" alt="Robe capsule JACES x Jacquemus vue 2" loading="lazy" class="product-image-secondary">
+            <div class="hover-sizes" aria-hidden="true"><p class="quick-buy-title"><strong>Achat rapide</strong> (Selectionnez votre taille)</p><div class="quick-buy-grid"><button type="button">34</button><button type="button">36</button><button type="button">38</button><button type="button">40</button><button type="button">42</button><button type="button">44</button></div></div>
+          </div>
+          <div class="product-info"><h3>Robe capsule JACES x Jacquemus</h3><p class="product-price">345€</p></div>
+        </article>
+
+        <article class="product-card collection-card" id="collab-dior" data-category="dior all" data-collab-view="all popup">
+          <div class="product-media">
+            <button class="product-favorite" type="button" aria-label="Ajouter aux favoris"><svg class="heart-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
+            <img src="https://images.unsplash.com/photo-1496747611176-843222e1e57c?q=80&w=1200" alt="Robe drapee JACES x Dior" loading="lazy" class="product-image-primary">
+            <img src="https://images.unsplash.com/photo-1529139574466-a303027c1d8b?q=80&w=1200" alt="Robe drapee JACES x Dior vue 2" loading="lazy" class="product-image-secondary">
+            <div class="hover-sizes" aria-hidden="true"><p class="quick-buy-title"><strong>Achat rapide</strong> (Selectionnez votre taille)</p><div class="quick-buy-grid"><button type="button">34</button><button type="button">36</button><button type="button">38</button><button type="button">40</button><button type="button">42</button><button type="button">44</button></div></div>
+          </div>
+          <div class="product-info"><h3>Robe drapee JACES x Dior</h3><p class="product-price">390€</p></div>
+        </article>
+
+        <article class="product-card collection-card" id="collab-saint-laurent" data-category="saint-laurent all" data-collab-view="all events">
+          <div class="product-media">
+            <button class="product-favorite" type="button" aria-label="Ajouter aux favoris"><svg class="heart-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
+            <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=1200" alt="Top monochrome JACES x Saint Laurent" loading="lazy" class="product-image-primary">
+            <img src="https://images.unsplash.com/photo-1483985988355-763728e1935b?q=80&w=1200" alt="Top monochrome JACES x Saint Laurent vue 2" loading="lazy" class="product-image-secondary">
+            <div class="hover-sizes" aria-hidden="true"><p class="quick-buy-title"><strong>Achat rapide</strong> (Selectionnez votre taille)</p><div class="quick-buy-grid"><button type="button">34</button><button type="button">36</button><button type="button">38</button><button type="button">40</button><button type="button">42</button><button type="button">44</button></div></div>
+          </div>
+          <div class="product-info"><h3>Top monochrome JACES x Saint Laurent</h3><p class="product-price">275€</p></div>
+        </article>
       </div>
     </section>
   </main>
 
-  <footer class="footer"><p class="footer-note">Copyright © 2026 JACES. Tous droits réservés.</p></footer>
+  <footer class="footer"><p class="footer-note">Copyright © 2026 Chloé. Tous droits reserves.</p></footer>
 
   <script>
     (function () {
+      let cards = Array.from(document.querySelectorAll('#product-grid .collection-card'));
       const count = document.getElementById('filter-count');
       const sectionTitle = document.getElementById('collection-page-title');
       const filterBar = document.getElementById('collection-filter-bar');
@@ -186,33 +233,18 @@
       const experienceGrid = document.getElementById('collab-experience-grid');
       const experienceDetail = document.getElementById('collab-experience-detail');
       let countdownTimer = null;
+      const valid = new Set(['all', 'nike', 'chloe', 'jacquemus', 'dior', 'saint-laurent']);
       const params = new URLSearchParams(window.location.search);
       const fromUrl = params.get('category');
       const fromView = params.get('collabView');
       const validViews = new Set(['all', 'exclusives', 'popup', 'events']);
       let currentView = validViews.has(fromView || '') ? fromView : 'all';
+      let current = fromUrl && valid.has(fromUrl) ? fromUrl : 'all';
 
-      function normalizeCategoryToken(value) {
-        return String(value || '')
-          .toLowerCase()
-          .trim()
-          .replace(/[^a-z0-9-]+/g, '-')
-          .replace(/^-+|-+$/g, '') || 'all';
-      }
-
-      function getAvailableCategories() {
-        return new Set(
-          Array.from(document.querySelectorAll('.category-nav-strip .cat-nav-item'))
-            .map((item) => normalizeCategoryToken(item.getAttribute('data-category') || 'all'))
-        );
-      }
-
-      function getSafeCategory(value) {
-        const normalized = normalizeCategoryToken(value);
-        return getAvailableCategories().has(normalized) ? normalized : 'all';
-      }
-
-      let current = getSafeCategory(fromUrl || 'all');
+      window.addEventListener('jaces:products-loaded', () => {
+        cards = Array.from(document.querySelectorAll('#product-grid .collection-card'));
+        setCategory(current, false, false);
+      });
 
       function getViewMeta(view) {
         if (view === 'exclusives') return { heading: 'Créations exclusives', documentTitle: 'Créations exclusives | JACES' };
@@ -503,12 +535,12 @@
           return;
         }
 
-        const cards = Array.from(document.querySelectorAll('#product-grid .collection-card'));
         let visible = 0;
         cards.forEach((card) => {
           const categories = (card.getAttribute('data-category') || '').split(' ');
+          const primary = categories.find((v) => v && v !== 'all') || '';
           const viewTokens = (card.getAttribute('data-collab-view') || 'all').split(' ').filter(Boolean);
-          const matchesCategory = current === 'all' || categories.includes(current);
+          const matchesCategory = current === 'all' || primary === current;
           const matchesView = currentView === 'all' || viewTokens.indexOf(currentView) !== -1 || viewTokens.indexOf('all') !== -1;
           const show = matchesCategory && matchesView;
           card.classList.toggle('hidden', !show);
@@ -540,74 +572,14 @@
 
       window.scrollToCollaborationResults = scrollToCollaborationResults;
 
-      function syncCollaborationsMegaMenuActiveLink() {
-        const navItemLink = document.querySelector('.nav .nav-item > a[href="collaborations.html"]');
-        const navItem = navItemLink ? navItemLink.closest('.nav-item') : null;
-        if (!navItem) return;
-
-        const submenuLinks = Array.from(navItem.querySelectorAll('.submenu a'));
-        if (!submenuLinks.length) return;
-
-        const wantedCategory = String(current || 'all').trim().toLowerCase();
-        const wantedView = String(currentView || 'all').trim().toLowerCase();
-
-        let bestLink = null;
-        let bestScore = -1;
-
-        submenuLinks.forEach((submenuLink) => {
-          try {
-            const parsed = new URL(submenuLink.getAttribute('href') || '', window.location.href);
-            const path = (parsed.pathname.split('/').pop() || '').toLowerCase();
-            if (path !== 'collaborations.html') return;
-
-            const linkCategory = String(parsed.searchParams.get('category') || '').trim().toLowerCase();
-            const linkView = String(parsed.searchParams.get('collabView') || '').trim().toLowerCase();
-
-            if (linkCategory && linkCategory !== wantedCategory) return;
-            if (linkView && linkView !== wantedView) return;
-
-            let score = 0;
-            if (linkCategory === wantedCategory) score += 20;
-            if (!linkCategory && wantedCategory === 'all') score += 2;
-            if (linkView === wantedView) score += 12;
-            if (!linkView && wantedView === 'all') score += 2;
-
-            if (score > bestScore) {
-              bestScore = score;
-              bestLink = submenuLink;
-            }
-          } catch (error) {
-            // Ignore malformed links and keep matching resilient.
-          }
-        });
-
-        submenuLinks.forEach((submenuLink) => {
-          submenuLink.classList.toggle('submenu-link-active', submenuLink === bestLink);
-        });
-
-        if (!bestLink) return;
-        try {
-          const parsed = new URL(bestLink.getAttribute('href') || '', window.location.href);
-          const key = `${window.location.pathname}${window.location.search || ''}`;
-          const selectedDestination = `${parsed.pathname}${parsed.search || ''}`;
-          const storageKey = 'jaces-submenu-selection-v1';
-          const raw = window.sessionStorage.getItem(storageKey);
-          const selections = raw ? JSON.parse(raw) : {};
-          selections[key] = selectedDestination;
-          window.sessionStorage.setItem(storageKey, JSON.stringify(selections));
-        } catch (error) {
-          // Ignore storage failures to avoid blocking navigation.
-        }
-      }
-
       function setCategory(category, shouldScroll, resetFilters) {
-        const safeCategory = getSafeCategory(category);
+        if (!valid.has(category)) return;
         if (resetFilters) {
           document.querySelectorAll('#collection-filter-bar input').forEach((input) => { input.checked = false; });
         }
-        current = safeCategory;
+        current = category;
         const nextParams = new URLSearchParams();
-        nextParams.set('category', safeCategory);
+        nextParams.set('category', category);
         if (currentView !== 'all') {
           nextParams.set('collabView', currentView);
         }
@@ -615,8 +587,6 @@
         if (window.location.search !== next) {
           history.replaceState({}, '', 'collaborations.html' + next);
         }
-        window.dispatchEvent(new CustomEvent('jaces:nav-state-changed'));
-        syncCollaborationsMegaMenuActiveLink();
         apply();
         if (shouldScroll) {
           scrollToCollaborationResults();
@@ -674,52 +644,16 @@
         setCategory(current, true, false);
       } else {
         apply();
-        syncCollaborationsMegaMenuActiveLink();
       }
-
-      window.addEventListener('jaces:products-loaded', () => {
-        apply();
-        syncCollaborationsMegaMenuActiveLink();
-      });
     })();
   </script>
   <script src="catalog.js"></script>
-  <script src="filters.js"></script>
-  <script type="module" src="products-page.js?t=20260628d"></script>
+  <script type="module" src="products-page.js"></script>
   <script src="cart.js"></script>
   <script src="favorites.js"></script>
   <script src="auth.js"></script>
   <script>
     (function () {
-      function navigateToProduct(card) {
-        var name = (card.querySelector('h3') || {}).textContent || '';
-        name = name.trim();
-        var price = (card.querySelector('.product-price') || {}).textContent || '';
-        price = price.trim();
-        var imgEl = card.querySelector('.product-image-primary');
-        var img = imgEl ? imgEl.getAttribute('src') || '' : '';
-        var secEl = card.querySelector('.product-image-secondary');
-        var secondaryImg = secEl ? secEl.getAttribute('src') || '' : '';
-        if (!name) return;
-        var url;
-        try {
-          url = (window.JacesCatalog && typeof window.JacesCatalog.getProductUrl === 'function')
-            ? window.JacesCatalog.getProductUrl({ name: name, price: price, img: img, secondaryImg: secondaryImg }, 'collaboration')
-            : null;
-        } catch (err) { url = null; }
-        if (!url) {
-          url = 'detail-produit.html?id=' + encodeURIComponent(name.toLowerCase().replace(/\s+/g, '-')) + '&name=' + encodeURIComponent(name) + '&price=' + encodeURIComponent(price) + '&img=' + encodeURIComponent(img) + '&origin=collaboration&originLabel=Collaboration&originUrl=collaborations.html&originNav=collaboration';
-        }
-        window.location.href = url;
-      }
-
-      document.querySelectorAll('.product-card').forEach(function (card) {
-        card.style.cursor = 'pointer';
-        card.addEventListener('click', function (e) {
-          if (e.target.closest('.product-favorite') || e.target.closest('.quick-buy-grid') || e.target.closest('.hover-sizes')) return;
-          navigateToProduct(card);
-        });
-      });
     })();
   </script>
 </body>

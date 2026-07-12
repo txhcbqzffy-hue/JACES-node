@@ -4,9 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Nos collections | JACES</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,400;500;600&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,600&family=Manrope:wght@300;400;500;600;700;800&display=swap" media="print" onload="this.media='all'">
   <link rel="stylesheet" href="style.css">
 </head>
 <body class="collection-page-body">
@@ -54,11 +51,11 @@
       <div class="submenu">
         <div>
           <p class="submenu-title">NOUVEAUTÉS</p>
-          <p class="submenu-copy">Nouvelles créations,<br>pièces exclusives<br>et collections signature.</p>
+          <p class="submenu-copy">Nouvelles pièces,<br>exclusivité<br>et robe signature.</p>
           <a href="nouveautes.html">Drop été</a>
           <a href="nouveautes.html">Édition limitée</a>
           <a href="nouveautes.html">Pièces signature</a>
-          <a href="nouveautes.html?category=all" class="underline-link">Voir toutes les nouveautés</a>
+          <a href="nouveautes.html?category=all" class="underline-link">Tout voir</a>
         </div>
         <div class="submenu-categories">
           <p class="submenu-title">FEMME</p>
@@ -111,8 +108,8 @@
       <a href="accessoires.html">Accessoires</a>
       <div class="submenu">
         <div>
-            <p class="submenu-title">COLLECTIONS</p>
-            <a href="collections.html?category=all" class="underline-link">Toutes les collections</a>
+            <p class="submenu-title">COLLECTION</p>
+            <a href="collection.html?category=all" class="underline-link">Toutes les collections</a>
           </div>
           <div class="submenu-categories">
             <a href="accessoires.html?category=sacs">Sacs</a>
@@ -157,7 +154,7 @@
   </nav>
 </header>
 
-  <main class="collections-page">
+  <main class="collection-page">
     <section class="category-nav-strip" aria-label="Catégories collection femme">
       <div class="category-nav-track" id="category-nav-track">
         <a href="#collection-page-title" class="cat-nav-item active" data-category="all">
@@ -251,8 +248,181 @@
         </div>
       </div>
 
-      <div class="product-grid" id="product-grid" aria-live="polite">
-        <p class="filter-empty-note">Chargement des produits...</p>
+      <div class="product-grid" id="product-grid" hidden>
+        <article class="product-card collection-card" id="cat-robe" data-category="robes all" data-collection="ss26">
+          <div class="product-media">
+            <button class="product-favorite" type="button" aria-label="Ajouter aux favoris"><svg class="heart-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
+            <img src="https://dl.dropboxusercontent.com/scl/fi/50wz53pj517xjx0pwqx7x/TopRose1-1.png?rlkey=qxlv8mlbcox3hx90kytrqf30q&st=x5sibfwd" alt="Robe noire satinée" loading="eager" fetchpriority="high" class="product-image-primary">
+            <img src="https://dl.dropboxusercontent.com/scl/fi/2v91thz03ep6q3pvy6gfr/TopRose2.png?rlkey=cglo69lnilc8wrapqh95trpu2&st=vattioqz" alt="Robe noire satinée vue 2" loading="lazy" class="product-image-secondary">
+            <div class="hover-sizes" aria-hidden="true">
+              <span>34</span><span>36</span><span>38</span><span>40</span>
+            </div>
+          </div>
+          <div class="product-info">
+            <h3>Robe noire satinée</h3>
+            <p class="product-price">195€</p>
+          </div>
+        </article>
+        <article class="product-card collection-card" id="cat-tops" data-category="tops all" data-collection="ss26">
+          <div class="product-media">
+            <button class="product-favorite" type="button" aria-label="Ajouter aux favoris"><svg class="heart-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
+            <img src="https://dl.dropboxusercontent.com/scl/fi/fc4shvxkkb1eko5m5tmac/TopBeige1.png?rlkey=8qdqh08h89qhmijwp618lwpzh&st=c4awnnse" alt="Top ivoire structure" loading="eager" class="product-image-primary">
+            <img src="https://dl.dropboxusercontent.com/scl/fi/5h3z8kcka8a2sb2ptoz0u/TopBeige2.png?rlkey=ufyv8lqna2w50pel7vwomkmmy&st=4iavl5yh" alt="Top ivoire structure vue 2" loading="lazy" class="product-image-secondary">
+            <div class="hover-sizes" aria-hidden="true">
+              <span>34</span><span>36</span><span>38</span><span>40</span>
+            </div>
+          </div>
+          <div class="product-info">
+            <h3>Top ivoire structure</h3>
+            <p class="product-price">320€</p>
+          </div>
+        </article>
+        <article class="product-card collection-card" id="cat-vestes" data-category="vestes all" data-collection="aw26">
+          <div class="product-media">
+            <button class="product-favorite" type="button" aria-label="Ajouter aux favoris"><svg class="heart-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
+            <img src="https://dl.dropboxusercontent.com/scl/fi/emo5s8z20mwthy1hf2br5/Manteau-structur-rose-1.png?rlkey=59zrt7yjwhb261r9szl6xoq7c&st=iw286vmm" alt="Veste structurée" loading="lazy" class="product-image-primary">
+            <img src="https://dl.dropboxusercontent.com/scl/fi/ifjzjv9xrghvhabjornqt/Manteau-structur-bleu-1.png?rlkey=bxpbng7nr15ddg4g929rlfu99&st=iif9bz80" alt="Veste structurée vue 2" loading="lazy" class="product-image-secondary">
+            <div class="hover-sizes" aria-hidden="true">
+              <span>34</span><span>36</span><span>38</span><span>40</span>
+            </div>
+          </div>
+          <div class="product-info">
+            <h3>Veste structurée</h3>
+            <p class="product-price">410€</p>
+          </div>
+        </article>
+        <article class="product-card collection-card" id="cat-essentielles" data-product-id="blouse-fluide" data-category="tops all" data-collection="ss26">
+          <div class="product-info">
+            <h3>Top fluide</h3>
+            <p class="product-price">125€</p>
+          </div>
+        </article>
+        <article class="product-card collection-card" id="cat-jupes" data-category="jupes all" data-collection="ss26">
+          <div class="product-info">
+            <h3>Jupe plissée</h3>
+            <p class="product-price">155€</p>
+          </div>
+        </article>
+        <article class="product-card collection-card" data-category="tops all" data-collection="ss26">
+          <div class="product-info">
+            <h3>Top blanc</h3>
+            <p class="product-price">98€</p>
+          </div>
+        </article>
+        <article class="product-card collection-card" data-category="tops all" data-collection="ss26">
+          <div class="product-info">
+            <h3>Top en soie</h3>
+            <p class="product-price">135€</p>
+          </div>
+        </article>
+        <article class="product-card collection-card" data-category="vestes all" data-collection="aw26">
+          <div class="product-info">
+            <h3>Veste en cuir</h3>
+            <p class="product-price">265€</p>
+          </div>
+        </article>
+        <article class="product-card collection-card" id="cat-pantalons-signature" data-category="pantalons all" data-collection="ss26">
+          <div class="product-info">
+            <h3>Short structure</h3>
+            <p class="product-price">140€</p>
+          </div>
+        </article>
+        <article class="product-card collection-card" id="cat-pantalons" data-category="pantalons all" data-collection="aw26">
+          <div class="product-info">
+            <h3>Pantalon droit</h3>
+            <p class="product-price">130€</p>
+          </div>
+        </article>
+        <article class="product-card collection-card" id="cat-vestes-signature" data-category="vestes all" data-collection="aw26">
+          <div class="product-info">
+            <h3>Veste oversize</h3>
+            <p class="product-price">245€</p>
+          </div>
+        </article>
+        <article class="product-card collection-card" data-category="vestes all" data-collection="aw26">
+          <div class="product-info">
+            <h3>Veste en laine</h3>
+            <p class="product-price">420€</p>
+          </div>
+        </article>
+        <article class="product-card collection-card" data-category="robes all" data-collection="ss26">
+          <div class="product-info">
+            <h3>Robe midi</h3>
+            <p class="product-price">175€</p>
+          </div>
+        </article>
+        <article class="product-card collection-card" data-category="tops all" data-collection="aw26">
+          <div class="product-info">
+            <h3>Top col montant</h3>
+            <p class="product-price">115€</p>
+          </div>
+        </article>
+        <article class="product-card collection-card" data-category="tops all" data-collection="ss26">
+          <div class="product-info">
+            <h3>Top oversize</h3>
+            <p class="product-price">118€</p>
+          </div>
+        </article>
+        <article class="product-card collection-card" data-category="robes all" data-collection="aw26">
+          <div class="product-info">
+            <h3>Robe texturee</h3>
+            <p class="product-price">160€</p>
+          </div>
+        </article>
+        <article class="product-card collection-card" data-category="pantalons all" data-collection="ss26">
+          <div class="product-info">
+            <h3>Pantalon large</h3>
+            <p class="product-price">125€</p>
+          </div>
+        </article>
+        <article class="product-card collection-card" data-category="tops all" data-collection="aw26">
+          <div class="product-info">
+            <h3>Top texture</h3>
+            <p class="product-price">105€</p>
+          </div>
+        </article>
+        <article class="product-card collection-card" data-category="robes all" data-collection="aw26">
+          <div class="product-info">
+            <h3>Robe chic</h3>
+            <p class="product-price">215€</p>
+          </div>
+        </article>
+        <article class="product-card collection-card" data-category="tops all" data-collection="ss26">
+          <div class="product-info">
+            <h3>Top décolleté</h3>
+            <p class="product-price">89€</p>
+          </div>
+        </article>
+        <article class="product-card collection-card" id="cat-accessoires" data-category="accessoires all" data-collection="ss26">
+          <div class="product-info">
+            <h3>Sac à bandoulière</h3>
+            <p class="product-price">138€</p>
+          </div>
+        </article>
+        <article class="product-card collection-card" data-category="accessoires all" data-collection="ss26">
+          <div class="product-info">
+            <h3>Accessoire élégant</h3>
+            <p class="product-price">150€</p>
+          </div>
+        </article>
+        <article class="product-card collection-card" data-category="tops all" data-collection="ss26">
+          <div class="product-info">
+            <h3>Ceinture fine</h3>
+            <p class="product-price">65€</p>
+          </div>
+        </article>
+        <article class="product-card collection-card" data-category="accessoires all" data-collection="aw26">
+          <div class="product-info">
+            <h3>Boucles d’oreilles</h3>
+            <p class="product-price">75€</p>
+          </div>
+        </article>
+        <article class="product-card collection-card" data-category="tops all" data-collection="ss26">
+          <div class="product-info">
+            <h3>Top minimaliste</h3>
+            <p class="product-price">68€</p>
+          </div>
+        </article>
       </div>
     </section>
   </main>
@@ -281,7 +451,7 @@
         </form>
       </div>
     </div>
-    <p class="footer-note">Copyright © 2026 JACES. Tous droits réservés.</p>
+    <p class="footer-note">Copyright © 2026 Chloé. Tous droits réservés.</p>
   </footer>
 
   <script src="admin-products.js"></script>
@@ -570,10 +740,10 @@
       /* 24 - Top minimaliste */{ tertiary: '', quaternary: '' }
     ];
 
-    const collectionCards = Array.from(document.querySelectorAll('.collection-card'));
+    let collectionCards = Array.from(document.querySelectorAll('.collection-card'));
     const productGrid = document.querySelector('.product-grid');
     const productSort = document.getElementById('product-sort');
-    const originalCards = productGrid ? Array.from(productGrid.querySelectorAll('.collection-card')) : [];
+    let originalCards = productGrid ? Array.from(productGrid.querySelectorAll('.collection-card')) : [];
 
     function getCardPrice(card) {
       const priceText = card.querySelector('.product-price')?.textContent || '0';
@@ -583,6 +753,11 @@
     function getCardName(card) {
       return card.querySelector('h3')?.textContent?.trim() || '';
     }
+
+    window.addEventListener('jaces:products-loaded', () => {
+      collectionCards = Array.from(document.querySelectorAll('.collection-card'));
+      originalCards = productGrid ? Array.from(productGrid.querySelectorAll('.collection-card')) : [];
+    });
 
     if (productGrid && productSort) {
       productSort.addEventListener('change', () => {
@@ -715,6 +890,7 @@
   const collectionParams = new URLSearchParams(window.location.search);
   const requestedCollection = collectionParams.get('collection');
   const requestedCategory = collectionParams.get('category');
+  const validCategories = new Set(['all', 'robes', 'tops', 'jupes', 'pantalons', 'vestes', 'accessoires']);
   const collectionMeta = {
     all: { heading: 'Nos collections', documentTitle: 'Nos collections | JACES' },
     ss26: { heading: 'Printemps–Été 2026', documentTitle: 'Printemps–Été 2026 | JACES' },
@@ -722,28 +898,13 @@
   };
   let currentCategoryFilter = null;
 
-  function removeDiacritics(str) {
-    const input = String(str || '');
-    try { return input.normalize('NFD').replace(/\p{M}+/gu, ''); }
-    catch (e) { return input.normalize('NFD').replace(/[\u0300-\u036F]/g, ''); }
-  }
   function normalizeVariantToken(value) {
-    return removeDiacritics(value)
+    return String(value || '')
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
       .toLowerCase()
       .replace(/[^a-z0-9]+/g, '-')
       .replace(/^-+|-+$/g, '');
-  }
-
-  function normalizeCategoryToken(value) {
-    const token = normalizeVariantToken(value);
-    return token || 'all';
-  }
-
-  function getAvailableCategories() {
-    return new Set(
-      Array.from(document.querySelectorAll('.category-nav-strip .cat-nav-item'))
-        .map((item) => normalizeCategoryToken(item.getAttribute('data-category') || 'all'))
-    );
   }
 
   function getCardVariantData(card) {
@@ -853,9 +1014,10 @@
 
     allCards.forEach((card) => {
       const categoryTokens = (card.getAttribute('data-category') || '').split(' ').filter(Boolean);
+      const primaryCategory = categoryTokens.find((token) => token !== 'all') || '';
       const cardCollection = card.getAttribute('data-collection') || 'all';
       const matchesCollection = collectionView === 'all' || cardCollection === collectionView;
-      const matchesCategory = !currentCategoryFilter || currentCategoryFilter === 'all' || categoryTokens.includes(currentCategoryFilter);
+      const matchesCategory = !currentCategoryFilter || currentCategoryFilter === 'all' || primaryCategory === currentCategoryFilter;
       const variantData = getCardVariantData(card);
       const matchesSize = !selectedSizes.length || variantData.sizes.some((size) => selectedSizes.includes(normalizeVariantToken(size)));
       const matchesColor = !selectedColors.length || variantData.colors.some((color) => selectedColors.includes(normalizeVariantToken(color)));
@@ -883,9 +1045,7 @@
   }
 
   function setCollectionCategory(category, shouldScroll, options) {
-    const normalizedCategory = normalizeCategoryToken(category);
-    const availableCategories = getAvailableCategories();
-    const safeCategory = availableCategories.has(normalizedCategory) ? normalizedCategory : 'all';
+    if (!category || !validCategories.has(category)) return;
 
     const preserveSeason = !!(options && options.preserveSeason);
 
@@ -897,7 +1057,7 @@
       targetParams.set('collection', currentSeason);
     }
 
-    targetParams.set('category', safeCategory);
+    targetParams.set('category', category);
 
     const targetSearch = '?' + targetParams.toString();
 
@@ -906,7 +1066,7 @@
       syncCollectionHeadingFromURL();
     }
 
-    currentCategoryFilter = safeCategory;
+    currentCategoryFilter = category;
 
     const productGridEl = document.getElementById('product-grid');
     if (productGridEl) {
@@ -914,7 +1074,7 @@
     }
 
     document.querySelectorAll('.category-nav-strip .cat-nav-item').forEach((item) => {
-      item.classList.toggle('active', (item.getAttribute('data-category') || 'all') === safeCategory);
+      item.classList.toggle('active', (item.getAttribute('data-category') || 'all') === category);
     });
 
     applyCollectionView();
@@ -940,11 +1100,11 @@
 
 
   function activateCategoryFromURL() {
-    if (!requestedCategory) return;
+    if (!requestedCategory || !validCategories.has(requestedCategory)) return;
     setCollectionCategory(requestedCategory, window.scrollY <= 120, { preserveSeason: true });
   }
 
-  if (requestedCategory) {
+  if (requestedCategory && validCategories.has(requestedCategory)) {
     activateCategoryFromURL();
   } else {
     currentCategoryFilter = 'all';
@@ -967,14 +1127,6 @@
       setCollectionCategory(category, shouldScroll, { preserveSeason: true });
     });
   });
-
-  window.addEventListener('jaces:products-loaded', () => {
-    if (requestedCategory) {
-      activateCategoryFromURL();
-      return;
-    }
-    applyCollectionView();
-  });
   </script>
 
   <div class="fav-overlay" id="fav-overlay"></div>
@@ -986,8 +1138,7 @@
     <div class="fav-panel-list" id="fav-panel-list"></div>
   </div>
   <script src="catalog.js"></script>
-  <script src="filters.js"></script>
-  <script type="module" src="products-page.js?t=20260628d"></script>
+  <script type="module" src="products-page.js"></script>
   <script src="cart.js"></script>
   <script src="favorites.js"></script>
   <script src="auth.js"></script>
@@ -1010,36 +1161,6 @@
     window.scrollToCollectionResults = scrollToCollectionResults;
 
     (function () {
-      function navigateToProduct(card) {
-        var name = (card.querySelector('h3') || {}).textContent || '';
-        name = name.trim();
-        var price = (card.querySelector('.product-price') || {}).textContent || '';
-        price = price.trim();
-        var selectedSize = (document.querySelector('#collection-filter-bar input[name="taille"]:checked') || {}).value || '';
-        var selectedColor = (document.querySelector('#collection-filter-bar input[name="couleur"]:checked') || {}).value || '';
-        var imgEl = card.querySelector('.product-image-primary');
-        var img = imgEl ? imgEl.getAttribute('src') || '' : '';
-        var secEl = card.querySelector('.product-image-secondary');
-        var secondaryImg = secEl ? secEl.getAttribute('src') || '' : '';
-        if (!name) return;
-        var url;
-        try {
-          url = (window.JacesCatalog && typeof window.JacesCatalog.getProductUrl === 'function')
-            ? window.JacesCatalog.getProductUrl({ name: name, price: price, img: img, secondaryImg: secondaryImg, selectedSize: selectedSize, selectedColor: selectedColor }, 'collection')
-            : null;
-        } catch (err) { url = null; }
-        if (!url) {
-          url = 'detail-produit.html?id=' + encodeURIComponent(name.toLowerCase().replace(/\s+/g, '-')) + '&name=' + encodeURIComponent(name) + '&price=' + encodeURIComponent(price) + '&img=' + encodeURIComponent(img) + '&selectedSize=' + encodeURIComponent(selectedSize) + '&selectedColor=' + encodeURIComponent(selectedColor) + '&origin=collection&originLabel=Collection&originUrl=collection.html&originNav=collection';
-        }
-        window.location.href = url;
-      }
-      document.querySelectorAll('.product-card').forEach(function (card) {
-        card.style.cursor = 'pointer';
-        card.addEventListener('click', function (e) {
-          if (e.target.closest('.product-favorite') || e.target.closest('.quick-buy-grid') || e.target.closest('.hover-sizes')) return;
-          navigateToProduct(card);
-        });
-      });
     })();
   </script>
 </body>

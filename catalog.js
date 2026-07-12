@@ -284,7 +284,7 @@
 
   function buildProduct(product) {
     const normalizedId = normalizeId(product.id || product.name);
-    const baseProduct = baseProducts[normalizedId] || {};
+    const baseProduct = {};
     const hasExplicitSizes = Array.isArray(product?.sizes) && product.sizes.length > 0;
     const mergedProduct = Object.assign({}, baseProduct, product, {
       id: normalizedId,
@@ -310,12 +310,14 @@
 
   function getProductById(id) {
     const normalizedId = normalizeId(id);
-    const product = baseProducts[normalizedId];
+    const cache = Array.isArray(window.__JACES_PRODUCTS_CACHE) ? window.__JACES_PRODUCTS_CACHE : [];
+    const product = cache.find((item) => normalizeId(item?.id) === normalizedId);
     return product ? buildProduct(product) : null;
   }
 
   function getAllProducts() {
-    return Object.values(baseProducts).map((product) => buildProduct(product));
+    const cache = Array.isArray(window.__JACES_PRODUCTS_CACHE) ? window.__JACES_PRODUCTS_CACHE : [];
+    return cache.map((product) => buildProduct(product));
   }
 
   window.JacesCatalog = {

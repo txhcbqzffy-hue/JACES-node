@@ -4,17 +4,11 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Accessoires | JACES</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,400;500;600&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,600&family=Manrope:wght@300;400;500;600;700;800&display=swap" media="print" onload="this.media='all'">
   <link rel="stylesheet" href="style.css">
 </head>
 <body class="collection-page-body accessoires-page">
 
   <div class="topbar">Livraison offerte dès 79 € | Retours offerts</div>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,400;500;600&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,600&family=Manrope:wght@300;400;500;600;700;800&display=swap" media="print" onload="this.media='all'">
 
   <header class="header">
     <div class="header-top">
@@ -57,11 +51,11 @@
         <div class="submenu">
           <div>
             <p class="submenu-title">NOUVEAUTÉS</p>
-            <p class="submenu-copy">Nouvelles créations,<br>pièces exclusives<br>et collections signature.</p>
+            <p class="submenu-copy">Nouvelles pièces,<br>exclusivité<br>et robe signature.</p>
             <a href="nouveautes.html">Drop été</a>
             <a href="nouveautes.html">Édition limitée</a>
             <a href="nouveautes.html">Pièces signature</a>
-            <a href="nouveautes.html?category=all" class="underline-link">Voir toutes les nouveautés</a>
+            <a href="nouveautes.html?category=all" class="underline-link">Tout voir</a>
           </div>
           <div class="submenu-categories">
             <p class="submenu-title">FEMME</p>
@@ -165,9 +159,9 @@
       <div class="category-nav-track" id="category-nav-track">
         <a href="#product-grid" class="cat-nav-item active" data-category="all">
           <div class="cat-nav-circle">
-            <img src="https://images.unsplash.com/photo-1551488831-00ddcb6c6bd3?q=80&w=400" alt="Voir tout" loading="eager">
+            <img src="https://images.unsplash.com/photo-1551488831-00ddcb6c6bd3?q=80&w=400" alt="Tout voir" loading="eager">
           </div>
-          <span>Voir tout</span>
+          <span>Tout voir</span>
         </a>
         <a href="#cat-sacs" class="cat-nav-item" data-category="sacs">
           <div class="cat-nav-circle">
@@ -241,8 +235,66 @@
         </div>
       </div>
 
-      <div class="product-grid" id="product-grid" aria-live="polite">
-        <p class="filter-empty-note">Chargement des produits...</p>
+      <div class="product-grid" id="product-grid" hidden>
+        <article class="product-card collection-card" id="cat-sacs" data-category="sacs all" data-material="cuir" data-color="noir">
+          <div class="product-media">
+            <button class="product-favorite" type="button" aria-label="Ajouter aux favoris"><svg class="heart-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
+            <img src="https://images.unsplash.com/photo-1548036328-c9fa89d128fa?q=80&w=1400" alt="Sac camera matelassé" loading="eager" fetchpriority="high" class="product-image-primary">
+            <img src="https://images.unsplash.com/photo-1584917865442-de89df76afd3?q=80&w=1400" alt="Sac camera matelassé vue 2" loading="lazy" class="product-image-secondary">
+          </div>
+          <div class="product-info">
+            <h3>Sac camera matelassé</h3>
+            <p class="product-price">320€</p>
+          </div>
+        </article>
+
+        <article class="product-card collection-card" id="cat-bijoux" data-category="bijoux all" data-material="metal" data-color="dore">
+          <div class="product-media">
+            <button class="product-favorite" type="button" aria-label="Ajouter aux favoris"><svg class="heart-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
+            <img src="https://images.unsplash.com/photo-1617038220319-276d3cfab638?q=80&w=1400" alt="Créoles torsadées" loading="eager" class="product-image-primary">
+            <img src="https://images.unsplash.com/photo-1611652022419-a9419f74343d?q=80&w=1400" alt="Créoles torsadées vue 2" loading="lazy" class="product-image-secondary">
+          </div>
+          <div class="product-info">
+            <h3>Créoles torsadées</h3>
+            <p class="product-price">95€</p>
+          </div>
+        </article>
+
+        <article class="product-card collection-card" id="cat-ceintures" data-category="ceintures all" data-material="cuir metal" data-color="noir camel">
+          <div class="product-media">
+            <button class="product-favorite" type="button" aria-label="Ajouter aux favoris"><svg class="heart-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
+            <img src="https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?q=80&w=1400" alt="Ceinture signature cuir" loading="lazy" class="product-image-primary">
+            <img src="https://images.unsplash.com/photo-1622560480605-d83c853bc5c3?q=80&w=1400" alt="Ceinture signature cuir vue 2" loading="lazy" class="product-image-secondary">
+          </div>
+          <div class="product-info">
+            <h3>Ceinture signature cuir</h3>
+            <p class="product-price">110€</p>
+          </div>
+        </article>
+
+        <article class="product-card collection-card" id="cat-foulards" data-category="foulards all" data-material="soie" data-color="ivoire">
+          <div class="product-media">
+            <button class="product-favorite" type="button" aria-label="Ajouter aux favoris"><svg class="heart-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
+            <img src="https://images.unsplash.com/photo-1529139574466-a303027c1d8b?q=80&w=1400" alt="Carré de soie imprimé" loading="lazy" class="product-image-primary">
+            <img src="https://images.unsplash.com/photo-1601924994987-69e26d50dc26?q=80&w=1400" alt="Carré de soie imprimé vue 2" loading="lazy" class="product-image-secondary">
+          </div>
+          <div class="product-info">
+            <h3>Carré de soie imprimé</h3>
+            <p class="product-price">85€</p>
+          </div>
+        </article>
+
+        <article class="product-card collection-card" data-category="sacs all" data-material="cuir" data-color="ivoire camel">
+          <div class="product-media">
+            <button class="product-favorite" type="button" aria-label="Ajouter aux favoris"><svg class="heart-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
+            <img src="https://images.unsplash.com/photo-1584917865442-de89df76afd3?q=80&w=1400" alt="Sac hobo camel" loading="lazy" class="product-image-primary">
+            <img src="https://images.unsplash.com/photo-1594223274512-ad4803739b7c?q=80&w=1400" alt="Sac hobo camel vue 2" loading="lazy" class="product-image-secondary">
+          </div>
+          <div class="product-info">
+            <h3>Sac hobo camel</h3>
+            <p class="product-price">295€</p>
+          </div>
+        </article>
       </div>
     </section>
   </main>
@@ -271,10 +323,9 @@
         </form>
       </div>
     </div>
-    <p class="footer-note">Copyright © 2026 JACES. Tous droits réservés.</p>
+    <p class="footer-note">Copyright © 2026 Chloé. Tous droits réservés.</p>
   </footer>
 
-  <script src="admin-products.js"></script>
   <script>
     (function () {
       function updateHeaderState() {
@@ -390,7 +441,7 @@
       const countNode = document.getElementById('filter-count');
       const productGrid = document.getElementById('product-grid');
       const productSort = document.getElementById('product-sort');
-      const allCards = productGrid ? Array.from(productGrid.querySelectorAll('.collection-card')) : [];
+      let allCards = productGrid ? Array.from(productGrid.querySelectorAll('.collection-card')) : [];
       const categoryNavItems = Array.from(document.querySelectorAll('.cat-nav-item'));
       let activeCategory = 'all';
       let isAutoSyncingVariantFilters = false;
@@ -406,6 +457,11 @@
         };
         return labels[token] || token;
       }
+
+      window.addEventListener('jaces:products-loaded', () => {
+        allCards = productGrid ? Array.from(productGrid.querySelectorAll('.collection-card')) : [];
+        renderGrid();
+      });
 
       allCards.forEach((card) => {
         const productOptions = card.querySelector('.product-options');
@@ -662,11 +718,6 @@
         setAccessoriesCategory(requestedCategory, false);
       }
 
-      window.addEventListener('jaces:products-loaded', () => {
-        updateFilterUi();
-        renderGrid();
-      });
-
       updateFilterUi();
       renderGrid();
     })();
@@ -681,8 +732,7 @@
     <div class="fav-panel-list" id="fav-panel-list"></div>
   </div>
   <script src="catalog.js"></script>
-  <script src="filters.js"></script>
-  <script type="module" src="products-page.js?t=20260628d"></script>
+  <script type="module" src="products-page.js"></script>
   <script src="cart.js"></script>
   <script src="favorites.js"></script>
   <script src="auth.js"></script>
