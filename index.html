@@ -429,31 +429,11 @@
       }
     });
 
-    // Images & quick-buy injection
-    const collectionImagePairs = [
-      { primary: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=1400', secondary: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=1400' },
-      { primary: 'https://images.unsplash.com/photo-1551488831-00ddcb6c6bd3?q=80&w=1400', secondary: 'https://images.unsplash.com/photo-1483985988355-763728e1935b?q=80&w=1400' },
-      { primary: 'https://images.unsplash.com/photo-1496747611176-843222e1e57c?q=80&w=1400', secondary: 'https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?q=80&w=1400' },
-      { primary: 'https://images.unsplash.com/photo-1485230895905-ec40ba36b9bc?q=80&w=1400', secondary: 'https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?q=80&w=1400' },
-      { primary: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=1400', secondary: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=1400' },
-      { primary: 'https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?q=80&w=1400', secondary: 'https://images.unsplash.com/photo-1464863979621-258859e62245?q=80&w=1400' },
-      { primary: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?q=80&w=1400', secondary: 'https://images.unsplash.com/photo-1485968579580-b6d095142e6e?q=80&w=1400' },
-      { primary: 'https://images.unsplash.com/photo-1464863979621-258859e62245?q=80&w=1400', secondary: 'https://images.unsplash.com/photo-1503341455253-b2e723bb3dbb?q=80&w=1400' },
-      { primary: 'https://images.unsplash.com/photo-1503341455253-b2e723bb3dbb?q=80&w=1400', secondary: 'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?q=80&w=1400' },
-      { primary: 'https://images.unsplash.com/photo-1485968579580-b6d095142e6e?q=80&w=1400', secondary: 'https://images.unsplash.com/photo-1551488831-00ddcb6c6bd3?q=80&w=1400' },
-      { primary: 'https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?q=80&w=1400', secondary: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?q=80&w=1400' },
-      { primary: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=1400', secondary: 'https://images.unsplash.com/photo-1496747611176-843222e1e57c?q=80&w=1400' },
-      { primary: 'https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?q=80&w=1400', secondary: 'https://images.unsplash.com/photo-1483985988355-763728e1935b?q=80&w=1400' },
-      { primary: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?q=80&w=1400', secondary: 'https://images.unsplash.com/photo-1485230895905-ec40ba36b9bc?q=80&w=1400' },
-      { primary: 'https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?q=80&w=1400', secondary: 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?q=80&w=1400' },
-      { primary: 'https://images.unsplash.com/photo-1485968579580-b6d095142e6e?q=80&w=1400', secondary: 'https://images.unsplash.com/photo-1464863979621-258859e62245?q=80&w=1400' },
-    ];
-
-    const collectionCards = Array.from(document.querySelectorAll('.collection-card'));
+    let collectionCards = Array.from(document.querySelectorAll('.collection-card'));
     const productGrid = document.querySelector('.product-grid');
     const productSort = document.getElementById('product-sort');
     const filterCount = document.querySelector('.filter-count');
-    const originalCards = productGrid ? Array.from(productGrid.querySelectorAll('.collection-card')) : [];
+    let originalCards = productGrid ? Array.from(productGrid.querySelectorAll('.collection-card')) : [];
     let currentCategoryFilter = 'all';
     let currentNouveauteTagFilter = '';
     let isAutoSyncingVariantFilters = false;
@@ -628,37 +608,9 @@
       return Math.abs(window.scrollY - targetY) > 80;
     }
 
-    const quickBuyMarkup = '<p class="quick-buy-title"><strong>Achat rapide</strong> (Selectionnez votre taille)</p><div class="quick-buy-grid"><button type="button">34</button><button type="button">36</button><button type="button">38</button><button type="button">40</button><button type="button">42</button><button type="button">44</button></div>';
-    const favoriteMarkup = '<button class="product-favorite" type="button" aria-label="Ajouter aux favoris"><svg class="heart-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button>';
-
     if (filterCount) {
       filterCount.textContent = `${collectionCards.length} produits`;
     }
-
-    collectionCards.forEach((card, index) => {
-      const pair = collectionImagePairs[index % collectionImagePairs.length];
-      const productName = card.querySelector('h3')?.textContent?.trim() || 'Produit';
-      let media = card.querySelector('.product-media');
-
-      if (!media) {
-        media = document.createElement('div');
-        media.className = 'product-media';
-        media.innerHTML = favoriteMarkup + '<img class="product-image-primary" loading="lazy" alt=""><img class="product-image-secondary" loading="lazy" alt=""><div class="hover-sizes" aria-hidden="true">' + quickBuyMarkup + '</div>';
-        card.insertBefore(media, card.firstElementChild);
-      }
-
-      if (!media.querySelector('.product-favorite')) media.insertAdjacentHTML('afterbegin', favoriteMarkup);
-
-      const hoverSizes = media.querySelector('.hover-sizes');
-      if (hoverSizes) hoverSizes.innerHTML = quickBuyMarkup;
-
-      const primaryImage = media.querySelector('.product-image-primary');
-      const secondaryImage = media.querySelector('.product-image-secondary');
-      if (primaryImage) { primaryImage.src = pair.primary; primaryImage.alt = productName; }
-      if (secondaryImage) { secondaryImage.src = pair.secondary; secondaryImage.alt = productName + ' vue 2'; }
-
-      media.querySelector('.nouv-feature-cta')?.remove();
-    });
 
     const nouveautesPageTitle = document.getElementById('collection-page-title');
     const validCategories = new Set(['all', 'robes', 'tops', 'jupes', 'pantalons', 'vestes', 'accessoires']);
@@ -795,10 +747,14 @@
     activateNouveautesFromURL(false);
 
     window.addEventListener('jaces:admin-products-sync', () => {
+      collectionCards = Array.from(document.querySelectorAll('.collection-card'));
+      originalCards = productGrid ? Array.from(productGrid.querySelectorAll('.collection-card')) : [];
       seedInitialCardOrder();
       applyStrictCategoryFilter();
     });
     window.addEventListener('jaces:products-loaded', () => {
+      collectionCards = Array.from(document.querySelectorAll('.collection-card'));
+      originalCards = productGrid ? Array.from(productGrid.querySelectorAll('.collection-card')) : [];
       seedInitialCardOrder();
       applyStrictCategoryFilter();
     });
