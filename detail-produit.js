@@ -42,13 +42,14 @@
     const productId = String(id || '').trim();
     if (!productId) return null;
 
-    const response = await fetch(`/api/products/${encodeURIComponent(productId)}`, { cache: 'no-store' });
+    const response = await fetch(`/api/products?id=${encodeURIComponent(productId)}`, { cache: 'no-store' });
     if (response.status === 404) return null;
     if (!response.ok) {
       throw new Error('Impossible de charger le produit Supabase');
     }
 
-    return await response.json();
+    const data = await response.json();
+    return Array.isArray(data) ? (data[0] || null) : data;
   }
 
   function normalizeApiProduct(product) {

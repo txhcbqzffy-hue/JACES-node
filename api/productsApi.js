@@ -14,7 +14,7 @@ export async function getProductById(id) {
   const productId = String(id || '').trim();
   if (!productId) return null;
 
-  const res = await fetch(`${API_URL}/api/products/${encodeURIComponent(productId)}`);
+  const res = await fetch(`${API_URL}/api/products?id=${encodeURIComponent(productId)}`);
 
   if (res.status === 404) {
     return null;
@@ -24,5 +24,6 @@ export async function getProductById(id) {
     throw new Error('Erreur chargement produit');
   }
 
-  return await res.json();
+  const data = await res.json();
+  return Array.isArray(data) ? (data[0] || null) : data;
 }
