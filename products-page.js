@@ -71,6 +71,15 @@ function normalizeMediaUrl(value) {
   }
 }
 
+function formatPrice(price) {
+  if (price === null || price === undefined || price === '') return '';
+  const raw = String(price).trim();
+  if (raw.includes('€')) return raw;
+  const numeric = Number(raw);
+  if (!Number.isFinite(numeric)) return raw;
+  return new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(numeric);
+}
+
 function buildProductCard(product, pageType) {
   const card = document.createElement('article');
   const images = Array.isArray(product.images) ? product.images : [];
@@ -78,6 +87,9 @@ function buildProductCard(product, pageType) {
   const hoverImage = normalizeMediaUrl(images[1]?.url || product.hover_image_url || product.secondaryImg || mainImage);
   const colors = Array.isArray(product.colors) ? product.colors.map((color) => String(color || '').trim()).filter(Boolean) : [];
   const sizes = Array.isArray(product.sizes) ? product.sizes.map((size) => String(size || '').trim()).filter(Boolean) : [];
+  const quickBuyMarkup = sizes.length
+    ? `<p class="quick-buy-title"><strong>Achat rapide</strong> (Selectionnez votre taille)</p><div class="quick-buy-grid">${sizes.map((size) => `<button type="button">${size}</button>`).join('')}</div>`
+    : '';
 
   card.className = 'product-card collection-card product-card-linkable';
   card.dataset.productId = String(product.id || '');
@@ -99,10 +111,11 @@ function buildProductCard(product, pageType) {
       </button>
       ${mainImage ? `<img src="${mainImage}" alt="${product.name || 'Produit JACES'}" loading="lazy" class="product-image-primary">` : '<div class="favorites-card-placeholder"></div>'}
       ${hoverImage ? `<img src="${hoverImage}" alt="${product.name || 'Produit JACES'}" loading="lazy" class="product-image-secondary">` : ''}
+      ${quickBuyMarkup ? `<div class="hover-sizes" aria-hidden="true">${quickBuyMarkup}</div>` : ''}
     </div>
     <div class="product-info">
       <h3>${product.name || 'Produit JACES'}</h3>
-      <p class="product-price">${product.price || ''}</p>
+      <p class="product-price">${formatPrice(product.price)}</p>
     </div>
   `;
 
