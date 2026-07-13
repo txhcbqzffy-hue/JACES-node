@@ -5499,6 +5499,7 @@ body.account-modal-open {
   letter-spacing: 0.18em;
   text-transform: uppercase;
   position: relative;
+  z-index: 261;
   padding: 10px 0;
   display: inline-block;
   color: #1b1a17;
