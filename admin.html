@@ -409,9 +409,11 @@ document.getElementById('product-form').addEventListener('submit', async (e) => 
   statusEl.className = 'status-msg';
   statusEl.textContent = 'Enregistrement...';
 
-  const images = Array.from(document.querySelectorAll('#images-list input'))
-    .map((input) => input.value.trim())
-    .filter(Boolean);
+  const images = [...new Set(
+    Array.from(document.querySelectorAll('#images-list input'))
+      .map((input) => input.value.trim())
+      .filter(Boolean)
+  )];
 
   const variants = Array.from(document.querySelectorAll('#variants-list .list-row')).map((row) => {
     const size = row.querySelector('.variant-size').value.trim();
