@@ -556,10 +556,9 @@
 
       cards.forEach((card) => {
         const cats = (card.getAttribute('data-category') || '').split(' ').filter(Boolean);
-        const primaryCategory = cats.find((token) => token !== 'all' && token !== 'cette-semaine') || '';
         const tagTokens = (card.getAttribute('data-nouveaute-tags') || '').split(' ').filter(Boolean);
         const variantData = getCardVariantData(card);
-        const matchesCategory = currentCategoryFilter === 'all' || primaryCategory === currentCategoryFilter;
+        const matchesCategory = currentCategoryFilter === 'all' || cats.includes(currentCategoryFilter);
         const matchesTag = !currentNouveauteTagFilter
           || !hasTaggedMatches
           || tagTokens.indexOf(currentNouveauteTagFilter) !== -1

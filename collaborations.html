@@ -491,10 +491,9 @@
 
         let visible = 0;
         cards.forEach((card) => {
-          const categories = (card.getAttribute('data-category') || '').split(' ');
-          const primary = categories.find((v) => v && v !== 'all') || '';
+          const categories = (card.getAttribute('data-category') || '').split(' ').filter(Boolean);
           const viewTokens = (card.getAttribute('data-collab-view') || 'all').split(' ').filter(Boolean);
-          const matchesCategory = current === 'all' || primary === current;
+          const matchesCategory = current === 'all' || categories.includes(current);
           const matchesView = currentView === 'all' || viewTokens.indexOf(currentView) !== -1 || viewTokens.indexOf('all') !== -1;
           const show = matchesCategory && matchesView;
           card.classList.toggle('hidden', !show);

@@ -679,10 +679,9 @@
 
     allCards.forEach((card) => {
       const categoryTokens = (card.getAttribute('data-category') || '').split(' ').filter(Boolean);
-      const primaryCategory = categoryTokens.find((token) => token !== 'all') || '';
       const cardCollection = card.getAttribute('data-collection') || 'all';
       const matchesCollection = collectionView === 'all' || cardCollection === collectionView;
-      const matchesCategory = !currentCategoryFilter || currentCategoryFilter === 'all' || primaryCategory === currentCategoryFilter;
+      const matchesCategory = !currentCategoryFilter || currentCategoryFilter === 'all' || categoryTokens.includes(currentCategoryFilter);
       const variantData = getCardVariantData(card);
       const matchesSize = !selectedSizes.length || variantData.sizes.some((size) => selectedSizes.includes(normalizeVariantToken(size)));
       const matchesColor = !selectedColors.length || variantData.colors.some((color) => selectedColors.includes(normalizeVariantToken(color)));
