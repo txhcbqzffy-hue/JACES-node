@@ -1,4 +1,4 @@
-import { getProducts } from './api/productsApi.js';
+import { getProducts } from './js/productsApi.js';
 
 function getPageType() {
   const body = document.body;
