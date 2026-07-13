@@ -245,12 +245,28 @@ function imageRow(value = '') {
   return row;
 }
 
+const SIZE_OPTIONS = ['34', '36', '38', '40', '42', '44'];
+const COLOR_OPTIONS = ['Noir', 'Blanc', 'Gris', 'Argent', 'Rouge', 'Bleu', 'Vert', 'Jaune', 'Orange', 'Rose', 'Violet', 'Marron', 'Beige', 'Doré', 'Bronze', 'Transparent', 'Multicolore'];
+
+function buildOptionsHtml(options, current) {
+  const known = options.includes(current) || !current
+    ? ''
+    : `<option value="${current}" selected>${current}</option>`;
+  return known + options.map((value) => `<option value="${value}"${value === current ? ' selected' : ''}>${value}</option>`).join('');
+}
+
 function variantRow(size = '', color = '', stock = '') {
   const row = document.createElement('div');
   row.className = 'list-row';
   row.innerHTML = `
-    <input type="text" placeholder="Taille" value="${size}" style="max-width:90px">
-    <input type="text" placeholder="Couleur" value="${color}" style="max-width:120px">
+    <select class="variant-size" style="max-width:90px">
+      <option value="">Taille</option>
+      ${buildOptionsHtml(SIZE_OPTIONS, size)}
+    </select>
+    <select class="variant-color" style="max-width:120px">
+      <option value="">Couleur</option>
+      ${buildOptionsHtml(COLOR_OPTIONS, color)}
+    </select>
     <input type="number" placeholder="Stock" min="0" value="${stock}" style="max-width:90px">
     <button type="button">✕</button>`;
   row.querySelector('button').addEventListener('click', () => row.remove());
@@ -389,8 +405,10 @@ document.getElementById('product-form').addEventListener('submit', async (e) => 
     .filter(Boolean);
 
   const variants = Array.from(document.querySelectorAll('#variants-list .list-row')).map((row) => {
-    const inputs = row.querySelectorAll('input');
-    return { size: inputs[0].value.trim(), color: inputs[1].value.trim(), stock: Number(inputs[2].value) || 0 };
+    const size = row.querySelector('.variant-size').value.trim();
+    const color = row.querySelector('.variant-color').value.trim();
+    const stock = Number(row.querySelector('input[type="number"]').value) || 0;
+    return { size, color, stock };
   }).filter((v) => v.size || v.color);
 
   const filterIds = Array.from(document.querySelectorAll('#filters-container input[type="checkbox"]:checked'))
