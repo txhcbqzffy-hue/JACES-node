@@ -2,13 +2,23 @@ const { createClient } = require('@supabase/supabase-js');
 
 function getSupabaseAdmin() {
   const url = process.env.SUPABASE_URL || 'https://uxhzrobxhumreuntxrzw.supabase.co';
-  const serviceKey = process.env.SUPABASE_SERVICE_KEY;
+  // Prefer a real service-role key (bypasses RLS for writes). Fall back to the
+  // existing SUPABASE_KEY so this works out of the box, but that var usually
+  // holds the anon/publishable key, which RLS may block from writing.
+  const serviceKey = process.env.SUPABASE_SERVICE_KEY || process.env.SUPABASE_KEY;
 
   if (!serviceKey) {
-    throw new Error('SUPABASE_SERVICE_KEY manquante: configurez-la dans les variables d\'environnement Vercel.');
+    throw new Error('Aucune cle Supabase configuree (SUPABASE_SERVICE_KEY ou SUPABASE_KEY).');
   }
 
   return createClient(url, serviceKey);
+}
+
+function withRlsHint(message) {
+  if (/permission denied|rls|policy|not allowed/i.test(String(message || ''))) {
+    return message + ' -- La cle Supabase utilisee n\'a probablement pas les droits d\'ecriture: ajoutez SUPABASE_SERVICE_KEY (cle service_role, pas anon) dans les variables d\'environnement Vercel.';
+  }
+  return message;
 }
 
 function isAuthorized(req) {
@@ -145,12 +155,12 @@ module.exports = async function handler(req, res) {
 
       if (action === 'create') {
         const { data, error } = await supabase.from('products').insert(productRow).select('id').single();
-        if (error) return res.status(500).json({ error: 'products (insert): ' + error.message });
+        if (error) return res.status(500).json({ error: withRlsHint('products (insert): ' + error.message) });
         productId = data.id;
       } else {
         if (!productId) return res.status(400).json({ error: 'id manquant pour la mise a jour' });
         const { error } = await supabase.from('products').update(productRow).eq('id', productId);
-        if (error) return res.status(500).json({ error: 'products (update): ' + error.message });
+        if (error) return res.status(500).json({ error: withRlsHint('products (update): ' + error.message) });
       }
 
       await replaceProductChildren(supabase, productId, { images, variants, filterIds });
