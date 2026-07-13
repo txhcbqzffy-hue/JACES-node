@@ -94,15 +94,21 @@ module.exports = async function handler(req, res) {
     const incomingPage = req.query?.page || null;
     const includeDiagnostics = String(req.query?.debug || '') === '1';
 
-    const { data: filters, error: filtersError } = await supabase
-      .from('filters')
-      .select('*');
+    const [{ data: filters, error: filtersError }, { data: allRelations, error: relationsError }] = await Promise.all([
+      supabase.from('filters').select('*'),
+      supabase.from('product_filters').select('product_id, filter_id')
+    ]);
 
     if (filtersError) {
       return res.status(500).json(withRlsHint('filters', filtersError.message));
     }
 
+    if (relationsError) {
+      return res.status(500).json(withRlsHint('product_filters', relationsError.message));
+    }
+
     const safeFilters = Array.isArray(filters) ? filters : [];
+    const safeRelations = Array.isArray(allRelations) ? allRelations : [];
     const filtersById = new Map(safeFilters.map((filter) => [String(filter.id), filter]));
 
     const activeFilterIds = new Set();
@@ -134,16 +140,6 @@ module.exports = async function handler(req, res) {
         });
       }
     }
-
-    const { data: allRelations, error: relationsError } = await supabase
-      .from('product_filters')
-      .select('product_id, filter_id');
-
-    if (relationsError) {
-      return res.status(500).json(withRlsHint('product_filters', relationsError.message));
-    }
-
-    const safeRelations = Array.isArray(allRelations) ? allRelations : [];
 
     let filteredProductIds = null;
     if (activeFilterIds.size) {
@@ -179,21 +175,22 @@ module.exports = async function handler(req, res) {
 
     const productIds = safeProducts.map((product) => String(product.id));
 
-    const { data: images, error: imagesError } = await supabase
-      .from('product_images')
-      .select('*')
-      .in('product_id', productIds)
-      .order('product_id', { ascending: true })
-      .order('position', { ascending: true, nullsFirst: true });
+    const [{ data: images, error: imagesError }, { data: variants, error: variantsError }] = await Promise.all([
+      supabase
+        .from('product_images')
+        .select('*')
+        .in('product_id', productIds)
+        .order('product_id', { ascending: true })
+        .order('position', { ascending: true, nullsFirst: true }),
+      supabase
+        .from('product_variants')
+        .select('*')
+        .in('product_id', productIds)
+    ]);
 
     if (imagesError) {
       return res.status(500).json(withRlsHint('product_images', imagesError.message));
     }
-
-    const { data: variants, error: variantsError } = await supabase
-      .from('product_variants')
-      .select('*')
-      .in('product_id', productIds);
 
     if (variantsError) {
       return res.status(500).json(withRlsHint('product_variants', variantsError.message));
