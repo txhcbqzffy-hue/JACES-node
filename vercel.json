@@ -2,6 +2,7 @@
   "rewrites": [
     { "source": "/api/products", "destination": "/api/products.js" },
     { "source": "/api/filters", "destination": "/api/filters.js" },
-    { "source": "/api/health", "destination": "/api/health.js" }
+    { "source": "/api/health", "destination": "/api/health.js" },
+    { "source": "/api/admin-products", "destination": "/api/admin-products.js" }
   ]
 }

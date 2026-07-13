@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Admin produits | JACES</title>
+<style>
+  :root { color-scheme: light; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Manrope, sans-serif;
+    background: #f5f1ea;
+    color: #1b1a17;
+  }
+  header {
+    padding: 20px 24px;
+    background: #171411;
+    color: #f6f1ea;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  header h1 { font-size: 1.1rem; margin: 0; letter-spacing: 0.04em; text-transform: uppercase; }
+  header button {
+    background: transparent;
+    border: 1px solid #6b645c;
+    color: #f6f1ea;
+    padding: 6px 12px;
+    font-size: 0.75rem;
+    cursor: pointer;
+  }
+  main { max-width: 1080px; margin: 0 auto; padding: 24px; }
+  .gate {
+    max-width: 360px;
+    margin: 15vh auto;
+    background: #fff;
+    padding: 28px;
+    border: 1px solid #d8cfc2;
+  }
+  .gate h2 { margin-top: 0; font-size: 1rem; }
+  .gate input { width: 100%; padding: 10px; border: 1px solid #c8bfb3; margin: 10px 0; font-size: 0.9rem; }
+  .gate button, .primary-btn {
+    width: 100%;
+    padding: 11px;
+    background: #171411;
+    color: #f6f1ea;
+    border: none;
+    font-size: 0.8rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    cursor: pointer;
+  }
+  .gate-error { color: #a5321f; font-size: 0.8rem; min-height: 1.2em; }
+  .layout { display: grid; grid-template-columns: 1fr 340px; gap: 24px; align-items: start; }
+  .card { background: #fff; border: 1px solid #d8cfc2; padding: 20px; margin-bottom: 20px; }
+  .card h2 { margin-top: 0; font-size: 0.95rem; text-transform: uppercase; letter-spacing: 0.05em; }
+  .field { margin-bottom: 14px; }
+  .field label { display: block; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 5px; color: #595149; }
+  .field input, .field textarea, .field select {
+    width: 100%; padding: 9px 10px; border: 1px solid #c8bfb3; font-size: 0.88rem; background: #fffcf7; color: #15120f;
+  }
+  .field textarea { min-height: 70px; resize: vertical; }
+  .row { display: flex; gap: 10px; }
+  .row .field { flex: 1; }
+  .list-row { display: flex; gap: 8px; margin-bottom: 8px; align-items: center; }
+  .list-row input { flex: 1; }
+  .list-row button, .add-btn { background: #ece5d8; border: 1px solid #c8bfb3; padding: 8px 10px; cursor: pointer; font-size: 0.75rem; }
+  .add-btn { margin-top: 4px; }
+  fieldset { border: 1px solid #d8cfc2; margin-bottom: 14px; padding: 10px 12px; }
+  legend { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.05em; color: #595149; padding: 0 6px; }
+  .checkbox-grid { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 6px; }
+  .checkbox-grid label { display: flex; align-items: center; gap: 6px; font-size: 0.82rem; text-transform: none; letter-spacing: 0; color: #1b1a17; }
+  .checkbox-grid input { width: auto; }
+  .actions { display: flex; gap: 10px; margin-top: 16px; }
+  .actions button { flex: 1; padding: 11px; font-size: 0.8rem; letter-spacing: 0.05em; text-transform: uppercase; cursor: pointer; }
+  .btn-secondary { background: #ece5d8; border: 1px solid #c8bfb3; color: #1b1a17; }
+  .status-msg { font-size: 0.82rem; margin-top: 10px; min-height: 1.2em; }
+  .status-msg.error { color: #a5321f; }
+  .status-msg.ok { color: #2f6b3a; }
+  .product-list-item {
+    display: flex; gap: 10px; align-items: center; padding: 8px; border: 1px solid #e4ddd1; margin-bottom: 8px; cursor: pointer; background: #fff;
+  }
+  .product-list-item:hover { background: #f8f3eb; }
+  .product-list-item img { width: 42px; height: 52px; object-fit: cover; background: #eee; }
+  .product-list-item .meta { flex: 1; min-width: 0; }
+  .product-list-item .meta strong { display: block; font-size: 0.82rem; }
+  .product-list-item .meta span { font-size: 0.74rem; color: #6f675f; }
+  .product-list-item .del { background: none; border: none; color: #a5321f; cursor: pointer; font-size: 0.9rem; padding: 4px 8px; }
+</style>
+</head>
+<body>
+
+<div id="gate" class="gate">
+  <h2>Accès admin</h2>
+  <input type="password" id="gate-password" placeholder="Mot de passe">
+  <button id="gate-submit">Entrer</button>
+  <p class="gate-error" id="gate-error"></p>
+</div>
+
+<div id="app" hidden>
+  <header>
+    <h1>Admin produits JACES</h1>
+    <button id="logout-btn">Déconnexion</button>
+  </header>
+  <main>
+    <div class="layout">
+      <div>
+        <div class="card">
+          <h2 id="form-title">Nouveau produit</h2>
+          <form id="product-form">
+            <input type="hidden" id="product-id">
+            <div class="row">
+              <div class="field">
+                <label for="f-name">Nom</label>
+                <input type="text" id="f-name" required>
+              </div>
+              <div class="field">
+                <label for="f-price">Prix (€)</label>
+                <input type="number" id="f-price" min="0" step="0.01" required>
+              </div>
+            </div>
+            <div class="field">
+              <label for="f-description">Description</label>
+              <textarea id="f-description"></textarea>
+            </div>
+
+            <div class="field">
+              <label>Images (liens Cloudinary / Dropbox)</label>
+              <div id="images-list"></div>
+              <button type="button" class="add-btn" id="add-image-btn">+ Ajouter une image</button>
+            </div>
+
+            <div class="field">
+              <label>Variantes (taille / couleur / stock)</label>
+              <div id="variants-list"></div>
+              <button type="button" class="add-btn" id="add-variant-btn">+ Ajouter une variante</button>
+            </div>
+
+            <div id="filters-container"></div>
+
+            <p class="status-msg" id="form-status"></p>
+
+            <div class="actions">
+              <button type="submit" class="primary-btn">Enregistrer</button>
+              <button type="button" class="btn-secondary" id="cancel-edit-btn">Nouveau produit</button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <div>
+        <div class="card">
+          <h2>Produits existants</h2>
+          <div id="product-list"></div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script type="module">
+const PASSWORD_KEY = 'jaces_admin_password';
+const gate = document.getElementById('gate');
+const app = document.getElementById('app');
+const gateError = document.getElementById('gate-error');
+
+function getPassword() {
+  return sessionStorage.getItem(PASSWORD_KEY) || '';
+}
+
+async function apiFetch(path, options = {}) {
+  const res = await fetch(path, options);
+  return res;
+}
+
+async function adminPost(payload) {
+  const res = await fetch('/api/admin-products', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-Admin-Password': getPassword()
+    },
+    body: JSON.stringify(payload)
+  });
+  const data = await res.json().catch(() => ({}));
+  if (res.status === 401) {
+    sessionStorage.removeItem(PASSWORD_KEY);
+    showGate('Mot de passe invalide.');
+    throw new Error('unauthorized');
+  }
+  if (!res.ok) throw new Error(data.error || 'Erreur serveur');
+  return data;
+}
+
+function showGate(message) {
+  gate.hidden = false;
+  app.hidden = true;
+  gateError.textContent = message || '';
+}
+
+function showApp() {
+  gate.hidden = true;
+  app.hidden = false;
+  init();
+}
+
+document.getElementById('gate-submit').addEventListener('click', async () => {
+  const value = document.getElementById('gate-password').value;
+  if (!value) return;
+  sessionStorage.setItem(PASSWORD_KEY, value);
+  try {
+    await adminPost({ action: 'ping' });
+  } catch (error) {
+    if (error.message === 'unauthorized') return;
+  }
+  showApp();
+});
+
+document.getElementById('gate-password').addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') document.getElementById('gate-submit').click();
+});
+
+document.getElementById('logout-btn').addEventListener('click', () => {
+  sessionStorage.removeItem(PASSWORD_KEY);
+  showGate('');
+});
+
+let filtersByMenu = {};
+let editingId = null;
+
+const MENU_LABELS = {
+  categories: 'Catégories (visible sur Collection)',
+  nouveautes: 'Nouveautés (visible sur Accueil + Nouveautés)',
+  accessoires: 'Accessoires (visible sur Accessoires)',
+  collaborations: 'Collaborations (visible sur Collaborations)'
+};
+
+function imageRow(value = '') {
+  const row = document.createElement('div');
+  row.className = 'list-row';
+  row.innerHTML = `<input type="url" placeholder="https://res.cloudinary.com/..." value="${value.replace(/"/g, '&quot;')}"><button type="button">✕</button>`;
+  row.querySelector('button').addEventListener('click', () => row.remove());
+  return row;
+}
+
+function variantRow(size = '', color = '', stock = '') {
+  const row = document.createElement('div');
+  row.className = 'list-row';
+  row.innerHTML = `
+    <input type="text" placeholder="Taille" value="${size}" style="max-width:90px">
+    <input type="text" placeholder="Couleur" value="${color}" style="max-width:120px">
+    <input type="number" placeholder="Stock" min="0" value="${stock}" style="max-width:90px">
+    <button type="button">✕</button>`;
+  row.querySelector('button').addEventListener('click', () => row.remove());
+  return row;
+}
+
+document.getElementById('add-image-btn').addEventListener('click', () => {
+  document.getElementById('images-list').appendChild(imageRow());
+});
+document.getElementById('add-variant-btn').addEventListener('click', () => {
+  document.getElementById('variants-list').appendChild(variantRow());
+});
+
+async function loadFilters() {
+  const res = await apiFetch('/api/filters');
+  const rows = await res.json();
+  filtersByMenu = {};
+  rows.forEach((filter) => {
+    const menu = filter.menu || 'autre';
+    if (!filtersByMenu[menu]) filtersByMenu[menu] = [];
+    filtersByMenu[menu].push(filter);
+  });
+
+  const container = document.getElementById('filters-container');
+  container.innerHTML = '';
+  Object.keys(filtersByMenu).forEach((menu) => {
+    const fieldset = document.createElement('fieldset');
+    const legend = document.createElement('legend');
+    legend.textContent = MENU_LABELS[menu] || menu;
+    fieldset.appendChild(legend);
+
+    const grid = document.createElement('div');
+    grid.className = 'checkbox-grid';
+    filtersByMenu[menu].forEach((filter) => {
+      const label = document.createElement('label');
+      label.innerHTML = `<input type="checkbox" value="${filter.id}"> ${filter.label || filter.name}`;
+      grid.appendChild(label);
+    });
+    fieldset.appendChild(grid);
+    container.appendChild(fieldset);
+  });
+}
+
+function resetForm() {
+  editingId = null;
+  document.getElementById('product-id').value = '';
+  document.getElementById('form-title').textContent = 'Nouveau produit';
+  document.getElementById('f-name').value = '';
+  document.getElementById('f-price').value = '';
+  document.getElementById('f-description').value = '';
+  document.getElementById('images-list').innerHTML = '';
+  document.getElementById('images-list').appendChild(imageRow());
+  document.getElementById('variants-list').innerHTML = '';
+  document.querySelectorAll('#filters-container input[type="checkbox"]').forEach((cb) => { cb.checked = false; });
+  document.getElementById('form-status').textContent = '';
+  document.getElementById('form-status').className = 'status-msg';
+}
+
+document.getElementById('cancel-edit-btn').addEventListener('click', resetForm);
+
+function fillFormWithProduct(product) {
+  editingId = product.id;
+  document.getElementById('product-id').value = product.id;
+  document.getElementById('form-title').textContent = 'Modifier: ' + (product.name || '');
+  document.getElementById('f-name').value = product.name || '';
+  document.getElementById('f-price').value = product.price || '';
+  document.getElementById('f-description').value = product.description || '';
+
+  const imagesList = document.getElementById('images-list');
+  imagesList.innerHTML = '';
+  const urls = Array.isArray(product.all_images) && product.all_images.length ? product.all_images : [''];
+  urls.forEach((url) => imagesList.appendChild(imageRow(url)));
+
+  const variantsList = document.getElementById('variants-list');
+  variantsList.innerHTML = '';
+  (product.variants || []).forEach((variant) => {
+    variantsList.appendChild(variantRow(variant.size || '', variant.color || '', variant.stock ?? ''));
+  });
+
+  const filterIds = new Set((product.filter_ids || []).map(String));
+  document.querySelectorAll('#filters-container input[type="checkbox"]').forEach((cb) => {
+    cb.checked = filterIds.has(String(cb.value));
+  });
+
+  document.getElementById('form-status').textContent = '';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+async function loadProductList() {
+  const res = await apiFetch('/api/products');
+  const products = await res.json();
+  const listEl = document.getElementById('product-list');
+  listEl.innerHTML = '';
+
+  if (!products.length) {
+    listEl.innerHTML = '<p style="font-size:0.82rem;color:#6f675f;">Aucun produit pour le moment.</p>';
+    return;
+  }
+
+  products.forEach((product) => {
+    const item = document.createElement('div');
+    item.className = 'product-list-item';
+    const img = product.image_url ? `<img src="${product.image_url}" alt="">` : '<div style="width:42px;height:52px;background:#eee;"></div>';
+    item.innerHTML = `
+      ${img}
+      <div class="meta"><strong>${product.name || 'Sans nom'}</strong><span>${product.price || 0}€</span></div>
+      <button type="button" class="del" title="Supprimer">🗑</button>
+    `;
+    item.addEventListener('click', (e) => {
+      if (e.target.closest('.del')) return;
+      fillFormWithProduct(product);
+    });
+    item.querySelector('.del').addEventListener('click', async (e) => {
+      e.stopPropagation();
+      if (!confirm(`Supprimer "${product.name}" ?`)) return;
+      try {
+        await adminPost({ action: 'delete', id: product.id });
+        if (editingId === product.id) resetForm();
+        loadProductList();
+      } catch (error) {
+        alert('Erreur: ' + error.message);
+      }
+    });
+    listEl.appendChild(item);
+  });
+}
+
+document.getElementById('product-form').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const statusEl = document.getElementById('form-status');
+  statusEl.className = 'status-msg';
+  statusEl.textContent = 'Enregistrement...';
+
+  const images = Array.from(document.querySelectorAll('#images-list input'))
+    .map((input) => input.value.trim())
+    .filter(Boolean);
+
+  const variants = Array.from(document.querySelectorAll('#variants-list .list-row')).map((row) => {
+    const inputs = row.querySelectorAll('input');
+    return { size: inputs[0].value.trim(), color: inputs[1].value.trim(), stock: Number(inputs[2].value) || 0 };
+  }).filter((v) => v.size || v.color);
+
+  const filterIds = Array.from(document.querySelectorAll('#filters-container input[type="checkbox"]:checked'))
+    .map((cb) => Number(cb.value));
+
+  const checkedFilters = filterIds
+    .map((id) => Object.values(filtersByMenu).flat().find((f) => f.id === id))
+    .filter(Boolean);
+  const category = checkedFilters.find((f) => f.menu === 'categories')?.label || '';
+  const pageType = checkedFilters.find((f) => f.menu !== 'categories')?.menu || (category ? 'collection' : '');
+  const nouveauteTag = checkedFilters.find((f) => f.menu === 'nouveautes')?.slug || '';
+
+  const payload = {
+    action: editingId ? 'update' : 'create',
+    id: editingId || undefined,
+    name: document.getElementById('f-name').value.trim(),
+    price: Number(document.getElementById('f-price').value) || 0,
+    description: document.getElementById('f-description').value.trim(),
+    images,
+    variants,
+    filterIds,
+    category,
+    pageType,
+    nouveauteTag
+  };
+
+  try {
+    await adminPost(payload);
+    statusEl.textContent = 'Enregistré ✓';
+    statusEl.className = 'status-msg ok';
+    resetForm();
+    loadProductList();
+  } catch (error) {
+    if (error.message === 'unauthorized') return;
+    statusEl.textContent = 'Erreur: ' + error.message;
+    statusEl.className = 'status-msg error';
+  }
+});
+
+async function init() {
+  await loadFilters();
+  resetForm();
+  await loadProductList();
+}
+
+if (getPassword()) {
+  adminPost({ action: 'ping' }).then(showApp).catch((error) => {
+    if (error.message !== 'unauthorized') showApp();
+  });
+} else {
+  showGate('');
+}
+</script>
+</body>
+</html>

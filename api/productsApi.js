@@ -1,7 +1,8 @@
 import { API_URL } from "./apiConfig.js";
 
-export async function getProducts() {
-  const res = await fetch(`${API_URL}/api/products`);
+export async function getProducts(pageType) {
+  const query = pageType ? `?page=${encodeURIComponent(pageType)}` : '';
+  const res = await fetch(`${API_URL}/api/products${query}`);
 
   if (!res.ok) {
     throw new Error("Erreur chargement produits");

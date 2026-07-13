@@ -108,9 +108,9 @@ async function loadPageProducts() {
   if (!productGrid) return;
 
   try {
-    const products = await getProducts();
-    window.__JACES_PRODUCTS_CACHE = Array.isArray(products) ? products : [];
     const pageType = getPageType();
+    const products = await getProducts(pageType);
+    window.__JACES_PRODUCTS_CACHE = Array.isArray(products) ? products : [];
     const visibleProducts = getVisibleProducts(products, pageType);
 
     productGrid.hidden = false;

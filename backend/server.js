@@ -7,6 +7,7 @@ const path = require('path');
 const productsHandler = require('../api/products');
 const filtersHandler = require('../api/filters');
 const healthHandler = require('../api/health');
+const adminProductsHandler = require('../api/admin-products');
 
 const app = express();
 
@@ -38,6 +39,10 @@ app.get('/api/filters', async (req, res) => {
 
 app.get('/api/health', async (req, res) => {
   return healthHandler(req, res);
+});
+
+app.post('/api/admin-products', async (req, res) => {
+  return adminProductsHandler(req, res);
 });
 
 app.get('/api/products/:id', async (req, res) => {
