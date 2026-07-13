@@ -11,8 +11,28 @@ function getPageType() {
   return '';
 }
 
+// Supabase collaboration filter slugs (e.g. "jaces-x-chloe") don't match the
+// short brand tokens the collaborations page filters by ("chloe").
+const COLLAB_SLUG_TO_TOKEN = {
+  'jaces-x-nike': 'nike',
+  'jaces-x-chloe': 'chloe',
+  'jaces-x-jacquemus': 'jacquemus',
+  'jaces-x-dior': 'dior',
+  'jaces-x-saint-laurent': 'saint-laurent'
+};
+
 function getProductCategoryTokens(product) {
   const tokens = ['all'];
+
+  // Prefer the real category/accessoire/collaboration tags set in the admin
+  // panel (Supabase product_filters) over guessing from the product name.
+  const filterTokens = Array.isArray(product?.filter_tokens) ? product.filter_tokens : [];
+  filterTokens.forEach((token) => {
+    tokens.unshift(COLLAB_SLUG_TO_TOKEN[token] || token);
+  });
+
+  // Fallback heuristic for products that aren't tagged with a matching
+  // filter yet, so they still show up somewhere reasonable.
   const scope = String([product?.name, product?.description].filter(Boolean).join(' '))
     .toLowerCase()
     .normalize('NFD')
