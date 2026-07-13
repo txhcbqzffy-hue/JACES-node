@@ -3,13 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Nouveautés | JACES</title>
+  <title>JACES | Prêt-à-porter et accessoires contemporains</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,400;500;600&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,600&family=Manrope:wght@300;400;500;600;700;800&display=swap" media="print" onload="this.media='all'">
   <link rel="stylesheet" href="style.css">
 </head>
-<body class="collection-page-body nouveautes-page">
+<body class="home-page">
 
   <div class="topbar">
     Livraison offerte dès 79 € | Retours offerts
@@ -172,102 +172,113 @@
   </nav>
 </header>
 
-  <main class="collection-page">
-    <section class="category-nav-strip" aria-label="Catégories nouveautés">
-      <div class="category-nav-track" id="category-nav-track">
-        <a href="#product-grid" class="cat-nav-item active" data-category="all">
-          <div class="cat-nav-circle">
-            <img src="https://images.unsplash.com/photo-1551488831-00ddcb6c6bd3?q=80&w=800" alt="Nouveautés" loading="eager">
-          </div>
-          <span>Tout voir</span>
-        </a>
-        <a href="#product-grid" class="cat-nav-item" data-category="robes">
-          <div class="cat-nav-circle">
-            <img src="https://images.unsplash.com/photo-1496747611176-843222e1e57c?q=80&w=800" alt="Robes" loading="eager">
-          </div>
-          <span>Robes</span>
-        </a>
-        <a href="#product-grid" class="cat-nav-item" data-category="tops">
-          <div class="cat-nav-circle">
-            <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=800" alt="Tops" loading="lazy">
-          </div>
-          <span>Tops</span>
-        </a>
-        <a href="#product-grid" class="cat-nav-item" data-category="jupes">
-          <div class="cat-nav-circle">
-            <img src="https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?q=80&w=800" alt="Jupes" loading="lazy">
-          </div>
-          <span>Jupes</span>
-        </a>
-        <a href="#product-grid" class="cat-nav-item" data-category="pantalons">
-          <div class="cat-nav-circle">
-            <img src="https://images.unsplash.com/photo-1509631179647-0177331693ae?q=80&w=800" alt="Pantalons" loading="lazy">
-          </div>
-          <span>Pantalons</span>
-        </a>
-        <a href="#product-grid" class="cat-nav-item" data-category="vestes">
-          <div class="cat-nav-circle">
-            <img src="https://images.unsplash.com/photo-1485230895905-ec40ba36b9bc?q=80&w=800" alt="Vestes" loading="lazy">
-          </div>
-          <span>Vestes</span>
-        </a>
-          <a href="#product-grid" class="cat-nav-item" data-category="accessoires">
-            <div class="cat-nav-circle">
-              <img src="https://images.unsplash.com/photo-1572635196237-14b3f281503f?q=80&w=800" alt="Accessoires" loading="lazy">
-            </div>
-            <span>Accessoires</span>
-          </a>
+  <main>
+    <section class="hero">
+      <div class="hero-content">
+        <p class="hero-kicker">Printemps / Été 2026</p>
+        <h1>Cet été, ose aussi.</h1>
+        <div class="hero-actions">
+          <a href="nouveautes.html" class="btn btn-home-nouveautes">Voir les nouveautés</a>
+        </div>
       </div>
     </section>
 
-    <section class="section">
+    <section class="home-slider-section" aria-label="Produits en vedette" hidden>
+      <div class="home-slider-header">
+        <h2>EN CE MOMENT</h2>
+        <div class="home-slider-controls">
+          <button class="slider-btn is-hidden" type="button" data-slider-prev aria-label="Produits précédents">←</button>
+          <button class="slider-btn" type="button" data-slider-next aria-label="Produits suivants">→</button>
+        </div>
+      </div>
+
+      <div class="home-slider-track" data-slider-track></div>
+    </section>
+
+    <section class="section section-highlight">
       <div class="section-intro">
-        <h2 id="collection-page-title">Nos nouveautés</h2>
+        <h2>Les silhouettes qui definissent JACES</h2>
+        <p>Trois territoires signatures, entre allure solaire, lignes epurees et accessoires precis.</p>
       </div>
 
-      <div class="filter-bar-luxury" id="collection-filter-bar">
-        <div class="filter-bar-top">
-          <div class="filter-pills">
-            <div class="filter-pill-wrap">
-              <button class="filter-pill" data-filter="taille">Taille <span class="pill-arrow">∨</span></button>
-              <div class="filter-dropdown">
-                <label><input type="checkbox" name="taille" value="34"> 34</label>
-                <label><input type="checkbox" name="taille" value="36"> 36</label>
-                <label><input type="checkbox" name="taille" value="38"> 38</label>
-                <label><input type="checkbox" name="taille" value="40"> 40</label>
-                <label><input type="checkbox" name="taille" value="42"> 42</label>
-                <label><input type="checkbox" name="taille" value="44"> 44</label>
-                <p class="filter-dropdown-note">Guide des tailles disponible dans chaque fiche produit.</p>
-              </div>
-            </div>
-            <div class="filter-pill-wrap">
-              <button class="filter-pill" data-filter="couleur">Couleur <span class="pill-arrow">∨</span></button>
-              <div class="filter-dropdown">
-                <label><input type="checkbox" name="couleur" value="noir"> Noir</label>
-                <label><input type="checkbox" name="couleur" value="ivoire"> Ivoire</label>
-                <label><input type="checkbox" name="couleur" value="beige"> Beige</label>
-                <label><input type="checkbox" name="couleur" value="bordeaux"> Bordeaux</label>
-              </div>
-            </div>
+      <div class="cards-grid">
+        <article class="card card-highlight">
+          <img src="https://images.unsplash.com/photo-1543163521-1bf539c55dd2?q=80&w=1400" alt="Chaussures" loading="lazy">
+          <div class="card-body">
+            <p class="card-tag">Dites Oui En Boss</p>
           </div>
+        </article>
 
-          <div class="product-sort-row">
-            <select id="product-sort" name="product-sort">
-              <option value="default">Trier</option>
-              <option value="price-asc">Prix croissant</option>
-              <option value="price-desc">Prix décroissant</option>
-              <option value="name-asc">Nom A-Z</option>
-            </select>
+        <article class="card card-highlight">
+          <img src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?q=80&w=1400" alt="Bijoux" loading="lazy">
+          <div class="card-body">
+            <p class="card-tag">L'eclat Du Quotidien</p>
           </div>
-        </div>
-        <div class="filter-bar-meta">
-          <button class="filter-reset-pill" id="filter-reset-pill">Réinitialiser</button>
-          <span class="filter-count">16 produits</span>
+        </article>
+
+        <article class="card card-highlight">
+          <img src="https://images.unsplash.com/photo-1584917865442-de89df76afd3?q=80&w=1400" alt="Sacs" loading="lazy">
+          <div class="card-body">
+            <p class="card-tag">L'accessoire Signature</p>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="editorial-hero">
+      <div class="editorial-content editorial-content-vestes">
+        <h2>Des silhouettes faites pour vous</h2>
+        <a href="collection.html" class="editorial-link">Decouvrir la selection</a>
+      </div>
+    </section>
+
+    <section class="section instagram-section" aria-label="Derniers posts Instagram">
+      <div class="instagram-header">
+        <span>Derniers posts Instagram</span>
+        <div class="instagram-header-right">
+          <a href="#" aria-label="Voir Instagram">@jaces</a>
+          <div class="instagram-controls">
+            <button type="button" class="instagram-btn is-hidden" data-ig-prev aria-label="Posts précédents">←</button>
+            <button type="button" class="instagram-btn" data-ig-next aria-label="Posts suivants">→</button>
+          </div>
         </div>
       </div>
+      <div class="instagram-carousel" data-ig-track>
+        <article class="instagram-post">
+          <img src="https://images.unsplash.com/photo-1529139574466-a303027c1d8b?q=80&w=1400" alt="Post Instagram 1" loading="lazy">
+        </article>
+        <article class="instagram-post">
+          <img src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?q=80&w=1400" alt="Post Instagram 2" loading="lazy">
+        </article>
+        <article class="instagram-post">
+          <img src="https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?q=80&w=1400" alt="Post Instagram 3" loading="lazy">
+        </article>
+        <article class="instagram-post">
+          <img src="https://images.unsplash.com/photo-1483985988355-763728e1935b?q=80&w=1400" alt="Post Instagram 4" loading="lazy">
+        </article>
+        <article class="instagram-post">
+          <img src="https://images.unsplash.com/photo-1496747611176-843222e1e57c?q=80&w=1400" alt="Post Instagram 5" loading="lazy">
+        </article>
+        <article class="instagram-post">
+          <img src="https://images.unsplash.com/photo-1464863979621-258859e62245?q=80&w=1400" alt="Post Instagram 6" loading="lazy">
+        </article>
+      </div>
+    </section>
 
-      <div class="product-grid" id="product-grid" aria-live="polite">
-        <p class="filter-empty-note">Chargement des produits...</p>
+    <section class="section home-social-section" aria-label="Réseaux sociaux JACES">
+      <div class="home-social-strip">
+        <a href="#" aria-label="Instagram">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><circle cx="12" cy="12" r="4.5"/><circle cx="17.5" cy="6.5" r="0.6" fill="currentColor" stroke="none"/></svg>
+        </a>
+        <a href="#" aria-label="Facebook">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+        </a>
+        <a href="#" aria-label="X (Twitter)">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+        </a>
+        <a href="#" aria-label="YouTube">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46a2.78 2.78 0 0 0-1.95 1.96A29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58 2.78 2.78 0 0 0 1.95 1.96C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 0 0 1.95-1.96A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z"/><polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02" fill="currentColor" stroke="none"/></svg>
+        </a>
       </div>
     </section>
   </main>
@@ -374,389 +385,6 @@
       });
     }
 
-    // Filter pills toggle
-    const filterBar = document.getElementById('collection-filter-bar');
-    const resetPill = document.getElementById('filter-reset-pill');
-    const filterPills = Array.from(document.querySelectorAll('#collection-filter-bar .filter-pill'));
-    const filterInputs = Array.from(document.querySelectorAll('#collection-filter-bar input'));
-
-    filterPills.forEach(pill => {
-      const baseLabel = pill.childNodes[0] ? pill.childNodes[0].textContent.trim() : pill.textContent.replace('∨','').trim();
-      pill.dataset.baseLabel = baseLabel;
-    });
-
-    function updateFilterUI() {
-      const hasActive = document.querySelectorAll('#collection-filter-bar input:checked').length > 0;
-      resetPill.classList.toggle('visible', hasActive);
-      filterPills.forEach(pill => {
-        const wrap = pill.closest('.filter-pill-wrap');
-        const checkedCount = wrap ? wrap.querySelectorAll('input:checked').length : 0;
-        const baseLabel = pill.dataset.baseLabel || 'Filtre';
-        if (pill.childNodes[0]) pill.childNodes[0].textContent = checkedCount > 0 ? `${baseLabel} (${checkedCount}) ` : `${baseLabel} `;
-        pill.classList.toggle('active', checkedCount > 0);
-      });
-    }
-
-    filterInputs.forEach(input => input.addEventListener('change', () => {
-      updateFilterUI();
-      applyStrictCategoryFilter();
-    }));
-    resetPill.addEventListener('click', () => {
-      document.querySelectorAll('#collection-filter-bar input').forEach(i => { i.checked = false; });
-      updateFilterUI();
-      applyStrictCategoryFilter();
-    });
-    updateFilterUI();
-
-    document.querySelectorAll('.filter-pill').forEach(pill => {
-      pill.addEventListener('click', (e) => {
-        e.stopPropagation();
-        const wrap = pill.closest('.filter-pill-wrap');
-        const isOpen = pill.classList.contains('open');
-        document.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('open'));
-        document.querySelectorAll('.filter-dropdown').forEach(d => d.classList.remove('open'));
-        if (!isOpen) {
-          pill.classList.add('open');
-          wrap.querySelector('.filter-dropdown').classList.add('open');
-        }
-      });
-    });
-    document.querySelectorAll('.filter-dropdown').forEach(d => d.addEventListener('click', e => e.stopPropagation()));
-    document.addEventListener('click', (e) => {
-      if (filterBar && !filterBar.contains(e.target)) {
-        document.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('open'));
-        document.querySelectorAll('.filter-dropdown').forEach(d => d.classList.remove('open'));
-      }
-    });
-
-    let collectionCards = Array.from(document.querySelectorAll('.collection-card'));
-    const productGrid = document.querySelector('.product-grid');
-    const productSort = document.getElementById('product-sort');
-    const filterCount = document.querySelector('.filter-count');
-    let originalCards = productGrid ? Array.from(productGrid.querySelectorAll('.collection-card')) : [];
-    let currentCategoryFilter = 'all';
-    let currentNouveauteTagFilter = '';
-    let isAutoSyncingVariantFilters = false;
-
-    function normalizeVariantToken(value) {
-      return String(value || '')
-        .normalize('NFD')
-        .replace(/[\u0300-\u036f]/g, '')
-        .toLowerCase()
-        .replace(/[^a-z0-9]+/g, '-')
-        .replace(/^-+|-+$/g, '');
-    }
-
-    function getCardVariantData(card) {
-      const name = card.querySelector('h3')?.textContent?.trim() || '';
-      const scope = normalizeVariantToken([name, card.getAttribute('data-category') || '', card.getAttribute('data-collection') || '', card.getAttribute('data-nouveaute-tags') || ''].join(' '));
-      const isAccessory = /accessoire|sac|ceinture|boucle|oreille|foulard/.test(scope);
-      let colors = ['noir', 'ivoire', 'beige', 'bordeaux'];
-
-      if (/rose/.test(scope)) colors = ['rose', 'ivoire', 'beige'];
-      else if (/bleu|marine/.test(scope)) colors = ['bleu', 'ivoire', 'beige'];
-      else if (/noir|encre|graphite|cigarette|satin/.test(scope)) colors = ['noir', 'ivoire', 'beige'];
-      else if (/blanc|craie|latte/.test(scope)) colors = ['ivoire', 'blanc', 'beige'];
-      else if (/beige|sable|taupe|camel|creme/.test(scope)) colors = ['beige', 'ivoire', 'camel'];
-      else if (/dor|argent/.test(scope)) colors = ['or', 'argent'];
-      else if (/nike/.test(scope)) colors = ['noir', 'bleu', 'beige'];
-      else if (/chloe/.test(scope)) colors = ['rose', 'ivoire', 'beige'];
-      else if (/jacquemus/.test(scope)) colors = ['beige', 'ivoire', 'camel'];
-      else if (/dior/.test(scope)) colors = ['ivoire', 'noir', 'beige'];
-      else if (/saint-laurent|saint-laurent/.test(scope)) colors = ['noir', 'bleu', 'graphite'];
-
-      return {
-        colors: colors,
-        sizes: isAccessory ? [] : ['34', '36', '38', '40', '42', '44']
-      };
-    }
-
-    function getCheckedTokens(name) {
-      return Array.from(document.querySelectorAll('#collection-filter-bar input[name="' + name + '"]:checked')).map((input) => normalizeVariantToken(input.value));
-    }
-
-    function syncFilterAvailability(visibleCards) {
-      const colorInputs = Array.from(document.querySelectorAll('#collection-filter-bar input[name="couleur"]'));
-      let shouldResync = false;
-
-      ['taille', 'couleur'].forEach((name) => {
-        const inputs = Array.from(document.querySelectorAll('#collection-filter-bar input[name="' + name + '"]'));
-        inputs.forEach((input) => {
-          const token = normalizeVariantToken(input.value);
-          const available = visibleCards.some((card) => {
-            const variantData = getCardVariantData(card);
-            const pool = name === 'taille' ? variantData.sizes : variantData.colors;
-            return pool.some((value) => normalizeVariantToken(value) === token);
-          });
-          input.disabled = !available && !input.checked;
-          input.closest('label')?.classList.toggle('is-unavailable', !available && !input.checked);
-        });
-      });
-
-      if (!isAutoSyncingVariantFilters) {
-        const activeColor = colorInputs.find((input) => input.checked && !input.disabled);
-        if (!activeColor) {
-          const fallbackColor = colorInputs.find((input) => !input.disabled);
-          if (fallbackColor) {
-            isAutoSyncingVariantFilters = true;
-            colorInputs.forEach((input) => { input.checked = input === fallbackColor; });
-            shouldResync = true;
-          }
-        }
-      }
-
-      return shouldResync;
-    }
-
-    function getCardPrice(card) {
-      const priceText = card.querySelector('.product-price')?.textContent || '0';
-      return Number(priceText.replace(/[^0-9]/g, '')) || 0;
-    }
-
-    function getCardName(card) {
-      return card.querySelector('h3')?.textContent?.trim() || '';
-    }
-
-    function seedInitialCardOrder() {
-      if (!productGrid || !productSort) return;
-
-      productSort.addEventListener('change', () => {
-        const currentCards = Array.from(productGrid.querySelectorAll('.collection-card'));
-        let sortedProducts = currentCards.slice();
-
-        if (productSort.value === 'default') {
-          sortedProducts = originalCards.slice();
-        } else if (productSort.value === 'price-asc') {
-          sortedProducts = currentCards.slice().sort((a, b) => getCardPrice(a) - getCardPrice(b));
-        } else if (productSort.value === 'price-desc') {
-          sortedProducts = currentCards.slice().sort((a, b) => getCardPrice(b) - getCardPrice(a));
-        } else if (productSort.value === 'name-asc') {
-          sortedProducts = currentCards.slice().sort((a, b) => getCardName(a).localeCompare(getCardName(b), 'fr'));
-        }
-
-        sortedProducts.forEach((card) => productGrid.appendChild(card));
-        applyStrictCategoryFilter();
-      });
-    }
-
-    function applyStrictCategoryFilter() {
-      const cards = Array.from(document.querySelectorAll('#product-grid .collection-card'));
-      const selectedSizes = getCheckedTokens('taille');
-      const selectedColors = getCheckedTokens('couleur');
-      const visibleCards = [];
-
-      const hasTaggedMatches = !!currentNouveauteTagFilter && cards.some((card) => {
-        const cats = (card.getAttribute('data-category') || '').split(' ').filter(Boolean);
-        const tagTokens = (card.getAttribute('data-nouveaute-tags') || '').split(' ').filter(Boolean);
-        if (tagTokens.indexOf(currentNouveauteTagFilter) !== -1) return true;
-        // Legacy static cards used "cette-semaine": treat it as drop-ete.
-        if (currentNouveauteTagFilter === 'drop-ete' && cats.indexOf('cette-semaine') !== -1) return true;
-        return false;
-      });
-
-      cards.forEach((card) => {
-        const cats = (card.getAttribute('data-category') || '').split(' ').filter(Boolean);
-        const tagTokens = (card.getAttribute('data-nouveaute-tags') || '').split(' ').filter(Boolean);
-        const variantData = getCardVariantData(card);
-        const matchesCategory = currentCategoryFilter === 'all' || cats.includes(currentCategoryFilter);
-        const matchesTag = !currentNouveauteTagFilter
-          || !hasTaggedMatches
-          || tagTokens.indexOf(currentNouveauteTagFilter) !== -1
-          || (currentNouveauteTagFilter === 'drop-ete' && cats.indexOf('cette-semaine') !== -1);
-        const matchesSize = !selectedSizes.length || variantData.sizes.some((size) => selectedSizes.includes(normalizeVariantToken(size)));
-        const matchesColor = !selectedColors.length || variantData.colors.some((color) => selectedColors.includes(normalizeVariantToken(color)));
-        const visible = matchesCategory && matchesTag && matchesSize && matchesColor;
-        card.classList.toggle('hidden', !visible);
-        if (visible) visibleCards.push(card);
-      });
-
-      if (syncFilterAvailability(visibleCards)) {
-        isAutoSyncingVariantFilters = false;
-        applyStrictCategoryFilter();
-        return;
-      }
-
-      isAutoSyncingVariantFilters = false;
-
-      const visibleCount = cards.filter((card) => !card.classList.contains('hidden')).length;
-      if (filterCount) filterCount.textContent = `${visibleCount} produits`;
-    }
-
-    function scrollToFilterBar() {
-      const filterBarTarget = document.getElementById('collection-filter-bar');
-      if (!filterBarTarget) return;
-
-      requestAnimationFrame(() => {
-        const header = document.querySelector('.header');
-        const headerBottom = header ? header.getBoundingClientRect().bottom : 120;
-        const filterTop = filterBarTarget.getBoundingClientRect().top + window.scrollY;
-        const offset = filterTop - headerBottom + 10;
-        const targetY = Math.max(0, offset);
-        if (Math.abs(window.scrollY - targetY) <= 80) return;
-        window.scrollTo({ top: targetY, behavior: 'smooth' });
-      });
-    }
-
-    function shouldScrollToFilterBar() {
-      const filterBarTarget = document.getElementById('collection-filter-bar');
-      if (!filterBarTarget) return false;
-      const header = document.querySelector('.header');
-      const headerBottom = header ? header.getBoundingClientRect().bottom : 120;
-      const filterTop = filterBarTarget.getBoundingClientRect().top + window.scrollY;
-      const targetY = Math.max(0, filterTop - headerBottom + 10);
-      return Math.abs(window.scrollY - targetY) > 80;
-    }
-
-    if (filterCount) {
-      filterCount.textContent = `${collectionCards.length} produits`;
-    }
-
-    const nouveautesPageTitle = document.getElementById('collection-page-title');
-    const validCategories = new Set(['all', 'robes', 'tops', 'jupes', 'pantalons', 'vestes', 'accessoires']);
-    const validTags = new Set(['drop-ete', 'edition-limitee', 'pieces-signature']);
-    const nouveautesMeta = {
-      all: { heading: 'Nos nouveautés', documentTitle: 'Nos nouveautés | JACES' },
-      'drop-ete': { heading: 'Drop été', documentTitle: 'Drop été | JACES' },
-      'edition-limitee': { heading: 'Édition limitée', documentTitle: 'Édition limitée | JACES' },
-      'pieces-signature': { heading: 'Pièces signature', documentTitle: 'Pièces signature | JACES' }
-    };
-
-    function getNouveautesView() {
-      const params = new URLSearchParams(window.location.search);
-      const tag = params.get('nouveauteTag');
-      return validTags.has(tag) ? tag : 'all';
-    }
-
-    function syncNouveautesHeadingFromURL() {
-      const view = getNouveautesView();
-      if (nouveautesPageTitle) {
-        nouveautesPageTitle.textContent = nouveautesMeta[view].heading;
-      }
-      document.title = nouveautesMeta[view].documentTitle;
-    }
-
-    function activateNouveautesFromURL(shouldScroll) {
-      const params = new URLSearchParams(window.location.search);
-      const reqCat = params.get('category');
-      currentCategoryFilter = validCategories.has(reqCat) ? reqCat : 'all';
-      currentNouveauteTagFilter = getNouveautesView() === 'all' ? '' : getNouveautesView();
-
-      document.querySelectorAll('.category-nav-strip .cat-nav-item').forEach((item) => {
-        item.classList.toggle('active', (item.getAttribute('data-category') || 'all') === currentCategoryFilter);
-      });
-
-      syncNouveautesHeadingFromURL();
-      applyStrictCategoryFilter();
-
-      if (shouldScroll && shouldScrollToFilterBar()) {
-        setTimeout(scrollToFilterBar, 100);
-      }
-    }
-
-    window.__jaces_activateNouveautesCategory = activateNouveautesFromURL;
-
-    function setNouveautesCategory(category, shouldScroll, options) {
-      if (!validCategories.has(category)) return;
-
-      const preserveTag = !!(options && options.preserveTag);
-      const currentParams = new URLSearchParams(window.location.search);
-      const currentTag = currentParams.get('nouveauteTag');
-      const targetParams = new URLSearchParams();
-
-      targetParams.set('category', category);
-      if (preserveTag && validTags.has(currentTag)) {
-        targetParams.set('nouveauteTag', currentTag);
-      }
-
-      const targetSearch = '?' + targetParams.toString();
-      if (window.location.search !== targetSearch) {
-        history.replaceState({}, '', 'nouveautes.html' + targetSearch);
-      }
-
-      currentCategoryFilter = category;
-      currentNouveauteTagFilter = preserveTag && validTags.has(currentTag) ? currentTag : '';
-
-      document.querySelectorAll('.category-nav-strip .cat-nav-item').forEach((item) => {
-        item.classList.toggle('active', (item.getAttribute('data-category') || 'all') === category);
-      });
-
-      syncNouveautesHeadingFromURL();
-      applyStrictCategoryFilter();
-
-      if (shouldScroll && shouldScrollToFilterBar()) {
-        scrollToFilterBar();
-      }
-    }
-
-    function setNouveautesMenuSelection(category, tag, shouldScroll) {
-      const safeCategory = validCategories.has(category) ? category : 'all';
-      const safeTag = validTags.has(tag) ? tag : '';
-      const targetParams = new URLSearchParams();
-
-      targetParams.set('category', safeCategory);
-      if (safeTag) {
-        targetParams.set('nouveauteTag', safeTag);
-      }
-
-      const targetSearch = '?' + targetParams.toString();
-      if (window.location.search !== targetSearch) {
-        history.replaceState({}, '', 'nouveautes.html' + targetSearch);
-      }
-
-      currentCategoryFilter = safeCategory;
-      currentNouveauteTagFilter = safeTag;
-
-      document.querySelectorAll('.category-nav-strip .cat-nav-item').forEach((item) => {
-        item.classList.toggle('active', (item.getAttribute('data-category') || 'all') === safeCategory);
-      });
-
-      syncNouveautesHeadingFromURL();
-      applyStrictCategoryFilter();
-
-      if (shouldScroll && shouldScrollToFilterBar()) {
-        scrollToFilterBar();
-      }
-    }
-
-    document.querySelectorAll('a[href^="nouveautes.html?category="]').forEach((link) => {
-      link.addEventListener('click', (event) => {
-        if (!window.location.pathname.endsWith('nouveautes.html')) return;
-
-        event.preventDefault();
-        const linkParams = new URL(link.getAttribute('href'), window.location.href).searchParams;
-        const category = linkParams.get('category') || 'all';
-        const tag = linkParams.get('nouveauteTag') || '';
-        const shouldScroll = window.scrollY <= 120;
-        setNouveautesMenuSelection(category, tag, shouldScroll);
-      });
-    });
-
-    document.querySelectorAll('.category-nav-strip .cat-nav-item').forEach(item => {
-      item.addEventListener('click', (e) => {
-        e.preventDefault();
-        const category = item.getAttribute('data-category') || 'all';
-        document.querySelectorAll('#collection-filter-bar input').forEach((input) => {
-          input.checked = false;
-        });
-        setNouveautesCategory(category, true, { preserveTag: true });
-      });
-    });
-
-    seedInitialCardOrder();
-    activateNouveautesFromURL(false);
-
-    window.addEventListener('jaces:admin-products-sync', () => {
-      collectionCards = Array.from(document.querySelectorAll('.collection-card'));
-      originalCards = productGrid ? Array.from(productGrid.querySelectorAll('.collection-card')) : [];
-      seedInitialCardOrder();
-      applyStrictCategoryFilter();
-    });
-    window.addEventListener('jaces:products-loaded', () => {
-      collectionCards = Array.from(document.querySelectorAll('.collection-card'));
-      originalCards = productGrid ? Array.from(productGrid.querySelectorAll('.collection-card')) : [];
-      seedInitialCardOrder();
-      applyStrictCategoryFilter();
-    });
   </script>
 
   <div class="fav-overlay" id="fav-overlay"></div>
@@ -768,45 +396,117 @@
     <div class="fav-panel-list" id="fav-panel-list"></div>
   </div>
   <script src="catalog.js"></script>
-  <script src="filters.js"></script>
-  <script type="module" src="products-page.js?t=20260628d"></script>
   <script src="cart.js"></script>
   <script src="favorites.js"></script>
   <script src="auth.js"></script>
-  <script>
-    (function () {
-      function navigateToProduct(card) {
-        var name = (card.querySelector('h3') || {}).textContent || '';
-        name = name.trim();
-        var price = (card.querySelector('.product-price') || {}).textContent || '';
-        price = price.trim();
-        var selectedSize = (document.querySelector('#collection-filter-bar input[name="taille"]:checked') || {}).value || '';
-        var selectedColor = (document.querySelector('#collection-filter-bar input[name="couleur"]:checked') || {}).value || '';
-        var imgEl = card.querySelector('.product-image-primary');
-        var img = imgEl ? imgEl.getAttribute('src') || '' : '';
-        var secEl = card.querySelector('.product-image-secondary');
-        var secondaryImg = secEl ? secEl.getAttribute('src') || '' : '';
-        if (!name) return;
-        var url;
-        try {
-          url = (window.JacesCatalog && typeof window.JacesCatalog.getProductUrl === 'function')
-            ? window.JacesCatalog.getProductUrl({ name: name, price: price, img: img, secondaryImg: secondaryImg, selectedSize: selectedSize, selectedColor: selectedColor }, 'nouveautes')
-            : null;
-        } catch (err) { url = null; }
-        if (!url) {
-          url = 'detail-produit.html?id=' + encodeURIComponent(name.toLowerCase().replace(/\s+/g, '-')) + '&name=' + encodeURIComponent(name) + '&price=' + encodeURIComponent(price) + '&img=' + encodeURIComponent(img) + '&selectedSize=' + encodeURIComponent(selectedSize) + '&selectedColor=' + encodeURIComponent(selectedColor) + '&origin=nouveautes&originLabel=Nouveautes&originUrl=nouveautes.html&originNav=nouveautes';
-        }
-        window.location.href = url;
+
+  <script type="module">
+    import { getProducts } from './js/productsApi.js';
+
+    function formatPrice(price) {
+      if (price === null || price === undefined || price === '') return '';
+      const raw = String(price).trim();
+      if (raw.includes('€')) return raw;
+      const numeric = Number(raw);
+      if (!Number.isFinite(numeric)) return raw;
+      return new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(numeric);
+    }
+
+    function buildHomeSliderCard(product) {
+      const images = Array.isArray(product.images) ? product.images : [];
+      const primarySrc = images[0]?.url || product.image_url || product.img || '';
+      const secondarySrc = images[1]?.url || product.hover_image_url || primarySrc;
+      const sizes = Array.isArray(product.sizes) ? product.sizes.map((s) => String(s || '').trim()).filter(Boolean) : [];
+      const quickBuyMarkup = sizes.length
+        ? `<p class="quick-buy-title"><strong>Achat rapide</strong> (Selectionnez votre taille)</p><div class="quick-buy-grid">${sizes.map((size) => `<button type="button">${size}</button>`).join('')}</div>`
+        : '';
+
+      const card = document.createElement('article');
+      card.className = 'home-slider-card';
+      card.dataset.productId = String(product.id || '');
+      card.innerHTML = `
+        <a class="home-slider-media" href="detail-produit.html?id=${encodeURIComponent(product.id || '')}" aria-label="Voir ${product.name || 'ce produit'}">
+          ${primarySrc ? `<img class="home-slider-image-primary" src="${primarySrc}" alt="${product.name || 'Produit JACES'}" loading="lazy">` : ''}
+          ${secondarySrc ? `<img class="home-slider-image-secondary" src="${secondarySrc}" alt="${product.name || 'Produit JACES'} vue 2" loading="lazy">` : ''}
+          ${quickBuyMarkup ? `<div class="hover-sizes" aria-hidden="true">${quickBuyMarkup}</div>` : ''}
+        </a>
+        <div class="home-slider-meta"><h3>${product.name || 'Produit JACES'}</h3><p>${formatPrice(product.price)}</p></div>
+      `;
+      return card;
+    }
+
+    function setupSlider() {
+      const track = document.querySelector('[data-slider-track]');
+      const nextBtn = document.querySelector('[data-slider-next]');
+      const prevBtn = document.querySelector('[data-slider-prev]');
+      if (!track || !nextBtn || !prevBtn) return;
+
+      const updateSliderButtons = () => {
+        const maxScrollLeft = track.scrollWidth - track.clientWidth;
+        prevBtn.classList.toggle('is-hidden', track.scrollLeft <= 4);
+        nextBtn.classList.toggle('is-hidden', track.scrollLeft >= maxScrollLeft - 4);
+      };
+
+      const getStep = () => {
+        const card = track.querySelector('.home-slider-card');
+        if (!card) return 360;
+        const styles = window.getComputedStyle(track);
+        const gap = parseFloat(styles.columnGap || styles.gap || '0');
+        return card.getBoundingClientRect().width + gap;
+      };
+
+      nextBtn.addEventListener('click', () => track.scrollBy({ left: getStep(), behavior: 'smooth' }));
+      prevBtn.addEventListener('click', () => track.scrollBy({ left: -getStep(), behavior: 'smooth' }));
+      track.addEventListener('scroll', updateSliderButtons, { passive: true });
+      window.addEventListener('resize', updateSliderButtons);
+      updateSliderButtons();
+    }
+
+    async function loadFeaturedProducts() {
+      const section = document.querySelector('.home-slider-section');
+      const track = document.querySelector('[data-slider-track]');
+      if (!section || !track) return;
+
+      try {
+        const products = await getProducts();
+        if (!Array.isArray(products) || !products.length) return;
+
+        track.innerHTML = '';
+        products.forEach((product) => track.appendChild(buildHomeSliderCard(product)));
+        section.hidden = false;
+        setupSlider();
+      } catch (error) {
+        console.error('Impossible de charger les produits en vedette:', error);
       }
-      document.querySelectorAll('.product-card').forEach(function (card) {
-        card.style.cursor = 'pointer';
-        card.addEventListener('click', function (e) {
-          if (card.classList.contains('admin-product-card') || card.hasAttribute('data-admin-id')) return;
-          if (e.target.closest('.product-favorite') || e.target.closest('.quick-buy-grid') || e.target.closest('.hover-sizes')) return;
-          navigateToProduct(card);
-        });
-      });
-    })();
+    }
+
+    loadFeaturedProducts();
+
+    const igTrack = document.querySelector('[data-ig-track]');
+    const igNextBtn = document.querySelector('[data-ig-next]');
+    const igPrevBtn = document.querySelector('[data-ig-prev]');
+
+    if (igTrack && igNextBtn && igPrevBtn) {
+      const updateInstagramButtons = () => {
+        const maxScrollLeft = igTrack.scrollWidth - igTrack.clientWidth;
+        igPrevBtn.classList.toggle('is-hidden', igTrack.scrollLeft <= 4);
+        igNextBtn.classList.toggle('is-hidden', igTrack.scrollLeft >= maxScrollLeft - 4);
+      };
+
+      const getInstagramStep = () => {
+        const card = igTrack.querySelector('.instagram-post');
+        if (!card) return 420;
+        const styles = window.getComputedStyle(igTrack);
+        const gap = parseFloat(styles.columnGap || styles.gap || '0');
+        return card.getBoundingClientRect().width + gap;
+      };
+
+      igNextBtn.addEventListener('click', () => igTrack.scrollBy({ left: getInstagramStep(), behavior: 'smooth' }));
+      igPrevBtn.addEventListener('click', () => igTrack.scrollBy({ left: -getInstagramStep(), behavior: 'smooth' }));
+      igTrack.addEventListener('scroll', updateInstagramButtons, { passive: true });
+      window.addEventListener('resize', updateInstagramButtons);
+      updateInstagramButtons();
+    }
   </script>
 </body>
 </html>
