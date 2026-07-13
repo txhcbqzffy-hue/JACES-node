@@ -249,10 +249,15 @@ const SIZE_OPTIONS = ['34', '36', '38', '40', '42', '44'];
 const COLOR_OPTIONS = ['Noir', 'Blanc', 'Gris', 'Argent', 'Rouge', 'Bleu', 'Vert', 'Jaune', 'Orange', 'Rose', 'Violet', 'Marron', 'Beige', 'Doré', 'Bronze', 'Transparent', 'Multicolore'];
 
 function buildOptionsHtml(options, current) {
-  const known = options.includes(current) || !current
+  // Match case-insensitively so legacy lowercase values (e.g. "noir" saved
+  // before this dropdown existed) select the properly-cased option instead
+  // of showing up as a separate raw entry.
+  const canonicalMatch = options.find((value) => value.toLowerCase() === String(current || '').toLowerCase());
+  const resolvedCurrent = canonicalMatch || current;
+  const known = options.includes(resolvedCurrent) || !resolvedCurrent
     ? ''
-    : `<option value="${current}" selected>${current}</option>`;
-  return known + options.map((value) => `<option value="${value}"${value === current ? ' selected' : ''}>${value}</option>`).join('');
+    : `<option value="${resolvedCurrent}" selected>${resolvedCurrent}</option>`;
+  return known + options.map((value) => `<option value="${value}"${value === resolvedCurrent ? ' selected' : ''}>${value}</option>`).join('');
 }
 
 function variantRow(size = '', color = '', stock = '') {
@@ -396,6 +401,10 @@ async function loadProductList() {
 
 document.getElementById('product-form').addEventListener('submit', async (e) => {
   e.preventDefault();
+  const submitBtn = e.target.querySelector('button[type="submit"]');
+  if (submitBtn.disabled) return;
+  submitBtn.disabled = true;
+
   const statusEl = document.getElementById('form-status');
   statusEl.className = 'status-msg';
   statusEl.textContent = 'Enregistrement...';
@@ -445,6 +454,8 @@ document.getElementById('product-form').addEventListener('submit', async (e) => 
     if (error.message === 'unauthorized') return;
     statusEl.textContent = 'Erreur: ' + error.message;
     statusEl.className = 'status-msg error';
+  } finally {
+    submitBtn.disabled = false;
   }
 });
 

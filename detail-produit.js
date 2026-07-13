@@ -1294,13 +1294,23 @@
 
       product = normalizedApiProduct || productByName;
       if (product && queryProduct) {
+        // Prefer fresh Supabase data (real colors/sizes/images) over the
+        // degraded copy encoded in the URL by legacy listing-card links.
+        // The URL copy is only a useful fallback when we couldn't fetch the
+        // product directly (normalizedApiProduct is null).
+        const preferApi = Boolean(normalizedApiProduct);
+        const pick = (apiValue, queryValue) => (preferApi ? (apiValue || queryValue) : (queryValue || apiValue));
+        const pickList = (apiValue, queryValue) => (preferApi
+          ? (Array.isArray(apiValue) && apiValue.length ? apiValue : queryValue)
+          : (Array.isArray(queryValue) && queryValue.length ? queryValue : apiValue));
+
         product = Object.assign({}, product, queryProduct, {
-          img: queryProduct.img || product.img,
-          secondaryImg: queryProduct.secondaryImg || product.secondaryImg,
-          tertiaryImg: queryProduct.tertiaryImg || product.tertiaryImg,
-          quaternaryImg: queryProduct.quaternaryImg || product.quaternaryImg,
-          colors: queryProduct.colors && queryProduct.colors.length ? queryProduct.colors : product.colors,
-          sizes: queryProduct.sizes && queryProduct.sizes.length ? queryProduct.sizes : product.sizes
+          img: pick(product.img, queryProduct.img),
+          secondaryImg: pick(product.secondaryImg, queryProduct.secondaryImg),
+          tertiaryImg: pick(product.tertiaryImg, queryProduct.tertiaryImg),
+          quaternaryImg: pick(product.quaternaryImg, queryProduct.quaternaryImg),
+          colors: pickList(product.colors, queryProduct.colors),
+          sizes: pickList(product.sizes, queryProduct.sizes)
         });
       }
     } catch (error) {
