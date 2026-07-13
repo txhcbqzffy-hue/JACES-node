@@ -741,7 +741,12 @@
     });
 
     seedInitialCardOrder();
-    activateNouveautesFromURL(false);
+    // Landed here via a mega-menu link to a specific category/tag (not a
+    // plain visit): scroll straight to the filtered results.
+    const initialParams = new URLSearchParams(window.location.search);
+    const hasInitialCategory = validCategories.has(initialParams.get('category')) && initialParams.get('category') !== 'all';
+    const hasInitialTag = validTags.has(initialParams.get('nouveauteTag'));
+    activateNouveautesFromURL(hasInitialCategory || hasInitialTag);
 
     window.addEventListener('jaces:admin-products-sync', () => {
       collectionCards = Array.from(document.querySelectorAll('.collection-card'));

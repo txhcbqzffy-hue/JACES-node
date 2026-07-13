@@ -655,7 +655,9 @@
 
       const requestedCategory = new URLSearchParams(window.location.search).get('category');
       if (requestedCategory && validCategories.has(requestedCategory)) {
-        setAccessoriesCategory(requestedCategory, false);
+        // Landed here via a mega-menu link to a specific category: scroll
+        // straight to the filtered results.
+        setAccessoriesCategory(requestedCategory, true);
       }
 
       updateFilterUi();

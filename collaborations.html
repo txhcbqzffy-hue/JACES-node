@@ -193,7 +193,11 @@
 
       window.addEventListener('jaces:products-loaded', () => {
         cards = Array.from(document.querySelectorAll('#product-grid .collection-card'));
-        setCategory(current, false, false);
+        // Landed here via a mega-menu link to a specific brand/view (not a
+        // plain visit): scroll straight to the filtered results, matching
+        // how the nouveautes page behaves.
+        const shouldScrollOnLoad = current !== 'all' || currentView !== 'all';
+        setCategory(current, shouldScrollOnLoad, false);
       });
 
       function getViewMeta(view) {
