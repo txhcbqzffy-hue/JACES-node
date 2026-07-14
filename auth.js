@@ -269,14 +269,18 @@
           }
 
           if (pageName === 'collection.html') {
-            // Same rule as the Nouveautés tags: only Printemps–Été 2026 /
-            // Automne–Hiver 2026 may ever be highlighted in this menu —
-            // category pills (Robes, Tops, ...) and "Toutes les
-            // collections" never get the active style, whether picked from
-            // an on-page pill or straight from the mega-menu.
-            if (!link.collection) return null;
-            if (link.collection !== currentCollection) return null;
-            score += 25;
+            // Only Printemps–Été 2026 / Automne–Hiver 2026 (or, absent any
+            // season, "Toutes les collections") may be highlighted here —
+            // category pills (Robes, Tops, ...) never get the active style,
+            // whether picked from an on-page pill or the mega-menu.
+            if (link.collection) {
+              if (link.collection !== currentCollection) return null;
+              score += 25;
+            } else if (!currentCollection && link.category === 'all') {
+              score += 3;
+            } else {
+              return null;
+            }
           }
 
           return { node: link.node, score };
