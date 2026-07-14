@@ -555,7 +555,9 @@
         const cats = (card.getAttribute('data-category') || '').split(' ').filter(Boolean);
         const tagTokens = (card.getAttribute('data-nouveaute-tags') || '').split(' ').filter(Boolean);
         const variantData = getCardVariantData(card);
-        const matchesCategory = currentCategoryFilter === 'all' || cats.includes(currentCategoryFilter);
+        const matchesCategory = currentCategoryFilter === 'all'
+          ? cats.includes('tout-voir')
+          : cats.includes(currentCategoryFilter);
         const matchesTag = currentNouveauteTagFilter
           ? (!hasTaggedMatches
             || tagTokens.indexOf(currentNouveauteTagFilter) !== -1
