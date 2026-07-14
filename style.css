@@ -6233,7 +6233,6 @@ body.header-scrolled .header .submenu a.submenu-link-active {
   padding: 6px 6px 4px;
   border-radius: 8px;
   transition: color 0.18s ease;
-  cursor: pointer;
 }
 
 .cat-nav-item:hover {
@@ -6549,13 +6548,6 @@ body.header-scrolled .header .submenu a.submenu-link-active {
   margin-left: auto;
   text-align: right;
   line-height: 1.9;
-}
-
-.product-grid-empty-message {
-  text-align: center;
-  color: #7a7266;
-  font-size: 0.9rem;
-  padding: 48px 16px;
 }
 
 .filter-reset-pill {
