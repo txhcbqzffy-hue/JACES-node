@@ -6263,7 +6263,7 @@ body.header-scrolled .header .submenu a.submenu-link-active {
 }
 
 .cat-nav-item:hover .cat-nav-circle img {
-  transform: scale(1.25);
+  transform: none;
 }
 
 .cat-nav-item span {
