@@ -21,6 +21,19 @@ const COLLAB_SLUG_TO_TOKEN = {
   'jaces-x-saint-laurent': 'saint-laurent'
 };
 
+// Slugified admin filter labels (menu "collections") don't match the short
+// season tokens the collection page filters by ("ss26" / "aw26").
+const SEASON_SLUG_TO_TOKEN = {
+  'printemps-ete-2026': 'ss26',
+  'automne-hiver-2026': 'aw26'
+};
+
+function getProductCollectionSeason(product) {
+  const filterTokens = Array.isArray(product?.filter_tokens) ? product.filter_tokens : [];
+  const seasonToken = filterTokens.map((token) => SEASON_SLUG_TO_TOKEN[token]).find(Boolean);
+  return seasonToken || 'all';
+}
+
 function getProductCategoryTokens(product) {
   const tokens = ['all'];
 
@@ -79,7 +92,7 @@ function buildProductCard(product, pageType) {
   card.className = 'product-card collection-card product-card-linkable';
   card.dataset.productId = String(product.id || '');
   card.dataset.category = getProductCategoryTokens(product);
-  card.dataset.collection = String(product.collectionSeason || 'all').toLowerCase() || 'all';
+  card.dataset.collection = getProductCollectionSeason(product);
   card.dataset.collabView = product.collaborationView ? `all ${String(product.collaborationView).toLowerCase()}` : 'all';
   card.dataset.nouveauteTags = Array.isArray(product.nouveauteTags) ? product.nouveauteTags.join(' ') : '';
   card.dataset.material = String(product.material || '').toLowerCase();
