@@ -73,6 +73,8 @@
   .checkbox-grid { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 6px; }
   .checkbox-grid label { display: flex; align-items: center; gap: 6px; font-size: 0.82rem; text-transform: none; letter-spacing: 0; color: #1b1a17; }
   .checkbox-grid input { width: auto; }
+  .filter-remove-btn { margin-left: auto; background: none; border: none; color: #a8382f; cursor: pointer; font-size: 0.78rem; padding: 0 2px; }
+  .filter-add-row { margin-top: 8px; }
   .actions { display: flex; gap: 10px; margin-top: 16px; }
   .actions button { flex: 1; padding: 11px; font-size: 0.8rem; letter-spacing: 0.05em; text-transform: uppercase; cursor: pointer; }
   .btn-secondary { background: #ece5d8; border: 1px solid #c8bfb3; color: #1b1a17; }
@@ -175,8 +177,8 @@ async function apiFetch(path, options = {}) {
   return res;
 }
 
-async function adminPost(payload) {
-  const res = await fetch('/api/admin-products', {
+async function adminApiPost(endpoint, payload) {
+  const res = await fetch(endpoint, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -192,6 +194,14 @@ async function adminPost(payload) {
   }
   if (!res.ok) throw new Error(data.error || 'Erreur serveur');
   return data;
+}
+
+async function adminPost(payload) {
+  return adminApiPost('/api/admin-products', payload);
+}
+
+async function adminFiltersPost(payload) {
+  return adminApiPost('/api/admin-filters', payload);
 }
 
 function showGate(message) {
@@ -286,6 +296,11 @@ document.getElementById('add-variant-btn').addEventListener('click', () => {
 });
 
 async function loadFilters() {
+  const checkedIds = new Set(
+    Array.from(document.querySelectorAll('#filters-container input[type="checkbox"]:checked'))
+      .map((cb) => cb.value)
+  );
+
   const res = await apiFetch('/api/filters');
   const rows = await res.json();
   filtersByMenu = {};
@@ -307,10 +322,49 @@ async function loadFilters() {
     grid.className = 'checkbox-grid';
     filtersByMenu[menu].forEach((filter) => {
       const label = document.createElement('label');
-      label.innerHTML = `<input type="checkbox" value="${filter.id}"> ${filter.label || filter.name}`;
+      const checkedAttr = checkedIds.has(String(filter.id)) ? ' checked' : '';
+      label.innerHTML = `<input type="checkbox" value="${filter.id}"${checkedAttr}> ${filter.label || filter.name}`;
+      const removeBtn = document.createElement('button');
+      removeBtn.type = 'button';
+      removeBtn.className = 'filter-remove-btn';
+      removeBtn.title = 'Supprimer cette option';
+      removeBtn.textContent = '✕';
+      removeBtn.addEventListener('click', async (e) => {
+        e.preventDefault();
+        if (!confirm(`Supprimer l'option "${filter.label || filter.name}" ?`)) return;
+        try {
+          await adminFiltersPost({ action: 'delete', id: filter.id });
+          await loadFilters();
+        } catch (error) {
+          if (error.message === 'unauthorized') return;
+          alert('Erreur: ' + error.message);
+        }
+      });
+      label.appendChild(removeBtn);
       grid.appendChild(label);
     });
     fieldset.appendChild(grid);
+
+    if (MENU_LABELS[menu]) {
+      const addRow = document.createElement('div');
+      addRow.className = 'list-row filter-add-row';
+      addRow.innerHTML = `<input type="text" placeholder="Nouvelle option (ex: Nouveautés)"><button type="button" class="add-btn">+ Ajouter</button>`;
+      const input = addRow.querySelector('input');
+      addRow.querySelector('button').addEventListener('click', async () => {
+        const label = input.value.trim();
+        if (!label) return;
+        try {
+          await adminFiltersPost({ action: 'create', menu, label });
+          input.value = '';
+          await loadFilters();
+        } catch (error) {
+          if (error.message === 'unauthorized') return;
+          alert('Erreur: ' + error.message);
+        }
+      });
+      fieldset.appendChild(addRow);
+    }
+
     container.appendChild(fieldset);
   });
 }
