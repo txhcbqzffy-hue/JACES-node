@@ -256,7 +256,10 @@
           if (pageName === 'nouveautes.html') {
             if (link.nouveauteTag) {
               if (link.nouveauteTag !== currentNouveauteTag) return null;
-              score += 12;
+              // Outweigh a plain category match (20): when a tag (Drop été,
+              // Édition limitée, Pièces signature) is active, it should stay
+              // highlighted even after also picking a FEMME category pill.
+              score += 25;
             } else if (!currentNouveauteTag) {
               score += 3;
             }
