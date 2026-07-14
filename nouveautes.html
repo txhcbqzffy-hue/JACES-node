@@ -549,10 +549,14 @@
         const matchesCategory = currentCategoryFilter === 'all'
           ? cats.includes('tout-voir')
           : cats.includes(currentCategoryFilter);
-        const matchesTag = currentNouveauteTagFilter
-          ? (tagTokens.indexOf(currentNouveauteTagFilter) !== -1
-            || (currentNouveauteTagFilter === 'drop-ete' && cats.indexOf('cette-semaine') !== -1))
-          : tagTokens.indexOf('tout-voir') !== -1;
+        // "Tout voir" is a wildcard: a product tagged with it matches every
+        // specific tag filter (Drop été, Édition limitée, Pièces signature)
+        // as well as the default/no-tag view — not a bucket of its own.
+        const matchesTag = tagTokens.indexOf('tout-voir') !== -1
+          || (!!currentNouveauteTagFilter && (
+            tagTokens.indexOf(currentNouveauteTagFilter) !== -1
+            || (currentNouveauteTagFilter === 'drop-ete' && cats.indexOf('cette-semaine') !== -1)
+          ));
         const matchesSize = !selectedSizes.length || variantData.sizes.some((size) => selectedSizes.includes(normalizeVariantToken(size)));
         const matchesColor = !selectedColors.length || variantData.colors.some((color) => selectedColors.includes(normalizeVariantToken(color)));
         const visible = matchesCategory && matchesTag && matchesSize && matchesColor;
