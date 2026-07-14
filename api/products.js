@@ -283,6 +283,14 @@ module.exports = async function handler(req, res) {
         .filter((url) => !isCloudinaryUrl(url))
         .map((url) => ({ type: 'non_cloudinary_image', url }));
 
+      const nouveauteTags = [...new Set(
+        (filterMenus.nouveautes || []).map((filter) => filter.slug).filter(Boolean)
+      )];
+      if (!nouveauteTags.length && product.nouveaute_tag) {
+        const legacyTag = slugify(product.nouveaute_tag);
+        if (legacyTag) nouveauteTags.push(legacyTag);
+      }
+
       return {
         ...product,
         images: sortedImages,
@@ -302,6 +310,7 @@ module.exports = async function handler(req, res) {
         filter_tokens: [...new Set(filterTokens)],
         filter_menus: filterMenus,
         filters: productFilters,
+        nouveauteTags,
         diagnostics: includeDiagnostics ? { cloudinaryWarnings } : undefined
       };
     });
