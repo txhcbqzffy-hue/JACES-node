@@ -6229,14 +6229,14 @@ body.header-scrolled .header .submenu a.submenu-link-active {
   flex: 0 0 auto;
   width: 120px;
   text-decoration: none;
-  color: #555;
+  color: #1b1a17;
   padding: 6px 6px 4px;
   border-radius: 8px;
   transition: color 0.18s ease;
 }
 
 .cat-nav-item:hover {
-  color: #111;
+  color: #8a887f;
 }
 
 .cat-nav-circle {
