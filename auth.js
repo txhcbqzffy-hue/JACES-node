@@ -254,15 +254,14 @@
           }
 
           if (pageName === 'nouveautes.html') {
-            if (link.nouveauteTag) {
-              if (link.nouveauteTag !== currentNouveauteTag) return null;
-              // Outweigh a plain category match (20): when a tag (Drop été,
-              // Édition limitée, Pièces signature) is active, it should stay
-              // highlighted even after also picking a FEMME category pill.
-              score += 25;
-            } else if (!currentNouveauteTag) {
-              score += 3;
-            }
+            // Only Drop été / Édition limitée / Pièces signature may ever be
+            // highlighted in this menu — category pills (Robes, Tops, ...)
+            // and "Tout voir" never get the active style, whether picked
+            // from an on-page pill or straight from the mega-menu, and
+            // whether or not a tag is currently selected.
+            if (!link.nouveauteTag) return null;
+            if (link.nouveauteTag !== currentNouveauteTag) return null;
+            score += 25;
           }
 
           if (pageName === 'collection.html') {
