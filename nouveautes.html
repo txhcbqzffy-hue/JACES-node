@@ -722,6 +722,16 @@
         const linkParams = new URL(link.getAttribute('href'), window.location.href).searchParams;
         const category = linkParams.get('category') || 'all';
         const tag = linkParams.get('nouveauteTag') || '';
+
+        if (tag) {
+          // A tag link (Drop été / Édition limitée / Pièces signature):
+          // land at the top so the category pills (Robes, Tops, ...) stay
+          // visible, instead of auto-scrolling down to the results.
+          setNouveautesMenuSelection(category, tag, false);
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+          return;
+        }
+
         const shouldScroll = window.scrollY <= 120;
         setNouveautesMenuSelection(category, tag, shouldScroll);
       });
@@ -739,12 +749,13 @@
     });
 
     seedInitialCardOrder();
-    // Landed here via a mega-menu link to a specific category/tag (not a
-    // plain visit): scroll straight to the filtered results.
+    // Landed here via a mega-menu link to a specific category (not a plain
+    // visit): scroll straight to the filtered results. Tag links (Drop
+    // été/Édition limitée/Pièces signature) never auto-scroll — they should
+    // land at the top so the category pills stay visible.
     const initialParams = new URLSearchParams(window.location.search);
     const hasInitialCategory = validCategories.has(initialParams.get('category')) && initialParams.get('category') !== 'all';
-    const hasInitialTag = validTags.has(initialParams.get('nouveauteTag'));
-    activateNouveautesFromURL(hasInitialCategory || hasInitialTag);
+    activateNouveautesFromURL(hasInitialCategory);
 
     window.addEventListener('jaces:admin-products-sync', () => {
       collectionCards = Array.from(document.querySelectorAll('.collection-card'));
