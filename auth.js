@@ -258,14 +258,18 @@
           }
 
           if (pageName === 'nouveautes.html') {
-            // Only Drop été / Édition limitée / Pièces signature may ever be
-            // highlighted in this menu — category pills (Robes, Tops, ...)
-            // and "Tout voir" never get the active style, whether picked
-            // from an on-page pill or straight from the mega-menu, and
-            // whether or not a tag is currently selected.
-            if (!link.nouveauteTag) return null;
-            if (link.nouveauteTag !== currentNouveauteTag) return null;
-            score += 25;
+            // Only Drop été / Édition limitée / Pièces signature (or, absent
+            // any tag, "Toutes les nouveautés") may be highlighted here —
+            // category pills (Robes, Tops, ...) never get the active style,
+            // whether picked from an on-page pill or the mega-menu.
+            if (link.nouveauteTag) {
+              if (link.nouveauteTag !== currentNouveauteTag) return null;
+              score += 25;
+            } else if (!currentNouveauteTag && link.category === 'all') {
+              score += 3;
+            } else {
+              return null;
+            }
           }
 
           if (pageName === 'collection.html') {
