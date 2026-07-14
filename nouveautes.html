@@ -542,15 +542,6 @@
       const selectedColors = getCheckedTokens('couleur');
       const visibleCards = [];
 
-      const hasTaggedMatches = !!currentNouveauteTagFilter && cards.some((card) => {
-        const cats = (card.getAttribute('data-category') || '').split(' ').filter(Boolean);
-        const tagTokens = (card.getAttribute('data-nouveaute-tags') || '').split(' ').filter(Boolean);
-        if (tagTokens.indexOf(currentNouveauteTagFilter) !== -1) return true;
-        // Legacy static cards used "cette-semaine": treat it as drop-ete.
-        if (currentNouveauteTagFilter === 'drop-ete' && cats.indexOf('cette-semaine') !== -1) return true;
-        return false;
-      });
-
       cards.forEach((card) => {
         const cats = (card.getAttribute('data-category') || '').split(' ').filter(Boolean);
         const tagTokens = (card.getAttribute('data-nouveaute-tags') || '').split(' ').filter(Boolean);
@@ -559,8 +550,7 @@
           ? cats.includes('tout-voir')
           : cats.includes(currentCategoryFilter);
         const matchesTag = currentNouveauteTagFilter
-          ? (!hasTaggedMatches
-            || tagTokens.indexOf(currentNouveauteTagFilter) !== -1
+          ? (tagTokens.indexOf(currentNouveauteTagFilter) !== -1
             || (currentNouveauteTagFilter === 'drop-ete' && cats.indexOf('cette-semaine') !== -1))
           : tagTokens.indexOf('tout-voir') !== -1;
         const matchesSize = !selectedSizes.length || variantData.sizes.some((size) => selectedSizes.includes(normalizeVariantToken(size)));
