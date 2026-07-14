@@ -493,7 +493,9 @@
         cards.forEach((card) => {
           const categories = (card.getAttribute('data-category') || '').split(' ').filter(Boolean);
           const viewTokens = (card.getAttribute('data-collab-view') || 'all').split(' ').filter(Boolean);
-          const matchesCategory = current === 'all' || categories.includes(current);
+          const matchesCategory = current === 'all'
+            ? categories.includes('tout-voir')
+            : categories.includes(current);
           const matchesView = currentView === 'all' || viewTokens.indexOf(currentView) !== -1 || viewTokens.indexOf('all') !== -1;
           const show = matchesCategory && matchesView;
           card.classList.toggle('hidden', !show);
