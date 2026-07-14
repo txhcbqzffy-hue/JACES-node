@@ -468,7 +468,7 @@
       if (!section || !track) return;
 
       try {
-        const products = await getProducts();
+        const products = await getProducts('nouveautes');
         if (!Array.isArray(products) || !products.length) return;
 
         track.innerHTML = '';
