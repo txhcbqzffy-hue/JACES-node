@@ -149,12 +149,12 @@
   <main class="collection-page">
     <section class="category-nav-strip" aria-label="Partenaires collaboration">
       <div class="category-nav-track" id="category-nav-track">
-        <a href="#collection-page-title" class="cat-nav-item active" data-category="all"><div class="cat-nav-circle"><img src="https://images.unsplash.com/photo-1483985988355-763728e1935b?q=80&w=400" alt="Tout voir"></div><span>Tout voir</span></a>
-        <a href="#collab-nike" class="cat-nav-item" data-category="nike"><div class="cat-nav-circle"><img src="https://images.unsplash.com/photo-1551488831-00ddcb6c6bd3?q=80&w=800" alt="JACES x Nike"></div><span>JACES × Nike</span></a>
-        <a href="#collab-chloe" class="cat-nav-item" data-category="chloe"><div class="cat-nav-circle"><img src="https://images.unsplash.com/photo-1485230895905-ec40ba36b9bc?q=80&w=800" alt="JACES x Chloé"></div><span>JACES × Chloé</span></a>
-        <a href="#collab-jacquemus" class="cat-nav-item" data-category="jacquemus"><div class="cat-nav-circle"><img src="https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?q=80&w=800" alt="JACES x Jacquemus"></div><span>JACES × Jacquemus</span></a>
-        <a href="#collab-dior" class="cat-nav-item" data-category="dior"><div class="cat-nav-circle"><img src="https://images.unsplash.com/photo-1496747611176-843222e1e57c?q=80&w=800" alt="JACES x Dior"></div><span>JACES × Dior</span></a>
-        <a href="#collab-saint-laurent" class="cat-nav-item" data-category="saint-laurent"><div class="cat-nav-circle"><img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=800" alt="JACES x Saint Laurent"></div><span>JACES × Saint Laurent</span></a>
+        <label class="cat-nav-item active" data-category="all"><input type="checkbox" class="cat-nav-checkbox" value="all" checked hidden><div class="cat-nav-circle"><img src="https://images.unsplash.com/photo-1483985988355-763728e1935b?q=80&w=400" alt="Tout voir"></div><span>Tout voir</span></label>
+        <label class="cat-nav-item" data-category="nike"><input type="checkbox" class="cat-nav-checkbox" value="nike" hidden><div class="cat-nav-circle"><img src="https://images.unsplash.com/photo-1551488831-00ddcb6c6bd3?q=80&w=800" alt="JACES x Nike"></div><span>JACES × Nike</span></label>
+        <label class="cat-nav-item" data-category="chloe"><input type="checkbox" class="cat-nav-checkbox" value="chloe" hidden><div class="cat-nav-circle"><img src="https://images.unsplash.com/photo-1485230895905-ec40ba36b9bc?q=80&w=800" alt="JACES x Chloé"></div><span>JACES × Chloé</span></label>
+        <label class="cat-nav-item" data-category="jacquemus"><input type="checkbox" class="cat-nav-checkbox" value="jacquemus" hidden><div class="cat-nav-circle"><img src="https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?q=80&w=800" alt="JACES x Jacquemus"></div><span>JACES × Jacquemus</span></label>
+        <label class="cat-nav-item" data-category="dior"><input type="checkbox" class="cat-nav-checkbox" value="dior" hidden><div class="cat-nav-circle"><img src="https://images.unsplash.com/photo-1496747611176-843222e1e57c?q=80&w=800" alt="JACES x Dior"></div><span>JACES × Dior</span></label>
+        <label class="cat-nav-item" data-category="saint-laurent"><input type="checkbox" class="cat-nav-checkbox" value="saint-laurent" hidden><div class="cat-nav-circle"><img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=800" alt="JACES x Saint Laurent"></div><span>JACES × Saint Laurent</span></label>
       </div>
     </section>
 
@@ -165,6 +165,7 @@
         <div class="collab-experience-grid" id="collab-experience-grid"></div>
         <article class="collab-experience-detail" id="collab-experience-detail" hidden></article>
       </section>
+      <p class="product-grid-empty-message" id="collab-empty-message" hidden>Aucun produit disponible</p>
       <div class="product-grid" id="product-grid" hidden></div>
     </section>
   </main>
@@ -182,6 +183,7 @@
       const experienceView = document.getElementById('collab-experience-view');
       const experienceGrid = document.getElementById('collab-experience-grid');
       const experienceDetail = document.getElementById('collab-experience-detail');
+      const emptyMessage = document.getElementById('collab-empty-message');
       let countdownTimer = null;
       const valid = new Set(['all', 'nike', 'chloe', 'jacquemus', 'dior', 'saint-laurent']);
       const params = new URLSearchParams(window.location.search);
@@ -189,15 +191,26 @@
       const fromView = params.get('collabView');
       const validViews = new Set(['all', 'exclusives', 'popup', 'events']);
       let currentView = validViews.has(fromView || '') ? fromView : 'all';
-      let current = fromUrl && valid.has(fromUrl) ? fromUrl : 'all';
+
+      function parseCategoryParam(raw) {
+        const value = String(raw || '').trim();
+        if (!value) return new Set(['all']);
+        if (value === 'none') return new Set();
+        const tokens = value.split(',').map((t) => t.trim()).filter((t) => valid.has(t));
+        if (!tokens.length || tokens.includes('all')) return new Set(['all']);
+        return new Set(tokens);
+      }
+
+      let current = parseCategoryParam(fromUrl);
+      const isDefaultAll = () => current.size === 1 && current.has('all');
 
       window.addEventListener('jaces:products-loaded', () => {
         cards = Array.from(document.querySelectorAll('#product-grid .collection-card'));
         // Landed here via a mega-menu link to a specific brand/view (not a
         // plain visit): scroll straight to the filtered results, matching
         // how the nouveautes page behaves.
-        const shouldScrollOnLoad = current !== 'all' || currentView !== 'all';
-        setCategory(current, shouldScrollOnLoad, false);
+        const shouldScrollOnLoad = !isDefaultAll() || currentView !== 'all';
+        setCategories(Array.from(current), shouldScrollOnLoad, false);
       });
 
       function getViewMeta(view) {
@@ -485,23 +498,30 @@
         if (experienceView) experienceView.hidden = !isEditorialView;
 
         if (isEditorialView) {
+          if (emptyMessage) emptyMessage.hidden = true;
           renderExperienceView(currentView);
           return;
         }
 
+        const showAll = current.has('all');
         let visible = 0;
         cards.forEach((card) => {
           const categories = (card.getAttribute('data-category') || '').split(' ').filter(Boolean);
           const viewTokens = (card.getAttribute('data-collab-view') || 'all').split(' ').filter(Boolean);
-          const matchesCategory = current === 'all' || categories.includes(current);
+          const matchesCategory = showAll || categories.some((cat) => current.has(cat));
           const matchesView = currentView === 'all' || viewTokens.indexOf(currentView) !== -1 || viewTokens.indexOf('all') !== -1;
           const show = matchesCategory && matchesView;
           card.classList.toggle('hidden', !show);
           if (show) visible += 1;
         });
         if (count) count.textContent = visible + (visible > 1 ? ' produits' : ' produit');
+        if (emptyMessage) emptyMessage.hidden = visible !== 0;
         document.querySelectorAll('.cat-nav-item').forEach((item) => {
-          item.classList.toggle('active', (item.getAttribute('data-category') || 'all') === current);
+          const cat = item.getAttribute('data-category') || 'all';
+          const checkbox = item.querySelector('.cat-nav-checkbox');
+          const isChecked = current.has(cat);
+          if (checkbox) checkbox.checked = isChecked;
+          item.classList.toggle('active', isChecked);
         });
       }
 
@@ -525,14 +545,17 @@
 
       window.scrollToCollaborationResults = scrollToCollaborationResults;
 
-      function setCategory(category, shouldScroll, resetFilters) {
-        if (!valid.has(category)) return;
+      function setCategories(categories, shouldScroll, resetFilters) {
+        const filtered = (Array.isArray(categories) ? categories : Array.from(categories)).filter((c) => valid.has(c));
+        // Empty selection is meaningful here (show nothing) — only fall back
+        // to "Tout voir" when "all" was explicitly among the picks.
+        current = filtered.includes('all') ? new Set(['all']) : new Set(filtered);
+
         if (resetFilters) {
           document.querySelectorAll('#collection-filter-bar input').forEach((input) => { input.checked = false; });
         }
-        current = category;
         const nextParams = new URLSearchParams();
-        nextParams.set('category', category);
+        nextParams.set('category', current.size ? Array.from(current).join(',') : 'none');
         if (currentView !== 'all') {
           nextParams.set('collabView', currentView);
         }
@@ -546,11 +569,27 @@
         }
       }
 
-      document.querySelectorAll('.category-nav-strip .cat-nav-item').forEach((item) => {
-        item.addEventListener('click', (event) => {
-          event.preventDefault();
+      // "Tout voir" and the individual brand checkboxes are mutually
+      // exclusive: picking "Tout voir" clears the others (it overrides them),
+      // and picking any brand clears "Tout voir" (it's no longer "all").
+      document.querySelectorAll('.category-nav-strip .cat-nav-checkbox').forEach((checkbox) => {
+        checkbox.addEventListener('change', () => {
+          const cat = checkbox.value;
           const shouldScroll = window.scrollY <= 120;
-          setCategory((item.getAttribute('data-category') || 'all').trim(), shouldScroll, true);
+
+          if (cat === 'all') {
+            setCategories(checkbox.checked ? ['all'] : [], shouldScroll, true);
+            return;
+          }
+
+          const next = new Set(current);
+          next.delete('all');
+          if (checkbox.checked) {
+            next.add(cat);
+          } else {
+            next.delete(cat);
+          }
+          setCategories(Array.from(next), shouldScroll, true);
         });
       });
 
@@ -567,7 +606,7 @@
             currentView = 'all';
           }
           syncPageTitle();
-          setCategory(category, true, false);
+          setCategories([category], true, false);
         });
       });
 
@@ -580,7 +619,7 @@
           const category = linkParams.get('category') || 'all';
           currentView = validViews.has(view) ? view : 'all';
           syncPageTitle();
-          setCategory(category, true, false);
+          setCategories([category], true, false);
         });
       });
 
@@ -594,7 +633,7 @@
       syncPageTitle();
       const hasRequestedState = params.has('category') || params.has('collabView');
       if (hasRequestedState) {
-        setCategory(current, true, false);
+        setCategories(Array.from(current), true, false);
       } else {
         apply();
       }
