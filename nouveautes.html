@@ -556,10 +556,11 @@
         const tagTokens = (card.getAttribute('data-nouveaute-tags') || '').split(' ').filter(Boolean);
         const variantData = getCardVariantData(card);
         const matchesCategory = currentCategoryFilter === 'all' || cats.includes(currentCategoryFilter);
-        const matchesTag = !currentNouveauteTagFilter
-          || !hasTaggedMatches
-          || tagTokens.indexOf(currentNouveauteTagFilter) !== -1
-          || (currentNouveauteTagFilter === 'drop-ete' && cats.indexOf('cette-semaine') !== -1);
+        const matchesTag = currentNouveauteTagFilter
+          ? (!hasTaggedMatches
+            || tagTokens.indexOf(currentNouveauteTagFilter) !== -1
+            || (currentNouveauteTagFilter === 'drop-ete' && cats.indexOf('cette-semaine') !== -1))
+          : tagTokens.indexOf('tout-voir') !== -1;
         const matchesSize = !selectedSizes.length || variantData.sizes.some((size) => selectedSizes.includes(normalizeVariantToken(size)));
         const matchesColor = !selectedColors.length || variantData.colors.some((color) => selectedColors.includes(normalizeVariantToken(color)));
         const visible = matchesCategory && matchesTag && matchesSize && matchesColor;
