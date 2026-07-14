@@ -1,5 +1,14 @@
 import { getProducts } from './js/productsApi.js';
 
+function slugifyToken(value) {
+  return String(value || '')
+    .normalize('NFD')
+    .replace(/[̀-ͯ]/g, '')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+}
+
 function getPageType() {
   const body = document.body;
   const path = window.location.pathname.split('/').pop() || '';
@@ -95,9 +104,9 @@ function buildProductCard(product, pageType) {
   card.dataset.collection = getProductCollectionSeason(product);
   card.dataset.collabView = product.collaborationView ? `all ${String(product.collaborationView).toLowerCase()}` : 'all';
   card.dataset.nouveauteTags = Array.isArray(product.nouveauteTags) ? product.nouveauteTags.join(' ') : '';
-  card.dataset.material = String(product.material || '').toLowerCase();
-  card.dataset.color = colors.join(' ').toLowerCase();
-  card.dataset.size = sizes.join(' ');
+  card.dataset.material = slugifyToken(product.material || '');
+  card.dataset.color = colors.map(slugifyToken).filter(Boolean).join(' ');
+  card.dataset.size = sizes.map(slugifyToken).filter(Boolean).join(' ');
   card.dataset.pageType = pageType || String(product.type || '').toLowerCase();
 
   card.innerHTML = `

@@ -6499,14 +6499,18 @@ body.header-scrolled .header .submenu a.submenu-link-active {
   border-radius: 4px;
   padding: 16px 20px;
   min-width: 180px;
+  max-width: min(360px, calc(100vw - 32px));
+  max-height: min(320px, 60vh);
+  overflow-y: auto;
   box-shadow: 0 12px 40px rgba(15, 15, 15, 0.1);
   z-index: 200;
-  flex-direction: column;
-  gap: 10px;
+  gap: 8px 20px;
 }
 
 .filter-dropdown.open {
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(120px, 1fr));
+  align-content: start;
 }
 
 .filter-dropdown label {
@@ -6529,6 +6533,7 @@ body.header-scrolled .header .submenu a.submenu-link-active {
 }
 
 .filter-dropdown-note {
+  grid-column: 1 / -1;
   font-family: var(--font-text);
   font-size: 11px;
   color: #9a9187;

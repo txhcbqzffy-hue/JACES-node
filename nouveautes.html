@@ -240,9 +240,22 @@
               <button class="filter-pill" data-filter="couleur">Couleur <span class="pill-arrow">∨</span></button>
               <div class="filter-dropdown">
                 <label><input type="checkbox" name="couleur" value="noir"> Noir</label>
-                <label><input type="checkbox" name="couleur" value="ivoire"> Ivoire</label>
+                <label><input type="checkbox" name="couleur" value="blanc"> Blanc</label>
+                <label><input type="checkbox" name="couleur" value="gris"> Gris</label>
+                <label><input type="checkbox" name="couleur" value="argent"> Argent</label>
+                <label><input type="checkbox" name="couleur" value="rouge"> Rouge</label>
+                <label><input type="checkbox" name="couleur" value="bleu"> Bleu</label>
+                <label><input type="checkbox" name="couleur" value="vert"> Vert</label>
+                <label><input type="checkbox" name="couleur" value="jaune"> Jaune</label>
+                <label><input type="checkbox" name="couleur" value="orange"> Orange</label>
+                <label><input type="checkbox" name="couleur" value="rose"> Rose</label>
+                <label><input type="checkbox" name="couleur" value="violet"> Violet</label>
+                <label><input type="checkbox" name="couleur" value="marron"> Marron</label>
                 <label><input type="checkbox" name="couleur" value="beige"> Beige</label>
-                <label><input type="checkbox" name="couleur" value="bordeaux"> Bordeaux</label>
+                <label><input type="checkbox" name="couleur" value="dore"> Doré</label>
+                <label><input type="checkbox" name="couleur" value="bronze"> Bronze</label>
+                <label><input type="checkbox" name="couleur" value="transparent"> Transparent</label>
+                <label><input type="checkbox" name="couleur" value="multicolore"> Multicolore</label>
               </div>
             </div>
           </div>
@@ -444,26 +457,9 @@
     }
 
     function getCardVariantData(card) {
-      const name = card.querySelector('h3')?.textContent?.trim() || '';
-      const scope = normalizeVariantToken([name, card.getAttribute('data-category') || '', card.getAttribute('data-collection') || '', card.getAttribute('data-nouveaute-tags') || ''].join(' '));
-      const isAccessory = /accessoire|sac|ceinture|boucle|oreille|foulard/.test(scope);
-      let colors = ['noir', 'ivoire', 'beige', 'bordeaux'];
-
-      if (/rose/.test(scope)) colors = ['rose', 'ivoire', 'beige'];
-      else if (/bleu|marine/.test(scope)) colors = ['bleu', 'ivoire', 'beige'];
-      else if (/noir|encre|graphite|cigarette|satin/.test(scope)) colors = ['noir', 'ivoire', 'beige'];
-      else if (/blanc|craie|latte/.test(scope)) colors = ['ivoire', 'blanc', 'beige'];
-      else if (/beige|sable|taupe|camel|creme/.test(scope)) colors = ['beige', 'ivoire', 'camel'];
-      else if (/dor|argent/.test(scope)) colors = ['or', 'argent'];
-      else if (/nike/.test(scope)) colors = ['noir', 'bleu', 'beige'];
-      else if (/chloe/.test(scope)) colors = ['rose', 'ivoire', 'beige'];
-      else if (/jacquemus/.test(scope)) colors = ['beige', 'ivoire', 'camel'];
-      else if (/dior/.test(scope)) colors = ['ivoire', 'noir', 'beige'];
-      else if (/saint-laurent|saint-laurent/.test(scope)) colors = ['noir', 'bleu', 'graphite'];
-
       return {
-        colors: colors,
-        sizes: isAccessory ? [] : ['34', '36', '38', '40', '42', '44']
+        colors: (card.getAttribute('data-color') || '').split(' ').filter(Boolean),
+        sizes: (card.getAttribute('data-size') || '').split(' ').filter(Boolean)
       };
     }
 
@@ -778,11 +774,11 @@
     </div>
     <div class="fav-panel-list" id="fav-panel-list"></div>
   </div>
-  <script src="catalog.js?v=20260715d"></script>
-  <script type="module" src="products-page.js?v=20260715d"></script>
-  <script src="cart.js?v=20260715d"></script>
-  <script src="favorites.js?v=20260715d"></script>
-  <script src="auth.js?v=20260715d"></script>
+  <script src="catalog.js?v=20260715e"></script>
+  <script type="module" src="products-page.js?v=20260715e"></script>
+  <script src="cart.js?v=20260715e"></script>
+  <script src="favorites.js?v=20260715e"></script>
+  <script src="auth.js?v=20260715e"></script>
   <script>
     (function () {
     })();
