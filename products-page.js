@@ -24,29 +24,14 @@ const COLLAB_SLUG_TO_TOKEN = {
 function getProductCategoryTokens(product) {
   const tokens = ['all'];
 
-  // Prefer the real category/accessoire/collaboration tags set in the admin
-  // panel (Supabase product_filters) over guessing from the product name.
+  // Only the real category/accessoire/collaboration tags set in the admin
+  // panel (Supabase product_filters) count \u2014 guessing from the product name
+  // used to cause false positives (e.g. any name containing "top" or "sac").
   const filterTokens = Array.isArray(product?.filter_tokens) ? product.filter_tokens : [];
   filterTokens.forEach((token) => {
     tokens.unshift(COLLAB_SLUG_TO_TOKEN[token] || token);
   });
 
-  // Fallback heuristic for products that aren't tagged with a matching
-  // filter yet, so they still show up somewhere reasonable.
-  const scope = String([product?.name, product?.description].filter(Boolean).join(' '))
-    .toLowerCase()
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '');
-
-  if (/robe/.test(scope)) tokens.unshift('robes');
-  if (/top/.test(scope)) tokens.unshift('tops');
-  if (/jupe/.test(scope)) tokens.unshift('jupes');
-  if (/pantalon|jean/.test(scope)) tokens.unshift('pantalons');
-  if (/veste|manteau|blazer/.test(scope)) tokens.unshift('vestes');
-  if (/sac/.test(scope)) tokens.unshift('sacs');
-  if (/bijou|boucle|collier|bracelet/.test(scope)) tokens.unshift('bijoux');
-  if (/ceinture/.test(scope)) tokens.unshift('ceintures');
-  if (/foulard|echarpe/.test(scope)) tokens.unshift('foulards');
   return Array.from(new Set(tokens)).join(' ');
 }
 
