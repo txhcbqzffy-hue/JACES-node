@@ -665,6 +665,7 @@
       const targetSearch = '?' + targetParams.toString();
       if (window.location.search !== targetSearch) {
         history.replaceState({}, '', 'nouveautes.html' + targetSearch);
+        window.dispatchEvent(new CustomEvent('jaces:nav-state-changed'));
       }
 
       currentCategoryFilter = category;
@@ -695,6 +696,7 @@
       const targetSearch = '?' + targetParams.toString();
       if (window.location.search !== targetSearch) {
         history.replaceState({}, '', 'nouveautes.html' + targetSearch);
+        window.dispatchEvent(new CustomEvent('jaces:nav-state-changed'));
       }
 
       currentCategoryFilter = safeCategory;
