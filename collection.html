@@ -279,7 +279,7 @@
     <p class="footer-note">Copyright © 2026 Chloé. Tous droits réservés.</p>
   </footer>
 
-  <script src="admin-products.js?v=20260714e"></script>
+  <script src="admin-products.js?v=20260714f"></script>
   <script>
     function updateHeaderState() {
       document.body.classList.toggle('header-scrolled', window.scrollY > 8);
@@ -499,6 +499,11 @@
     window.addEventListener('jaces:products-loaded', () => {
       collectionCards = Array.from(document.querySelectorAll('.collection-card'));
       originalCards = productGrid ? Array.from(productGrid.querySelectorAll('.collection-card')) : [];
+      // Cards just arrived asynchronously from the API: the filter applied
+      // during the initial synchronous run saw an empty grid and did
+      // nothing, so every filter (season, category, "Tout voir") needs to
+      // be re-applied now that the real cards exist.
+      applyCollectionView();
     });
 
     if (productGrid && productSort) {
@@ -805,11 +810,11 @@
     </div>
     <div class="fav-panel-list" id="fav-panel-list"></div>
   </div>
-  <script src="catalog.js?v=20260714e"></script>
-  <script type="module" src="products-page.js?v=20260714e"></script>
-  <script src="cart.js?v=20260714e"></script>
-  <script src="favorites.js?v=20260714e"></script>
-  <script src="auth.js?v=20260714e"></script>
+  <script src="catalog.js?v=20260714f"></script>
+  <script type="module" src="products-page.js?v=20260714f"></script>
+  <script src="cart.js?v=20260714f"></script>
+  <script src="favorites.js?v=20260714f"></script>
+  <script src="auth.js?v=20260714f"></script>
   <script>
     function scrollToCollectionResults() {
       const filterBarTarget = document.getElementById('collection-filter-bar');
