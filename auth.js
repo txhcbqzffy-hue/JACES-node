@@ -227,7 +227,11 @@
       const currentNouveauteTag = String(params.get('nouveauteTag') || '').trim().toLowerCase();
       const currentCollection = String(params.get('collection') || '').trim().toLowerCase();
 
-      const candidates = Array.from(nav.querySelectorAll('.submenu a'))
+      // Exclude placeholder links (href="#", e.g. unfinished Défilé/Univers
+      // entries): they resolve to the current page's own URL including its
+      // full query string, so they'd accidentally "match" any state and
+      // steal the highlight from the real link.
+      const candidates = Array.from(nav.querySelectorAll('.submenu a:not([href="#"])'))
         .map(parseSubmenuLink)
         .filter((link) => link && link.pathname === currentPath);
 
