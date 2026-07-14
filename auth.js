@@ -269,12 +269,14 @@
           }
 
           if (pageName === 'collection.html') {
-            if (link.collection) {
-              if (link.collection !== currentCollection) return null;
-              score += 12;
-            } else if (!currentCollection) {
-              score += 3;
-            }
+            // Same rule as the Nouveautés tags: only Printemps–Été 2026 /
+            // Automne–Hiver 2026 may ever be highlighted in this menu —
+            // category pills (Robes, Tops, ...) and "Toutes les
+            // collections" never get the active style, whether picked from
+            // an on-page pill or straight from the mega-menu.
+            if (!link.collection) return null;
+            if (link.collection !== currentCollection) return null;
+            score += 25;
           }
 
           return { node: link.node, score };

@@ -279,7 +279,7 @@
     <p class="footer-note">Copyright © 2026 Chloé. Tous droits réservés.</p>
   </footer>
 
-  <script src="admin-products.js?v=20260714f"></script>
+  <script src="admin-products.js?v=20260715a"></script>
   <script>
     function updateHeaderState() {
       document.body.classList.toggle('header-scrolled', window.scrollY > 8);
@@ -737,6 +737,7 @@
     if (window.location.search !== targetSearch) {
       history.replaceState({}, '', 'collection.html' + targetSearch);
       syncCollectionHeadingFromURL();
+      window.dispatchEvent(new CustomEvent('jaces:nav-state-changed'));
     }
 
     currentCategoryFilter = category;
@@ -810,11 +811,11 @@
     </div>
     <div class="fav-panel-list" id="fav-panel-list"></div>
   </div>
-  <script src="catalog.js?v=20260714f"></script>
-  <script type="module" src="products-page.js?v=20260714f"></script>
-  <script src="cart.js?v=20260714f"></script>
-  <script src="favorites.js?v=20260714f"></script>
-  <script src="auth.js?v=20260714f"></script>
+  <script src="catalog.js?v=20260715a"></script>
+  <script type="module" src="products-page.js?v=20260715a"></script>
+  <script src="cart.js?v=20260715a"></script>
+  <script src="favorites.js?v=20260715a"></script>
+  <script src="auth.js?v=20260715a"></script>
   <script>
     function scrollToCollectionResults() {
       const filterBarTarget = document.getElementById('collection-filter-bar');
