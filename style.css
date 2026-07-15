@@ -7017,7 +7017,6 @@ body.header-scrolled .header .submenu a.submenu-link-active {
 .products-page .quick-buy-grid button.is-disabled {
   color: #b8b2a7;
   cursor: not-allowed;
-  pointer-events: none;
 }
 
 .home-slider-card .quick-buy-grid button.is-disabled:hover,
