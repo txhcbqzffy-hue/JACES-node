@@ -4991,6 +4991,95 @@ body.account-modal-open {
   color: #16130f;
 }
 
+.size-advisor-profiles {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.size-advisor-profile-chip {
+  display: inline-flex;
+  align-items: stretch;
+  border: 1px solid rgba(27, 26, 23, 0.14);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.size-advisor-profile-chip.is-active {
+  border-color: #111111;
+}
+
+.size-advisor-profile-chip-label {
+  border: 0;
+  background: #ffffff;
+  color: #16130f;
+  font-family: "Manrope", sans-serif;
+  font-size: 0.78rem;
+  font-weight: 600;
+  padding: 7px 6px 7px 14px;
+  cursor: pointer;
+}
+
+.size-advisor-profile-chip.is-active .size-advisor-profile-chip-label {
+  background: #111111;
+  color: #ffffff;
+}
+
+.size-advisor-profile-chip-remove {
+  border: 0;
+  background: #ffffff;
+  color: #9a9284;
+  font-size: 0.9rem;
+  line-height: 1;
+  padding: 7px 12px 7px 4px;
+  cursor: pointer;
+}
+
+.size-advisor-profile-chip.is-active .size-advisor-profile-chip-remove {
+  background: #111111;
+  color: #b8b2a7;
+}
+
+.size-advisor-profile-add {
+  border: 1px dashed rgba(27, 26, 23, 0.3);
+  border-radius: 999px;
+  background: none;
+  color: #5f584e;
+  font-family: "Manrope", sans-serif;
+  font-size: 0.78rem;
+  font-weight: 600;
+  padding: 7px 14px;
+  cursor: pointer;
+}
+
+.size-advisor-profile-new {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.size-advisor-profile-new input {
+  border: 1px solid rgba(27, 26, 23, 0.22);
+  border-radius: 999px;
+  padding: 6px 12px;
+  font-family: "Manrope", sans-serif;
+  font-size: 0.78rem;
+  width: 150px;
+}
+
+.size-advisor-profile-confirm {
+  border: 1px solid #111111;
+  border-radius: 999px;
+  background: #111111;
+  color: #ffffff;
+  font-family: "Manrope", sans-serif;
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 7px 12px;
+  cursor: pointer;
+}
+
 .size-advisor-intro {
   display: grid;
   align-content: start;

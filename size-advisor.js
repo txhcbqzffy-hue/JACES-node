@@ -90,6 +90,7 @@
       step: 0,
       fitMode: savedAdvisorProfile?.fitMode || 'ideal',
       errors: {},
+      isAddingProfile: false,
       form: {
         height: savedAdvisorProfile?.height || '',
         weight: savedAdvisorProfile?.weight || '',
@@ -101,6 +102,53 @@
         size: initialSize || ''
       }
     };
+
+    function loadActiveProfileIntoForm() {
+      const active = window.JacesFavorites && typeof window.JacesFavorites.getSizeAdvisorProfile === 'function'
+        ? window.JacesFavorites.getSizeAdvisorProfile()
+        : null;
+      state.fitMode = active?.fitMode || 'ideal';
+      state.errors = {};
+      state.form = Object.assign({}, state.form, {
+        height: active?.height || '',
+        weight: active?.weight || '',
+        age: active?.age || '',
+        belly: active?.belly || '',
+        hips: active?.hips || '',
+        chestBand: active?.chestBand || '',
+        cup: active?.cup || ''
+      });
+    }
+
+    function getActiveProfileName() {
+      const active = window.JacesFavorites && typeof window.JacesFavorites.getSizeAdvisorProfile === 'function'
+        ? window.JacesFavorites.getSizeAdvisorProfile()
+        : null;
+      return active?.name || '';
+    }
+
+    function renderProfileSwitcher() {
+      if (!window.JacesFavorites || typeof window.JacesFavorites.listSizeAdvisorProfiles !== 'function') return '';
+      const { profiles, activeId } = window.JacesFavorites.listSizeAdvisorProfiles();
+
+      const chips = profiles.map((profile) => `
+        <span class="size-advisor-profile-chip${profile.id === activeId ? ' is-active' : ''}" data-select-profile="${profile.id}">
+          <button type="button" class="size-advisor-profile-chip-label" data-select-profile="${profile.id}">${profile.name}</button>
+          <button type="button" class="size-advisor-profile-chip-remove" data-delete-profile="${profile.id}" aria-label="Supprimer ce profil">×</button>
+        </span>
+      `).join('');
+
+      const addControl = state.isAddingProfile
+        ? `
+          <span class="size-advisor-profile-new">
+            <input id="advisor-new-profile-name" type="text" maxlength="24" placeholder="Prénom (ex : Ma fille)">
+            <button type="button" class="size-advisor-profile-confirm" data-confirm-add-profile="true">OK</button>
+          </span>
+        `
+        : `<button type="button" class="size-advisor-profile-add" data-add-profile="true">+ Ajouter un profil</button>`;
+
+      return `<div class="size-advisor-profiles">${chips}${addControl}</div>`;
+    }
 
     function closeAdvisor() {
       overlay.remove();
@@ -148,13 +196,15 @@
       const activeSize = recommended || product.sizes[0] || '';
       persistAdvisorProfile(activeSize);
       persistSuggestedSizes(activeSize, alternate && alternate !== activeSize ? alternate : '');
+      const profileName = getActiveProfileName();
+      const kicker = profileName && profileName !== 'Moi' ? `Taille de ${profileName} :` : 'Votre taille est :';
       return `
         <div class="size-advisor-shell size-advisor-result">
           <div class="size-advisor-topbar">
             <div></div>
             <button class="size-advisor-close" type="button" data-close="true" aria-label="Fermer">×</button>
           </div>
-          <p class="size-advisor-kicker">Votre taille est :</p>
+          <p class="size-advisor-kicker">${kicker}</p>
           <div class="size-advisor-size">${activeSize}</div>
           <p class="size-advisor-saved-suggestion">Suggestion ideale enregistree : ${activeSize}</p>
           ${alternate && alternate !== activeSize ? `<p class="size-advisor-alt">Alternative suggeree : ${alternate}</p>` : ''}
@@ -196,6 +246,7 @@
               <button class="size-advisor-back${showBack ? ' visible' : ''}" type="button" data-back="true" aria-label="Retour">←</button>
               <button class="size-advisor-close" type="button" data-close="true" aria-label="Fermer">×</button>
             </div>
+            ${renderProfileSwitcher()}
             <div class="size-advisor-intro">
               <h2>Trouvez votre taille idéale</h2>
               <p class="size-advisor-subtitle">Quelques informations suffisent pour estimer la coupe la plus juste, dans un parcours pensé pour la femme JACES.</p>
@@ -294,6 +345,48 @@
         return;
       }
 
+      const deleteProfile = event.target.closest('[data-delete-profile]');
+      if (deleteProfile) {
+        event.stopPropagation();
+        if (window.JacesFavorites && typeof window.JacesFavorites.deleteSizeAdvisorProfile === 'function') {
+          window.JacesFavorites.deleteSizeAdvisorProfile(deleteProfile.dataset.deleteProfile);
+        }
+        loadActiveProfileIntoForm();
+        renderStep();
+        return;
+      }
+
+      const selectProfile = event.target.closest('[data-select-profile]');
+      if (selectProfile) {
+        if (window.JacesFavorites && typeof window.JacesFavorites.setActiveSizeAdvisorProfileId === 'function') {
+          window.JacesFavorites.setActiveSizeAdvisorProfileId(selectProfile.dataset.selectProfile);
+        }
+        state.isAddingProfile = false;
+        loadActiveProfileIntoForm();
+        renderStep();
+        return;
+      }
+
+      const addProfile = event.target.closest('[data-add-profile]');
+      if (addProfile) {
+        state.isAddingProfile = true;
+        renderStep();
+        modal.querySelector('#advisor-new-profile-name')?.focus();
+        return;
+      }
+
+      const confirmAddProfile = event.target.closest('[data-confirm-add-profile]');
+      if (confirmAddProfile) {
+        const name = modal.querySelector('#advisor-new-profile-name')?.value || '';
+        if (name.trim() && window.JacesFavorites && typeof window.JacesFavorites.createSizeAdvisorProfile === 'function') {
+          window.JacesFavorites.createSizeAdvisorProfile(name.trim());
+          loadActiveProfileIntoForm();
+        }
+        state.isAddingProfile = false;
+        renderStep();
+        return;
+      }
+
       const option = event.target.closest('[data-field]');
       if (option) {
         state.form[option.dataset.field] = option.dataset.value;
@@ -351,6 +444,13 @@
 
         state.step = clamp(state.step + 1, 0, 3);
         renderStep();
+      }
+    });
+
+    overlay.addEventListener('keydown', (event) => {
+      if (event.key === 'Enter' && event.target.id === 'advisor-new-profile-name') {
+        event.preventDefault();
+        modal.querySelector('[data-confirm-add-profile]')?.click();
       }
     });
 

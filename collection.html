@@ -468,21 +468,38 @@
 
     const sizeAdvisorTrigger = document.getElementById('collection-size-advisor-trigger');
     const sizeAdvisorResult = document.getElementById('collection-size-advisor-result');
+    const sizeAdvisorVirtualProduct = { id: 'size-advisor-collection', name: '', sizes: ['34', '36', '38', '40', '42', '44'] };
+
+    // The label reflects whichever profile is currently active ("Moi", "Ma
+    // fille"...), since switching profiles inside the advisor changes every
+    // suggestion across the site until someone switches back.
+    function refreshSizeAdvisorLabel() {
+      if (!sizeAdvisorResult || !window.JacesFavorites || typeof window.JacesFavorites.getSuggestedSizesForProduct !== 'function') return;
+      const suggestion = window.JacesFavorites.getSuggestedSizesForProduct(sizeAdvisorVirtualProduct).suggestedSize;
+      if (!suggestion) {
+        sizeAdvisorResult.hidden = true;
+        return;
+      }
+      const activeProfile = typeof window.JacesFavorites.getSizeAdvisorProfile === 'function'
+        ? window.JacesFavorites.getSizeAdvisorProfile()
+        : null;
+      const profileName = activeProfile?.name && activeProfile.name !== 'Moi' ? activeProfile.name : '';
+      sizeAdvisorResult.textContent = (profileName ? `Taille de ${profileName}` : 'Votre taille') + ' : ' + suggestion;
+      sizeAdvisorResult.hidden = false;
+    }
+
     if (sizeAdvisorTrigger) {
       sizeAdvisorTrigger.addEventListener('click', () => {
         if (!window.JacesSizeAdvisor) return;
-        const virtualProduct = { id: 'size-advisor-collection', name: '', sizes: ['34', '36', '38', '40', '42', '44'] };
-        window.JacesSizeAdvisor.open(virtualProduct, '', (recommendedSize) => {
+        window.JacesSizeAdvisor.open(sizeAdvisorVirtualProduct, '', (recommendedSize) => {
           const checkbox = document.querySelector('#collection-filter-bar input[name="taille"][value="' + recommendedSize + '"]');
-          if (!checkbox) return;
-          document.querySelectorAll('#collection-filter-bar input[name="taille"]').forEach((input) => { input.checked = false; });
-          checkbox.checked = true;
-          if (sizeAdvisorResult) {
-            sizeAdvisorResult.textContent = 'Votre taille : ' + recommendedSize;
-            sizeAdvisorResult.hidden = false;
+          if (checkbox) {
+            document.querySelectorAll('#collection-filter-bar input[name="taille"]').forEach((input) => { input.checked = false; });
+            checkbox.checked = true;
+            updateFilterUI();
+            applyCollectionView();
           }
-          updateFilterUI();
-          applyCollectionView();
+          refreshSizeAdvisorLabel();
         });
       });
     }
@@ -491,15 +508,8 @@
     // product detail advisor) should already show "Votre taille" here,
     // not just right after running the wizard on this exact page load.
     // favorites.js loads after this script, so defer until it's ready.
-    document.addEventListener('DOMContentLoaded', () => {
-      if (!sizeAdvisorResult || !window.JacesFavorites || typeof window.JacesFavorites.getSuggestedSizesForProduct !== 'function') return;
-      const virtualProduct = { id: 'size-advisor-collection', name: '', sizes: ['34', '36', '38', '40', '42', '44'] };
-      const existingSuggestion = window.JacesFavorites.getSuggestedSizesForProduct(virtualProduct).suggestedSize;
-      if (existingSuggestion) {
-        sizeAdvisorResult.textContent = 'Votre taille : ' + existingSuggestion;
-        sizeAdvisorResult.hidden = false;
-      }
-    });
+    document.addEventListener('DOMContentLoaded', refreshSizeAdvisorLabel);
+    window.addEventListener('jaces:favorite-selection-sync', refreshSizeAdvisorLabel);
 
     updateFilterUI();
 
@@ -825,9 +835,9 @@
   <script src="catalog.js?v=20260715r"></script>
   <script type="module" src="products-page.js?v=20260715r"></script>
   <script src="cart.js?v=20260715r"></script>
-  <script src="favorites.js?v=20260715r"></script>
+  <script src="favorites.js?v=20260715t"></script>
   <script src="auth.js?v=20260715r"></script>
-  <script src="size-advisor.js?v=20260715r"></script>
+  <script src="size-advisor.js?v=20260715t"></script>
   <script>
     function scrollToCollectionResults() {
       const filterBarTarget = document.getElementById('collection-filter-bar');

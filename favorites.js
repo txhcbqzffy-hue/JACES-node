@@ -3,6 +3,7 @@
   const HISTORY_STORAGE_KEY = 'jaces-favorites-history';
   const SELECTIONS_STORAGE_KEY = 'jaces-favorites-selections';
   const ADVISOR_PROFILE_STORAGE_KEY = 'jaces-size-advisor-profile';
+  const ADVISOR_PROFILES_STORAGE_KEY = 'jaces-size-advisor-profiles';
   const MAX_HISTORY_ITEMS = 5;
   const ACCOUNT_SESSION_KEY = 'jaces-account-session';
   const FAVORITES_SYNC_EVENT = 'jaces:favorites-sync';
@@ -115,22 +116,102 @@
     try { localStorage.setItem(storageKey, JSON.stringify(selections)); } catch {}
   }
 
-  // Unlike favorites/cart, the size profile isn't account data — it's a
-  // per-device sizing convenience that should work for guests too, so it
-  // deliberately uses a plain (unscoped) key instead of
-  // getScopedStorageKey(), which returns '' when not logged in.
-  function getSizeAdvisorProfile() {
+  // Unlike favorites/cart, size profiles aren't account data — they're a
+  // per-device sizing convenience that should work for guests too, so they
+  // deliberately use a plain (unscoped) key instead of getScopedStorageKey(),
+  // which returns '' when not logged in. Several named profiles are kept
+  // (e.g. "Moi", "Ma fille") so one device/account can shop for several
+  // people; whichever one is "active" drives every "Trouver ma taille
+  // idéale" suggestion across the site until someone switches it.
+  function generateProfileId() {
+    return 'p_' + Math.random().toString(36).slice(2, 10);
+  }
+
+  function readAdvisorProfilesState() {
     try {
-      return JSON.parse(localStorage.getItem(ADVISOR_PROFILE_STORAGE_KEY) || 'null');
-    } catch {
-      return null;
+      const raw = JSON.parse(localStorage.getItem(ADVISOR_PROFILES_STORAGE_KEY) || 'null');
+      if (raw && Array.isArray(raw.profiles)) return raw;
+    } catch {}
+
+    // Migrate the legacy single-profile format so nobody's saved sizing is lost.
+    try {
+      const legacy = JSON.parse(localStorage.getItem(ADVISOR_PROFILE_STORAGE_KEY) || 'null');
+      if (legacy) {
+        const id = generateProfileId();
+        return { profiles: [Object.assign({ id, name: 'Moi' }, legacy)], activeId: id };
+      }
+    } catch {}
+
+    return { profiles: [], activeId: '' };
+  }
+
+  function writeAdvisorProfilesState(state) {
+    try { localStorage.setItem(ADVISOR_PROFILES_STORAGE_KEY, JSON.stringify(state)); } catch {}
+  }
+
+  function listSizeAdvisorProfiles() {
+    const state = readAdvisorProfilesState();
+    return {
+      profiles: state.profiles.map((profile) => ({ id: profile.id, name: profile.name || 'Profil' })),
+      activeId: state.activeId
+    };
+  }
+
+  function getActiveSizeAdvisorProfile() {
+    const state = readAdvisorProfilesState();
+    return state.profiles.find((profile) => profile.id === state.activeId) || state.profiles[0] || null;
+  }
+
+  // Kept as the read entry point used by getSuggestedSizesForProduct and by
+  // the advisor modal to prefill its form with whichever profile is active.
+  function getSizeAdvisorProfile() {
+    return getActiveSizeAdvisorProfile();
+  }
+
+  function setActiveSizeAdvisorProfileId(id) {
+    const state = readAdvisorProfilesState();
+    if (!state.profiles.some((profile) => profile.id === id)) return;
+    state.activeId = id;
+    writeAdvisorProfilesState(state);
+    emitSyncEvent(FAVORITE_SELECTION_SYNC_EVENT, {});
+  }
+
+  function createSizeAdvisorProfile(name) {
+    const state = readAdvisorProfilesState();
+    const id = generateProfileId();
+    state.profiles.push({
+      id,
+      name: String(name || '').trim() || 'Profil',
+      height: '', weight: '', age: '', belly: '', hips: '', chestBand: '', cup: '', fitMode: 'ideal'
+    });
+    state.activeId = id;
+    writeAdvisorProfilesState(state);
+    emitSyncEvent(FAVORITE_SELECTION_SYNC_EVENT, {});
+    return id;
+  }
+
+  function deleteSizeAdvisorProfile(id) {
+    const state = readAdvisorProfilesState();
+    state.profiles = state.profiles.filter((profile) => profile.id !== id);
+    if (state.activeId === id) {
+      state.activeId = state.profiles[0]?.id || '';
     }
+    writeAdvisorProfilesState(state);
+    emitSyncEvent(FAVORITE_SELECTION_SYNC_EVENT, {});
   }
 
   function saveSizeAdvisorProfile(profile, fitMode) {
     if (!profile) return;
 
-    const nextProfile = {
+    const state = readAdvisorProfilesState();
+    let active = state.profiles.find((item) => item.id === state.activeId);
+    if (!active) {
+      active = { id: generateProfileId(), name: 'Moi' };
+      state.profiles.push(active);
+      state.activeId = active.id;
+    }
+
+    Object.assign(active, {
       height: profile.height || '',
       weight: profile.weight || '',
       age: profile.age || '',
@@ -139,12 +220,12 @@
       chestBand: profile.chestBand || '',
       cup: profile.cup || '',
       fitMode: fitMode || profile.fitMode || 'ideal'
-    };
+    });
 
-    try { localStorage.setItem(ADVISOR_PROFILE_STORAGE_KEY, JSON.stringify(nextProfile)); } catch {}
+    writeAdvisorProfilesState(state);
 
     emitSyncEvent(FAVORITE_SELECTION_SYNC_EVENT, {
-      advisorProfile: nextProfile
+      advisorProfile: active
     });
   }
 
@@ -856,7 +937,7 @@ if (path === 'collection.html' || path === 'nouveautes.html' || path === 'access
         getScopedStorageKey(STORAGE_KEY),
         getScopedStorageKey(HISTORY_STORAGE_KEY),
         getScopedStorageKey(SELECTIONS_STORAGE_KEY),
-        ADVISOR_PROFILE_STORAGE_KEY,
+        ADVISOR_PROFILES_STORAGE_KEY,
         ACCOUNT_SESSION_KEY
       ].filter(Boolean);
       if (!relevantKeys.includes(event.key)) return;
@@ -926,6 +1007,10 @@ if (path === 'collection.html' || path === 'nouveautes.html' || path === 'access
     saveProductSelection,
     getSizeAdvisorProfile,
     saveSizeAdvisorProfile,
+    listSizeAdvisorProfiles,
+    setActiveSizeAdvisorProfileId,
+    createSizeAdvisorProfile,
+    deleteSizeAdvisorProfile,
     getSuggestedSizesForProduct
   };
 
