@@ -158,7 +158,7 @@
           <div class="size-advisor-size">${activeSize}</div>
           <p class="size-advisor-saved-suggestion">Suggestion ideale enregistree : ${activeSize}</p>
           ${alternate && alternate !== activeSize ? `<p class="size-advisor-alt">Alternative suggeree : ${alternate}</p>` : ''}
-          <p class="size-advisor-result-note">Notre recommandation${product?.name ? ' pour cette pièce' : ''}, selon les informations renseignées.</p>
+          <p class="size-advisor-result-note">Notre recommandation, selon les informations renseignées.</p>
           <div class="size-advisor-fit-toggle">
             <button class="size-advisor-fit-button${state.fitMode === 'ideal' ? ' is-active' : ''}" type="button" data-fit="ideal">Idéale</button>
             <button class="size-advisor-fit-button${state.fitMode === 'ample' ? ' is-active' : ''}" type="button" data-fit="ample">Plus ample</button>
@@ -197,7 +197,7 @@
               <button class="size-advisor-close" type="button" data-close="true" aria-label="Fermer">×</button>
             </div>
             <div class="size-advisor-intro">
-              <h2>Trouvez votre taille idéale${product?.name ? ' pour cette pièce' : ''}</h2>
+              <h2>Trouvez votre taille idéale</h2>
               <p class="size-advisor-subtitle">Quelques informations suffisent pour estimer la coupe la plus juste, dans un parcours pensé pour la femme JACES.</p>
             </div>
             <div class="size-advisor-fields">
