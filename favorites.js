@@ -697,22 +697,12 @@ if (path === 'collection.html' || path === 'nouveautes.html' || path === 'access
     });
   }
 
-  function isAccessoryLikeCard(card, product) {
-    if (document.body?.classList.contains('accessoires-page')) {
-      return true;
-    }
-
-    const categoryTokens = String(card?.dataset?.category || '').toLowerCase();
-    if (/\baccessoires?\b|\bsacs?\b|\bbijoux?\b|\bceintures?\b|\bfoulards?\b/.test(categoryTokens)) {
-      return true;
-    }
-
-    const name = String(product?.name || '').toLowerCase();
-    if (/sac|ceinture|boucles|collier|bracelet|bijou|foulard|echarpe|mule|sandale|botte|chaussure|chaussette/.test(name)) {
-      return true;
-    }
-
-    return false;
+  function isAccessoryLikeCard() {
+    // Only trust the page context (a real, non-guessed signal) — matching
+    // on the product's category label or name caused false positives, e.g.
+    // an apparel item cross-tagged with the "Accessoires" category filter
+    // had its quick-buy sizes wiped even though it has real sizes.
+    return !!document.body?.classList.contains('accessoires-page');
   }
 
   function buildQuickBuyTitleMarkup(suggestedSize) {
