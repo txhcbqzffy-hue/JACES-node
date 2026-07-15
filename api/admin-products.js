@@ -117,6 +117,12 @@ module.exports = async function handler(req, res) {
       return res.status(200).json({ ok: true });
     }
 
+    if (action === 'diag_list') {
+      const { data, error, count } = await supabase.from('products').select('id,name,created_at', { count: 'exact' }).order('created_at', { ascending: false });
+      if (error) return res.status(500).json({ error: error.message });
+      return res.status(200).json({ count, products: data });
+    }
+
     if (action === 'delete') {
       const productId = String(body.id || '').trim();
       if (!productId) return res.status(400).json({ error: 'id manquant' });
