@@ -411,18 +411,40 @@
       return new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR', minimumFractionDigits: 0, maximumFractionDigits: 2 }).format(numeric);
     }
 
+    const NUMERIC_SIZE_ORDER = ['34', '36', '38', '40', '42', '44'];
+
+    function sortSizes(sizes) {
+      return sizes.slice().sort((a, b) => {
+        const indexA = NUMERIC_SIZE_ORDER.indexOf(a);
+        const indexB = NUMERIC_SIZE_ORDER.indexOf(b);
+        if (indexA === -1 && indexB === -1) return a.localeCompare(b, 'fr');
+        if (indexA === -1) return 1;
+        if (indexB === -1) return -1;
+        return indexA - indexB;
+      });
+    }
+
     function buildHomeSliderCard(product) {
       const images = Array.isArray(product.images) ? product.images : [];
       const primarySrc = images[0]?.url || product.image_url || product.img || '';
       const secondarySrc = images[1]?.url || product.hover_image_url || primarySrc;
-      const sizes = Array.isArray(product.sizes) ? product.sizes.map((s) => String(s || '').trim()).filter(Boolean) : [];
-      const quickBuyMarkup = sizes.length
-        ? `<p class="quick-buy-title"><strong>Achat rapide</strong> (Selectionnez votre taille)</p><div class="quick-buy-grid">${sizes.map((size) => `<button type="button">${size}</button>`).join('')}</div>`
+      const sizes = sortSizes(Array.isArray(product.sizes) ? product.sizes.map((s) => String(s || '').trim()).filter(Boolean) : []);
+      // Same rule as the collection/product pages: if the real sizes are all
+      // part of the standard 34-44 range, show that whole range with the
+      // unavailable ones greyed out instead of only what happens to be in stock.
+      const isNumericSizeSubset = sizes.length > 0 && sizes.every((size) => NUMERIC_SIZE_ORDER.includes(size));
+      const displaySizes = isNumericSizeSubset ? NUMERIC_SIZE_ORDER : sizes;
+      const quickBuyMarkup = displaySizes.length
+        ? `<p class="quick-buy-title"><strong>Achat rapide</strong> (Selectionnez votre taille)</p><div class="quick-buy-grid">${displaySizes.map((size) => {
+          const isAvailable = sizes.includes(size);
+          return `<button type="button" class="${isAvailable ? '' : 'is-disabled'}"${isAvailable ? '' : ' disabled aria-disabled="true" tabindex="-1"'}>${size}</button>`;
+        }).join('')}</div>`
         : '';
 
       const card = document.createElement('article');
       card.className = 'home-slider-card';
       card.dataset.productId = String(product.id || '');
+      card.dataset.size = sizes.join(' ');
       card.innerHTML = `
         <a class="home-slider-media" href="detail-produit.html?id=${encodeURIComponent(product.id || '')}" aria-label="Voir ${product.name || 'ce produit'}">
           ${primarySrc ? `<img class="home-slider-image-primary" src="${primarySrc}" alt="${product.name || 'Produit JACES'}" loading="lazy">` : ''}
