@@ -114,11 +114,13 @@
     try { localStorage.setItem(storageKey, JSON.stringify(selections)); } catch {}
   }
 
+  // Unlike favorites/cart, the size profile isn't account data — it's a
+  // per-device sizing convenience that should work for guests too, so it
+  // deliberately uses a plain (unscoped) key instead of
+  // getScopedStorageKey(), which returns '' when not logged in.
   function getSizeAdvisorProfile() {
-    const storageKey = getScopedStorageKey(ADVISOR_PROFILE_STORAGE_KEY);
-    if (!storageKey) return null;
     try {
-      return JSON.parse(localStorage.getItem(storageKey) || 'null');
+      return JSON.parse(localStorage.getItem(ADVISOR_PROFILE_STORAGE_KEY) || 'null');
     } catch {
       return null;
     }
@@ -138,9 +140,7 @@
       fitMode: fitMode || profile.fitMode || 'ideal'
     };
 
-    const storageKey = getScopedStorageKey(ADVISOR_PROFILE_STORAGE_KEY);
-    if (!storageKey) return;
-    try { localStorage.setItem(storageKey, JSON.stringify(nextProfile)); } catch {}
+    try { localStorage.setItem(ADVISOR_PROFILE_STORAGE_KEY, JSON.stringify(nextProfile)); } catch {}
 
     emitSyncEvent(FAVORITE_SELECTION_SYNC_EVENT, {
       advisorProfile: nextProfile
@@ -840,7 +840,7 @@ if (path === 'collection.html' || path === 'nouveautes.html' || path === 'access
         getScopedStorageKey(STORAGE_KEY),
         getScopedStorageKey(HISTORY_STORAGE_KEY),
         getScopedStorageKey(SELECTIONS_STORAGE_KEY),
-        getScopedStorageKey(ADVISOR_PROFILE_STORAGE_KEY),
+        ADVISOR_PROFILE_STORAGE_KEY,
         ACCOUNT_SESSION_KEY
       ].filter(Boolean);
       if (!relevantKeys.includes(event.key)) return;
