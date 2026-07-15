@@ -3,6 +3,15 @@
     return Math.min(Math.max(value, min), max);
   }
 
+  function formatPrice(price) {
+    if (price === null || price === undefined || price === '') return '';
+    const raw = String(price).trim();
+    if (raw.includes('€')) return raw;
+    const numeric = Number(raw);
+    if (!Number.isFinite(numeric)) return raw;
+    return new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(numeric);
+  }
+
   function getProductId() {
     const params = new URLSearchParams(window.location.search);
     return params.get('id') || '';
@@ -1442,7 +1451,7 @@
         <div class="product-detail-heading-block">
           <div class="product-detail-header">
             <h1>${product.name}</h1>
-            <p class="product-detail-price">${product.price}</p>
+            <p class="product-detail-price">${formatPrice(product.price)}</p>
           </div>
           <p class="product-detail-subtitle">${detailSubtitle}</p>
         </div>
@@ -1582,7 +1591,7 @@
                     : ''}
                   ${quickBuyMarkup ? `<div class="hover-sizes" aria-hidden="true">${quickBuyMarkup}</div>` : ''}
                 </a>
-                <div class="home-slider-meta"><h3>${entry.product.name}</h3><p>${entry.product.price || ''}</p></div>
+                <div class="home-slider-meta"><h3>${entry.product.name}</h3><p>${formatPrice(entry.product.price)}</p></div>
               </article>
             `;
             }).join('')}
