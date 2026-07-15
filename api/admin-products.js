@@ -76,13 +76,19 @@ async function replaceProductChildren(supabase, productId, { images, variants, f
     supabase.from('product_images').delete().eq('product_id', productId),
     supabase.from('product_variants').delete().eq('product_id', productId),
     supabase.from('product_filters').delete().eq('product_id', productId),
-    supabase.from('product_reviews').delete().eq('product_id', productId)
+    // product_reviews is a newer, optional table - a missing table here must
+    // never abort the function before images/variants/filters are
+    // re-inserted below (that previously wiped a product's real images with
+    // no way to restore them, since the delete succeeded but the insert was
+    // never reached).
+    supabase.from('product_reviews').delete().eq('product_id', productId).then((result) => result, (error) => ({ error }))
   ]);
 
   if (imagesDel.error) throw new Error('product_images (delete): ' + imagesDel.error.message);
   if (variantsDel.error) throw new Error('product_variants (delete): ' + variantsDel.error.message);
   if (filtersDel.error) throw new Error('product_filters (delete): ' + filtersDel.error.message);
-  if (reviewsDel.error) throw new Error('product_reviews (delete): ' + reviewsDel.error.message);
+  const reviewsTableMissing = /could not find the table/i.test(String(reviewsDel?.error?.message || ''));
+  if (reviewsDel?.error && !reviewsTableMissing) throw new Error('product_reviews (delete): ' + reviewsDel.error.message);
 
   if (images.length) {
     const rows = images.map((url, index) => ({ product_id: productId, url, position: index + 1 }));
@@ -105,7 +111,9 @@ async function replaceProductChildren(supabase, productId, { images, variants, f
   if (Array.isArray(reviews) && reviews.length) {
     const rows = reviews.map((review) => ({ product_id: productId, author: review.author, rating: review.rating, review_text: review.text }));
     const { error } = await supabase.from('product_reviews').insert(rows);
-    if (error) throw new Error('product_reviews (insert): ' + error.message);
+    if (error && !/could not find the table/i.test(String(error.message || ''))) {
+      throw new Error('product_reviews (insert): ' + error.message);
+    }
   }
 }
 
