@@ -7,6 +7,7 @@
   const ACCOUNT_SESSION_KEY = 'jaces-account-session';
   const FAVORITES_SYNC_EVENT = 'jaces:favorites-sync';
   const FAVORITE_SELECTION_SYNC_EVENT = 'jaces:favorite-selection-sync';
+  const NUMERIC_SIZE_ORDER = ['34', '36', '38', '40', '42', '44'];
 
   const colorLabels = {
     black: 'Noir',
@@ -430,7 +431,11 @@ if (path === 'collection.html' || path === 'nouveautes.html' || path === 'access
     const tertiaryImg = card.dataset.tertiaryImg || '';
     const quaternaryImg = card.dataset.quaternaryImg || '';
     const id = card.dataset.productId || card.id || normalizeId(name);
-    const sizes = (card.dataset.sizes || '').split(',').map(value => value.trim()).filter(Boolean);
+    // dataset.sizes (comma-separated) is only ever set on home-slider-card
+    // markup; regular product cards carry the real available sizes in
+    // dataset.size (space-separated) instead.
+    const sizesSource = card.dataset.sizes || card.dataset.size?.split(' ').join(',') || '';
+    const sizes = sizesSource.split(',').map(value => value.trim()).filter(Boolean);
     const colors = getColorsFromCard(card);
     return {
       id,
@@ -752,8 +757,19 @@ if (path === 'collection.html' || path === 'nouveautes.html' || path === 'access
       const suggestedSize = [selection.suggestedSize, selection.size]
         .map((size) => String(size || '').trim())
         .find((size) => quickBuySizes.includes(size)) || quickBuySizes[0];
-      const buttonsHtml = quickBuySizes
-        .map((size) => '<button class="' + (suggestedSize === size ? 'is-recommended' : '') + '" type="button">' + size + '</button>')
+      // Same rule as the product detail page and the catalog cards: if the
+      // real sizes are all part of the standard 34-44 range, show that
+      // whole range with the unavailable ones greyed out.
+      const isNumericSizeSubset = quickBuySizes.every((size) => NUMERIC_SIZE_ORDER.includes(size));
+      const displaySizes = isNumericSizeSubset ? NUMERIC_SIZE_ORDER : quickBuySizes;
+      const buttonsHtml = displaySizes
+        .map((size) => {
+          const isAvailable = quickBuySizes.includes(size);
+          const recommendedClass = isAvailable && suggestedSize === size ? ' is-recommended' : '';
+          const disabledClass = isAvailable ? '' : ' is-disabled';
+          const disabledAttr = isAvailable ? '' : ' disabled aria-disabled="true" tabindex="-1"';
+          return '<button class="' + recommendedClass + disabledClass + '" type="button"' + disabledAttr + '>' + size + '</button>';
+        })
         .join('');
       panel.dataset.quickSizes = quickBuySizes.join(',');
       panel.innerHTML = '<p class="quick-buy-title">' + buildQuickBuyTitleMarkup(suggestedSize) + '</p><div class="quick-buy-grid">' + buttonsHtml + '</div>';

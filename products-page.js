@@ -110,8 +110,16 @@ function buildProductCard(product, pageType) {
   const hoverImage = normalizeMediaUrl(images[1]?.url || product.hover_image_url || product.secondaryImg || mainImage);
   const colors = Array.isArray(product.colors) ? product.colors.map((color) => String(color || '').trim()).filter(Boolean) : [];
   const sizes = sortSizes(Array.isArray(product.sizes) ? product.sizes.map((size) => String(size || '').trim()).filter(Boolean) : []);
-  const quickBuyMarkup = sizes.length
-    ? `<p class="quick-buy-title"><strong>Achat rapide</strong> (Selectionnez votre taille)</p><div class="quick-buy-grid">${sizes.map((size) => `<button type="button">${size}</button>`).join('')}</div>`
+  // Same rule as the product detail page: if the real sizes are all part of
+  // the standard 34-44 range, show that whole range with the unavailable
+  // ones greyed out, instead of only listing what happens to be in stock.
+  const isNumericSizeSubset = sizes.length > 0 && sizes.every((size) => NUMERIC_SIZE_ORDER.includes(size));
+  const displaySizes = isNumericSizeSubset ? NUMERIC_SIZE_ORDER : sizes;
+  const quickBuyMarkup = displaySizes.length
+    ? `<p class="quick-buy-title"><strong>Achat rapide</strong> (Selectionnez votre taille)</p><div class="quick-buy-grid">${displaySizes.map((size) => {
+      const isAvailable = sizes.includes(size);
+      return `<button type="button" class="${isAvailable ? '' : 'is-disabled'}"${isAvailable ? '' : ' disabled aria-disabled="true" tabindex="-1"'}>${size}</button>`;
+    }).join('')}</div>`
     : '';
 
   card.className = 'product-card collection-card product-card-linkable';
