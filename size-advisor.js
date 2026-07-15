@@ -146,8 +146,9 @@
           `;
         }
         return `
-        <span class="size-advisor-profile-chip${profile.id === activeId ? ' is-active' : ''}" data-select-profile="${profile.id}">
-          <button type="button" class="size-advisor-profile-chip-label" data-select-profile="${profile.id}" data-rename-profile="${profile.id}" title="Double-cliquer pour renommer">${profile.name}</button>
+        <span class="size-advisor-profile-chip${profile.id === activeId ? ' is-active' : ''}">
+          <button type="button" class="size-advisor-profile-chip-label" data-select-profile="${profile.id}">${profile.name}</button>
+          <button type="button" class="size-advisor-profile-chip-rename" data-rename-profile="${profile.id}" aria-label="Renommer ce profil">✎</button>
           <button type="button" class="size-advisor-profile-chip-remove" data-delete-profile="${profile.id}" aria-label="Supprimer ce profil">×</button>
         </span>
       `;
@@ -372,6 +373,17 @@
         return;
       }
 
+      const renameProfile = event.target.closest('[data-rename-profile]');
+      if (renameProfile) {
+        state.isAddingProfile = false;
+        state.renamingProfileId = renameProfile.dataset.renameProfile;
+        renderStep();
+        const input = modal.querySelector('#advisor-rename-profile-name');
+        input?.focus();
+        input?.select();
+        return;
+      }
+
       const confirmRenameProfile = event.target.closest('[data-confirm-rename-profile]');
       if (confirmRenameProfile) {
         const name = modal.querySelector('#advisor-rename-profile-name')?.value || '';
@@ -473,17 +485,6 @@
         state.step = clamp(state.step + 1, 0, 3);
         renderStep();
       }
-    });
-
-    overlay.addEventListener('dblclick', (event) => {
-      const renameTarget = event.target.closest('[data-rename-profile]');
-      if (!renameTarget) return;
-      state.isAddingProfile = false;
-      state.renamingProfileId = renameTarget.dataset.renameProfile;
-      renderStep();
-      const input = modal.querySelector('#advisor-rename-profile-name');
-      input?.focus();
-      input?.select();
     });
 
     overlay.addEventListener('keydown', (event) => {

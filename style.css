@@ -5034,6 +5034,16 @@ body.account-modal-open {
   color: #ffffff;
 }
 
+.size-advisor-profile-chip-rename {
+  border: 0;
+  background: #ffffff;
+  color: #9a9284;
+  font-size: 0.78rem;
+  line-height: 1;
+  padding: 7px 4px;
+  cursor: pointer;
+}
+
 .size-advisor-profile-chip-remove {
   border: 0;
   background: #ffffff;
@@ -5044,6 +5054,7 @@ body.account-modal-open {
   cursor: pointer;
 }
 
+.size-advisor-profile-chip.is-active .size-advisor-profile-chip-rename,
 .size-advisor-profile-chip.is-active .size-advisor-profile-chip-remove {
   background: #111111;
   color: #b8b2a7;
