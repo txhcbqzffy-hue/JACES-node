@@ -1314,6 +1314,9 @@
           : (Array.isArray(queryValue) && queryValue.length ? queryValue : apiValue));
 
         product = Object.assign({}, product, queryProduct, {
+          name: pick(product.name, queryProduct.name),
+          price: pick(product.price, queryProduct.price),
+          description: pick(product.description, queryProduct.description),
           img: pick(product.img, queryProduct.img),
           secondaryImg: pick(product.secondaryImg, queryProduct.secondaryImg),
           tertiaryImg: pick(product.tertiaryImg, queryProduct.tertiaryImg),
