@@ -9,6 +9,22 @@ function slugifyToken(value) {
     .replace(/^-+|-+$/g, '');
 }
 
+// Matches the standard size range shown (in order) on the product detail
+// page, so the quick-buy chips on catalog cards aren't stuck in whatever
+// order the variants happen to be stored in the database.
+const NUMERIC_SIZE_ORDER = ['34', '36', '38', '40', '42', '44'];
+
+function sortSizes(sizes) {
+  return sizes.slice().sort((a, b) => {
+    const indexA = NUMERIC_SIZE_ORDER.indexOf(a);
+    const indexB = NUMERIC_SIZE_ORDER.indexOf(b);
+    if (indexA === -1 && indexB === -1) return a.localeCompare(b, 'fr');
+    if (indexA === -1) return 1;
+    if (indexB === -1) return -1;
+    return indexA - indexB;
+  });
+}
+
 function getPageType() {
   const body = document.body;
   const path = window.location.pathname.split('/').pop() || '';
@@ -93,7 +109,7 @@ function buildProductCard(product, pageType) {
   const mainImage = normalizeMediaUrl(images[0]?.url || product.image_url || product.img || '');
   const hoverImage = normalizeMediaUrl(images[1]?.url || product.hover_image_url || product.secondaryImg || mainImage);
   const colors = Array.isArray(product.colors) ? product.colors.map((color) => String(color || '').trim()).filter(Boolean) : [];
-  const sizes = Array.isArray(product.sizes) ? product.sizes.map((size) => String(size || '').trim()).filter(Boolean) : [];
+  const sizes = sortSizes(Array.isArray(product.sizes) ? product.sizes.map((size) => String(size || '').trim()).filter(Boolean) : []);
   const quickBuyMarkup = sizes.length
     ? `<p class="quick-buy-title"><strong>Achat rapide</strong> (Selectionnez votre taille)</p><div class="quick-buy-grid">${sizes.map((size) => `<button type="button">${size}</button>`).join('')}</div>`
     : '';
