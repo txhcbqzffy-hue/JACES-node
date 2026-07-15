@@ -395,7 +395,6 @@
       let allCards = productGrid ? Array.from(productGrid.querySelectorAll('.collection-card')) : [];
       const categoryNavItems = Array.from(document.querySelectorAll('.cat-nav-item'));
       let activeCategory = 'all';
-      let isAutoSyncingVariantFilters = false;
       const validCategories = new Set(['all', 'sacs', 'bijoux', 'ceintures', 'foulards']);
 
       function formatMaterialLabel(token) {
@@ -460,7 +459,6 @@
 
       function syncColorAvailability(visibleCards) {
         const colorInputs = Array.from(document.querySelectorAll('#collection-filter-bar input[name="couleur"]'));
-        let shouldResync = false;
 
         colorInputs.forEach((input) => {
           const token = input.value;
@@ -472,19 +470,7 @@
           input.closest('label')?.classList.toggle('is-unavailable', !available && !input.checked);
         });
 
-        if (!isAutoSyncingVariantFilters) {
-          const activeColor = colorInputs.find((input) => input.checked && !input.disabled);
-          if (!activeColor) {
-            const fallbackColor = colorInputs.find((input) => !input.disabled);
-            if (fallbackColor) {
-              isAutoSyncingVariantFilters = true;
-              colorInputs.forEach((input) => { input.checked = input === fallbackColor; });
-              shouldResync = true;
-            }
-          }
-        }
-
-        return shouldResync;
+        return false;
       }
 
       function getCardPrice(card) {
@@ -544,13 +530,7 @@
           productGrid.appendChild(card);
         });
 
-        if (syncColorAvailability(visibleCards)) {
-          isAutoSyncingVariantFilters = false;
-          renderGrid();
-          return;
-        }
-
-        isAutoSyncingVariantFilters = false;
+        syncColorAvailability(visibleCards);
 
         if (countNode) {
           countNode.textContent = visibleCards.length + (visibleCards.length > 1 ? ' produits' : ' produit');
@@ -685,10 +665,10 @@
     </div>
     <div class="fav-panel-list" id="fav-panel-list"></div>
   </div>
-  <script src="catalog.js?v=20260715e"></script>
-  <script type="module" src="products-page.js?v=20260715e"></script>
-  <script src="cart.js?v=20260715e"></script>
-  <script src="favorites.js?v=20260715e"></script>
-  <script src="auth.js?v=20260715e"></script>
+  <script src="catalog.js?v=20260715f"></script>
+  <script type="module" src="products-page.js?v=20260715f"></script>
+  <script src="cart.js?v=20260715f"></script>
+  <script src="favorites.js?v=20260715f"></script>
+  <script src="auth.js?v=20260715f"></script>
 </body>
 </html>

@@ -445,7 +445,6 @@
     let originalCards = productGrid ? Array.from(productGrid.querySelectorAll('.collection-card')) : [];
     let currentCategoryFilter = 'all';
     let currentNouveauteTagFilter = '';
-    let isAutoSyncingVariantFilters = false;
 
     function normalizeVariantToken(value) {
       return String(value || '')
@@ -468,9 +467,6 @@
     }
 
     function syncFilterAvailability(visibleCards) {
-      const colorInputs = Array.from(document.querySelectorAll('#collection-filter-bar input[name="couleur"]'));
-      let shouldResync = false;
-
       ['taille', 'couleur'].forEach((name) => {
         const inputs = Array.from(document.querySelectorAll('#collection-filter-bar input[name="' + name + '"]'));
         inputs.forEach((input) => {
@@ -485,19 +481,7 @@
         });
       });
 
-      if (!isAutoSyncingVariantFilters) {
-        const activeColor = colorInputs.find((input) => input.checked && !input.disabled);
-        if (!activeColor) {
-          const fallbackColor = colorInputs.find((input) => !input.disabled);
-          if (fallbackColor) {
-            isAutoSyncingVariantFilters = true;
-            colorInputs.forEach((input) => { input.checked = input === fallbackColor; });
-            shouldResync = true;
-          }
-        }
-      }
-
-      return shouldResync;
+      return false;
     }
 
     function getCardPrice(card) {
@@ -559,13 +543,7 @@
         if (visible) visibleCards.push(card);
       });
 
-      if (syncFilterAvailability(visibleCards)) {
-        isAutoSyncingVariantFilters = false;
-        applyStrictCategoryFilter();
-        return;
-      }
-
-      isAutoSyncingVariantFilters = false;
+      syncFilterAvailability(visibleCards);
 
       const visibleCount = cards.filter((card) => !card.classList.contains('hidden')).length;
       if (filterCount) filterCount.textContent = `${visibleCount} produits`;
@@ -774,11 +752,11 @@
     </div>
     <div class="fav-panel-list" id="fav-panel-list"></div>
   </div>
-  <script src="catalog.js?v=20260715e"></script>
-  <script type="module" src="products-page.js?v=20260715e"></script>
-  <script src="cart.js?v=20260715e"></script>
-  <script src="favorites.js?v=20260715e"></script>
-  <script src="auth.js?v=20260715e"></script>
+  <script src="catalog.js?v=20260715f"></script>
+  <script type="module" src="products-page.js?v=20260715f"></script>
+  <script src="cart.js?v=20260715f"></script>
+  <script src="favorites.js?v=20260715f"></script>
+  <script src="auth.js?v=20260715f"></script>
   <script>
     (function () {
     })();
