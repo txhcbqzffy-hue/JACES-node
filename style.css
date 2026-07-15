@@ -6543,6 +6543,21 @@ body.header-scrolled .header .submenu a.submenu-link-active {
   padding-top: 10px;
 }
 
+.filter-size-advisor-link {
+  grid-column: 1 / -1;
+  border: none;
+  background: transparent;
+  padding: 0;
+  margin-top: 4px;
+  color: #1b1a17;
+  font-family: var(--font-text);
+  font-size: 13px;
+  letter-spacing: 0.02em;
+  text-decoration: underline;
+  cursor: pointer;
+  text-align: left;
+}
+
 .filter-count {
   font-family: var(--font-text);
   font-size: 11px;

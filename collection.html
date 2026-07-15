@@ -218,6 +218,7 @@
                 <label><input type="checkbox" name="taille" value="40"> 40</label>
                 <label><input type="checkbox" name="taille" value="42"> 42</label>
                 <label><input type="checkbox" name="taille" value="44"> 44</label>
+                <button type="button" class="filter-size-advisor-link" id="collection-size-advisor-trigger">Trouver ma taille idéale</button>
                 <p class="filter-dropdown-note">Guide des tailles disponible dans chaque fiche produit.</p>
               </div>
             </div>
@@ -291,7 +292,7 @@
     <p class="footer-note">Copyright © 2026 Chloé. Tous droits réservés.</p>
   </footer>
 
-  <script src="admin-products.js?v=20260715k"></script>
+  <script src="admin-products.js?v=20260715l"></script>
   <script>
     function updateHeaderState() {
       document.body.classList.toggle('header-scrolled', window.scrollY > 8);
@@ -461,6 +462,22 @@
       updateFilterUI();
       applyCollectionView();
     });
+
+    const sizeAdvisorTrigger = document.getElementById('collection-size-advisor-trigger');
+    if (sizeAdvisorTrigger) {
+      sizeAdvisorTrigger.addEventListener('click', () => {
+        if (!window.JacesSizeAdvisor) return;
+        const virtualProduct = { id: 'size-advisor-collection', name: '', sizes: ['34', '36', '38', '40', '42', '44'] };
+        window.JacesSizeAdvisor.open(virtualProduct, '', (recommendedSize) => {
+          const checkbox = document.querySelector('#collection-filter-bar input[name="taille"][value="' + recommendedSize + '"]');
+          if (!checkbox) return;
+          document.querySelectorAll('#collection-filter-bar input[name="taille"]').forEach((input) => { input.checked = false; });
+          checkbox.checked = true;
+          updateFilterUI();
+          applyCollectionView();
+        });
+      });
+    }
 
     updateFilterUI();
 
@@ -783,11 +800,12 @@
     </div>
     <div class="fav-panel-list" id="fav-panel-list"></div>
   </div>
-  <script src="catalog.js?v=20260715k"></script>
-  <script type="module" src="products-page.js?v=20260715k"></script>
-  <script src="cart.js?v=20260715k"></script>
-  <script src="favorites.js?v=20260715k"></script>
-  <script src="auth.js?v=20260715k"></script>
+  <script src="catalog.js?v=20260715l"></script>
+  <script type="module" src="products-page.js?v=20260715l"></script>
+  <script src="cart.js?v=20260715l"></script>
+  <script src="favorites.js?v=20260715l"></script>
+  <script src="auth.js?v=20260715l"></script>
+  <script src="size-advisor.js?v=20260715l"></script>
   <script>
     function scrollToCollectionResults() {
       const filterBarTarget = document.getElementById('collection-filter-bar');
