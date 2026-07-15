@@ -91,6 +91,7 @@
       fitMode: savedAdvisorProfile?.fitMode || 'ideal',
       errors: {},
       isAddingProfile: false,
+      renamingProfileId: '',
       form: {
         height: savedAdvisorProfile?.height || '',
         weight: savedAdvisorProfile?.weight || '',
@@ -127,16 +128,30 @@
       return active?.name || '';
     }
 
+    function isProfileComplete(profile) {
+      return !!(profile && profile.height && profile.weight && profile.age && profile.belly && profile.hips && profile.chestBand && profile.cup);
+    }
+
     function renderProfileSwitcher() {
       if (!window.JacesFavorites || typeof window.JacesFavorites.listSizeAdvisorProfiles !== 'function') return '';
       const { profiles, activeId } = window.JacesFavorites.listSizeAdvisorProfiles();
 
-      const chips = profiles.map((profile) => `
+      const chips = profiles.map((profile) => {
+        if (profile.id === state.renamingProfileId) {
+          return `
+            <span class="size-advisor-profile-chip is-renaming">
+              <input type="text" class="size-advisor-profile-rename-input" id="advisor-rename-profile-name" maxlength="24" value="${String(profile.name).replace(/"/g, '&quot;')}">
+              <button type="button" class="size-advisor-profile-confirm" data-confirm-rename-profile="${profile.id}">OK</button>
+            </span>
+          `;
+        }
+        return `
         <span class="size-advisor-profile-chip${profile.id === activeId ? ' is-active' : ''}" data-select-profile="${profile.id}">
-          <button type="button" class="size-advisor-profile-chip-label" data-select-profile="${profile.id}">${profile.name}</button>
+          <button type="button" class="size-advisor-profile-chip-label" data-select-profile="${profile.id}" data-rename-profile="${profile.id}" title="Double-cliquer pour renommer">${profile.name}</button>
           <button type="button" class="size-advisor-profile-chip-remove" data-delete-profile="${profile.id}" aria-label="Supprimer ce profil">×</button>
         </span>
-      `).join('');
+      `;
+      }).join('');
 
       const addControl = state.isAddingProfile
         ? `
@@ -201,9 +216,10 @@
       return `
         <div class="size-advisor-shell size-advisor-result">
           <div class="size-advisor-topbar">
-            <div></div>
+            <button class="size-advisor-back visible" type="button" data-back="true" aria-label="Retour">←</button>
             <button class="size-advisor-close" type="button" data-close="true" aria-label="Fermer">×</button>
           </div>
+          ${renderProfileSwitcher()}
           <p class="size-advisor-kicker">${kicker}</p>
           <div class="size-advisor-size">${activeSize}</div>
           <p class="size-advisor-saved-suggestion">Suggestion ideale enregistree : ${activeSize}</p>
@@ -356,6 +372,17 @@
         return;
       }
 
+      const confirmRenameProfile = event.target.closest('[data-confirm-rename-profile]');
+      if (confirmRenameProfile) {
+        const name = modal.querySelector('#advisor-rename-profile-name')?.value || '';
+        if (name.trim() && window.JacesFavorites && typeof window.JacesFavorites.renameSizeAdvisorProfile === 'function') {
+          window.JacesFavorites.renameSizeAdvisorProfile(confirmRenameProfile.dataset.confirmRenameProfile, name.trim());
+        }
+        state.renamingProfileId = '';
+        renderStep();
+        return;
+      }
+
       const selectProfile = event.target.closest('[data-select-profile]');
       if (selectProfile) {
         if (window.JacesFavorites && typeof window.JacesFavorites.setActiveSizeAdvisorProfileId === 'function') {
@@ -363,6 +390,7 @@
         }
         state.isAddingProfile = false;
         loadActiveProfileIntoForm();
+        state.step = isProfileComplete(state.form) ? 3 : 0;
         renderStep();
         return;
       }
@@ -447,10 +475,25 @@
       }
     });
 
+    overlay.addEventListener('dblclick', (event) => {
+      const renameTarget = event.target.closest('[data-rename-profile]');
+      if (!renameTarget) return;
+      state.isAddingProfile = false;
+      state.renamingProfileId = renameTarget.dataset.renameProfile;
+      renderStep();
+      const input = modal.querySelector('#advisor-rename-profile-name');
+      input?.focus();
+      input?.select();
+    });
+
     overlay.addEventListener('keydown', (event) => {
       if (event.key === 'Enter' && event.target.id === 'advisor-new-profile-name') {
         event.preventDefault();
         modal.querySelector('[data-confirm-add-profile]')?.click();
+      }
+      if (event.key === 'Enter' && event.target.id === 'advisor-rename-profile-name') {
+        event.preventDefault();
+        modal.querySelector('[data-confirm-rename-profile]')?.click();
       }
     });
 

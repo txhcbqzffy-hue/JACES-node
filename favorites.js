@@ -190,6 +190,15 @@
     return id;
   }
 
+  function renameSizeAdvisorProfile(id, name) {
+    const state = readAdvisorProfilesState();
+    const profile = state.profiles.find((item) => item.id === id);
+    if (!profile) return;
+    profile.name = String(name || '').trim() || profile.name;
+    writeAdvisorProfilesState(state);
+    emitSyncEvent(FAVORITE_SELECTION_SYNC_EVENT, {});
+  }
+
   function deleteSizeAdvisorProfile(id) {
     const state = readAdvisorProfilesState();
     state.profiles = state.profiles.filter((profile) => profile.id !== id);
@@ -1010,6 +1019,7 @@ if (path === 'collection.html' || path === 'nouveautes.html' || path === 'access
     listSizeAdvisorProfiles,
     setActiveSizeAdvisorProfileId,
     createSizeAdvisorProfile,
+    renameSizeAdvisorProfile,
     deleteSizeAdvisorProfile,
     getSuggestedSizesForProduct
   };

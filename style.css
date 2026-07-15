@@ -5088,6 +5088,21 @@ body.account-modal-open {
   cursor: pointer;
 }
 
+.size-advisor-profile-chip.is-renaming {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.size-advisor-profile-rename-input {
+  border: 1px solid #111111;
+  border-radius: 999px;
+  padding: 6px 12px;
+  font-family: "Manrope", sans-serif;
+  font-size: 0.78rem;
+  width: 150px;
+}
+
 .size-advisor-intro {
   display: grid;
   align-content: start;
