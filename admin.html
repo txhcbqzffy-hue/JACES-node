@@ -150,6 +150,13 @@
 
             <div id="filters-container"></div>
 
+            <div class="field">
+              <label style="display:flex;align-items:center;gap:8px;font-weight:normal;">
+                <input type="checkbox" id="f-show-in-related" style="width:auto;">
+                Afficher en bas des fiches produit ("En ce moment")
+              </label>
+            </div>
+
             <p class="status-msg" id="form-status"></p>
 
             <div class="actions">
@@ -335,6 +342,7 @@ function resetForm() {
   document.getElementById('f-description').value = '';
   document.getElementById('f-style-notes').value = '';
   document.getElementById('f-care-instructions').value = '';
+  document.getElementById('f-show-in-related').checked = false;
   document.getElementById('images-list').innerHTML = '';
   document.getElementById('images-list').appendChild(imageRow());
   document.getElementById('variants-list').innerHTML = '';
@@ -354,6 +362,7 @@ function fillFormWithProduct(product) {
   document.getElementById('f-description').value = product.description || '';
   document.getElementById('f-style-notes').value = product.style_notes || '';
   document.getElementById('f-care-instructions').value = product.care_instructions || '';
+  document.getElementById('f-show-in-related').checked = !!product.show_in_related;
 
   const imagesList = document.getElementById('images-list');
   imagesList.innerHTML = '';
@@ -455,6 +464,7 @@ document.getElementById('product-form').addEventListener('submit', async (e) => 
     description: document.getElementById('f-description').value.trim(),
     styleNotes: document.getElementById('f-style-notes').value.trim(),
     careInstructions: document.getElementById('f-care-instructions').value.trim(),
+    showInRelated: document.getElementById('f-show-in-related').checked,
     images,
     variants,
     filterIds,

@@ -770,12 +770,6 @@
     return family === 'accessoires' || family === 'bijoux';
   }
 
-  function countSharedValues(left, right) {
-    const leftValues = Array.isArray(left) ? left : [];
-    const rightValues = new Set((Array.isArray(right) ? right : []).map((value) => String(value).toLowerCase()));
-    return leftValues.reduce((count, value) => count + (rightValues.has(String(value).toLowerCase()) ? 1 : 0), 0);
-  }
-
   function buildProductUrl(product, origin) {
     const params = new URLSearchParams();
     params.set('id', product.id || '');
@@ -803,28 +797,20 @@
     return `detail-produit.html?${params.toString()}`;
   }
 
+  // Which products appear here is chosen explicitly in admin (a checkbox
+  // per product), not guessed from the name/colors — matches the same
+  // "no auto-fallback" preference already applied to categories/tags.
   function getRelatedProducts(product, origin, allProducts) {
     const sourceProducts = Array.isArray(allProducts) ? allProducts : [];
 
-    const currentFamily = getProductFamily(product);
-    const currentIsUnique = hasUniqueSize(product);
     return sourceProducts
-      .filter((candidate) => candidate.id !== product.id)
-      .map((candidate) => {
-        let score = 0;
-
-        if (getProductFamily(candidate) === currentFamily) score += 5;
-        score += countSharedValues(product.colors, candidate.colors) * 3;
-        if (hasUniqueSize(candidate) === currentIsUnique) score += 2;
-
-        return {
-          product: candidate,
-          score,
-          url: buildProductUrl(candidate, origin || { key: 'collection', label: 'Collection', url: 'collection.html', navKey: 'collection' })
-        };
-      })
-      .sort((left, right) => right.score - left.score || left.product.name.localeCompare(right.product.name, 'fr'))
-      .slice(0, 8);
+      .filter((candidate) => candidate.id !== product.id && candidate.show_in_related)
+      .sort((left, right) => new Date(right.created_at || 0) - new Date(left.created_at || 0))
+      .slice(0, 8)
+      .map((candidate) => ({
+        product: candidate,
+        url: buildProductUrl(candidate, origin || { key: 'collection', label: 'Collection', url: 'collection.html', navKey: 'collection' })
+      }));
   }
 
   function bindHorizontalSlider(track, prevBtn, nextBtn) {

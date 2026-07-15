@@ -134,6 +134,7 @@ module.exports = async function handler(req, res) {
       const description = String(body.description || '').trim();
       const styleNotes = String(body.styleNotes || '').trim();
       const careInstructions = String(body.careInstructions || '').trim();
+      const showInRelated = Boolean(body.showInRelated);
       const category = String(body.category || '').trim();
       const pageType = String(body.pageType || '').trim();
       const nouveauteTag = String(body.nouveauteTag || '').trim();
@@ -150,6 +151,7 @@ module.exports = async function handler(req, res) {
         description,
         style_notes: styleNotes || null,
         care_instructions: careInstructions || null,
+        show_in_related: showInRelated,
         category: category || null,
         page_type: pageType || null,
         nouveaute_tag: nouveauteTag || null
