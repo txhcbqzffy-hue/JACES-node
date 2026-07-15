@@ -1334,7 +1334,11 @@
 
     const isAccessory = isAccessoryProduct(product, origin);
     const isUnique = !isAccessory && hasUniqueSize(product);
-    const noSize = isAccessory || hasNoSize(product);
+    // Trust the real tagged sizes, not the accessory guess: a product
+    // categorized "Accessoires" that still has actual size variants (e.g.
+    // a dress cross-tagged for the Accessoires filter) must keep showing
+    // its size picker.
+    const noSize = hasNoSize(product);
     const gallery = buildGallery(product);
     const detailSubtitle = clampSingleLineText(getProductDetailSubtitle(product), 70);
     const colors = (product.colors && product.colors.length) ? product.colors : [];
