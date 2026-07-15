@@ -309,7 +309,7 @@
     <p class="footer-note">Copyright © 2026 JACES. Tous droits réservés.</p>
   </footer>
 
-  <script src="admin-products.js?v=20260715j"></script>
+  <script src="admin-products.js?v=20260715k"></script>
   <script>
     function updateHeaderState() {
       document.body.classList.toggle('header-scrolled', window.scrollY > 8);
@@ -394,10 +394,10 @@
     </div>
     <div class="fav-panel-list" id="fav-panel-list"></div>
   </div>
-  <script src="catalog.js?v=20260715j"></script>
-  <script src="cart.js?v=20260715j"></script>
-  <script src="favorites.js?v=20260715j"></script>
-  <script src="auth.js?v=20260715j"></script>
+  <script src="catalog.js?v=20260715k"></script>
+  <script src="cart.js?v=20260715k"></script>
+  <script src="favorites.js?v=20260715k"></script>
+  <script src="auth.js?v=20260715k"></script>
 
   <script type="module">
     import { getProducts } from './js/productsApi.js';
@@ -408,7 +408,7 @@
       if (raw.includes('€')) return raw;
       const numeric = Number(raw);
       if (!Number.isFinite(numeric)) return raw;
-      return new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(numeric);
+      return new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR', minimumFractionDigits: 0, maximumFractionDigits: 2 }).format(numeric);
     }
 
     function buildHomeSliderCard(product) {

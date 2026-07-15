@@ -84,7 +84,7 @@ function formatPrice(price) {
   if (raw.includes('€')) return raw;
   const numeric = Number(raw);
   if (!Number.isFinite(numeric)) return raw;
-  return new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(numeric);
+  return new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR', minimumFractionDigits: 0, maximumFractionDigits: 2 }).format(numeric);
 }
 
 function buildProductCard(product, pageType) {
