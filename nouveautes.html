@@ -440,6 +440,20 @@
       });
     }
 
+    // A profile from a previous visit (this page, another page, or the
+    // product detail advisor) should already show "Votre taille" here,
+    // not just right after running the wizard on this exact page load.
+    // favorites.js loads after this script, so defer until it's ready.
+    document.addEventListener('DOMContentLoaded', () => {
+      if (!sizeAdvisorResult || !window.JacesFavorites || typeof window.JacesFavorites.getSuggestedSizesForProduct !== 'function') return;
+      const virtualProduct = { id: 'size-advisor-nouveautes', name: '', sizes: ['34', '36', '38', '40', '42', '44'] };
+      const existingSuggestion = window.JacesFavorites.getSuggestedSizesForProduct(virtualProduct).suggestedSize;
+      if (existingSuggestion) {
+        sizeAdvisorResult.textContent = 'Votre taille : ' + existingSuggestion;
+        sizeAdvisorResult.hidden = false;
+      }
+    });
+
     updateFilterUI();
 
     document.querySelectorAll('.filter-pill').forEach(pill => {
@@ -778,12 +792,12 @@
     </div>
     <div class="fav-panel-list" id="fav-panel-list"></div>
   </div>
-  <script src="catalog.js?v=20260715n"></script>
-  <script type="module" src="products-page.js?v=20260715n"></script>
-  <script src="cart.js?v=20260715n"></script>
-  <script src="favorites.js?v=20260715n"></script>
-  <script src="auth.js?v=20260715n"></script>
-  <script src="size-advisor.js?v=20260715n"></script>
+  <script src="catalog.js?v=20260715o"></script>
+  <script type="module" src="products-page.js?v=20260715o"></script>
+  <script src="cart.js?v=20260715o"></script>
+  <script src="favorites.js?v=20260715o"></script>
+  <script src="auth.js?v=20260715o"></script>
+  <script src="size-advisor.js?v=20260715o"></script>
   <script>
     (function () {
     })();
