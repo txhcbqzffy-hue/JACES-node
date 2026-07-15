@@ -409,40 +409,18 @@
       };
     }
 
-    const reviewSeed = normalizeProductKey(product?.id || product?.name || 'jaces')
-      .split('')
-      .reduce((sum, ch) => sum + ch.charCodeAt(0), 0);
-
-    const fitMentions = ['la coupe tombe exactement comme attendu', 'la taille conseillee est juste', 'la coupe est flatteuse sans comprimer', 'la tenue est bien equilibree sur la silhouette'];
-    const fabricMentions = ['matiere douce et premium', 'tissu net avec beau tombe', 'matiere confortable au porter', 'finition haut de gamme visible'];
-    const styleMentions = ['piece facile a styliser', 'rendu encore plus beau en vrai', 'allure chic des la premiere tenue', 'tombe impeccable toute la journee'];
-
-    const pick = (list, offset) => list[(reviewSeed + offset) % list.length];
-    const reviews = [
-      `${pick(fitMentions, 0)}, ${pick(fabricMentions, 1)}.`,
-      `${pick(styleMentions, 2)}, je recommande cette ${String(product?.name || 'piece').toLowerCase()}.`,
-      `${pick(fabricMentions, 3)}, couture propre et sensation premium.`,
-      `${pick(fitMentions, 1)}, je la reprendrai dans une autre couleur.`
-    ];
-
-    const rating = Number.isFinite(customRating) ? customRating : (4.6 + ((reviewSeed % 4) * 0.1));
-    const verifiedCount = Number.isFinite(customCount) ? customCount : (92 + (reviewSeed % 89));
-    const itemRatings = [5, 5, 4 + ((reviewSeed + 1) % 2), 4 + ((reviewSeed + 2) % 2)];
-
-    return {
-      rating: Math.min(5, Math.round(rating * 10) / 10),
-      verifiedCount,
-      quote: customQuote || reviews[0],
-      reviews: reviews.map((text, index) => ({
-        author: `Cliente ${index + 1}`,
-        rating: itemRatings[index],
-        text
-      }))
-    };
+    // No admin-entered reviews: show a real empty state instead of
+    // fabricated ratings/text.
+    return { rating: 0, verifiedCount: 0, quote: '', reviews: [] };
   }
 
   function getReviewBreakdown(reviewData) {
-    const total = Math.max(1, Math.round(Number(reviewData?.verifiedCount || 0)));
+    const realTotal = Math.round(Number(reviewData?.verifiedCount || 0));
+    if (realTotal <= 0) {
+      return [5, 4, 3, 2, 1].map((stars) => ({ stars, count: 0 }));
+    }
+
+    const total = Math.max(1, realTotal);
     const targetRating = Math.max(0, Math.min(5, Number(reviewData?.rating || 4.7)));
     const seed = Math.round((targetRating % 1) * 100);
 
@@ -584,7 +562,7 @@
         `  <p class="product-reviews-item-author">${entry.author}</p>`,
         '</article>'
       ].join('');
-    }).join('');
+    }).join('') || '<p class="product-reviews-photos-empty">Aucun avis client pour le moment.</p>';
 
     const safePhotos = Array.isArray(photos) ? photos.filter(Boolean) : [];
 
@@ -1048,10 +1026,9 @@
     const reviewStarsMarkup = buildStarMarkup(reviewData.rating);
     const reviewQuotePreview = buildReviewPreview(reviewData.quote, 40);
     const isAdminTechnicalReference = /^admin-/i.test(String(product.id || '').trim());
-    const adminReviewPhotos = Array.isArray(product.review_photos) ? product.review_photos.filter(Boolean) : [];
-    const customerPhotos = adminReviewPhotos.length
-      ? adminReviewPhotos.slice(0, 8)
-      : [gallery.primaryImage, gallery.secondaryImage, gallery.tertiaryImage, gallery.quaternaryImage].filter(Boolean).slice(0, 4);
+    // Only real admin-uploaded photos - no fallback to the product's own
+    // gallery images, which aren't actual customer photos.
+    const customerPhotos = (Array.isArray(product.review_photos) ? product.review_photos.filter(Boolean) : []).slice(0, 8);
     const FIT_METER_STEPS = { petit: { label: 'Petit', percent: 10 }, normal: { label: 'Normal', percent: 50 }, grand: { label: 'Grand', percent: 90 } };
     const QUALITY_METER_STEPS = { moyenne: { label: 'Moyenne', percent: 10 }, bonne: { label: 'Bonne', percent: 50 }, premium: { label: 'Premium', percent: 90 } };
     const fitMeter = FIT_METER_STEPS[product.fit_rating] || FIT_METER_STEPS.normal;
@@ -1134,7 +1111,7 @@
                   <p class="product-detail-reassurance-count">${reviewData.verifiedCount} avis v&eacute;rifi&eacute;s</p>
                 </div>
                 <div class="product-detail-reassurance-col product-detail-reassurance-col--quote">
-                  <p class="product-detail-reassurance-quote">&ldquo;${reviewQuotePreview}&rdquo;</p>
+                  ${reviewQuotePreview ? `<p class="product-detail-reassurance-quote">&ldquo;${reviewQuotePreview}&rdquo;</p>` : ''}
                   <button type="button" class="product-detail-reassurance-link" data-open-reviews="reviews">Voir les avis</button>
                 </div>
               </div>
@@ -1193,7 +1170,7 @@
           <p class="product-detail-insights-count">${reviewData.verifiedCount} avis v&eacute;rifi&eacute;s</p>
           <div class="product-detail-insights-breakdown" aria-label="R&eacute;partition des notes">
             ${reviewBreakdown.map((row) => {
-              const percent = Math.max(1, Math.round((row.count / Math.max(1, reviewData.verifiedCount)) * 100));
+              const percent = row.count > 0 ? Math.max(1, Math.round((row.count / Math.max(1, reviewData.verifiedCount)) * 100)) : 0;
               return `<div class="product-detail-insights-breakdown-row"><span class="stars-label">${row.stars} &#9733;</span><span class="bar"><span style="width:${percent}%;"></span></span><span class="count">${row.count}</span></div>`;
             }).join('')}
           </div>
@@ -1201,9 +1178,11 @@
         <div class="product-detail-insights-col product-detail-insights-col--photos">
           <h3>Photos clientes</h3>
           <div class="product-detail-insights-photos">
-            ${customerPhotos.map((src, index) => `<img src="${src}" alt="Photo cliente ${index + 1}" loading="lazy">`).join('')}
+            ${customerPhotos.length
+              ? customerPhotos.map((src, index) => `<img src="${src}" alt="Photo cliente ${index + 1}" loading="lazy">`).join('')
+              : '<p class="product-detail-insights-photos-empty">Aucune photo cliente pour le moment.</p>'}
           </div>
-          <button class="product-detail-insights-photos-btn" type="button" data-open-reviews="photos">Voir toutes les photos</button>
+          ${customerPhotos.length ? '<button class="product-detail-insights-photos-btn" type="button" data-open-reviews="photos">Voir toutes les photos</button>' : ''}
         </div>
         <div class="product-detail-insights-col product-detail-insights-col--fit">
           <div class="product-detail-fit-meters" aria-label="Indicateurs ${isAccessory ? 'port&eacute; et qualit&eacute;' : 'taille et qualit&eacute;'}"><div class="product-detail-fit-meter"><p class="product-detail-fit-meter-title">${isAccessory ? 'Port&eacute;' : 'Taille'}</p><div class="product-detail-fit-meter-track" role="img" aria-label="${isAccessory ? 'Port&eacute;' : 'Taille'}: ${fitMeter.label}"><span class="product-detail-fit-meter-dot" style="left: ${fitMeter.percent}%;"></span></div><div class="product-detail-fit-meter-labels"><span>Petit</span><span>Normal</span><span>Grand</span></div></div><div class="product-detail-fit-meter"><p class="product-detail-fit-meter-title">Qualit&eacute;</p><div class="product-detail-fit-meter-track" role="img" aria-label="Qualit&eacute;: ${qualityMeter.label}"><span class="product-detail-fit-meter-dot" style="left: ${qualityMeter.percent}%;"></span></div><div class="product-detail-fit-meter-labels"><span>Moyenne</span><span>Bonne</span><span>Premium</span></div></div></div>
