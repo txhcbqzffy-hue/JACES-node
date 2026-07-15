@@ -233,7 +233,10 @@
                 <label><input type="checkbox" name="taille" value="40"> 40</label>
                 <label><input type="checkbox" name="taille" value="42"> 42</label>
                 <label><input type="checkbox" name="taille" value="44"> 44</label>
-                <button type="button" class="filter-size-advisor-link" id="nouveautes-size-advisor-trigger">Trouver ma taille idéale</button>
+                <div class="filter-size-advisor-row">
+                  <button type="button" class="filter-size-advisor-link" id="nouveautes-size-advisor-trigger">Trouver ma taille idéale</button>
+                  <span class="filter-size-advisor-result" id="nouveautes-size-advisor-result" hidden></span>
+                </div>
                 <p class="filter-dropdown-note">Guide des tailles disponible dans chaque fiche produit.</p>
               </div>
             </div>
@@ -417,6 +420,7 @@
     }
 
     const sizeAdvisorTrigger = document.getElementById('nouveautes-size-advisor-trigger');
+    const sizeAdvisorResult = document.getElementById('nouveautes-size-advisor-result');
     if (sizeAdvisorTrigger) {
       sizeAdvisorTrigger.addEventListener('click', () => {
         if (!window.JacesSizeAdvisor) return;
@@ -426,6 +430,10 @@
           if (!checkbox) return;
           document.querySelectorAll('#collection-filter-bar input[name="taille"]').forEach((input) => { input.checked = false; });
           checkbox.checked = true;
+          if (sizeAdvisorResult) {
+            sizeAdvisorResult.textContent = 'Votre taille : ' + recommendedSize;
+            sizeAdvisorResult.hidden = false;
+          }
           updateFilterUI();
           applyStrictCategoryFilter();
         });
@@ -770,12 +778,12 @@
     </div>
     <div class="fav-panel-list" id="fav-panel-list"></div>
   </div>
-  <script src="catalog.js?v=20260715l"></script>
-  <script type="module" src="products-page.js?v=20260715l"></script>
-  <script src="cart.js?v=20260715l"></script>
-  <script src="favorites.js?v=20260715l"></script>
-  <script src="auth.js?v=20260715l"></script>
-  <script src="size-advisor.js?v=20260715l"></script>
+  <script src="catalog.js?v=20260715m"></script>
+  <script type="module" src="products-page.js?v=20260715m"></script>
+  <script src="cart.js?v=20260715m"></script>
+  <script src="favorites.js?v=20260715m"></script>
+  <script src="auth.js?v=20260715m"></script>
+  <script src="size-advisor.js?v=20260715m"></script>
   <script>
     (function () {
     })();

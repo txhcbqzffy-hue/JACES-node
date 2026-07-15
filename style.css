@@ -6543,12 +6543,18 @@ body.header-scrolled .header .submenu a.submenu-link-active {
   padding-top: 10px;
 }
 
-.filter-size-advisor-link {
+.filter-size-advisor-row {
   grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.filter-size-advisor-link {
   border: none;
   background: transparent;
   padding: 0;
-  margin-top: 4px;
   color: #1b1a17;
   font-family: var(--font-text);
   font-size: 13px;
@@ -6556,6 +6562,13 @@ body.header-scrolled .header .submenu a.submenu-link-active {
   text-decoration: underline;
   cursor: pointer;
   text-align: left;
+}
+
+.filter-size-advisor-result {
+  white-space: nowrap;
+  color: #d94d84;
+  font-weight: 700;
+  font-size: 13px;
 }
 
 .filter-count {
