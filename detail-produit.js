@@ -1048,7 +1048,14 @@
     const reviewStarsMarkup = buildStarMarkup(reviewData.rating);
     const reviewQuotePreview = buildReviewPreview(reviewData.quote, 40);
     const isAdminTechnicalReference = /^admin-/i.test(String(product.id || '').trim());
-    const customerPhotos = [gallery.primaryImage, gallery.secondaryImage, gallery.tertiaryImage, gallery.quaternaryImage].filter(Boolean).slice(0, 4);
+    const adminReviewPhotos = Array.isArray(product.review_photos) ? product.review_photos.filter(Boolean) : [];
+    const customerPhotos = adminReviewPhotos.length
+      ? adminReviewPhotos.slice(0, 8)
+      : [gallery.primaryImage, gallery.secondaryImage, gallery.tertiaryImage, gallery.quaternaryImage].filter(Boolean).slice(0, 4);
+    const FIT_METER_STEPS = { petit: { label: 'Petit', percent: 10 }, normal: { label: 'Normal', percent: 50 }, grand: { label: 'Grand', percent: 90 } };
+    const QUALITY_METER_STEPS = { moyenne: { label: 'Moyenne', percent: 10 }, bonne: { label: 'Bonne', percent: 50 }, premium: { label: 'Premium', percent: 90 } };
+    const fitMeter = FIT_METER_STEPS[product.fit_rating] || FIT_METER_STEPS.normal;
+    const qualityMeter = QUALITY_METER_STEPS[product.quality_rating] || QUALITY_METER_STEPS.premium;
     const getQuickBuyMarkup = (entryProduct) => {
       if (isAccessoryProduct(entryProduct, origin)) return '';
       const quickBuySizes = Array.isArray(entryProduct?.sizes)
@@ -1199,7 +1206,7 @@
           <button class="product-detail-insights-photos-btn" type="button" data-open-reviews="photos">Voir toutes les photos</button>
         </div>
         <div class="product-detail-insights-col product-detail-insights-col--fit">
-          <div class="product-detail-fit-meters" aria-label="Indicateurs ${isAccessory ? 'port&eacute; et qualit&eacute;' : 'taille et qualit&eacute;'}"><div class="product-detail-fit-meter"><p class="product-detail-fit-meter-title">${isAccessory ? 'Port&eacute;' : 'Taille'}</p><div class="product-detail-fit-meter-track" role="img" aria-label="${isAccessory ? 'Port&eacute;: Normal' : 'Taille: Normal'}"><span class="product-detail-fit-meter-dot" style="left: 50%;"></span></div><div class="product-detail-fit-meter-labels"><span>Petit</span><span>Normal</span><span>Grand</span></div></div><div class="product-detail-fit-meter"><p class="product-detail-fit-meter-title">Qualit&eacute;</p><div class="product-detail-fit-meter-track" role="img" aria-label="Qualit&eacute;: Premium"><span class="product-detail-fit-meter-dot" style="left: 94%;"></span></div><div class="product-detail-fit-meter-labels"><span>Moyenne</span><span>Bonne</span><span>Premium</span></div></div></div>
+          <div class="product-detail-fit-meters" aria-label="Indicateurs ${isAccessory ? 'port&eacute; et qualit&eacute;' : 'taille et qualit&eacute;'}"><div class="product-detail-fit-meter"><p class="product-detail-fit-meter-title">${isAccessory ? 'Port&eacute;' : 'Taille'}</p><div class="product-detail-fit-meter-track" role="img" aria-label="${isAccessory ? 'Port&eacute;' : 'Taille'}: ${fitMeter.label}"><span class="product-detail-fit-meter-dot" style="left: ${fitMeter.percent}%;"></span></div><div class="product-detail-fit-meter-labels"><span>Petit</span><span>Normal</span><span>Grand</span></div></div><div class="product-detail-fit-meter"><p class="product-detail-fit-meter-title">Qualit&eacute;</p><div class="product-detail-fit-meter-track" role="img" aria-label="Qualit&eacute;: ${qualityMeter.label}"><span class="product-detail-fit-meter-dot" style="left: ${qualityMeter.percent}%;"></span></div><div class="product-detail-fit-meter-labels"><span>Moyenne</span><span>Bonne</span><span>Premium</span></div></div></div>
         </div>
       </section>
       ${relatedProducts.length ? `

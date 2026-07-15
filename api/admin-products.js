@@ -55,16 +55,34 @@ function sanitizeFilterIds(filterIds) {
     .filter((id) => Number.isFinite(id)))];
 }
 
-async function replaceProductChildren(supabase, productId, { images, variants, filterIds }) {
-  const [imagesDel, variantsDel, filtersDel] = await Promise.all([
+function sanitizeReviewPhotos(reviewPhotos) {
+  return (Array.isArray(reviewPhotos) ? reviewPhotos : [])
+    .map((url) => String(url || '').trim())
+    .filter(Boolean);
+}
+
+function sanitizeReviews(reviews) {
+  return (Array.isArray(reviews) ? reviews : [])
+    .map((review) => ({
+      author: String(review?.author || '').trim(),
+      rating: Math.max(1, Math.min(5, Number(review?.rating) || 5)),
+      text: String(review?.text || '').trim()
+    }))
+    .filter((review) => review.text);
+}
+
+async function replaceProductChildren(supabase, productId, { images, variants, filterIds, reviews }) {
+  const [imagesDel, variantsDel, filtersDel, reviewsDel] = await Promise.all([
     supabase.from('product_images').delete().eq('product_id', productId),
     supabase.from('product_variants').delete().eq('product_id', productId),
-    supabase.from('product_filters').delete().eq('product_id', productId)
+    supabase.from('product_filters').delete().eq('product_id', productId),
+    supabase.from('product_reviews').delete().eq('product_id', productId)
   ]);
 
   if (imagesDel.error) throw new Error('product_images (delete): ' + imagesDel.error.message);
   if (variantsDel.error) throw new Error('product_variants (delete): ' + variantsDel.error.message);
   if (filtersDel.error) throw new Error('product_filters (delete): ' + filtersDel.error.message);
+  if (reviewsDel.error) throw new Error('product_reviews (delete): ' + reviewsDel.error.message);
 
   if (images.length) {
     const rows = images.map((url, index) => ({ product_id: productId, url, position: index + 1 }));
@@ -82,6 +100,12 @@ async function replaceProductChildren(supabase, productId, { images, variants, f
     const rows = filterIds.map((filterId) => ({ product_id: productId, filter_id: filterId }));
     const { error } = await supabase.from('product_filters').insert(rows);
     if (error) throw new Error('product_filters (insert): ' + error.message);
+  }
+
+  if (Array.isArray(reviews) && reviews.length) {
+    const rows = reviews.map((review) => ({ product_id: productId, author: review.author, rating: review.rating, review_text: review.text }));
+    const { error } = await supabase.from('product_reviews').insert(rows);
+    if (error) throw new Error('product_reviews (insert): ' + error.message);
   }
 }
 
@@ -121,7 +145,7 @@ module.exports = async function handler(req, res) {
       const productId = String(body.id || '').trim();
       if (!productId) return res.status(400).json({ error: 'id manquant' });
 
-      await replaceProductChildren(supabase, productId, { images: [], variants: [], filterIds: [] });
+      await replaceProductChildren(supabase, productId, { images: [], variants: [], filterIds: [], reviews: [] });
       const { error } = await supabase.from('products').delete().eq('id', productId);
       if (error) return res.status(500).json({ error: 'products (delete): ' + error.message });
 
@@ -135,12 +159,16 @@ module.exports = async function handler(req, res) {
       const styleNotes = String(body.styleNotes || '').trim();
       const careInstructions = String(body.careInstructions || '').trim();
       const showInRelated = Boolean(body.showInRelated);
+      const fitRating = String(body.fitRating || 'normal').trim();
+      const qualityRating = String(body.qualityRating || 'premium').trim();
       const category = String(body.category || '').trim();
       const pageType = String(body.pageType || '').trim();
       const nouveauteTag = String(body.nouveauteTag || '').trim();
       const images = sanitizeImages(body.images);
       const variants = sanitizeVariants(body.variants);
       const filterIds = sanitizeFilterIds(body.filterIds);
+      const reviewPhotos = sanitizeReviewPhotos(body.reviewPhotos);
+      const reviews = sanitizeReviews(body.reviews);
 
       if (!name) return res.status(400).json({ error: 'Le nom du produit est requis' });
       if (!images.length) return res.status(400).json({ error: 'Au moins une image est requise' });
@@ -152,6 +180,9 @@ module.exports = async function handler(req, res) {
         style_notes: styleNotes || null,
         care_instructions: careInstructions || null,
         show_in_related: showInRelated,
+        fit_rating: fitRating,
+        quality_rating: qualityRating,
+        review_photos: reviewPhotos,
         category: category || null,
         page_type: pageType || null,
         nouveaute_tag: nouveauteTag || null
@@ -169,7 +200,7 @@ module.exports = async function handler(req, res) {
         if (error) return res.status(500).json({ error: withRlsHint('products (update): ' + error.message) });
       }
 
-      await replaceProductChildren(supabase, productId, { images, variants, filterIds });
+      await replaceProductChildren(supabase, productId, { images, variants, filterIds, reviews });
 
       return res.status(200).json({ ok: true, id: productId });
     }

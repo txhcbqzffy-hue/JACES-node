@@ -175,7 +175,7 @@ module.exports = async function handler(req, res) {
 
     const productIds = safeProducts.map((product) => String(product.id));
 
-    const [{ data: images, error: imagesError }, { data: variants, error: variantsError }] = await Promise.all([
+    const [{ data: images, error: imagesError }, { data: variants, error: variantsError }, reviewsResult] = await Promise.all([
       supabase
         .from('product_images')
         .select('*')
@@ -185,7 +185,15 @@ module.exports = async function handler(req, res) {
       supabase
         .from('product_variants')
         .select('*')
+        .in('product_id', productIds),
+      // product_reviews is a newer, optional table - degrade gracefully
+      // (no reviews) instead of failing the whole catalog if it hasn't
+      // been created yet in a given environment.
+      supabase
+        .from('product_reviews')
+        .select('*')
         .in('product_id', productIds)
+        .then((result) => result, (error) => ({ data: [], error }))
     ]);
 
     if (imagesError) {
@@ -195,6 +203,8 @@ module.exports = async function handler(req, res) {
     if (variantsError) {
       return res.status(500).json(withRlsHint('product_variants', variantsError.message));
     }
+
+    const reviews = reviewsResult && !reviewsResult.error ? reviewsResult.data : [];
 
     const imagesByProduct = new Map();
     (images || []).forEach((image) => {
@@ -208,6 +218,17 @@ module.exports = async function handler(req, res) {
       const key = String(variant.product_id);
       if (!variantsByProduct.has(key)) variantsByProduct.set(key, []);
       variantsByProduct.get(key).push(variant);
+    });
+
+    const reviewsByProduct = new Map();
+    (reviews || []).forEach((review) => {
+      const key = String(review.product_id);
+      if (!reviewsByProduct.has(key)) reviewsByProduct.set(key, []);
+      reviewsByProduct.get(key).push({
+        author: review.author || '',
+        rating: review.rating || 5,
+        text: review.review_text || ''
+      });
     });
 
     const filtersByProduct = new Map();
@@ -227,6 +248,7 @@ module.exports = async function handler(req, res) {
       });
       const productVariants = (variantsByProduct.get(key) || []).slice();
       const productFilters = (filtersByProduct.get(key) || []).slice();
+      const productReviews = (reviewsByProduct.get(key) || []).slice();
 
       const sortedImages = productImages.map((image, index) => ({
         ...image,
@@ -310,6 +332,7 @@ module.exports = async function handler(req, res) {
         filter_tokens: [...new Set(filterTokens)],
         filter_menus: filterMenus,
         filters: productFilters,
+        reviews: productReviews,
         nouveauteTags,
         diagnostics: includeDiagnostics ? { cloudinaryWarnings } : undefined
       };

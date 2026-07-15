@@ -66,6 +66,10 @@
   .row .field { flex: 1; }
   .list-row { display: flex; gap: 8px; margin-bottom: 8px; align-items: center; }
   .list-row input { flex: 1; }
+  .review-row { align-items: flex-start; }
+  .review-row input { flex: 0 0 130px; }
+  .review-row select { flex: 0 0 64px; }
+  .review-row textarea { flex: 1; min-height: 44px; resize: vertical; }
   .list-row button, .add-btn { background: #ece5d8; border: 1px solid #c8bfb3; padding: 8px 10px; cursor: pointer; font-size: 0.75rem; }
   .add-btn { margin-top: 4px; }
   fieldset { border: 1px solid #d8cfc2; margin-bottom: 14px; padding: 10px 12px; }
@@ -146,6 +150,37 @@
               <label>Variantes (taille / couleur / stock)</label>
               <div id="variants-list"></div>
               <button type="button" class="add-btn" id="add-variant-btn">+ Ajouter une variante</button>
+            </div>
+
+            <div class="field">
+              <label>Photos clientes (liens Cloudinary / Dropbox)</label>
+              <div id="review-photos-list"></div>
+              <button type="button" class="add-btn" id="add-review-photo-btn">+ Ajouter une photo cliente</button>
+            </div>
+
+            <div class="field">
+              <label>Avis clients</label>
+              <div id="reviews-list"></div>
+              <button type="button" class="add-btn" id="add-review-btn">+ Ajouter un avis</button>
+            </div>
+
+            <div class="row">
+              <div class="field">
+                <label for="f-fit-rating">Port&eacute;</label>
+                <select id="f-fit-rating">
+                  <option value="petit">Petit</option>
+                  <option value="normal" selected>Normal</option>
+                  <option value="grand">Grand</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="f-quality-rating">Qualit&eacute;</label>
+                <select id="f-quality-rating">
+                  <option value="moyenne">Moyenne</option>
+                  <option value="bonne">Bonne</option>
+                  <option value="premium" selected>Premium</option>
+                </select>
+              </div>
             </div>
 
             <div id="filters-container"></div>
@@ -296,8 +331,36 @@ function variantRow(size = '', color = '', stock = '') {
   return row;
 }
 
+function reviewPhotoRow(value = '') {
+  const row = document.createElement('div');
+  row.className = 'list-row';
+  row.innerHTML = `<input type="url" placeholder="https://res.cloudinary.com/..." value="${value.replace(/"/g, '&quot;')}"><button type="button">✕</button>`;
+  row.querySelector('button').addEventListener('click', () => row.remove());
+  return row;
+}
+
+function reviewRow(author = '', rating = 5, text = '') {
+  const row = document.createElement('div');
+  row.className = 'list-row review-row';
+  row.innerHTML = `
+    <input type="text" class="review-author" placeholder="Nom cliente" value="${String(author).replace(/"/g, '&quot;')}">
+    <select class="review-rating">
+      ${[5, 4, 3, 2, 1].map((n) => `<option value="${n}"${Number(rating) === n ? ' selected' : ''}>${n}★</option>`).join('')}
+    </select>
+    <textarea class="review-text" placeholder="Texte de l'avis">${String(text)}</textarea>
+    <button type="button">✕</button>`;
+  row.querySelector('button').addEventListener('click', () => row.remove());
+  return row;
+}
+
 document.getElementById('add-image-btn').addEventListener('click', () => {
   document.getElementById('images-list').appendChild(imageRow());
+});
+document.getElementById('add-review-photo-btn').addEventListener('click', () => {
+  document.getElementById('review-photos-list').appendChild(reviewPhotoRow());
+});
+document.getElementById('add-review-btn').addEventListener('click', () => {
+  document.getElementById('reviews-list').appendChild(reviewRow());
 });
 document.getElementById('add-variant-btn').addEventListener('click', () => {
   document.getElementById('variants-list').appendChild(variantRow());
@@ -346,6 +409,10 @@ function resetForm() {
   document.getElementById('images-list').innerHTML = '';
   document.getElementById('images-list').appendChild(imageRow());
   document.getElementById('variants-list').innerHTML = '';
+  document.getElementById('review-photos-list').innerHTML = '';
+  document.getElementById('reviews-list').innerHTML = '';
+  document.getElementById('f-fit-rating').value = 'normal';
+  document.getElementById('f-quality-rating').value = 'premium';
   document.querySelectorAll('#filters-container input[type="checkbox"]').forEach((cb) => { cb.checked = false; });
   document.getElementById('form-status').textContent = '';
   document.getElementById('form-status').className = 'status-msg';
@@ -363,6 +430,18 @@ function fillFormWithProduct(product) {
   document.getElementById('f-style-notes').value = product.style_notes || '';
   document.getElementById('f-care-instructions').value = product.care_instructions || '';
   document.getElementById('f-show-in-related').checked = !!product.show_in_related;
+  document.getElementById('f-fit-rating').value = product.fit_rating || 'normal';
+  document.getElementById('f-quality-rating').value = product.quality_rating || 'premium';
+
+  const reviewPhotosList = document.getElementById('review-photos-list');
+  reviewPhotosList.innerHTML = '';
+  (Array.isArray(product.review_photos) ? product.review_photos : []).forEach((url) => reviewPhotosList.appendChild(reviewPhotoRow(url)));
+
+  const reviewsList = document.getElementById('reviews-list');
+  reviewsList.innerHTML = '';
+  (Array.isArray(product.reviews) ? product.reviews : []).forEach((review) => {
+    reviewsList.appendChild(reviewRow(review.author || '', review.rating || 5, review.text || ''));
+  });
 
   const imagesList = document.getElementById('images-list');
   imagesList.innerHTML = '';
@@ -446,6 +525,18 @@ document.getElementById('product-form').addEventListener('submit', async (e) => 
     return { size, color, stock };
   }).filter((v) => v.size || v.color);
 
+  const reviewPhotos = [...new Set(
+    Array.from(document.querySelectorAll('#review-photos-list input'))
+      .map((input) => input.value.trim())
+      .filter(Boolean)
+  )];
+
+  const reviews = Array.from(document.querySelectorAll('#reviews-list .review-row')).map((row) => ({
+    author: row.querySelector('.review-author').value.trim(),
+    rating: Number(row.querySelector('.review-rating').value) || 5,
+    text: row.querySelector('.review-text').value.trim()
+  })).filter((r) => r.text);
+
   const filterIds = Array.from(document.querySelectorAll('#filters-container input[type="checkbox"]:checked'))
     .map((cb) => Number(cb.value));
 
@@ -465,6 +556,10 @@ document.getElementById('product-form').addEventListener('submit', async (e) => 
     styleNotes: document.getElementById('f-style-notes').value.trim(),
     careInstructions: document.getElementById('f-care-instructions').value.trim(),
     showInRelated: document.getElementById('f-show-in-related').checked,
+    fitRating: document.getElementById('f-fit-rating').value,
+    qualityRating: document.getElementById('f-quality-rating').value,
+    reviewPhotos,
+    reviews,
     images,
     variants,
     filterIds,
