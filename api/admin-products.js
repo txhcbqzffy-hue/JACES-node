@@ -132,6 +132,8 @@ module.exports = async function handler(req, res) {
       const name = String(body.name || '').trim();
       const price = toPrice(body.price);
       const description = String(body.description || '').trim();
+      const styleNotes = String(body.styleNotes || '').trim();
+      const careInstructions = String(body.careInstructions || '').trim();
       const category = String(body.category || '').trim();
       const pageType = String(body.pageType || '').trim();
       const nouveauteTag = String(body.nouveauteTag || '').trim();
@@ -146,6 +148,8 @@ module.exports = async function handler(req, res) {
         name,
         price,
         description,
+        style_notes: styleNotes || null,
+        care_instructions: careInstructions || null,
         category: category || null,
         page_type: pageType || null,
         nouveaute_tag: nouveauteTag || null

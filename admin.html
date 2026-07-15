@@ -127,6 +127,16 @@
             </div>
 
             <div class="field">
+              <label for="f-style-notes">Porté et style / Taille et coupe</label>
+              <textarea id="f-style-notes"></textarea>
+            </div>
+
+            <div class="field">
+              <label for="f-care-instructions">Entretien</label>
+              <textarea id="f-care-instructions"></textarea>
+            </div>
+
+            <div class="field">
               <label>Images (liens Cloudinary / Dropbox)</label>
               <div id="images-list"></div>
               <button type="button" class="add-btn" id="add-image-btn">+ Ajouter une image</button>
@@ -323,6 +333,8 @@ function resetForm() {
   document.getElementById('f-name').value = '';
   document.getElementById('f-price').value = '';
   document.getElementById('f-description').value = '';
+  document.getElementById('f-style-notes').value = '';
+  document.getElementById('f-care-instructions').value = '';
   document.getElementById('images-list').innerHTML = '';
   document.getElementById('images-list').appendChild(imageRow());
   document.getElementById('variants-list').innerHTML = '';
@@ -340,6 +352,8 @@ function fillFormWithProduct(product) {
   document.getElementById('f-name').value = product.name || '';
   document.getElementById('f-price').value = product.price || '';
   document.getElementById('f-description').value = product.description || '';
+  document.getElementById('f-style-notes').value = product.style_notes || '';
+  document.getElementById('f-care-instructions').value = product.care_instructions || '';
 
   const imagesList = document.getElementById('images-list');
   imagesList.innerHTML = '';
@@ -439,6 +453,8 @@ document.getElementById('product-form').addEventListener('submit', async (e) => 
     name: document.getElementById('f-name').value.trim(),
     price: Number(document.getElementById('f-price').value) || 0,
     description: document.getElementById('f-description').value.trim(),
+    styleNotes: document.getElementById('f-style-notes').value.trim(),
+    careInstructions: document.getElementById('f-care-instructions').value.trim(),
     images,
     variants,
     filterIds,

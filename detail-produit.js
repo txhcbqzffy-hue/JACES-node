@@ -1175,13 +1175,13 @@
               <details class="product-detail-accordion">
                 <summary class="product-detail-accordion-summary">${isAccessory ? 'Port&eacute; et Style' : 'Taille et Coupe'}</summary>
                 <div class="product-detail-accordion-body">
-                  <p>${isAccessory ? 'Une allure pens&eacute;e pour accompagner la silhouette avec &eacute;quilibre et confort visuel.' : 'Coupe pens&eacute;e pour un tomb&eacute; net et confortable, fid&egrave;le &agrave; la recommandation de taille affich&eacute;e.'}</p>
+                  <p>${product.style_notes || (isAccessory ? 'Une allure pens&eacute;e pour accompagner la silhouette avec &eacute;quilibre et confort visuel.' : 'Coupe pens&eacute;e pour un tomb&eacute; net et confortable, fid&egrave;le &agrave; la recommandation de taille affich&eacute;e.')}</p>
                 </div>
               </details>
               <details class="product-detail-accordion">
                 <summary class="product-detail-accordion-summary">Entretien</summary>
                 <div class="product-detail-accordion-body">
-                  <p>Lavable en machine &agrave; 30&deg;C programme d&eacute;licat, s&eacute;chage &agrave; l'air libre, repassage doux sur l'envers.</p>
+                  <p>${product.care_instructions || 'Lavable en machine &agrave; 30&deg;C programme d&eacute;licat, s&eacute;chage &agrave; l\'air libre, repassage doux sur l\'envers.'}</p>
                 </div>
               </details>
             </div>
