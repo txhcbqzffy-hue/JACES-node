@@ -1165,7 +1165,7 @@
               </div>
             </div>
             <div class="product-detail-accordions">
-              <details class="product-detail-accordion">
+              <details class="product-detail-accordion" open>
                 <summary class="product-detail-accordion-summary">D&eacute;tails</summary>
                 <div class="product-detail-accordion-body">
                   <p>${product.description}</p>
