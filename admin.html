@@ -397,14 +397,20 @@ document.getElementById('filters-container').addEventListener('mousedown', (even
   const input = getRadioFromFilterEvent(event);
   if (input) input.dataset.wasChecked = input.checked ? '1' : '';
 });
+// Clicking a <label> actually fires two click events (one on the label,
+// then a synthetic one on the input) - the input's own default action
+// re-checks it right after, so this must run in the capture phase and
+// preventDefault() before that default action applies, not just react
+// to it afterwards.
 document.getElementById('filters-container').addEventListener('click', (event) => {
   const input = getRadioFromFilterEvent(event);
   if (input && input.dataset.wasChecked === '1') {
+    event.preventDefault();
     input.checked = false;
     input.dataset.wasChecked = '';
     input.dispatchEvent(new Event('change', { bubbles: true }));
   }
-});
+}, true);
 
 async function loadFilters() {
   const res = await apiFetch('/api/filters');
