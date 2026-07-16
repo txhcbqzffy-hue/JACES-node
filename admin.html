@@ -161,9 +161,24 @@
             </div>
 
             <div class="field">
-              <label>Avis clients</label>
-              <div id="reviews-list"></div>
-              <button type="button" class="add-btn" id="add-review-btn">+ Ajouter un avis</button>
+              <label>Mati&egrave;re (filtre Accessoires)</label>
+              <div class="checkbox-grid" id="material-checkboxes">
+                <label><input type="checkbox" name="material" value="cuir"> Cuir</label>
+                <label><input type="checkbox" name="material" value="metal"> M&eacute;tal</label>
+                <label><input type="checkbox" name="material" value="soie"> Soie</label>
+                <label><input type="checkbox" name="material" value="laine"> Laine</label>
+                <label><input type="checkbox" name="material" value="coton"> Coton</label>
+              </div>
+              <p class="field-hint" id="material-required-hint" hidden>Obligatoire : au moins une mati&egrave;re, car un accessoire (Sacs/Bijoux/Ceintures/Foulards) est coch&eacute; ci-dessous.</p>
+            </div>
+
+            <div id="filters-container"></div>
+
+            <div class="field">
+              <label style="display:flex;align-items:center;gap:8px;font-weight:normal;">
+                <input type="checkbox" id="f-show-in-related" style="width:auto;">
+                Afficher en bas des fiches produit ("En ce moment")
+              </label>
             </div>
 
             <div class="row">
@@ -186,24 +201,9 @@
             </div>
 
             <div class="field">
-              <label>Mati&egrave;re (filtre Accessoires)</label>
-              <div class="checkbox-grid" id="material-checkboxes">
-                <label><input type="checkbox" name="material" value="cuir"> Cuir</label>
-                <label><input type="checkbox" name="material" value="metal"> M&eacute;tal</label>
-                <label><input type="checkbox" name="material" value="soie"> Soie</label>
-                <label><input type="checkbox" name="material" value="laine"> Laine</label>
-                <label><input type="checkbox" name="material" value="coton"> Coton</label>
-              </div>
-              <p class="field-hint" id="material-required-hint" hidden>Obligatoire : au moins une mati&egrave;re, car un accessoire (Sacs/Bijoux/Ceintures/Foulards) est coch&eacute; ci-dessous.</p>
-            </div>
-
-            <div id="filters-container"></div>
-
-            <div class="field">
-              <label style="display:flex;align-items:center;gap:8px;font-weight:normal;">
-                <input type="checkbox" id="f-show-in-related" style="width:auto;">
-                Afficher en bas des fiches produit ("En ce moment")
-              </label>
+              <label>Avis clients</label>
+              <div id="reviews-list"></div>
+              <button type="button" class="add-btn" id="add-review-btn">+ Ajouter un avis</button>
             </div>
 
             <p class="status-msg" id="form-status"></p>
