@@ -59,15 +59,26 @@ function getProductCollectionSeason(product) {
   return seasonToken || 'all';
 }
 
+// Only these menus feed the Collection/Collaborations/Accessoires page's
+// shared data-category tokens - "nouveautes_categories" and "nouveautes"
+// have their own separate dataset attributes (see below) and must stay out
+// of this one, since e.g. "Tops" is a real option under both the Collection
+// Cat\u00e9gories menu and the independent Nouveaut\u00e9s one, and mixing them would
+// make a Nouveaut\u00e9s-only tag leak into the Collection page's filtering.
+const CATEGORY_TOKEN_MENUS = ['categories', 'collaborations', 'accessoires'];
+
 function getProductCategoryTokens(product) {
   const tokens = ['all'];
 
   // Only the real category/accessoire/collaboration tags set in the admin
   // panel (Supabase product_filters) count \u2014 guessing from the product name
   // used to cause false positives (e.g. any name containing "top" or "sac").
-  const filterTokens = Array.isArray(product?.filter_tokens) ? product.filter_tokens : [];
-  filterTokens.forEach((token) => {
-    tokens.unshift(COLLAB_SLUG_TO_TOKEN[token] || token);
+  const filterMenus = product?.filter_menus || {};
+  CATEGORY_TOKEN_MENUS.forEach((menu) => {
+    (Array.isArray(filterMenus[menu]) ? filterMenus[menu] : []).forEach((filter) => {
+      const slug = filter?.slug;
+      if (slug) tokens.unshift(COLLAB_SLUG_TO_TOKEN[slug] || slug);
+    });
   });
 
   return Array.from(new Set(tokens)).join(' ');
