@@ -433,27 +433,31 @@ async function loadFilters() {
     const grid = document.createElement('div');
     grid.className = 'checkbox-grid';
     // A product belongs to exactly one Collection category (Robes/Tops/...),
-    // one accessory type (Sacs/Bijoux/...) if it's an accessory, or one
-    // Collaboration (Tout voir/JACES x .../...) if it's a collaboration -
-    // those are mutually exclusive radio groups (and mutually exclusive
-    // with each other, enforced below). Nouveautés/Saison stay multi-select.
-    const radioNameByMenu = { categories: 'filter-category', accessoires: 'filter-accessory-type', collaborations: 'filter-collaboration', collections: 'filter-season' };
+    // one accessory type (Sacs/Bijoux/...) if it's an accessory, one
+    // Collaboration if it's a collaboration, one Saison, and one Nouveautés
+    // tag (Drop été/Édition limitée/Pièces signature) - all mutually
+    // exclusive radio groups within their menu (Catégories/Accessoires/
+    // Collaborations are additionally exclusive with each other, enforced
+    // below).
+    const radioNameByMenu = { categories: 'filter-category', accessoires: 'filter-accessory-type', collaborations: 'filter-collaboration', collections: 'filter-season', nouveautes: 'filter-nouveaute-tag' };
     const radioName = radioNameByMenu[menu];
-    // "Tout voir" is no longer pickable here (Catégories or Collaborations)
-    // - every product now needs a real classification, so this catch-all
-    // doesn't belong among the choices (its underlying filter rows stay
-    // untouched in Supabase).
+    // "Tout voir" is no longer pickable in Catégories/Collaborations - every
+    // product now needs a real classification, so this catch-all doesn't
+    // belong among those choices (its filter rows stay untouched). In
+    // Nouveautés, "Tout voir" is kept but stays a standalone checkbox, not
+    // part of the Drop été/Édition limitée/Pièces signature radio group.
     const menuOptions = (menu === 'categories' || menu === 'collaborations')
       ? filtersByMenu[menu].filter((filter) => (filter.label || filter.name) !== 'Tout voir')
       : filtersByMenu[menu];
     menuOptions.forEach((filter) => {
       const label = document.createElement('label');
       const filterLabel = filter.label || filter.name;
-      // "Créations exclusives" isn't a brand collab - it can be checked
-      // alongside one of JACES x Nike/Chloé/... instead of being mutually
-      // exclusive with them, so it stays a plain checkbox.
+      // "Créations exclusives" isn't a brand collab, and Nouveautés' "Tout
+      // voir" isn't a specific tag - both can be checked alongside their
+      // group's radio option instead of being mutually exclusive with it.
       const isStandaloneCollab = menu === 'collaborations' && filterLabel === 'Créations exclusives';
-      const inputAttrs = radioName && !isStandaloneCollab ? `type="radio" name="${radioName}"` : 'type="checkbox"';
+      const isStandaloneNouveaute = menu === 'nouveautes' && filterLabel.trim() === 'Tout voir';
+      const inputAttrs = radioName && !isStandaloneCollab && !isStandaloneNouveaute ? `type="radio" name="${radioName}"` : 'type="checkbox"';
       label.innerHTML = `<input ${inputAttrs} value="${filter.id}" data-menu="${menu}"> ${filterLabel}`;
       grid.appendChild(label);
     });
