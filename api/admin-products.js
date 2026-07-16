@@ -121,7 +121,18 @@ async function replaceProductChildren(supabase, productId, { images, variants, f
   }
 
   if (Array.isArray(reviews) && reviews.length) {
-    const rows = reviews.map((review) => ({ product_id: productId, author: review.author, rating: review.rating, review_text: review.text }));
+    // Every save deletes and re-inserts all reviews together, so they'd all
+    // land on the same created_at otherwise - stagger it explicitly so the
+    // submitted order (admin's list is newest-first) survives as the
+    // "newest first" ordering used everywhere reviews are read back.
+    const now = Date.now();
+    const rows = reviews.map((review, index) => ({
+      product_id: productId,
+      author: review.author,
+      rating: review.rating,
+      review_text: review.text,
+      created_at: new Date(now - index * 1000).toISOString()
+    }));
     const { error } = await supabase.from('product_reviews').insert(rows);
     if (error && !/could not find the table/i.test(String(error.message || ''))) {
       throw new Error('product_reviews (insert): ' + error.message);
