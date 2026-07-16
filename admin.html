@@ -379,6 +379,7 @@ document.getElementById('add-review-btn').addEventListener('click', () => {
 });
 document.getElementById('add-variant-btn').addEventListener('click', () => {
   document.getElementById('variants-list').appendChild(variantRow());
+  updateVariantSizeAvailability();
 });
 
 async function loadFilters() {
@@ -494,6 +495,7 @@ function fillFormWithProduct(product) {
     cb.checked = filterIds.has(String(cb.value));
   });
   updateMaterialRequiredHint();
+  updateVariantSizeAvailability();
 
   document.getElementById('form-status').textContent = '';
   window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -653,14 +655,30 @@ document.getElementById('product-form').addEventListener('submit', async (e) => 
   }
 });
 
-function updateMaterialRequiredHint() {
+function isAccessorySelected() {
   const accessoryIds = new Set((filtersByMenu.accessoires || []).map((f) => String(f.id)));
-  const isAccessory = Array.from(document.querySelectorAll('#filters-container input:checked'))
+  return Array.from(document.querySelectorAll('#filters-container input:checked'))
     .some((cb) => accessoryIds.has(cb.value));
-  document.getElementById('material-required-hint').hidden = !isAccessory;
 }
 
-document.getElementById('filters-container').addEventListener('change', updateMaterialRequiredHint);
+function updateMaterialRequiredHint() {
+  document.getElementById('material-required-hint').hidden = !isAccessorySelected();
+}
+
+// Accessoires don't use a clothing size, so the Taille select in each
+// variant row is locked (and cleared) once an accessory type is checked.
+function updateVariantSizeAvailability() {
+  const disable = isAccessorySelected();
+  document.querySelectorAll('#variants-list .variant-size').forEach((select) => {
+    select.disabled = disable;
+    if (disable) select.value = '';
+  });
+}
+
+document.getElementById('filters-container').addEventListener('change', () => {
+  updateMaterialRequiredHint();
+  updateVariantSizeAvailability();
+});
 
 async function init() {
   await loadFilters();
