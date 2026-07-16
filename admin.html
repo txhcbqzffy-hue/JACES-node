@@ -401,13 +401,15 @@ async function loadFilters() {
 
     const grid = document.createElement('div');
     grid.className = 'checkbox-grid';
-    // A product belongs to exactly one Collection category (Robes/Tops/...),
-    // so those options are mutually exclusive - everything else (Nouveautés,
-    // Accessoires, Collaborations, Saison) can still have several checked.
-    const isSingleChoice = menu === 'categories';
+    // A product belongs to exactly one Collection category (Robes/Tops/...)
+    // and, if it's an accessory, exactly one accessory type (Sacs/Bijoux/...)
+    // - those two groups are mutually exclusive radio buttons. Everything
+    // else (Nouveautés, Collaborations, Saison) can still have several checked.
+    const radioNameByMenu = { categories: 'filter-category', accessoires: 'filter-accessory-type' };
+    const radioName = radioNameByMenu[menu];
     filtersByMenu[menu].forEach((filter) => {
       const label = document.createElement('label');
-      const inputAttrs = isSingleChoice ? 'type="radio" name="filter-category"' : 'type="checkbox"';
+      const inputAttrs = radioName ? `type="radio" name="${radioName}"` : 'type="checkbox"';
       label.innerHTML = `<input ${inputAttrs} value="${filter.id}"> ${filter.label || filter.name}`;
       grid.appendChild(label);
     });
