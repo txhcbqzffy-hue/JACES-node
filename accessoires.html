@@ -473,6 +473,22 @@
         return false;
       }
 
+      function syncMaterialAvailability(visibleCards) {
+        const materialInputs = Array.from(document.querySelectorAll('#collection-filter-bar input[name="matiere"]'));
+
+        materialInputs.forEach((input) => {
+          const token = input.value;
+          const available = visibleCards.some((card) => {
+            const cardMaterials = String(card.dataset.material || '').split(' ').filter(Boolean);
+            return cardMaterials.includes(token);
+          });
+          input.disabled = !available && !input.checked;
+          input.closest('label')?.classList.toggle('is-unavailable', !available && !input.checked);
+        });
+
+        return false;
+      }
+
       function getCardPrice(card) {
         const priceText = card.querySelector('.product-price') ? card.querySelector('.product-price').textContent : '0';
         return Number(priceText.replace(/[^0-9]/g, '')) || 0;
@@ -531,6 +547,7 @@
         });
 
         syncColorAvailability(visibleCards);
+        syncMaterialAvailability(visibleCards);
 
         if (countNode) {
           countNode.textContent = visibleCards.length + (visibleCards.length > 1 ? ' produits' : ' produit');
