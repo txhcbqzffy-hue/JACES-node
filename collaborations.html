@@ -82,7 +82,7 @@
         <a href="collaborations.html" class="active">Collaborations</a>
         <div class="submenu">
           <div>
-            <a href="collaborations.html?collabView=exclusives&category=creations-exclusives">Créations exclusives</a>
+            <a href="collaborations.html?collabView=exclusives&category=all">Créations exclusives</a>
             <a href="collaborations.html?collabView=popup&category=all">Pop-up stores</a>
             <a href="collaborations.html?collabView=events&category=all">Événements</a>
             <a href="collaborations.html?collabView=all&category=all" class="underline-link">Toutes les collaborations</a>
@@ -182,7 +182,7 @@
       const experienceGrid = document.getElementById('collab-experience-grid');
       const experienceDetail = document.getElementById('collab-experience-detail');
       let countdownTimer = null;
-      const valid = new Set(['all', 'creations-exclusives', 'nike', 'chloe', 'jacquemus', 'dior', 'saint-laurent']);
+      const valid = new Set(['all', 'nike', 'chloe', 'jacquemus', 'dior', 'saint-laurent']);
       const params = new URLSearchParams(window.location.search);
       const fromUrl = params.get('category');
       const fromView = params.get('collabView');
