@@ -638,6 +638,15 @@ document.getElementById('product-form').addEventListener('submit', async (e) => 
     return;
   }
 
+  // Choosing the "Accessoires" Collection category specifically also
+  // requires picking which type it is (Sacs/Bijoux/Ceintures/Foulards).
+  if (category === 'Accessoires' && !hasAccessoryType) {
+    statusEl.textContent = 'Erreur: choisissez un type d\'accessoire (Sacs/Bijoux/Ceintures/Foulards).';
+    statusEl.className = 'status-msg error';
+    submitBtn.disabled = false;
+    return;
+  }
+
   // Accessoires (Sacs/Bijoux/Ceintures/Foulards) need Matière and at least
   // one couleur+stock entry - "taille" doesn't apply the way it does to
   // clothing, so it's the one variant field that stays optional for them.
