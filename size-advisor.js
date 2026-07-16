@@ -206,6 +206,33 @@
       return errors;
     }
 
+    const BELLY_LABELS = { plat: 'Plat', moyen: 'Moyen', rond: 'Rond' };
+    const HIPS_LABELS = { etroit: 'Étroit', moyen: 'Moyen', large: 'Large' };
+
+    function renderProfileDetails() {
+      const rows = [
+        ['Taille', state.form.height ? `${state.form.height} cm` : ''],
+        ['Poids', state.form.weight ? `${state.form.weight} kg` : ''],
+        ['Âge', state.form.age ? `${state.form.age} ans` : ''],
+        ['Ventre', BELLY_LABELS[state.form.belly] || ''],
+        ['Hanches', HIPS_LABELS[state.form.hips] || ''],
+        ['Tour de dos', state.form.chestBand ? `${state.form.chestBand} cm` : ''],
+        ['Bonnet', state.form.cup || '']
+      ].filter(([, value]) => value);
+
+      if (!rows.length) return '';
+
+      return `
+        <div class="size-advisor-profile-details">
+          <p class="size-advisor-profile-details-title">Informations utilis&eacute;es</p>
+          <div class="size-advisor-profile-details-grid">
+            ${rows.map(([label, value]) => `<div class="size-advisor-profile-details-row"><span>${label}</span><strong>${value}</strong></div>`).join('')}
+          </div>
+          <button type="button" class="size-advisor-profile-edit" data-edit-profile="true">Modifier</button>
+        </div>
+      `;
+    }
+
     function renderResult() {
       const recommended = getRecommendation(product, state.form, state.fitMode);
       const alternate = getRecommendation(product, state.form, state.fitMode === 'ideal' ? 'ample' : 'ideal');
@@ -231,6 +258,7 @@
             <button class="size-advisor-fit-button${state.fitMode === 'ample' ? ' is-active' : ''}" type="button" data-fit="ample">Plus ample</button>
           </div>
           <p class="size-advisor-result-text">${state.fitMode === 'ideal' ? 'Une allure nette, équilibrée et fidèle à la coupe du modèle.' : 'Une option plus relâchée, avec davantage d’aisance sur la silhouette.'}</p>
+          ${renderProfileDetails()}
           <button class="size-advisor-primary" type="button" data-apply-size="${activeSize}">Appliquer la taille ${activeSize}</button>
         </div>
       `;
@@ -437,6 +465,13 @@
       const fitButton = event.target.closest('[data-fit]');
       if (fitButton) {
         state.fitMode = fitButton.dataset.fit;
+        renderStep();
+        return;
+      }
+
+      const editProfile = event.target.closest('[data-edit-profile]');
+      if (editProfile) {
+        state.step = 0;
         renderStep();
         return;
       }

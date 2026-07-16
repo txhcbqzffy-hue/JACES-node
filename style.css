@@ -5413,6 +5413,61 @@ body.account-modal-open {
   font-size: 0.8rem;
 }
 
+.size-advisor-profile-details {
+  width: 100%;
+  max-width: 320px;
+  border: 1px solid rgba(27, 26, 23, 0.14);
+  padding: 14px 16px;
+  display: grid;
+  gap: 10px;
+}
+
+.size-advisor-profile-details-title {
+  margin: 0;
+  font-family: "Manrope", sans-serif;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #676158;
+}
+
+.size-advisor-profile-details-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px 16px;
+}
+
+.size-advisor-profile-details-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  font-family: "Manrope", sans-serif;
+  font-size: 0.82rem;
+}
+
+.size-advisor-profile-details-row span {
+  color: #676158;
+}
+
+.size-advisor-profile-details-row strong {
+  color: #16130f;
+}
+
+.size-advisor-profile-edit {
+  justify-self: start;
+  border: 1px solid rgba(27, 26, 23, 0.3);
+  background: none;
+  color: #16130f;
+  font-family: "Manrope", sans-serif;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 8px 16px;
+  cursor: pointer;
+}
+
 @keyframes size-advisor-slide-in {
   from {
     transform: translateX(24px);

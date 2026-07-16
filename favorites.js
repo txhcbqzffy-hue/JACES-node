@@ -334,14 +334,18 @@
       });
     }
 
+    // The suggestion must always reflect whichever profile is currently
+    // active - a per-product cache written under a different profile (e.g.
+    // "Moi") must not stick around and contradict a newly active profile
+    // (e.g. "Lucie") that has different measurements.
     const computedSuggestion = getSuggestedSizesForProduct(product);
-    const resolvedSuggestedSize = storedSelection.suggestedSize || computedSuggestion.suggestedSize || '';
+    const resolvedSuggestedSize = computedSuggestion.suggestedSize || storedSelection.suggestedSize || '';
     const resolvedSize = storedSelection.size || resolvedSuggestedSize || '';
 
     return Object.assign({}, storedSelection, {
       size: resolvedSize,
       suggestedSize: resolvedSuggestedSize,
-      alternateSuggestedSize: storedSelection.alternateSuggestedSize || computedSuggestion.alternateSuggestedSize || ''
+      alternateSuggestedSize: computedSuggestion.alternateSuggestedSize || storedSelection.alternateSuggestedSize || ''
     });
   }
 
