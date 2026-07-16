@@ -1,4 +1,5 @@
 const { createClient } = require('@supabase/supabase-js');
+const { sendRestockEmail } = require('../lib/brevo');
 
 function getSupabaseAdmin() {
   const url = process.env.SUPABASE_URL || 'https://uxhzrobxhumreuntxrzw.supabase.co';
@@ -117,6 +118,59 @@ async function replaceProductChildren(supabase, productId, { images, variants, f
   }
 }
 
+function getStockBySize(variants) {
+  const stockBySize = new Map();
+  (variants || []).forEach((variant) => {
+    const size = String(variant?.size || '').trim();
+    if (!size) return;
+    const stock = Number.isFinite(Number(variant?.stock)) ? Number(variant.stock) : 0;
+    stockBySize.set(size, (stockBySize.get(size) || 0) + Math.max(0, stock));
+  });
+  return stockBySize;
+}
+
+function getRestockedSizes(beforeStockBySize, afterVariants) {
+  const afterStockBySize = getStockBySize(afterVariants);
+  const restocked = [];
+  afterStockBySize.forEach((stock, size) => {
+    const wasOutOfStock = !beforeStockBySize.has(size) || beforeStockBySize.get(size) <= 0;
+    if (wasOutOfStock && stock > 0) restocked.push(size);
+  });
+  return restocked;
+}
+
+// Fire-and-forget: notification delivery must never fail or delay the
+// product save itself, so every step here is best-effort and logged only.
+async function notifyRestockedSizes(supabase, productId, productName, restockedSizes) {
+  if (!restockedSizes.length) return;
+
+  for (const size of restockedSizes) {
+    try {
+      const { data: pending, error } = await supabase
+        .from('stock_notifications')
+        .select('id, email')
+        .eq('product_id', productId)
+        .eq('size', size)
+        .eq('notified', false);
+
+      if (error || !pending || !pending.length) continue;
+
+      const productUrl = `https://jaces-node.vercel.app/detail-produit.html?id=${productId}`;
+
+      for (const row of pending) {
+        const result = await sendRestockEmail({ toEmail: row.email, productName, size, productUrl });
+        if (result.ok) {
+          await supabase.from('stock_notifications').update({ notified: true }).eq('id', row.id);
+        } else if (!result.skipped) {
+          console.error('Brevo send failed:', result.error);
+        }
+      }
+    } catch (notifyError) {
+      console.error('notifyRestockedSizes error:', notifyError.message);
+    }
+  }
+}
+
 module.exports = async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
@@ -197,6 +251,7 @@ module.exports = async function handler(req, res) {
       };
 
       let productId = String(body.id || '').trim();
+      let beforeStockBySize = new Map();
 
       if (action === 'create') {
         const { data, error } = await supabase.from('products').insert(productRow).select('id').single();
@@ -204,11 +259,21 @@ module.exports = async function handler(req, res) {
         productId = data.id;
       } else {
         if (!productId) return res.status(400).json({ error: 'id manquant pour la mise a jour' });
+        const { data: existingVariants } = await supabase.from('product_variants').select('size, stock').eq('product_id', productId);
+        beforeStockBySize = getStockBySize(existingVariants);
         const { error } = await supabase.from('products').update(productRow).eq('id', productId);
         if (error) return res.status(500).json({ error: withRlsHint('products (update): ' + error.message) });
       }
 
       await replaceProductChildren(supabase, productId, { images, variants, filterIds, reviews });
+
+      if (action === 'update') {
+        // Awaited rather than fire-and-forget: Vercel serverless functions
+        // don't guarantee background work continues after the response is
+        // sent, so notifications must complete within this invocation.
+        const restockedSizes = getRestockedSizes(beforeStockBySize, variants);
+        await notifyRestockedSizes(supabase, productId, name, restockedSizes);
+      }
 
       return res.status(200).json({ ok: true, id: productId });
     }
