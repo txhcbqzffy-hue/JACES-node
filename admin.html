@@ -439,10 +439,11 @@ async function loadFilters() {
     // with each other, enforced below). Nouveautés/Saison stay multi-select.
     const radioNameByMenu = { categories: 'filter-category', accessoires: 'filter-accessory-type', collaborations: 'filter-collaboration' };
     const radioName = radioNameByMenu[menu];
-    // "Tout voir" is no longer a pickable category here - every product now
-    // needs a real classification, so this catch-all doesn't belong among
-    // the choices (its underlying filter row stays untouched in Supabase).
-    const menuOptions = menu === 'categories'
+    // "Tout voir" is no longer pickable here (Catégories or Collaborations)
+    // - every product now needs a real classification, so this catch-all
+    // doesn't belong among the choices (its underlying filter rows stay
+    // untouched in Supabase).
+    const menuOptions = (menu === 'categories' || menu === 'collaborations')
       ? filtersByMenu[menu].filter((filter) => (filter.label || filter.name) !== 'Tout voir')
       : filtersByMenu[menu];
     menuOptions.forEach((filter) => {
