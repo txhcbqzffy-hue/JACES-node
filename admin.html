@@ -432,11 +432,12 @@ async function loadFilters() {
 
     const grid = document.createElement('div');
     grid.className = 'checkbox-grid';
-    // A product belongs to exactly one Collection category (Robes/Tops/...)
-    // and, if it's an accessory, exactly one accessory type (Sacs/Bijoux/...)
-    // - those two groups are mutually exclusive radio buttons. Everything
-    // else (Nouveautés, Collaborations, Saison) can still have several checked.
-    const radioNameByMenu = { categories: 'filter-category', accessoires: 'filter-accessory-type' };
+    // A product belongs to exactly one Collection category (Robes/Tops/...),
+    // one accessory type (Sacs/Bijoux/...) if it's an accessory, or one
+    // Collaboration (Tout voir/JACES x .../...) if it's a collaboration -
+    // those are mutually exclusive radio groups (and mutually exclusive
+    // with each other, enforced below). Nouveautés/Saison stay multi-select.
+    const radioNameByMenu = { categories: 'filter-category', accessoires: 'filter-accessory-type', collaborations: 'filter-collaboration' };
     const radioName = radioNameByMenu[menu];
     // "Tout voir" is no longer a pickable category here - every product now
     // needs a real classification, so this catch-all doesn't belong among
@@ -615,13 +616,15 @@ document.getElementById('product-form').addEventListener('submit', async (e) => 
   const pageType = checkedFilters.find((f) => f.menu !== 'categories')?.menu || (category ? 'collection' : '');
   const nouveauteTag = checkedFilters.find((f) => f.menu === 'nouveautes')?.slug || '';
 
-  // Every product needs a classification: either a Collection category
-  // (Robes/Tops/.../Accessoires - mutually exclusive, radio buttons) or an
-  // Accessoires type (Sacs/Bijoux/Ceintures/Foulards).
+  // Every product needs exactly one classification: a Collection category
+  // (Robes/Tops/.../Accessoires), an Accessoires type (Sacs/Bijoux/...), or
+  // a Collaboration (Tout voir/JACES x .../...) - all mutually exclusive
+  // radio groups, enforced live by enforceCollaborationExclusivity.
   const hasCategory = checkedFilters.some((f) => f.menu === 'categories');
   const hasAccessoryType = checkedFilters.some((f) => f.menu === 'accessoires');
-  if (!hasCategory && !hasAccessoryType) {
-    statusEl.textContent = 'Erreur: choisissez une catégorie (Robes/Tops/...) ou un type d\'accessoire (Sacs/Bijoux/...).';
+  const hasCollaboration = checkedFilters.some((f) => f.menu === 'collaborations');
+  if (!hasCategory && !hasAccessoryType && !hasCollaboration) {
+    statusEl.textContent = 'Erreur: choisissez une catégorie (Robes/Tops/...), un type d\'accessoire (Sacs/Bijoux/...) ou une collaboration.';
     statusEl.className = 'status-msg error';
     submitBtn.disabled = false;
     return;
@@ -705,7 +708,26 @@ function updateVariantSizeAvailability() {
   });
 }
 
-document.getElementById('filters-container').addEventListener('change', () => {
+// A product is either a "regular" catalog item (Collection category and/or
+// Accessoires type) or a Collaboration - not both, so picking one side
+// clears whatever was checked on the other.
+function enforceCollaborationExclusivity(event) {
+  const input = event.target;
+  if (!input || input.type !== 'radio' || !input.checked) return;
+
+  if (input.name === 'filter-collaboration') {
+    document.querySelectorAll('#filters-container input[name="filter-category"]:checked, #filters-container input[name="filter-accessory-type"]:checked').forEach((other) => {
+      other.checked = false;
+    });
+  } else if (input.name === 'filter-category' || input.name === 'filter-accessory-type') {
+    document.querySelectorAll('#filters-container input[name="filter-collaboration"]:checked').forEach((other) => {
+      other.checked = false;
+    });
+  }
+}
+
+document.getElementById('filters-container').addEventListener('change', (event) => {
+  enforceCollaborationExclusivity(event);
   updateMaterialRequiredHint();
   updateVariantSizeAvailability();
 });
