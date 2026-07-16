@@ -159,7 +159,54 @@
 
     <section class="section" aria-label="Produits collaborations">
       <div class="section-intro"><h2 id="collection-page-title">Pieces collaborations</h2></div>
-      <div class="filter-bar-luxury" id="collection-filter-bar"><div class="filter-bar-meta"><button class="filter-reset-pill" id="filter-reset-pill">Reinitialiser</button><span class="filter-count" id="filter-count">5 produits</span></div></div>
+      <div class="filter-bar-luxury" id="collection-filter-bar">
+        <div class="filter-bar-top">
+          <div class="filter-pills">
+            <div class="filter-pill-wrap">
+              <button class="filter-pill" data-filter="taille">Taille <span class="pill-arrow">∨</span></button>
+              <div class="filter-dropdown">
+                <label><input type="checkbox" name="taille" value="34"> 34</label>
+                <label><input type="checkbox" name="taille" value="36"> 36</label>
+                <label><input type="checkbox" name="taille" value="38"> 38</label>
+                <label><input type="checkbox" name="taille" value="40"> 40</label>
+                <label><input type="checkbox" name="taille" value="42"> 42</label>
+                <label><input type="checkbox" name="taille" value="44"> 44</label>
+                <div class="filter-size-advisor-row">
+                  <button type="button" class="filter-size-advisor-link" id="collaborations-size-advisor-trigger">Trouver ma taille idéale</button>
+                  <span class="filter-size-advisor-result" id="collaborations-size-advisor-result" hidden></span>
+                </div>
+                <p class="filter-dropdown-note">Guide des tailles disponible dans chaque fiche produit.</p>
+              </div>
+            </div>
+            <div class="filter-pill-wrap">
+              <button class="filter-pill" data-filter="couleur">Couleur <span class="pill-arrow">∨</span></button>
+              <div class="filter-dropdown">
+                <label><input type="checkbox" name="couleur" value="noir"> Noir</label>
+                <label><input type="checkbox" name="couleur" value="blanc"> Blanc</label>
+                <label><input type="checkbox" name="couleur" value="gris"> Gris</label>
+                <label><input type="checkbox" name="couleur" value="argent"> Argent</label>
+                <label><input type="checkbox" name="couleur" value="rouge"> Rouge</label>
+                <label><input type="checkbox" name="couleur" value="bleu"> Bleu</label>
+                <label><input type="checkbox" name="couleur" value="vert"> Vert</label>
+                <label><input type="checkbox" name="couleur" value="jaune"> Jaune</label>
+                <label><input type="checkbox" name="couleur" value="orange"> Orange</label>
+                <label><input type="checkbox" name="couleur" value="rose"> Rose</label>
+                <label><input type="checkbox" name="couleur" value="violet"> Violet</label>
+                <label><input type="checkbox" name="couleur" value="marron"> Marron</label>
+                <label><input type="checkbox" name="couleur" value="beige"> Beige</label>
+                <label><input type="checkbox" name="couleur" value="dore"> Doré</label>
+                <label><input type="checkbox" name="couleur" value="bronze"> Bronze</label>
+                <label><input type="checkbox" name="couleur" value="transparent"> Transparent</label>
+                <label><input type="checkbox" name="couleur" value="multicolore"> Multicolore</label>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="filter-bar-meta">
+          <button class="filter-reset-pill" id="filter-reset-pill">Reinitialiser</button>
+          <span class="filter-count" id="filter-count">5 produits</span>
+        </div>
+      </div>
       <section class="collab-experience-view" id="collab-experience-view" hidden aria-label="Informations collaborations">
         <div class="collab-experience-grid" id="collab-experience-grid"></div>
         <article class="collab-experience-detail" id="collab-experience-detail" hidden></article>
@@ -475,6 +522,26 @@
         });
       }
 
+      function normalizeVariantToken(value) {
+        return String(value || '')
+          .normalize('NFD')
+          .replace(/[̀-ͯ]/g, '')
+          .toLowerCase()
+          .replace(/[^a-z0-9]+/g, '-')
+          .replace(/^-+|-+$/g, '');
+      }
+
+      function getCardVariantData(card) {
+        return {
+          colors: (card.getAttribute('data-color') || '').split(' ').filter(Boolean),
+          sizes: (card.getAttribute('data-size') || '').split(' ').filter(Boolean)
+        };
+      }
+
+      function getCheckedTokens(name) {
+        return Array.from(document.querySelectorAll('#collection-filter-bar input[name="' + name + '"]:checked')).map((input) => normalizeVariantToken(input.value));
+      }
+
       function apply() {
         const isEditorialView = currentView === 'popup' || currentView === 'events';
 
@@ -488,6 +555,9 @@
           return;
         }
 
+        const selectedSizes = getCheckedTokens('taille');
+        const selectedColors = getCheckedTokens('couleur');
+
         let visible = 0;
         cards.forEach((card) => {
           const categories = (card.getAttribute('data-category') || '').split(' ').filter(Boolean);
@@ -496,7 +566,10 @@
             ? categories.includes('tout-voir')
             : categories.includes(current);
           const matchesView = currentView === 'all' || viewTokens.indexOf(currentView) !== -1 || viewTokens.indexOf('all') !== -1;
-          const show = matchesCategory && matchesView;
+          const variantData = getCardVariantData(card);
+          const matchesSize = !selectedSizes.length || variantData.sizes.some((size) => selectedSizes.includes(normalizeVariantToken(size)));
+          const matchesColor = !selectedColors.length || variantData.colors.some((color) => selectedColors.includes(normalizeVariantToken(color)));
+          const show = matchesCategory && matchesView && matchesSize && matchesColor;
           card.classList.toggle('hidden', !show);
           if (show) visible += 1;
         });
@@ -505,6 +578,8 @@
           item.classList.toggle('active', (item.getAttribute('data-category') || 'all') === current);
         });
       }
+
+      window.__applyCollabFilters = apply;
 
       function scrollToCollaborationResults() {
         const filterBarTarget = (currentView === 'popup' || currentView === 'events')
@@ -585,10 +660,19 @@
         });
       });
 
+      document.querySelectorAll('#collection-filter-bar input[name="taille"], #collection-filter-bar input[name="couleur"]').forEach((input) => {
+        input.addEventListener('change', () => {
+          if (window.__updateCollabFilterUI) window.__updateCollabFilterUI();
+          apply();
+        });
+      });
+
       const reset = document.getElementById('filter-reset-pill');
       if (reset) {
         reset.addEventListener('click', () => {
           document.querySelectorAll('#collection-filter-bar input').forEach((input) => { input.checked = false; });
+          if (window.__updateCollabFilterUI) window.__updateCollabFilterUI();
+          apply();
         });
       }
 
@@ -607,8 +691,101 @@
   <script src="favorites.js?v=20260716c"></script>
   <script src="stock-notify.js?v=20260716d"></script>
   <script src="auth.js?v=20260715r"></script>
+  <script src="size-advisor.js?v=20260716c"></script>
   <script>
     (function () {
+      const resetPill = document.getElementById('filter-reset-pill');
+      const filterPills = Array.from(document.querySelectorAll('#collection-filter-bar .filter-pill'));
+
+      filterPills.forEach((pill) => {
+        const baseLabel = pill.childNodes[0] ? pill.childNodes[0].textContent.trim() : pill.textContent.replace('∨', '').trim();
+        pill.dataset.baseLabel = baseLabel;
+      });
+
+      function updateFilterUI() {
+        const hasActive = document.querySelectorAll('#collection-filter-bar input:checked').length > 0;
+        if (resetPill) resetPill.classList.toggle('visible', hasActive);
+
+        filterPills.forEach((pill) => {
+          const wrap = pill.closest('.filter-pill-wrap');
+          const checkedCount = wrap ? wrap.querySelectorAll('input:checked').length : 0;
+          const baseLabel = pill.dataset.baseLabel || 'Filtre';
+
+          if (pill.childNodes[0]) {
+            pill.childNodes[0].textContent = checkedCount > 0 ? `${baseLabel} (${checkedCount}) ` : `${baseLabel} `;
+          }
+          pill.classList.toggle('active', checkedCount > 0);
+        });
+      }
+
+      window.__updateCollabFilterUI = updateFilterUI;
+      updateFilterUI();
+
+      // Filter pills toggle
+      const filterBar = document.getElementById('collection-filter-bar');
+      document.querySelectorAll('.filter-pill').forEach((pill) => {
+        pill.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const wrap = pill.closest('.filter-pill-wrap');
+          const isOpen = pill.classList.contains('open');
+          document.querySelectorAll('.filter-pill').forEach((p) => p.classList.remove('open'));
+          document.querySelectorAll('.filter-dropdown').forEach((d) => d.classList.remove('open'));
+          if (!isOpen) {
+            pill.classList.add('open');
+            wrap.querySelector('.filter-dropdown').classList.add('open');
+          }
+        });
+      });
+
+      document.querySelectorAll('.filter-dropdown').forEach((dropdown) => {
+        dropdown.addEventListener('click', (e) => { e.stopPropagation(); });
+      });
+
+      document.addEventListener('click', (e) => {
+        if (filterBar && !filterBar.contains(e.target)) {
+          document.querySelectorAll('.filter-pill').forEach((p) => p.classList.remove('open'));
+          document.querySelectorAll('.filter-dropdown').forEach((d) => d.classList.remove('open'));
+        }
+      });
+
+      const sizeAdvisorTrigger = document.getElementById('collaborations-size-advisor-trigger');
+      const sizeAdvisorResult = document.getElementById('collaborations-size-advisor-result');
+      const sizeAdvisorVirtualProduct = { id: 'size-advisor-collaborations', name: '', sizes: ['34', '36', '38', '40', '42', '44'] };
+
+      function refreshSizeAdvisorLabel() {
+        if (!sizeAdvisorResult || !window.JacesFavorites || typeof window.JacesFavorites.getSuggestedSizesForProduct !== 'function') return;
+        const suggestion = window.JacesFavorites.getSuggestedSizesForProduct(sizeAdvisorVirtualProduct).suggestedSize;
+        if (!suggestion) {
+          sizeAdvisorResult.hidden = true;
+          return;
+        }
+        const activeProfile = typeof window.JacesFavorites.getSizeAdvisorProfile === 'function'
+          ? window.JacesFavorites.getSizeAdvisorProfile()
+          : null;
+        const profileName = activeProfile?.name && activeProfile.name !== 'Moi' ? activeProfile.name : '';
+        sizeAdvisorResult.textContent = (profileName ? `Taille de ${profileName}` : 'Votre taille') + ' : ' + suggestion;
+        sizeAdvisorResult.hidden = false;
+      }
+
+      if (sizeAdvisorTrigger) {
+        sizeAdvisorTrigger.addEventListener('click', () => {
+          if (!window.JacesSizeAdvisor) return;
+          window.JacesSizeAdvisor.open(sizeAdvisorVirtualProduct, '', (recommendedSize) => {
+            const checkbox = document.querySelector('#collection-filter-bar input[name="taille"][value="' + recommendedSize + '"]');
+            if (checkbox) {
+              document.querySelectorAll('#collection-filter-bar input[name="taille"]').forEach((input) => { input.checked = false; });
+              checkbox.checked = true;
+              updateFilterUI();
+              if (window.__applyCollabFilters) window.__applyCollabFilters();
+            }
+            refreshSizeAdvisorLabel();
+          });
+        });
+      }
+
+      document.addEventListener('DOMContentLoaded', refreshSizeAdvisorLabel);
+      window.addEventListener('jaces:favorite-selection-sync', refreshSizeAdvisorLabel);
+      refreshSizeAdvisorLabel();
     })();
   </script>
 </body>
