@@ -83,6 +83,7 @@
   .status-msg { font-size: 0.82rem; margin-top: 10px; min-height: 1.2em; }
   .status-msg.error { color: #a5321f; }
   .status-msg.ok { color: #2f6b3a; }
+  .field-hint { margin: 8px 0 0; font-size: 0.75rem; color: #a5321f; }
   .product-list-item {
     display: flex; gap: 10px; align-items: center; padding: 8px; border: 1px solid #e4ddd1; margin-bottom: 8px; cursor: pointer; background: #fff;
   }
@@ -153,17 +154,6 @@
             </div>
 
             <div class="field">
-              <label>Mati&egrave;re (filtre Accessoires)</label>
-              <div class="checkbox-grid" id="material-checkboxes">
-                <label><input type="checkbox" name="material" value="cuir"> Cuir</label>
-                <label><input type="checkbox" name="material" value="metal"> M&eacute;tal</label>
-                <label><input type="checkbox" name="material" value="soie"> Soie</label>
-                <label><input type="checkbox" name="material" value="laine"> Laine</label>
-                <label><input type="checkbox" name="material" value="coton"> Coton</label>
-              </div>
-            </div>
-
-            <div class="field">
               <label>Photos clientes (liens Cloudinary / Dropbox)</label>
               <div id="review-photos-list"></div>
               <button type="button" class="add-btn" id="add-review-photo-btn">+ Ajouter une photo cliente</button>
@@ -192,6 +182,18 @@
                   <option value="premium" selected>Premium</option>
                 </select>
               </div>
+            </div>
+
+            <div class="field">
+              <label>Mati&egrave;re (filtre Accessoires)</label>
+              <div class="checkbox-grid" id="material-checkboxes">
+                <label><input type="checkbox" name="material" value="cuir"> Cuir</label>
+                <label><input type="checkbox" name="material" value="metal"> M&eacute;tal</label>
+                <label><input type="checkbox" name="material" value="soie"> Soie</label>
+                <label><input type="checkbox" name="material" value="laine"> Laine</label>
+                <label><input type="checkbox" name="material" value="coton"> Coton</label>
+              </div>
+              <p class="field-hint" id="material-required-hint" hidden>Obligatoire : au moins une mati&egrave;re, car un accessoire (Sacs/Bijoux/Ceintures/Foulards) est coch&eacute; ci-dessous.</p>
             </div>
 
             <div id="filters-container"></div>
@@ -426,6 +428,7 @@ function resetForm() {
   document.getElementById('f-quality-rating').value = 'premium';
   document.querySelectorAll('#material-checkboxes input[type="checkbox"]').forEach((cb) => { cb.checked = false; });
   document.querySelectorAll('#filters-container input[type="checkbox"]').forEach((cb) => { cb.checked = false; });
+  document.getElementById('material-required-hint').hidden = true;
   document.getElementById('form-status').textContent = '';
   document.getElementById('form-status').className = 'status-msg';
 }
@@ -475,6 +478,7 @@ function fillFormWithProduct(product) {
   document.querySelectorAll('#filters-container input[type="checkbox"]').forEach((cb) => {
     cb.checked = filterIds.has(String(cb.value));
   });
+  updateMaterialRequiredHint();
 
   document.getElementById('form-status').textContent = '';
   window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -564,6 +568,27 @@ document.getElementById('product-form').addEventListener('submit', async (e) => 
   const pageType = checkedFilters.find((f) => f.menu !== 'categories')?.menu || (category ? 'collection' : '');
   const nouveauteTag = checkedFilters.find((f) => f.menu === 'nouveautes')?.slug || '';
 
+  // Accessoires (Sacs/Bijoux/Ceintures/Foulards) need Matière and at least
+  // one couleur+stock entry - "taille" doesn't apply the way it does to
+  // clothing, so it's the one variant field that stays optional for them.
+  const isAccessory = checkedFilters.some((f) => f.menu === 'accessoires');
+  if (isAccessory) {
+    const materialChecked = document.querySelectorAll('#material-checkboxes input[type="checkbox"]:checked').length > 0;
+    if (!materialChecked) {
+      statusEl.textContent = 'Erreur: choisissez au moins une Matière pour un accessoire.';
+      statusEl.className = 'status-msg error';
+      submitBtn.disabled = false;
+      return;
+    }
+    const hasColorStockVariant = variants.some((v) => v.color && v.stock > 0);
+    if (!hasColorStockVariant) {
+      statusEl.textContent = 'Erreur: ajoutez au moins une variante avec couleur et stock pour un accessoire.';
+      statusEl.className = 'status-msg error';
+      submitBtn.disabled = false;
+      return;
+    }
+  }
+
   const payload = {
     action: editingId ? 'update' : 'create',
     id: editingId || undefined,
@@ -600,6 +625,15 @@ document.getElementById('product-form').addEventListener('submit', async (e) => 
     submitBtn.disabled = false;
   }
 });
+
+function updateMaterialRequiredHint() {
+  const accessoryIds = new Set((filtersByMenu.accessoires || []).map((f) => String(f.id)));
+  const isAccessory = Array.from(document.querySelectorAll('#filters-container input[type="checkbox"]:checked'))
+    .some((cb) => accessoryIds.has(cb.value));
+  document.getElementById('material-required-hint').hidden = !isAccessory;
+}
+
+document.getElementById('filters-container').addEventListener('change', updateMaterialRequiredHint);
 
 async function init() {
   await loadFilters();

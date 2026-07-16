@@ -106,7 +106,10 @@ async function replaceProductChildren(supabase, productId, { images, variants, f
   }
 
   if (variants.length) {
-    const rows = variants.map((variant) => ({ product_id: productId, size: variant.size, color: variant.color, stock: variant.stock }));
+    // size is a Postgres enum column: an empty string isn't a valid enum
+    // value and would crash the insert, so accessories (color+stock, no
+    // size) need null here instead.
+    const rows = variants.map((variant) => ({ product_id: productId, size: variant.size || null, color: variant.color, stock: variant.stock }));
     const { error } = await supabase.from('product_variants').insert(rows);
     if (error) throw new Error('product_variants (insert): ' + error.message);
   }
