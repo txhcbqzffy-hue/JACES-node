@@ -1,0 +1,1113 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Admin produits V2 | JACES</title>
+<style>
+  :root { color-scheme: light; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Manrope, sans-serif;
+    background: #f5f1ea;
+    color: #1b1a17;
+  }
+  header {
+    padding: 16px 24px;
+    background: #171411;
+    color: #f6f1ea;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 20;
+  }
+  header h1 { font-size: 1.05rem; margin: 0; letter-spacing: 0.03em; }
+  header .header-actions { display: flex; gap: 8px; align-items: center; }
+  header a, header button {
+    background: transparent;
+    border: 1px solid #6b645c;
+    color: #f6f1ea;
+    padding: 7px 12px;
+    font-size: 0.74rem;
+    cursor: pointer;
+    text-decoration: none;
+    border-radius: 3px;
+  }
+  header a:hover, header button:hover { background: rgba(255,255,255,0.08); }
+  main { max-width: 1160px; margin: 0 auto; padding: 24px; }
+  .gate {
+    max-width: 360px;
+    margin: 15vh auto;
+    background: #fff;
+    padding: 28px;
+    border: 1px solid #d8cfc2;
+    border-radius: 6px;
+  }
+  .gate h2 { margin-top: 0; font-size: 1rem; }
+  .gate input { width: 100%; padding: 10px; border: 1px solid #c8bfb3; margin: 10px 0; font-size: 0.9rem; border-radius: 4px; }
+  .gate button, .primary-btn {
+    width: 100%;
+    padding: 12px;
+    background: #171411;
+    color: #f6f1ea;
+    border: none;
+    font-size: 0.8rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    cursor: pointer;
+    border-radius: 4px;
+  }
+  .gate-error { color: #a5321f; font-size: 0.8rem; min-height: 1.2em; }
+
+  .layout { display: grid; grid-template-columns: minmax(0,1fr) 320px; gap: 24px; align-items: start; }
+  @media (max-width: 880px) { .layout { grid-template-columns: 1fr; } }
+
+  .progress-card {
+    background: #fff; border: 1px solid #d8cfc2; border-radius: 8px; padding: 16px 18px; margin-bottom: 18px;
+  }
+  .progress-card h2 { margin: 0 0 10px; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; color: #595149; }
+  .progress-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+  .progress-list li { display: flex; align-items: center; gap: 8px; font-size: 0.84rem; color: #6f675f; }
+  .progress-list li.done { color: #2f6b3a; }
+  .progress-list li .dot {
+    width: 16px; height: 16px; border-radius: 50%; border: 1.5px solid #c8bfb3; flex: 0 0 auto;
+    display: flex; align-items: center; justify-content: center; font-size: 0.62rem; color: transparent;
+  }
+  .progress-list li.done .dot { background: #2f6b3a; border-color: #2f6b3a; color: #fff; }
+
+  .step {
+    background: #fff; border: 1px solid #d8cfc2; border-radius: 8px; padding: 20px 22px; margin-bottom: 18px;
+  }
+  .step.optional { border-style: dashed; }
+  .step-head { display: flex; align-items: baseline; gap: 10px; margin-bottom: 4px; }
+  .step-num {
+    display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px;
+    background: #171411; color: #f6f1ea; border-radius: 50%; font-size: 0.74rem; font-weight: 700; flex: 0 0 auto;
+  }
+  .step h2 { margin: 0; font-size: 1rem; }
+  .step-badge {
+    margin-left: auto; font-size: 0.66rem; text-transform: uppercase; letter-spacing: 0.05em;
+    padding: 3px 8px; border-radius: 10px; background: #f1ece2; color: #8a8175;
+  }
+  .step-help { margin: 4px 0 16px 34px; font-size: 0.82rem; color: #6f675f; line-height: 1.5; }
+
+  .field { margin-bottom: 14px; }
+  .field label { display: block; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 5px; color: #595149; }
+  .field input, .field textarea, .field select {
+    width: 100%; padding: 10px 11px; border: 1px solid #c8bfb3; font-size: 0.9rem; background: #fffcf7; color: #15120f; border-radius: 4px;
+  }
+  .field textarea { min-height: 70px; resize: vertical; }
+  .row { display: flex; gap: 12px; }
+  .row .field { flex: 1; }
+
+  .type-picker { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 12px; margin: 0 0 18px 34px; }
+  @media (max-width: 640px) { .type-picker { grid-template-columns: 1fr; } }
+  .type-card {
+    display: flex; flex-direction: column; align-items: center; gap: 8px; text-align: center;
+    padding: 18px 14px; border: 1.5px solid #d8cfc2; border-radius: 8px; background: #fffcf7; cursor: pointer;
+    font-family: inherit; color: #1b1a17;
+  }
+  .type-card .emoji { font-size: 1.6rem; }
+  .type-card .title { font-size: 0.88rem; font-weight: 700; }
+  .type-card .desc { font-size: 0.72rem; color: #8a8175; line-height: 1.4; }
+  .type-card:hover { border-color: #a89f8f; }
+  .type-card.is-active { border-color: #171411; background: #171411; color: #f6f1ea; }
+  .type-card.is-active .desc { color: #cfc7ba; }
+
+  .type-fields { margin: 0 0 18px 34px; padding: 16px; background: #faf6ee; border: 1px solid #eee3d2; border-radius: 6px; }
+  .type-fields .field-title { font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; color: #595149; margin: 0 0 10px; }
+  .type-fields .field-title .req { color: #a5321f; font-weight: 400; text-transform: none; letter-spacing: 0; }
+  .type-fields + .type-fields { margin-top: 12px; }
+
+  .pill-group { display: flex; flex-wrap: wrap; gap: 8px; }
+  .pill {
+    border: 1px solid #c8bfb3; background: #fff; color: #1b1a17; padding: 8px 14px; border-radius: 999px;
+    font-size: 0.82rem; cursor: pointer; font-family: inherit;
+  }
+  .pill:hover { border-color: #8a8175; }
+  .pill.is-active { background: #171411; border-color: #171411; color: #fff; }
+  .pill.is-disabled { opacity: 0.4; cursor: not-allowed; }
+  .pill-hint { margin: 10px 0 0; font-size: 0.76rem; color: #6f675f; }
+  .pill-hint.error { color: #a5321f; font-weight: 600; }
+
+  .checkbox-line { display: flex; align-items: center; gap: 8px; font-size: 0.84rem; margin-top: 10px; }
+  .checkbox-line input { width: auto; }
+
+  .list-row { display: flex; gap: 8px; margin-bottom: 8px; align-items: center; }
+  .list-row input { flex: 1; }
+  .variant-row select, .variant-row input { flex: 1; }
+  .variant-row .variant-size-wrap { flex: 1; }
+  #reviews-list { max-height: 260px; overflow-y: auto; padding-right: 4px; }
+  .review-row { align-items: flex-start; }
+  .review-row input { flex: 0 0 130px; }
+  .review-row select { flex: 0 0 64px; }
+  .review-row textarea { flex: 1; min-height: 40px; resize: vertical; }
+  .list-row button, .add-btn {
+    background: #ece5d8; border: 1px solid #c8bfb3; padding: 8px 12px; cursor: pointer; font-size: 0.75rem; border-radius: 4px;
+  }
+  .add-btn { margin-top: 4px; }
+
+  .actions { display: flex; gap: 10px; margin-top: 4px; }
+  .actions button { flex: 1; padding: 12px; font-size: 0.82rem; letter-spacing: 0.04em; text-transform: uppercase; cursor: pointer; border-radius: 4px; }
+  .btn-secondary { background: #ece5d8; border: 1px solid #c8bfb3; color: #1b1a17; }
+  .status-msg { font-size: 0.85rem; margin: 12px 0; min-height: 1.2em; }
+  .status-msg.error { color: #a5321f; }
+  .status-msg.ok { color: #2f6b3a; }
+
+  .side-card { background: #fff; border: 1px solid #d8cfc2; border-radius: 8px; padding: 18px; }
+  .side-card h2 { margin: 0 0 12px; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.04em; }
+  .side-card input[type="search"] {
+    width: 100%; padding: 9px 10px; border: 1px solid #c8bfb3; font-size: 0.85rem; border-radius: 4px; margin-bottom: 12px;
+  }
+  .product-list-item {
+    display: flex; gap: 10px; align-items: center; padding: 9px; border: 1px solid #e4ddd1; margin-bottom: 8px; cursor: pointer; background: #fff; border-radius: 6px;
+  }
+  .product-list-item:hover { background: #f8f3eb; }
+  .product-list-item img { width: 42px; height: 52px; object-fit: cover; background: #eee; border-radius: 3px; }
+  .product-list-item .meta { flex: 1; min-width: 0; }
+  .product-list-item .meta strong { display: block; font-size: 0.84rem; }
+  .product-list-item .meta .price { font-size: 0.74rem; color: #6f675f; }
+  .product-list-item .meta .badges { display: flex; gap: 4px; flex-wrap: wrap; margin-top: 4px; }
+  .badge {
+    font-size: 0.62rem; text-transform: uppercase; letter-spacing: 0.03em; padding: 2px 6px; border-radius: 8px;
+    background: #f1ece2; color: #6f675f;
+  }
+  .badge.vetement { background: #e7eef5; color: #2f5a80; }
+  .badge.accessoire { background: #f5ece2; color: #8a5a2f; }
+  .badge.collaboration { background: #f2e7f5; color: #6a2f80; }
+  .badge.unclassified { background: #f5e2e2; color: #8a2f2f; }
+  .product-list-item .del { background: none; border: none; color: #a5321f; cursor: pointer; font-size: 0.9rem; padding: 4px 8px; }
+</style>
+</head>
+<body>
+
+<div id="gate" class="gate">
+  <h2>Accès admin</h2>
+  <input type="password" id="gate-password" placeholder="Mot de passe">
+  <button id="gate-submit">Entrer</button>
+  <p class="gate-error" id="gate-error"></p>
+</div>
+
+<div id="app" hidden>
+  <header>
+    <h1>Admin produits JACES — V2</h1>
+    <div class="header-actions">
+      <a href="admin.html">Admin classique (V1)</a>
+      <button id="logout-btn">Déconnexion</button>
+    </div>
+  </header>
+  <main>
+    <div class="layout">
+      <div>
+        <div class="progress-card">
+          <h2>Progression</h2>
+          <ul class="progress-list" id="progress-list"></ul>
+        </div>
+
+        <form id="product-form">
+          <input type="hidden" id="product-id">
+
+          <section class="step">
+            <div class="step-head"><span class="step-num">1</span><h2>Informations générales</h2></div>
+            <p class="step-help">Le nom, le prix et au moins une photo sont obligatoires.</p>
+            <div class="row">
+              <div class="field">
+                <label for="f-name">Nom *</label>
+                <input type="text" id="f-name" required>
+              </div>
+              <div class="field">
+                <label for="f-price">Prix (€) *</label>
+                <input type="number" id="f-price" min="0" step="0.01" required>
+              </div>
+            </div>
+            <div class="field">
+              <label for="f-description">Description</label>
+              <textarea id="f-description"></textarea>
+            </div>
+            <div class="field">
+              <label>Images (liens Cloudinary / Dropbox) *</label>
+              <div id="images-list"></div>
+              <button type="button" class="add-btn" id="add-image-btn">+ Ajouter une image</button>
+            </div>
+          </section>
+
+          <section class="step">
+            <div class="step-head"><span class="step-num">2</span><h2>Type de produit</h2></div>
+            <p class="step-help">Choisissez ce qu'est ce produit — ça détermine automatiquement où il apparaît sur le site et quels champs sont utiles en dessous.</p>
+
+            <div class="type-picker">
+              <button type="button" class="type-card" data-type="vetement">
+                <span class="emoji">👗</span>
+                <span class="title">Vêtement</span>
+                <span class="desc">Robe, top, jupe, pantalon, veste — visible sur la page Collection.</span>
+              </button>
+              <button type="button" class="type-card" data-type="accessoire">
+                <span class="emoji">👜</span>
+                <span class="title">Accessoire</span>
+                <span class="desc">Sac, bijou, ceinture, foulard — visible sur la page Accessoires.</span>
+              </button>
+              <button type="button" class="type-card" data-type="collaboration">
+                <span class="emoji">🤝</span>
+                <span class="title">Collaboration</span>
+                <span class="desc">JACES x une marque, ou une création exclusive.</span>
+              </button>
+            </div>
+
+            <div id="type-vetement-fields" class="type-fields" hidden>
+              <p class="field-title">Catégorie <span class="req">(une seule)</span></p>
+              <div class="pill-group" id="vetement-category-pills"></div>
+            </div>
+
+            <div id="type-accessoire-fields" class="type-fields" hidden>
+              <p class="field-title">Type d'accessoire <span class="req">(obligatoire, une seule valeur)</span></p>
+              <div class="pill-group" id="accessoire-type-pills"></div>
+              <p class="field-title" style="margin-top:16px;">Matière <span class="req">(obligatoire, plusieurs possibles)</span></p>
+              <div class="pill-group" id="material-pills">
+                <button type="button" class="pill" data-material="cuir">Cuir</button>
+                <button type="button" class="pill" data-material="metal">Métal</button>
+                <button type="button" class="pill" data-material="soie">Soie</button>
+                <button type="button" class="pill" data-material="laine">Laine</button>
+                <button type="button" class="pill" data-material="coton">Coton</button>
+              </div>
+              <p class="pill-hint">Un accessoire n'a pas de taille vêtement — dans l'étape 3, la colonne "Taille" est masquée et remplacée par couleur + stock uniquement.</p>
+            </div>
+
+            <div id="type-collaboration-fields" class="type-fields" hidden>
+              <p class="field-title">Collaboration de marque <span class="req">(une seule, optionnel si "Créations exclusives" seul suffit)</span></p>
+              <div class="pill-group" id="collaboration-brand-pills"></div>
+              <label class="checkbox-line">
+                <input type="checkbox" id="f-collab-exclusive">
+                Créations exclusives (peut se combiner avec la marque ci-dessus)
+              </label>
+            </div>
+
+            <p class="pill-hint error" id="type-error-hint" hidden></p>
+          </section>
+
+          <section class="step">
+            <div class="step-head"><span class="step-num">3</span><h2>Variantes</h2></div>
+            <p class="step-help" id="variant-step-help">Taille, couleur et stock disponibles pour ce produit.</p>
+            <div id="variants-list"></div>
+            <button type="button" class="add-btn" id="add-variant-btn">+ Ajouter une variante</button>
+          </section>
+
+          <section class="step optional">
+            <div class="step-head"><span class="step-num">4</span><h2>Visibilité secondaire</h2><span class="step-badge">Optionnel</span></div>
+            <p class="step-help">Un produit peut en plus apparaître dans une saison Collection et/ou dans Nouveautés, indépendamment de son type ci-dessus.</p>
+
+            <div class="type-fields">
+              <p class="field-title">Saison (page Collection)</p>
+              <div class="pill-group" id="season-pills"></div>
+            </div>
+
+            <div class="type-fields">
+              <p class="field-title">Apparition dans Nouveautés</p>
+              <label class="checkbox-line">
+                <input type="checkbox" id="f-nouveaute-tout-voir">
+                Tout voir (apparaît dans "Toutes les nouveautés" sans étiquette précise)
+              </label>
+              <div class="pill-group" id="nouveaute-tag-pills" style="margin-top:10px;"></div>
+              <p class="pill-hint">Choisir Drop été / Édition limitée / Pièces signature suffit aussi à apparaître dans "Toutes les nouveautés", sans cocher "Tout voir".</p>
+            </div>
+
+            <div class="type-fields">
+              <p class="field-title">Catégorie sur la page Nouveautés (indépendante de l'étape 2)</p>
+              <div class="pill-group" id="nouveaute-category-pills"></div>
+            </div>
+          </section>
+
+          <section class="step optional">
+            <div class="step-head"><span class="step-num">5</span><h2>Contenu enrichi</h2><span class="step-badge">Optionnel</span></div>
+            <p class="step-help">Textes et avis affichés sur la fiche produit. Rien de tout ceci n'est obligatoire.</p>
+
+            <div class="field">
+              <label for="f-style-notes">Porté et style / Taille et coupe</label>
+              <textarea id="f-style-notes"></textarea>
+            </div>
+            <div class="field">
+              <label for="f-care-instructions">Entretien</label>
+              <textarea id="f-care-instructions"></textarea>
+            </div>
+            <div class="row">
+              <div class="field">
+                <label for="f-fit-rating">Porté</label>
+                <select id="f-fit-rating">
+                  <option value="petit">Petit</option>
+                  <option value="normal" selected>Normal</option>
+                  <option value="grand">Grand</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="f-quality-rating">Qualité</label>
+                <select id="f-quality-rating">
+                  <option value="moyenne">Moyenne</option>
+                  <option value="bonne">Bonne</option>
+                  <option value="premium" selected>Premium</option>
+                </select>
+              </div>
+            </div>
+            <div class="field">
+              <label>Photos clientes (liens Cloudinary / Dropbox)</label>
+              <div id="review-photos-list"></div>
+              <button type="button" class="add-btn" id="add-review-photo-btn">+ Ajouter une photo cliente</button>
+            </div>
+            <div class="field">
+              <label>Avis clients</label>
+              <div id="reviews-list"></div>
+              <button type="button" class="add-btn" id="add-review-btn">+ Ajouter un avis</button>
+            </div>
+            <label class="checkbox-line">
+              <input type="checkbox" id="f-show-in-related">
+              Afficher en bas des fiches produit ("En ce moment")
+            </label>
+          </section>
+
+          <p class="status-msg" id="form-status"></p>
+          <div class="actions">
+            <button type="submit" class="primary-btn">Enregistrer</button>
+            <button type="button" class="btn-secondary" id="cancel-edit-btn">Nouveau produit</button>
+          </div>
+        </form>
+      </div>
+
+      <div>
+        <div class="side-card">
+          <h2>Produits existants</h2>
+          <input type="search" id="product-search" placeholder="Rechercher un produit...">
+          <div id="product-list"></div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script type="module">
+const PASSWORD_KEY = 'jaces_admin_password';
+const gate = document.getElementById('gate');
+const app = document.getElementById('app');
+const gateError = document.getElementById('gate-error');
+
+function getPassword() {
+  return sessionStorage.getItem(PASSWORD_KEY) || '';
+}
+
+async function adminPost(payload) {
+  const res = await fetch('/api/admin-products', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'X-Admin-Password': getPassword() },
+    body: JSON.stringify(payload)
+  });
+  const data = await res.json().catch(() => ({}));
+  if (res.status === 401) {
+    sessionStorage.removeItem(PASSWORD_KEY);
+    showGate('Mot de passe invalide.');
+    throw new Error('unauthorized');
+  }
+  if (!res.ok) throw new Error(data.error || 'Erreur serveur');
+  return data;
+}
+
+function showGate(message) {
+  gate.hidden = false;
+  app.hidden = true;
+  gateError.textContent = message || '';
+}
+
+function showApp() {
+  gate.hidden = true;
+  app.hidden = false;
+  init();
+}
+
+document.getElementById('gate-submit').addEventListener('click', async () => {
+  const value = document.getElementById('gate-password').value;
+  if (!value) return;
+  sessionStorage.setItem(PASSWORD_KEY, value);
+  try {
+    await adminPost({ action: 'ping' });
+  } catch (error) {
+    if (error.message === 'unauthorized') return;
+  }
+  showApp();
+});
+document.getElementById('gate-password').addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') document.getElementById('gate-submit').click();
+});
+document.getElementById('logout-btn').addEventListener('click', () => {
+  sessionStorage.removeItem(PASSWORD_KEY);
+  showGate('');
+});
+
+// ---------------------------------------------------------------------
+// State
+// ---------------------------------------------------------------------
+let filtersByMenu = {};
+let editingId = null;
+
+const state = {
+  productType: '',        // 'vetement' | 'accessoire' | 'collaboration'
+  categoryId: null,       // categories menu (vetement branch only, excludes Accessoires)
+  accessoryTypeId: null,  // accessoires menu
+  materials: new Set(),   // 'cuir','metal','soie','laine','coton'
+  collaborationId: null,  // collaborations menu (brand)
+  exclusive: false,       // "Créations exclusives" checkbox
+  seasonId: null,         // collections menu
+  nouveauteToutVoir: false,
+  nouveauteTagId: null,   // nouveautes menu (Drop été/Édition limitée/Pièces signature)
+  nouveauteCategoryId: null // nouveautes_categories menu
+};
+
+function accessoriesCategoryFilter() {
+  return (filtersByMenu.categories || []).find((f) => (f.label || f.name) === 'Accessoires');
+}
+
+function toutVoirFilter(menu) {
+  return (filtersByMenu[menu] || []).find((f) => (f.label || f.name || '').trim() === 'Tout voir');
+}
+
+function exclusiveFilter() {
+  return (filtersByMenu.collaborations || []).find((f) => (f.label || f.name) === 'Créations exclusives');
+}
+
+// ---------------------------------------------------------------------
+// Small building blocks (images / variants / photos / reviews) - same
+// data shape as the classic admin, just restyled.
+// ---------------------------------------------------------------------
+function imageRow(value = '') {
+  const row = document.createElement('div');
+  row.className = 'list-row';
+  row.innerHTML = `<input type="url" placeholder="https://res.cloudinary.com/..." value="${value.replace(/"/g, '&quot;')}"><button type="button">✕</button>`;
+  row.querySelector('button').addEventListener('click', () => row.remove());
+  return row;
+}
+
+const SIZE_OPTIONS = ['34', '36', '38', '40', '42', '44'];
+const COLOR_OPTIONS = ['Noir', 'Blanc', 'Gris', 'Argent', 'Rouge', 'Bleu', 'Vert', 'Jaune', 'Orange', 'Rose', 'Violet', 'Marron', 'Beige', 'Doré', 'Bronze', 'Transparent', 'Multicolore'];
+
+function buildOptionsHtml(options, current) {
+  const canonicalMatch = options.find((value) => value.toLowerCase() === String(current || '').toLowerCase());
+  const resolvedCurrent = canonicalMatch || current;
+  const known = options.includes(resolvedCurrent) || !resolvedCurrent
+    ? ''
+    : `<option value="${resolvedCurrent}" selected>${resolvedCurrent}</option>`;
+  return known + options.map((value) => `<option value="${value}"${value === resolvedCurrent ? ' selected' : ''}>${value}</option>`).join('');
+}
+
+function variantRow(size = '', color = '', stock = '') {
+  const row = document.createElement('div');
+  row.className = 'list-row variant-row';
+  const isAccessoire = state.productType === 'accessoire';
+  row.innerHTML = `
+    ${isAccessoire ? '' : `
+    <div class="variant-size-wrap">
+      <select class="variant-size">
+        <option value="">Taille</option>
+        ${buildOptionsHtml(SIZE_OPTIONS, size)}
+      </select>
+    </div>`}
+    <select class="variant-color">
+      <option value="">Couleur</option>
+      ${buildOptionsHtml(COLOR_OPTIONS, color)}
+    </select>
+    <input type="number" placeholder="Stock" min="0" value="${stock}">
+    <button type="button">✕</button>`;
+  row.querySelector('button').addEventListener('click', () => { row.remove(); updateProgress(); });
+  return row;
+}
+
+function reviewPhotoRow(value = '') {
+  const row = document.createElement('div');
+  row.className = 'list-row';
+  row.innerHTML = `<input type="url" placeholder="https://res.cloudinary.com/..." value="${value.replace(/"/g, '&quot;')}"><button type="button">✕</button>`;
+  row.querySelector('button').addEventListener('click', () => row.remove());
+  return row;
+}
+
+function reviewRow(author = '', rating = 5, text = '') {
+  const row = document.createElement('div');
+  row.className = 'list-row review-row';
+  row.innerHTML = `
+    <input type="text" class="review-author" placeholder="Nom cliente" value="${String(author).replace(/"/g, '&quot;')}">
+    <select class="review-rating">
+      ${[5, 4, 3, 2, 1].map((n) => `<option value="${n}"${Number(rating) === n ? ' selected' : ''}>${n}★</option>`).join('')}
+    </select>
+    <textarea class="review-text" placeholder="Texte de l'avis">${String(text)}</textarea>
+    <button type="button">✕</button>`;
+  row.querySelector('button').addEventListener('click', () => row.remove());
+  return row;
+}
+
+document.getElementById('add-image-btn').addEventListener('click', () => {
+  document.getElementById('images-list').appendChild(imageRow());
+  updateProgress();
+});
+document.getElementById('add-review-photo-btn').addEventListener('click', () => {
+  document.getElementById('review-photos-list').appendChild(reviewPhotoRow());
+});
+document.getElementById('add-review-btn').addEventListener('click', () => {
+  document.getElementById('reviews-list').prepend(reviewRow());
+});
+document.getElementById('add-variant-btn').addEventListener('click', () => {
+  document.getElementById('variants-list').appendChild(variantRow());
+});
+
+function rebuildVariantRows() {
+  // Re-render existing rows when switching product type, so the Taille
+  // column appears/disappears without losing already-entered color/stock.
+  const list = document.getElementById('variants-list');
+  const existing = Array.from(list.querySelectorAll('.variant-row')).map((row) => ({
+    size: row.querySelector('.variant-size')?.value || '',
+    color: row.querySelector('.variant-color')?.value || '',
+    stock: row.querySelector('input[type="number"]')?.value || ''
+  }));
+  list.innerHTML = '';
+  existing.forEach((v) => list.appendChild(variantRow(v.size, v.color, v.stock)));
+  document.getElementById('variant-step-help').textContent = state.productType === 'accessoire'
+    ? 'Un accessoire n\'a pas de taille — renseignez juste couleur et stock.'
+    : 'Taille, couleur et stock disponibles pour ce produit.';
+}
+
+// ---------------------------------------------------------------------
+// Pill group rendering
+// ---------------------------------------------------------------------
+function renderSinglePillGroup(container, filters, selectedId, onSelect) {
+  container.innerHTML = '';
+  filters.forEach((filter) => {
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'pill' + (selectedId === filter.id ? ' is-active' : '');
+    btn.textContent = filter.label || filter.name;
+    btn.addEventListener('click', () => onSelect(selectedId === filter.id ? null : filter.id));
+    container.appendChild(btn);
+  });
+}
+
+function renderCategoryPills() {
+  const options = (filtersByMenu.categories || []).filter((f) => (f.label || f.name) !== 'Accessoires' && (f.label || f.name) !== 'Tout voir');
+  renderSinglePillGroup(document.getElementById('vetement-category-pills'), options, state.categoryId, (id) => {
+    state.categoryId = id;
+    updateProgress();
+  });
+}
+
+function renderAccessoryTypePills() {
+  const options = filtersByMenu.accessoires || [];
+  renderSinglePillGroup(document.getElementById('accessoire-type-pills'), options, state.accessoryTypeId, (id) => {
+    state.accessoryTypeId = id;
+    updateProgress();
+  });
+}
+
+function renderCollaborationPills() {
+  const options = (filtersByMenu.collaborations || []).filter((f) => (f.label || f.name) !== 'Créations exclusives' && (f.label || f.name) !== 'Tout voir');
+  renderSinglePillGroup(document.getElementById('collaboration-brand-pills'), options, state.collaborationId, (id) => {
+    state.collaborationId = id;
+    updateProgress();
+  });
+}
+
+function renderSeasonPills() {
+  renderSinglePillGroup(document.getElementById('season-pills'), filtersByMenu.collections || [], state.seasonId, (id) => {
+    state.seasonId = id;
+  });
+}
+
+function renderNouveauteTagPills() {
+  const options = (filtersByMenu.nouveautes || []).filter((f) => (f.label || f.name || '').trim() !== 'Tout voir');
+  renderSinglePillGroup(document.getElementById('nouveaute-tag-pills'), options, state.nouveauteTagId, (id) => {
+    state.nouveauteTagId = id;
+  });
+}
+
+function renderNouveauteCategoryPills() {
+  renderSinglePillGroup(document.getElementById('nouveaute-category-pills'), filtersByMenu.nouveautes_categories || [], state.nouveauteCategoryId, (id) => {
+    state.nouveauteCategoryId = id;
+  });
+}
+
+function renderMaterialPills() {
+  document.querySelectorAll('#material-pills .pill').forEach((btn) => {
+    btn.classList.toggle('is-active', state.materials.has(btn.dataset.material));
+  });
+}
+
+document.querySelectorAll('#material-pills .pill').forEach((btn) => {
+  btn.addEventListener('click', () => {
+    const value = btn.dataset.material;
+    if (state.materials.has(value)) state.materials.delete(value);
+    else state.materials.add(value);
+    renderMaterialPills();
+    updateProgress();
+  });
+});
+
+document.getElementById('f-collab-exclusive').addEventListener('change', (e) => {
+  state.exclusive = e.target.checked;
+  updateProgress();
+});
+
+// ---------------------------------------------------------------------
+// Type picker (progressive disclosure)
+// ---------------------------------------------------------------------
+function setProductType(type, options) {
+  const skipReset = options && options.skipReset;
+  if (state.productType === type) return;
+  state.productType = type;
+
+  if (!skipReset) {
+    state.categoryId = null;
+    state.accessoryTypeId = null;
+    state.materials.clear();
+    state.collaborationId = null;
+    state.exclusive = false;
+    document.getElementById('f-collab-exclusive').checked = false;
+  }
+
+  document.querySelectorAll('.type-card').forEach((card) => {
+    card.classList.toggle('is-active', card.dataset.type === type);
+  });
+  document.getElementById('type-vetement-fields').hidden = type !== 'vetement';
+  document.getElementById('type-accessoire-fields').hidden = type !== 'accessoire';
+  document.getElementById('type-collaboration-fields').hidden = type !== 'collaboration';
+
+  renderCategoryPills();
+  renderAccessoryTypePills();
+  renderCollaborationPills();
+  renderMaterialPills();
+  rebuildVariantRows();
+  updateProgress();
+}
+
+document.querySelectorAll('.type-card').forEach((card) => {
+  card.addEventListener('click', () => setProductType(card.dataset.type));
+});
+
+// ---------------------------------------------------------------------
+// Filters loading
+// ---------------------------------------------------------------------
+async function loadFilters() {
+  const res = await fetch('/api/filters');
+  const rows = await res.json();
+  filtersByMenu = {};
+  rows.forEach((filter) => {
+    const menu = filter.menu || 'autre';
+    if (!filtersByMenu[menu]) filtersByMenu[menu] = [];
+    filtersByMenu[menu].push(filter);
+  });
+  renderCategoryPills();
+  renderAccessoryTypePills();
+  renderCollaborationPills();
+  renderSeasonPills();
+  renderNouveauteTagPills();
+  renderNouveauteCategoryPills();
+}
+
+document.getElementById('f-nouveaute-tout-voir').addEventListener('change', (e) => {
+  state.nouveauteToutVoir = e.target.checked;
+});
+
+// ---------------------------------------------------------------------
+// Progress checklist
+// ---------------------------------------------------------------------
+function getTypeCompletion() {
+  if (state.productType === 'vetement') return !!state.categoryId;
+  if (state.productType === 'accessoire') {
+    const hasVariant = Array.from(document.querySelectorAll('#variants-list .variant-row')).some((row) => {
+      const color = row.querySelector('.variant-color')?.value;
+      const stock = Number(row.querySelector('input[type="number"]')?.value) || 0;
+      return color && stock > 0;
+    });
+    return !!state.accessoryTypeId && state.materials.size > 0 && hasVariant;
+  }
+  if (state.productType === 'collaboration') return !!(state.collaborationId || state.exclusive);
+  return false;
+}
+
+function updateProgress() {
+  const hasName = !!document.getElementById('f-name').value.trim();
+  const hasPrice = Number(document.getElementById('f-price').value) > 0;
+  const hasImage = Array.from(document.querySelectorAll('#images-list input')).some((i) => i.value.trim());
+  const hasType = !!state.productType;
+  const typeComplete = hasType && getTypeCompletion();
+
+  const items = [
+    { label: 'Nom du produit', done: hasName },
+    { label: 'Prix', done: hasPrice },
+    { label: 'Au moins une image', done: hasImage },
+    { label: 'Type de produit choisi', done: hasType },
+    { label: 'Détails du type complétés', done: typeComplete }
+  ];
+
+  const list = document.getElementById('progress-list');
+  list.innerHTML = items.map((item) => `
+    <li class="${item.done ? 'done' : ''}"><span class="dot">${item.done ? '✓' : ''}</span>${item.label}</li>
+  `).join('');
+
+  return items.every((item) => item.done);
+}
+
+['f-name', 'f-price'].forEach((id) => {
+  document.getElementById(id).addEventListener('input', updateProgress);
+});
+document.getElementById('images-list').addEventListener('input', updateProgress);
+
+// ---------------------------------------------------------------------
+// Reset / fill form
+// ---------------------------------------------------------------------
+function resetForm() {
+  editingId = null;
+  document.getElementById('product-id').value = '';
+  document.getElementById('f-name').value = '';
+  document.getElementById('f-price').value = '';
+  document.getElementById('f-description').value = '';
+  document.getElementById('f-style-notes').value = '';
+  document.getElementById('f-care-instructions').value = '';
+  document.getElementById('f-show-in-related').checked = false;
+  document.getElementById('images-list').innerHTML = '';
+  document.getElementById('images-list').appendChild(imageRow());
+  document.getElementById('variants-list').innerHTML = '';
+  document.getElementById('review-photos-list').innerHTML = '';
+  document.getElementById('reviews-list').innerHTML = '';
+  document.getElementById('f-fit-rating').value = 'normal';
+  document.getElementById('f-quality-rating').value = 'premium';
+  document.getElementById('f-nouveaute-tout-voir').checked = false;
+  document.getElementById('f-collab-exclusive').checked = false;
+  document.getElementById('type-error-hint').hidden = true;
+
+  state.productType = '';
+  state.categoryId = null;
+  state.accessoryTypeId = null;
+  state.materials.clear();
+  state.collaborationId = null;
+  state.exclusive = false;
+  state.seasonId = null;
+  state.nouveauteToutVoir = false;
+  state.nouveauteTagId = null;
+  state.nouveauteCategoryId = null;
+
+  document.querySelectorAll('.type-card').forEach((card) => card.classList.remove('is-active'));
+  document.getElementById('type-vetement-fields').hidden = true;
+  document.getElementById('type-accessoire-fields').hidden = true;
+  document.getElementById('type-collaboration-fields').hidden = true;
+
+  renderCategoryPills();
+  renderAccessoryTypePills();
+  renderCollaborationPills();
+  renderSeasonPills();
+  renderNouveauteTagPills();
+  renderNouveauteCategoryPills();
+  renderMaterialPills();
+
+  document.getElementById('form-status').textContent = '';
+  document.getElementById('form-status').className = 'status-msg';
+  updateProgress();
+}
+
+document.getElementById('cancel-edit-btn').addEventListener('click', resetForm);
+
+function fillFormWithProduct(product) {
+  resetForm();
+  editingId = product.id;
+  document.getElementById('product-id').value = product.id;
+  document.getElementById('f-name').value = product.name || '';
+  document.getElementById('f-price').value = product.price || '';
+  document.getElementById('f-description').value = product.description || '';
+  document.getElementById('f-style-notes').value = product.style_notes || '';
+  document.getElementById('f-care-instructions').value = product.care_instructions || '';
+  document.getElementById('f-show-in-related').checked = !!product.show_in_related;
+  document.getElementById('f-fit-rating').value = product.fit_rating || 'normal';
+  document.getElementById('f-quality-rating').value = product.quality_rating || 'premium';
+
+  const reviewPhotosList = document.getElementById('review-photos-list');
+  (Array.isArray(product.review_photos) ? product.review_photos : []).forEach((url) => reviewPhotosList.appendChild(reviewPhotoRow(url)));
+
+  const reviewsList = document.getElementById('reviews-list');
+  (Array.isArray(product.reviews) ? product.reviews : []).forEach((review) => {
+    reviewsList.appendChild(reviewRow(review.author || '', review.rating || 5, review.text || ''));
+  });
+
+  const imagesList = document.getElementById('images-list');
+  imagesList.innerHTML = '';
+  const urls = Array.isArray(product.all_images) && product.all_images.length ? product.all_images : [''];
+  urls.forEach((url) => imagesList.appendChild(imageRow(url)));
+
+  const filterIds = new Set((product.filter_ids || []).map(String));
+  const findChecked = (menu) => (filtersByMenu[menu] || []).find((f) => filterIds.has(String(f.id)));
+
+  const accessoryType = findChecked('accessoires');
+  const collab = findChecked('collaborations');
+  const collabExclusive = exclusiveFilter();
+  const hasExclusive = collabExclusive && filterIds.has(String(collabExclusive.id));
+  const categoryFilter = findChecked('categories');
+  const isAccessoryCategory = categoryFilter && (categoryFilter.label || categoryFilter.name) === 'Accessoires';
+
+  if (accessoryType || isAccessoryCategory) {
+    setProductType('accessoire', { skipReset: true });
+    state.accessoryTypeId = accessoryType ? accessoryType.id : null;
+    state.materials = new Set((Array.isArray(product.material) ? product.material : []).map(String));
+  } else if (collab || hasExclusive) {
+    setProductType('collaboration', { skipReset: true });
+    state.collaborationId = collab ? collab.id : null;
+    state.exclusive = !!hasExclusive;
+    document.getElementById('f-collab-exclusive').checked = state.exclusive;
+  } else if (categoryFilter) {
+    setProductType('vetement', { skipReset: true });
+    state.categoryId = categoryFilter.id;
+  }
+
+  const seasonFilter = findChecked('collections');
+  state.seasonId = seasonFilter ? seasonFilter.id : null;
+
+  const nouveauteToutVoirFilter = toutVoirFilter('nouveautes');
+  state.nouveauteToutVoir = !!(nouveauteToutVoirFilter && filterIds.has(String(nouveauteToutVoirFilter.id)));
+  document.getElementById('f-nouveaute-tout-voir').checked = state.nouveauteToutVoir;
+
+  const nouveauteTagFilter = (filtersByMenu.nouveautes || []).find((f) => (f.label || f.name || '').trim() !== 'Tout voir' && filterIds.has(String(f.id)));
+  state.nouveauteTagId = nouveauteTagFilter ? nouveauteTagFilter.id : null;
+
+  const nouveauteCategoryFilter = findChecked('nouveautes_categories');
+  state.nouveauteCategoryId = nouveauteCategoryFilter ? nouveauteCategoryFilter.id : null;
+
+  renderCategoryPills();
+  renderAccessoryTypePills();
+  renderCollaborationPills();
+  renderSeasonPills();
+  renderNouveauteTagPills();
+  renderNouveauteCategoryPills();
+  renderMaterialPills();
+
+  const variantsList = document.getElementById('variants-list');
+  variantsList.innerHTML = '';
+  (product.variants || []).forEach((variant) => {
+    variantsList.appendChild(variantRow(variant.size || '', variant.color || '', variant.stock ?? ''));
+  });
+
+  document.getElementById('form-status').textContent = '';
+  updateProgress();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ---------------------------------------------------------------------
+// Product list (with search + type badges)
+// ---------------------------------------------------------------------
+let allProducts = [];
+
+function classifyProduct(product) {
+  const category = String(product.category || '');
+  if (category === 'Accessoires') return 'accessoire';
+  if (category) return 'vetement';
+  if (product.page_type === 'collaborations') return 'collaboration';
+  return 'unclassified';
+}
+
+function badgeLabel(type) {
+  return { vetement: 'Vêtement', accessoire: 'Accessoire', collaboration: 'Collaboration', unclassified: 'Non classé' }[type] || type;
+}
+
+function renderProductList(filterText) {
+  const listEl = document.getElementById('product-list');
+  const query = (filterText || '').trim().toLowerCase();
+  const filtered = query ? allProducts.filter((p) => (p.name || '').toLowerCase().includes(query)) : allProducts;
+
+  listEl.innerHTML = '';
+  if (!filtered.length) {
+    listEl.innerHTML = '<p style="font-size:0.82rem;color:#6f675f;">Aucun produit.</p>';
+    return;
+  }
+
+  filtered.forEach((product) => {
+    const type = classifyProduct(product);
+    const item = document.createElement('div');
+    item.className = 'product-list-item';
+    const img = product.image_url ? `<img src="${product.image_url}" alt="">` : '<div style="width:42px;height:52px;background:#eee;border-radius:3px;"></div>';
+    item.innerHTML = `
+      ${img}
+      <div class="meta">
+        <strong>${product.name || 'Sans nom'}</strong>
+        <span class="price">${product.price || 0}€</span>
+        <div class="badges"><span class="badge ${type}">${badgeLabel(type)}</span>${product.category ? `<span class="badge">${product.category}</span>` : ''}</div>
+      </div>
+      <button type="button" class="del" title="Supprimer">🗑</button>
+    `;
+    item.addEventListener('click', (e) => {
+      if (e.target.closest('.del')) return;
+      fillFormWithProduct(product);
+    });
+    item.querySelector('.del').addEventListener('click', async (e) => {
+      e.stopPropagation();
+      if (!confirm(`Supprimer "${product.name}" ?`)) return;
+      try {
+        await adminPost({ action: 'delete', id: product.id });
+        if (editingId === product.id) resetForm();
+        loadProductList();
+      } catch (error) {
+        alert('Erreur: ' + error.message);
+      }
+    });
+    listEl.appendChild(item);
+  });
+}
+
+async function loadProductList() {
+  const res = await fetch('/api/products');
+  allProducts = await res.json();
+  renderProductList(document.getElementById('product-search').value);
+}
+
+document.getElementById('product-search').addEventListener('input', (e) => {
+  renderProductList(e.target.value);
+});
+
+// ---------------------------------------------------------------------
+// Submit
+// ---------------------------------------------------------------------
+document.getElementById('product-form').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const submitBtn = e.target.querySelector('button[type="submit"]');
+  if (submitBtn.disabled) return;
+  submitBtn.disabled = true;
+
+  const statusEl = document.getElementById('form-status');
+  const typeErrorHint = document.getElementById('type-error-hint');
+  typeErrorHint.hidden = true;
+  statusEl.className = 'status-msg';
+  statusEl.textContent = 'Enregistrement...';
+
+  const images = [...new Set(Array.from(document.querySelectorAll('#images-list input')).map((i) => i.value.trim()).filter(Boolean))];
+
+  const variants = Array.from(document.querySelectorAll('#variants-list .variant-row')).map((row) => {
+    const size = row.querySelector('.variant-size')?.value.trim() || '';
+    const color = row.querySelector('.variant-color').value.trim();
+    const stock = Number(row.querySelector('input[type="number"]').value) || 0;
+    return { size, color, stock };
+  }).filter((v) => v.size || v.color);
+
+  const reviewPhotos = [...new Set(Array.from(document.querySelectorAll('#review-photos-list input')).map((i) => i.value.trim()).filter(Boolean))];
+  const reviews = Array.from(document.querySelectorAll('#reviews-list .review-row')).map((row) => ({
+    author: row.querySelector('.review-author').value.trim(),
+    rating: Number(row.querySelector('.review-rating').value) || 5,
+    text: row.querySelector('.review-text').value.trim()
+  })).filter((r) => r.text);
+
+  function fail(message) {
+    statusEl.textContent = 'Erreur: ' + message;
+    statusEl.className = 'status-msg error';
+    typeErrorHint.textContent = message;
+    typeErrorHint.hidden = false;
+    submitBtn.disabled = false;
+  }
+
+  if (!document.getElementById('f-name').value.trim()) return fail('le nom du produit est requis.');
+  if (!images.length) return fail('au moins une image est requise.');
+  if (!state.productType) return fail('choisissez un type de produit (Vêtement / Accessoire / Collaboration).');
+
+  if (state.productType === 'vetement' && !state.categoryId) {
+    return fail('choisissez une catégorie (Robes/Tops/Jupes/Pantalons/Vestes).');
+  }
+  if (state.productType === 'accessoire') {
+    if (!state.accessoryTypeId) return fail('choisissez un type d\'accessoire (Sacs/Bijoux/Ceintures/Foulards).');
+    if (!state.materials.size) return fail('choisissez au moins une Matière.');
+    const hasColorStockVariant = variants.some((v) => v.color && v.stock > 0);
+    if (!hasColorStockVariant) return fail('ajoutez au moins une variante avec couleur et stock.');
+  }
+  if (state.productType === 'collaboration' && !state.collaborationId && !state.exclusive) {
+    return fail('choisissez une collaboration de marque ou cochez "Créations exclusives".');
+  }
+
+  // Build the exact same filterIds / category / pageType / nouveauteTag
+  // shape the classic admin sends, so the backend needs zero changes.
+  const filterIds = [];
+  let category = '';
+  let pageType = '';
+
+  if (state.productType === 'vetement' && state.categoryId) {
+    filterIds.push(state.categoryId);
+    const filter = (filtersByMenu.categories || []).find((f) => f.id === state.categoryId);
+    category = filter ? (filter.label || filter.name) : '';
+    pageType = 'collection';
+  } else if (state.productType === 'accessoire') {
+    const accCategory = accessoriesCategoryFilter();
+    if (accCategory) filterIds.push(accCategory.id);
+    if (state.accessoryTypeId) filterIds.push(state.accessoryTypeId);
+    category = 'Accessoires';
+    pageType = 'accessoires';
+  } else if (state.productType === 'collaboration') {
+    if (state.collaborationId) filterIds.push(state.collaborationId);
+    if (state.exclusive) {
+      const exclusive = exclusiveFilter();
+      if (exclusive) filterIds.push(exclusive.id);
+    }
+    pageType = 'collaborations';
+  }
+
+  if (state.seasonId) filterIds.push(state.seasonId);
+
+  let nouveauteTag = '';
+  if (state.nouveauteToutVoir) {
+    const tv = toutVoirFilter('nouveautes');
+    if (tv) filterIds.push(tv.id);
+  }
+  if (state.nouveauteTagId) {
+    filterIds.push(state.nouveauteTagId);
+    const filter = (filtersByMenu.nouveautes || []).find((f) => f.id === state.nouveauteTagId);
+    nouveauteTag = filter ? filter.slug : '';
+  }
+  if (state.nouveauteCategoryId) filterIds.push(state.nouveauteCategoryId);
+
+  const payload = {
+    action: editingId ? 'update' : 'create',
+    id: editingId || undefined,
+    name: document.getElementById('f-name').value.trim(),
+    price: Number(document.getElementById('f-price').value) || 0,
+    description: document.getElementById('f-description').value.trim(),
+    styleNotes: document.getElementById('f-style-notes').value.trim(),
+    careInstructions: document.getElementById('f-care-instructions').value.trim(),
+    showInRelated: document.getElementById('f-show-in-related').checked,
+    fitRating: document.getElementById('f-fit-rating').value,
+    qualityRating: document.getElementById('f-quality-rating').value,
+    material: Array.from(state.materials),
+    reviewPhotos,
+    reviews,
+    images,
+    variants,
+    filterIds: [...new Set(filterIds)],
+    category,
+    pageType,
+    nouveauteTag
+  };
+
+  try {
+    await adminPost(payload);
+    statusEl.textContent = 'Enregistré ✓';
+    statusEl.className = 'status-msg ok';
+    resetForm();
+    loadProductList();
+  } catch (error) {
+    if (error.message === 'unauthorized') return;
+    statusEl.textContent = 'Erreur: ' + error.message;
+    statusEl.className = 'status-msg error';
+  } finally {
+    submitBtn.disabled = false;
+  }
+});
+
+async function init() {
+  await loadFilters();
+  resetForm();
+  await loadProductList();
+}
+
+if (getPassword()) {
+  adminPost({ action: 'ping' }).then(showApp).catch((error) => {
+    if (error.message !== 'unauthorized') showApp();
+  });
+} else {
+  showGate('');
+}
+</script>
+</body>
+</html>
