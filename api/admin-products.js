@@ -225,19 +225,6 @@ module.exports = async function handler(req, res) {
       return res.status(200).json({ ok: true });
     }
 
-    if (action === 'seed_nouveaute_categories') {
-      const labels = ['Robes', 'Tops', 'Jupes', 'Pantalons', 'Vestes', 'Accessoires'];
-      const { data: existing } = await supabase.from('filters').select('id, label').eq('menu', 'nouveautes_categories');
-      const existingLabels = new Set((existing || []).map((f) => f.label));
-      const rows = labels
-        .filter((label) => !existingLabels.has(label))
-        .map((label, index) => ({ label, menu: 'nouveautes_categories', position: index + 1, is_active: true }));
-      if (!rows.length) return res.status(200).json({ ok: true, inserted: 0, note: 'already seeded' });
-      const { data, error } = await supabase.from('filters').insert(rows).select('*');
-      if (error) return res.status(500).json({ error: error.message });
-      return res.status(200).json({ ok: true, inserted: data.length, data });
-    }
-
     if (action === 'delete') {
       const productId = String(body.id || '').trim();
       if (!productId) return res.status(400).json({ error: 'id manquant' });
