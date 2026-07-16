@@ -385,14 +385,23 @@ document.getElementById('add-variant-btn').addEventListener('click', () => {
 // Native radios can't be unchecked by clicking the already-selected one -
 // clicking it again clears the whole group instead, so a category or
 // accessory type can be picked "by mistake" and then cleared back to none.
+// event.target may be the <label> (clicking its text) rather than the
+// nested <input>, so look inside the label too, not just up via closest().
+function getRadioFromFilterEvent(event) {
+  if (event.target.matches('input[type="radio"]')) return event.target;
+  const label = event.target.closest('label');
+  return label ? label.querySelector('input[type="radio"]') : null;
+}
+
 document.getElementById('filters-container').addEventListener('mousedown', (event) => {
-  const input = event.target.closest('input[type="radio"]');
+  const input = getRadioFromFilterEvent(event);
   if (input) input.dataset.wasChecked = input.checked ? '1' : '';
 });
 document.getElementById('filters-container').addEventListener('click', (event) => {
-  const input = event.target.closest('input[type="radio"]');
+  const input = getRadioFromFilterEvent(event);
   if (input && input.dataset.wasChecked === '1') {
     input.checked = false;
+    input.dataset.wasChecked = '';
     input.dispatchEvent(new Event('change', { bubbles: true }));
   }
 });
