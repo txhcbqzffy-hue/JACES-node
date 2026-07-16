@@ -1011,8 +1011,9 @@
         const selectedClass = isAvailable && size === firstSize ? ' is-selected' : '';
         const recommendedClass = isAvailable && size === suggestedSize ? ' is-recommended' : '';
         const disabledClass = !isAvailable ? ' is-disabled' : '';
-        const disabledAttr = !isAvailable ? ' disabled aria-disabled="true" tabindex="-1"' : '';
-        return `<button class="product-detail-size-chip${selectedClass}${recommendedClass}${disabledClass}" type="button" data-size="${size}"${disabledAttr}>${size}</button>`;
+        // Not a native disabled button: clicking an unavailable size opens
+        // the "notify me when back in stock" flow instead of doing nothing.
+        return `<button class="product-detail-size-chip${selectedClass}${recommendedClass}${disabledClass}" type="button" data-size="${size}">${size}</button>`;
       }).join('')
       : '';
     const relatedProducts = getRelatedProducts(product, origin, allProducts);
@@ -1402,7 +1403,12 @@
 
     shell.querySelectorAll('.product-detail-size-chip').forEach((btn) => {
       btn.addEventListener('click', () => {
-        if (btn.classList.contains('is-disabled')) return;
+        if (btn.classList.contains('is-disabled')) {
+          if (window.JacesStockNotify && typeof window.JacesStockNotify.open === 'function') {
+            window.JacesStockNotify.open(product.id, btn.dataset.size, product.name);
+          }
+          return;
+        }
         const isAlreadySelected = btn.classList.contains('is-selected');
         const hasMandatorySize = !!(window.JacesFavorites
           && typeof window.JacesFavorites.getSavedSelection === 'function'

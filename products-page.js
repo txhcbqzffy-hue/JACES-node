@@ -118,7 +118,9 @@ function buildProductCard(product, pageType) {
   const quickBuyMarkup = displaySizes.length
     ? `<p class="quick-buy-title"><strong>Achat rapide</strong> (Selectionnez votre taille)</p><div class="quick-buy-grid">${displaySizes.map((size) => {
       const isAvailable = sizes.includes(size);
-      return `<button type="button" class="${isAvailable ? '' : 'is-disabled'}"${isAvailable ? '' : ' disabled aria-disabled="true" tabindex="-1"'}>${size}</button>`;
+      // Not a native disabled button: clicking an unavailable size opens
+      // the "notify me when back in stock" flow instead of doing nothing.
+      return `<button type="button" class="${isAvailable ? '' : 'is-disabled'}">${size}</button>`;
     }).join('')}</div>`
     : '';
 

@@ -861,8 +861,9 @@ if (path === 'collection.html' || path === 'nouveautes.html' || path === 'access
           const isAvailable = quickBuySizes.includes(size);
           const recommendedClass = isAvailable && suggestedSize === size ? ' is-recommended' : '';
           const disabledClass = isAvailable ? '' : ' is-disabled';
-          const disabledAttr = isAvailable ? '' : ' disabled aria-disabled="true" tabindex="-1"';
-          return '<button class="' + recommendedClass + disabledClass + '" type="button"' + disabledAttr + '>' + size + '</button>';
+          // Not a native disabled button: clicking an unavailable size opens
+          // the "notify me when back in stock" flow instead of doing nothing.
+          return '<button class="' + recommendedClass + disabledClass + '" type="button">' + size + '</button>';
         })
         .join('');
       panel.dataset.quickSizes = quickBuySizes.join(',');
@@ -915,6 +916,14 @@ if (path === 'collection.html' || path === 'nouveautes.html' || path === 'access
         if (!product || !product.id) return;
 
         const selectedSize = String(quickBuyButton.textContent || '').trim();
+
+        if (quickBuyButton.classList.contains('is-disabled')) {
+          if (window.JacesStockNotify && typeof window.JacesStockNotify.open === 'function') {
+            window.JacesStockNotify.open(product.id, selectedSize, product.name);
+          }
+          return;
+        }
+
         if (selectedSize) {
           saveProductSelection(product.id, 'size', selectedSize);
         }

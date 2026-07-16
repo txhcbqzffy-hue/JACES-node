@@ -397,6 +397,7 @@
   <script src="catalog.js?v=20260715r"></script>
   <script src="cart.js?v=20260715r"></script>
   <script src="favorites.js?v=20260716c"></script>
+  <script src="stock-notify.js?v=20260716d"></script>
   <script src="auth.js?v=20260715r"></script>
 
   <script type="module">
@@ -437,7 +438,7 @@
       const quickBuyMarkup = displaySizes.length
         ? `<p class="quick-buy-title"><strong>Achat rapide</strong> (Selectionnez votre taille)</p><div class="quick-buy-grid">${displaySizes.map((size) => {
           const isAvailable = sizes.includes(size);
-          return `<button type="button" class="${isAvailable ? '' : 'is-disabled'}"${isAvailable ? '' : ' disabled aria-disabled="true" tabindex="-1"'}>${size}</button>`;
+          return `<button type="button" class="${isAvailable ? '' : 'is-disabled'}">${size}</button>`;
         }).join('')}</div>`
         : '';
 
