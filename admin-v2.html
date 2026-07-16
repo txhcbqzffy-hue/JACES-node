@@ -308,15 +308,12 @@
               <p class="field-title">Apparition dans Nouveautés</p>
               <label class="checkbox-line">
                 <input type="checkbox" id="f-nouveaute-tout-voir">
-                Tout voir (apparaît dans "Toutes les nouveautés" sans étiquette précise)
+                Afficher aussi dans Nouveautés
               </label>
-              <div class="pill-group" id="nouveaute-tag-pills" style="margin-top:10px;"></div>
-              <p class="pill-hint">Choisir Drop été / Édition limitée / Pièces signature suffit aussi à apparaître dans "Toutes les nouveautés", sans cocher "Tout voir".</p>
-            </div>
-
-            <div class="type-fields">
-              <p class="field-title">Catégorie sur la page Nouveautés (indépendante de l'étape 2)</p>
-              <div class="pill-group" id="nouveaute-category-pills"></div>
+              <p class="pill-hint" id="nouveaute-category-preview"></p>
+              <p class="field-title" style="margin-top:16px;">Badge spécial <span class="req">(optionnel)</span></p>
+              <div class="pill-group" id="nouveaute-tag-pills"></div>
+              <p class="pill-hint">Choisir un badge (Drop été / Édition limitée / Pièces signature) suffit aussi à apparaître dans "Toutes les nouveautés", même sans cocher la case ci-dessus.</p>
             </div>
           </section>
 
@@ -456,9 +453,8 @@ const state = {
   collaborationId: null,  // collaborations menu (brand)
   exclusive: false,       // "Créations exclusives" checkbox
   seasonId: null,         // collections menu
-  nouveauteToutVoir: false,
-  nouveauteTagId: null,   // nouveautes menu (Drop été/Édition limitée/Pièces signature)
-  nouveauteCategoryId: null // nouveautes_categories menu
+  nouveauteToutVoir: false, // "Afficher aussi dans Nouveautés" checkbox
+  nouveauteTagId: null    // nouveautes menu (Drop été/Édition limitée/Pièces signature)
 };
 
 function accessoriesCategoryFilter() {
@@ -467,6 +463,35 @@ function accessoriesCategoryFilter() {
 
 function toutVoirFilter(menu) {
   return (filtersByMenu[menu] || []).find((f) => (f.label || f.name || '').trim() === 'Tout voir');
+}
+
+// The Nouveautés category is never picked separately - it's always the same
+// category/type chosen in étape 2, so a product never needs classifying twice.
+function deriveNouveauteCategoryLabel() {
+  if (state.productType === 'vetement' && state.categoryId) {
+    const filter = (filtersByMenu.categories || []).find((f) => f.id === state.categoryId);
+    return filter ? (filter.label || filter.name) : '';
+  }
+  if (state.productType === 'accessoire') return 'Accessoires';
+  return '';
+}
+
+function deriveNouveauteCategoryId() {
+  const label = deriveNouveauteCategoryLabel();
+  if (!label) return null;
+  const filter = (filtersByMenu.nouveautes_categories || []).find((f) => (f.label || f.name) === label);
+  return filter ? filter.id : null;
+}
+
+function updateNouveauteCategoryPreview() {
+  const el = document.getElementById('nouveaute-category-preview');
+  if (!el) return;
+  const checked = document.getElementById('f-nouveaute-tout-voir').checked;
+  if (!checked) { el.textContent = ''; return; }
+  const label = deriveNouveauteCategoryLabel();
+  el.textContent = label
+    ? `Sera visible dans "Toutes les nouveautés" et dans sa catégorie "${label}".`
+    : 'Choisissez d\'abord un type de produit (étape 2) pour définir sa catégorie sur Nouveautés.';
 }
 
 function exclusiveFilter() {
@@ -591,6 +616,7 @@ function renderCategoryPills() {
   renderSinglePillGroup(document.getElementById('vetement-category-pills'), options, state.categoryId, (id) => {
     state.categoryId = id;
     updateProgress();
+    updateNouveauteCategoryPreview();
   });
 }
 
@@ -599,6 +625,7 @@ function renderAccessoryTypePills() {
   renderSinglePillGroup(document.getElementById('accessoire-type-pills'), options, state.accessoryTypeId, (id) => {
     state.accessoryTypeId = id;
     updateProgress();
+    updateNouveauteCategoryPreview();
   });
 }
 
@@ -620,12 +647,6 @@ function renderNouveauteTagPills() {
   const options = (filtersByMenu.nouveautes || []).filter((f) => (f.label || f.name || '').trim() !== 'Tout voir');
   renderSinglePillGroup(document.getElementById('nouveaute-tag-pills'), options, state.nouveauteTagId, (id) => {
     state.nouveauteTagId = id;
-  });
-}
-
-function renderNouveauteCategoryPills() {
-  renderSinglePillGroup(document.getElementById('nouveaute-category-pills'), filtersByMenu.nouveautes_categories || [], state.nouveauteCategoryId, (id) => {
-    state.nouveauteCategoryId = id;
   });
 }
 
@@ -680,6 +701,7 @@ function setProductType(type, options) {
   renderMaterialPills();
   rebuildVariantRows();
   updateProgress();
+  updateNouveauteCategoryPreview();
 }
 
 document.querySelectorAll('.type-card').forEach((card) => {
@@ -703,11 +725,11 @@ async function loadFilters() {
   renderCollaborationPills();
   renderSeasonPills();
   renderNouveauteTagPills();
-  renderNouveauteCategoryPills();
 }
 
 document.getElementById('f-nouveaute-tout-voir').addEventListener('change', (e) => {
   state.nouveauteToutVoir = e.target.checked;
+  updateNouveauteCategoryPreview();
 });
 
 // ---------------------------------------------------------------------
@@ -787,7 +809,6 @@ function resetForm() {
   state.seasonId = null;
   state.nouveauteToutVoir = false;
   state.nouveauteTagId = null;
-  state.nouveauteCategoryId = null;
 
   document.querySelectorAll('.type-card').forEach((card) => card.classList.remove('is-active'));
   document.getElementById('type-vetement-fields').hidden = true;
@@ -799,8 +820,8 @@ function resetForm() {
   renderCollaborationPills();
   renderSeasonPills();
   renderNouveauteTagPills();
-  renderNouveauteCategoryPills();
   renderMaterialPills();
+  updateNouveauteCategoryPreview();
 
   document.getElementById('form-status').textContent = '';
   document.getElementById('form-status').className = 'status-msg';
@@ -863,22 +884,23 @@ function fillFormWithProduct(product) {
   state.seasonId = seasonFilter ? seasonFilter.id : null;
 
   const nouveauteToutVoirFilter = toutVoirFilter('nouveautes');
-  state.nouveauteToutVoir = !!(nouveauteToutVoirFilter && filterIds.has(String(nouveauteToutVoirFilter.id)));
+  const hasToutVoirTag = !!(nouveauteToutVoirFilter && filterIds.has(String(nouveauteToutVoirFilter.id)));
+  const nouveauteCategoryFilter = findChecked('nouveautes_categories');
+  // The checkbox now covers both "Tout voir" and having a matching Nouveautés
+  // category tag, since étape 2's category is reused automatically for it.
+  state.nouveauteToutVoir = hasToutVoirTag || !!nouveauteCategoryFilter;
   document.getElementById('f-nouveaute-tout-voir').checked = state.nouveauteToutVoir;
 
   const nouveauteTagFilter = (filtersByMenu.nouveautes || []).find((f) => (f.label || f.name || '').trim() !== 'Tout voir' && filterIds.has(String(f.id)));
   state.nouveauteTagId = nouveauteTagFilter ? nouveauteTagFilter.id : null;
-
-  const nouveauteCategoryFilter = findChecked('nouveautes_categories');
-  state.nouveauteCategoryId = nouveauteCategoryFilter ? nouveauteCategoryFilter.id : null;
 
   renderCategoryPills();
   renderAccessoryTypePills();
   renderCollaborationPills();
   renderSeasonPills();
   renderNouveauteTagPills();
-  renderNouveauteCategoryPills();
   renderMaterialPills();
+  updateNouveauteCategoryPreview();
 
   const variantsList = document.getElementById('variants-list');
   variantsList.innerHTML = '';
@@ -1056,7 +1078,13 @@ document.getElementById('product-form').addEventListener('submit', async (e) => 
     const filter = (filtersByMenu.nouveautes || []).find((f) => f.id === state.nouveauteTagId);
     nouveauteTag = filter ? filter.slug : '';
   }
-  if (state.nouveauteCategoryId) filterIds.push(state.nouveauteCategoryId);
+  // A specific badge (Drop été/...) already qualifies for "Toutes les
+  // nouveautés" on its own, so the matching category tag applies whenever
+  // either the checkbox or a badge is set - not just the checkbox alone.
+  if (state.nouveauteToutVoir || state.nouveauteTagId) {
+    const derivedCategoryId = deriveNouveauteCategoryId();
+    if (derivedCategoryId) filterIds.push(derivedCategoryId);
+  }
 
   const payload = {
     action: editingId ? 'update' : 'create',
