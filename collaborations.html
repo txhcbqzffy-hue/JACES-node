@@ -561,11 +561,17 @@
         let visible = 0;
         cards.forEach((card) => {
           const categories = (card.getAttribute('data-category') || '').split(' ').filter(Boolean);
-          const viewTokens = (card.getAttribute('data-collab-view') || 'all').split(' ').filter(Boolean);
+          // Every product this page loads is already scoped to the
+          // Collaborations menu via the API, so the "all brands" view no
+          // longer needs a separate "tout-voir" tag (removed as a pickable
+          // option in admin) - just show it. "Créations exclusives" isn't
+          // surfaced via a real collabView field from the API, so match it
+          // off its own filter token instead.
           const matchesCategory = current === 'all'
-            ? categories.includes('tout-voir')
+            ? true
             : categories.includes(current);
-          const matchesView = currentView === 'all' || viewTokens.indexOf(currentView) !== -1 || viewTokens.indexOf('all') !== -1;
+          const matchesView = currentView === 'all'
+            || (currentView === 'exclusives' && categories.includes('creations-exclusives'));
           const variantData = getCardVariantData(card);
           const matchesSize = !selectedSizes.length || variantData.sizes.some((size) => selectedSizes.includes(normalizeVariantToken(size)));
           const matchesColor = !selectedColors.length || variantData.colors.some((color) => selectedColors.includes(normalizeVariantToken(color)));
