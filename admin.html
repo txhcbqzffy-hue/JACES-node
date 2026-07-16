@@ -299,6 +299,7 @@ let editingId = null;
 const MENU_LABELS = {
   categories: 'Catégories (visible sur Collection)',
   nouveautes: 'Nouveautés (visible sur Accueil + Nouveautés)',
+  nouveautes_categories: 'Catégories (visible sur Nouveautés)',
   accessoires: 'Accessoires (visible sur Accessoires)',
   collaborations: 'Collaborations (visible sur Collaborations)',
   collections: 'Saison (visible sur Collection)'
@@ -439,7 +440,7 @@ async function loadFilters() {
     // exclusive radio groups within their menu (Catégories/Accessoires/
     // Collaborations are additionally exclusive with each other, enforced
     // below).
-    const radioNameByMenu = { categories: 'filter-category', accessoires: 'filter-accessory-type', collaborations: 'filter-collaboration', collections: 'filter-season', nouveautes: 'filter-nouveaute-tag' };
+    const radioNameByMenu = { categories: 'filter-category', accessoires: 'filter-accessory-type', collaborations: 'filter-collaboration', collections: 'filter-season', nouveautes: 'filter-nouveaute-tag', nouveautes_categories: 'filter-nouveaute-category' };
     const radioName = radioNameByMenu[menu];
     // "Tout voir" is no longer pickable in Catégories/Collaborations - every
     // product now needs a real classification, so this catch-all doesn't

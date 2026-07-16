@@ -73,6 +73,17 @@ function getProductCategoryTokens(product) {
   return Array.from(new Set(tokens)).join(' ');
 }
 
+// The Nouveaut\u00e9s page has its own independent Robes/Tops/.../Accessoires
+// classification (menu "nouveautes_categories"), separate from the
+// Collection page's Cat\u00e9gories - a product can be tagged differently (or
+// not at all) for each, so this reads its own menu-scoped filters instead
+// of the flat filter_tokens list used above.
+function getProductNouveauteCategoryTokens(product) {
+  const menuFilters = product?.filter_menus?.nouveautes_categories;
+  const slugs = Array.isArray(menuFilters) ? menuFilters.map((filter) => filter.slug).filter(Boolean) : [];
+  return Array.from(new Set(['all', ...slugs])).join(' ');
+}
+
 function normalizeMediaUrl(value) {
   const raw = String(value || '').trim();
   if (!raw) return '';
@@ -127,6 +138,7 @@ function buildProductCard(product, pageType) {
   card.className = 'product-card collection-card product-card-linkable';
   card.dataset.productId = String(product.id || '');
   card.dataset.category = getProductCategoryTokens(product);
+  card.dataset.nouveauteCategory = getProductNouveauteCategoryTokens(product);
   card.dataset.collection = getProductCollectionSeason(product);
   card.dataset.collabView = product.collaborationView ? `all ${String(product.collaborationView).toLowerCase()}` : 'all';
   card.dataset.nouveauteTags = Array.isArray(product.nouveauteTags) ? product.nouveauteTags.join(' ') : '';

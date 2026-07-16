@@ -598,16 +598,13 @@
       const visibleCards = [];
 
       cards.forEach((card) => {
-        const cats = (card.getAttribute('data-category') || '').split(' ').filter(Boolean);
+        // Nouveautés has its own independent Robes/Tops/.../Accessoires
+        // classification (menu "nouveautes_categories"), separate from the
+        // Collection page's Catégories - a product can be tagged
+        // differently (or not at all) for each.
+        const cats = (card.getAttribute('data-nouveaute-category') || '').split(' ').filter(Boolean);
         const tagTokens = (card.getAttribute('data-nouveaute-tags') || '').split(' ').filter(Boolean);
         const variantData = getCardVariantData(card);
-        // "Toutes les nouveautés" no longer needs a "tout-voir" category tag
-        // - every product has exactly one Collection category now (that
-        // catch-all was removed as a pickable admin option there), so the
-        // untargeted view just shows everything instead of requiring a tag
-        // nothing can have anymore. (This is the Catégories menu's
-        // "tout-voir" - unrelated to the Nouveautés tag "tout-voir" used in
-        // matchesTag below, which is untouched.)
         const matchesCategory = currentCategoryFilter === 'all'
           ? true
           : cats.includes(currentCategoryFilter);
@@ -837,7 +834,7 @@
     <div class="fav-panel-list" id="fav-panel-list"></div>
   </div>
   <script src="catalog.js?v=20260715r"></script>
-  <script type="module" src="products-page.js?v=20260716f"></script>
+  <script type="module" src="products-page.js?v=20260716g"></script>
   <script src="cart.js?v=20260715r"></script>
   <script src="favorites.js?v=20260716c"></script>
   <script src="stock-notify.js?v=20260716d"></script>
