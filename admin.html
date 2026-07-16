@@ -437,7 +437,7 @@ async function loadFilters() {
     // Collaboration (Tout voir/JACES x .../...) if it's a collaboration -
     // those are mutually exclusive radio groups (and mutually exclusive
     // with each other, enforced below). Nouveautés/Saison stay multi-select.
-    const radioNameByMenu = { categories: 'filter-category', accessoires: 'filter-accessory-type', collaborations: 'filter-collaboration' };
+    const radioNameByMenu = { categories: 'filter-category', accessoires: 'filter-accessory-type', collaborations: 'filter-collaboration', collections: 'filter-season' };
     const radioName = radioNameByMenu[menu];
     // "Tout voir" is no longer pickable here (Catégories or Collaborations)
     // - every product now needs a real classification, so this catch-all
