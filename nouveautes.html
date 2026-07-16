@@ -610,12 +610,15 @@
           : cats.includes(currentCategoryFilter);
         // "Tout voir" is a wildcard: a product tagged with it matches every
         // specific tag filter (Drop été, Édition limitée, Pièces signature)
-        // as well as the default/no-tag view — not a bucket of its own.
+        // as well as the default/no-tag view. On the default/no-tag view
+        // ("Toutes les nouveautés"), a product tagged with any of the three
+        // specific tags shows up there too - "Tout voir" isn't the only way
+        // in anymore.
+        const NOUVEAUTE_TAG_SLUGS = ['drop-ete', 'edition-limitee', 'pieces-signature'];
         const matchesTag = tagTokens.indexOf('tout-voir') !== -1
-          || (!!currentNouveauteTagFilter && (
-            tagTokens.indexOf(currentNouveauteTagFilter) !== -1
-            || (currentNouveauteTagFilter === 'drop-ete' && cats.indexOf('cette-semaine') !== -1)
-          ));
+          || (currentNouveauteTagFilter
+            ? tagTokens.indexOf(currentNouveauteTagFilter) !== -1
+            : tagTokens.some((token) => NOUVEAUTE_TAG_SLUGS.includes(token)));
         const matchesSize = !selectedSizes.length || variantData.sizes.some((size) => selectedSizes.includes(normalizeVariantToken(size)));
         const matchesColor = !selectedColors.length || variantData.colors.some((color) => selectedColors.includes(normalizeVariantToken(color)));
         const matchesMaterial = !selectedMaterials.length || variantData.materials.some((material) => selectedMaterials.includes(normalizeVariantToken(material)));
