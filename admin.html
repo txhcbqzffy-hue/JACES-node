@@ -448,8 +448,13 @@ async function loadFilters() {
       : filtersByMenu[menu];
     menuOptions.forEach((filter) => {
       const label = document.createElement('label');
-      const inputAttrs = radioName ? `type="radio" name="${radioName}"` : 'type="checkbox"';
-      label.innerHTML = `<input ${inputAttrs} value="${filter.id}"> ${filter.label || filter.name}`;
+      const filterLabel = filter.label || filter.name;
+      // "Créations exclusives" isn't a brand collab - it can be checked
+      // alongside one of JACES x Nike/Chloé/... instead of being mutually
+      // exclusive with them, so it stays a plain checkbox.
+      const isStandaloneCollab = menu === 'collaborations' && filterLabel === 'Créations exclusives';
+      const inputAttrs = radioName && !isStandaloneCollab ? `type="radio" name="${radioName}"` : 'type="checkbox"';
+      label.innerHTML = `<input ${inputAttrs} value="${filter.id}" data-menu="${menu}"> ${filterLabel}`;
       grid.appendChild(label);
     });
     fieldset.appendChild(grid);
@@ -723,17 +728,19 @@ function updateMaterialCheckboxAvailability() {
 
 // A product is either a "regular" catalog item (Collection category and/or
 // Accessoires type) or a Collaboration - not both, so picking one side
-// clears whatever was checked on the other.
+// clears whatever was checked on the other. Uses data-menu rather than the
+// radio name so "Créations exclusives" (a plain checkbox, since it can be
+// combined with one brand collab) still counts as "this is a collaboration".
 function enforceCollaborationExclusivity(event) {
   const input = event.target;
-  if (!input || input.type !== 'radio' || !input.checked) return;
+  if (!input || !input.checked || !input.dataset.menu) return;
 
-  if (input.name === 'filter-collaboration') {
-    document.querySelectorAll('#filters-container input[name="filter-category"]:checked, #filters-container input[name="filter-accessory-type"]:checked').forEach((other) => {
+  if (input.dataset.menu === 'collaborations') {
+    document.querySelectorAll('#filters-container input[data-menu="categories"]:checked, #filters-container input[data-menu="accessoires"]:checked').forEach((other) => {
       other.checked = false;
     });
-  } else if (input.name === 'filter-category' || input.name === 'filter-accessory-type') {
-    document.querySelectorAll('#filters-container input[name="filter-collaboration"]:checked').forEach((other) => {
+  } else if (input.dataset.menu === 'categories' || input.dataset.menu === 'accessoires') {
+    document.querySelectorAll('#filters-container input[data-menu="collaborations"]:checked').forEach((other) => {
       other.checked = false;
     });
   }
