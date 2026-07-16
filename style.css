@@ -7204,10 +7204,6 @@ body.header-scrolled .header .submenu a.submenu-link-active {
   text-decoration: none;
 }
 
-.collection-page .quick-buy-grid button.is-disabled {
-  color: #1b1a17;
-}
-
 .collection-page .collection-card.is-hovered .product-image-primary,
 .collection-page .collection-card.is-hovered .product-image-secondary {
   transform: none;
@@ -7450,10 +7446,6 @@ body.header-scrolled .header .submenu a.submenu-link-active {
 .products-page .quick-buy-grid button:focus-visible {
   font-weight: 700;
   text-decoration: underline;
-}
-
-.products-page .quick-buy-grid button.is-disabled {
-  color: #1b1a17;
 }
 
 @media (hover: hover) {
