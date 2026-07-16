@@ -697,9 +697,17 @@ document.getElementById('product-form').addEventListener('submit', async (e) => 
 });
 
 function isAccessorySelected() {
+  // Either the "Accessoires" Collection category itself, or a specific
+  // accessory type (Sacs/Bijoux/Ceintures/Foulards), counts - both mean the
+  // product isn't clothing and shouldn't use a clothing size.
   const accessoryIds = new Set((filtersByMenu.accessoires || []).map((f) => String(f.id)));
+  const accessoryCategoryIds = new Set(
+    (filtersByMenu.categories || [])
+      .filter((f) => (f.label || f.name) === 'Accessoires')
+      .map((f) => String(f.id))
+  );
   return Array.from(document.querySelectorAll('#filters-container input:checked'))
-    .some((cb) => accessoryIds.has(cb.value));
+    .some((cb) => accessoryIds.has(cb.value) || accessoryCategoryIds.has(cb.value));
 }
 
 function updateMaterialRequiredHint() {
