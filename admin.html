@@ -374,7 +374,8 @@ document.getElementById('add-review-photo-btn').addEventListener('click', () => 
   document.getElementById('review-photos-list').appendChild(reviewPhotoRow());
 });
 document.getElementById('add-review-btn').addEventListener('click', () => {
-  document.getElementById('reviews-list').appendChild(reviewRow());
+  // Newest first, matching how reviews are ordered everywhere else.
+  document.getElementById('reviews-list').prepend(reviewRow());
 });
 document.getElementById('add-variant-btn').addEventListener('click', () => {
   document.getElementById('variants-list').appendChild(variantRow());

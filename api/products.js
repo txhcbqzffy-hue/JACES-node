@@ -193,6 +193,7 @@ module.exports = async function handler(req, res) {
         .from('product_reviews')
         .select('*')
         .in('product_id', productIds)
+        .order('created_at', { ascending: false })
         .then((result) => result, (error) => ({ data: [], error }))
     ]);
 
