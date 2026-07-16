@@ -209,7 +209,7 @@
       <div class="filter-bar-luxury" id="collection-filter-bar">
         <div class="filter-bar-top">
           <div class="filter-pills">
-            <div class="filter-pill-wrap">
+            <div class="filter-pill-wrap" id="collection-taille-pill-wrap">
               <button class="filter-pill" data-filter="taille">Taille <span class="pill-arrow">∨</span></button>
               <div class="filter-dropdown">
                 <label><input type="checkbox" name="taille" value="34"> 34</label>
@@ -245,6 +245,16 @@
                 <label><input type="checkbox" name="couleur" value="bronze"> Bronze</label>
                 <label><input type="checkbox" name="couleur" value="transparent"> Transparent</label>
                 <label><input type="checkbox" name="couleur" value="multicolore"> Multicolore</label>
+              </div>
+            </div>
+            <div class="filter-pill-wrap" id="collection-matiere-pill-wrap">
+              <button class="filter-pill" data-filter="matiere">Mati&egrave;re <span class="pill-arrow">∨</span></button>
+              <div class="filter-dropdown">
+                <label><input type="checkbox" name="matiere" value="cuir"> Cuir</label>
+                <label><input type="checkbox" name="matiere" value="metal"> M&eacute;tal</label>
+                <label><input type="checkbox" name="matiere" value="soie"> Soie</label>
+                <label><input type="checkbox" name="matiere" value="laine"> Laine</label>
+                <label><input type="checkbox" name="matiere" value="coton"> Coton</label>
               </div>
             </div>
           </div>
@@ -639,7 +649,8 @@
   function getCardVariantData(card) {
     return {
       colors: (card.getAttribute('data-color') || '').split(' ').filter(Boolean),
-      sizes: (card.getAttribute('data-size') || '').split(' ').filter(Boolean)
+      sizes: (card.getAttribute('data-size') || '').split(' ').filter(Boolean),
+      materials: (card.getAttribute('data-material') || '').split(' ').filter(Boolean)
     };
   }
 
@@ -648,13 +659,13 @@
   }
 
   function syncFilterAvailability(visibleCards) {
-    ['taille', 'couleur'].forEach((name) => {
+    ['taille', 'couleur', 'matiere'].forEach((name) => {
       const inputs = Array.from(document.querySelectorAll('#collection-filter-bar input[name="' + name + '"]'));
       inputs.forEach((input) => {
         const token = normalizeVariantToken(input.value);
         const available = visibleCards.some((card) => {
           const variantData = getCardVariantData(card);
-          const pool = name === 'taille' ? variantData.sizes : variantData.colors;
+          const pool = name === 'taille' ? variantData.sizes : name === 'couleur' ? variantData.colors : variantData.materials;
           return pool.some((value) => normalizeVariantToken(value) === token);
         });
         input.disabled = !available && !input.checked;
@@ -663,6 +674,19 @@
     });
 
     return false;
+  }
+
+  // Accessoires don't use a clothing size, so the Taille filter/size advisor
+  // hide whenever that's the active category - Matière stays available
+  // everywhere since a season/tag view can mix accessories with clothing.
+  function updateTailleVisibilityForCategory() {
+    const tailleWrap = document.getElementById('collection-taille-pill-wrap');
+    if (!tailleWrap) return;
+    const isAccessoryView = currentCategoryFilter === 'accessoires';
+    tailleWrap.hidden = isAccessoryView;
+    if (isAccessoryView) {
+      tailleWrap.querySelectorAll('input[name="taille"]:checked').forEach((input) => { input.checked = false; });
+    }
   }
 
   // Dynamically get collectionView from current URL params
@@ -696,11 +720,13 @@
   }
 
   function applyCollectionView() {
+    updateTailleVisibilityForCategory();
     const collectionView = getCollectionView();
     const productGridEl = document.getElementById('product-grid');
     const allCards = Array.from(document.querySelectorAll('#product-grid .collection-card'));
-    const selectedSizes = getCheckedTokens('taille');
+    const selectedSizes = currentCategoryFilter === 'accessoires' ? [] : getCheckedTokens('taille');
     const selectedColors = getCheckedTokens('couleur');
+    const selectedMaterials = getCheckedTokens('matiere');
     let visible = 0;
     const visibleCards = [];
 
@@ -721,7 +747,8 @@
       const variantData = getCardVariantData(card);
       const matchesSize = !selectedSizes.length || variantData.sizes.some((size) => selectedSizes.includes(normalizeVariantToken(size)));
       const matchesColor = !selectedColors.length || variantData.colors.some((color) => selectedColors.includes(normalizeVariantToken(color)));
-      const show = matchesCollection && matchesCategory && matchesSize && matchesColor;
+      const matchesMaterial = !selectedMaterials.length || variantData.materials.some((material) => selectedMaterials.includes(normalizeVariantToken(material)));
+      const show = matchesCollection && matchesCategory && matchesSize && matchesColor && matchesMaterial;
 
       card.classList.toggle('hidden', !show);
       if (show) {
