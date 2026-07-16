@@ -153,6 +153,17 @@
             </div>
 
             <div class="field">
+              <label>Mati&egrave;re (filtre Accessoires)</label>
+              <div class="checkbox-grid" id="material-checkboxes">
+                <label><input type="checkbox" name="material" value="cuir"> Cuir</label>
+                <label><input type="checkbox" name="material" value="metal"> M&eacute;tal</label>
+                <label><input type="checkbox" name="material" value="soie"> Soie</label>
+                <label><input type="checkbox" name="material" value="laine"> Laine</label>
+                <label><input type="checkbox" name="material" value="coton"> Coton</label>
+              </div>
+            </div>
+
+            <div class="field">
               <label>Photos clientes (liens Cloudinary / Dropbox)</label>
               <div id="review-photos-list"></div>
               <button type="button" class="add-btn" id="add-review-photo-btn">+ Ajouter une photo cliente</button>
@@ -413,6 +424,7 @@ function resetForm() {
   document.getElementById('reviews-list').innerHTML = '';
   document.getElementById('f-fit-rating').value = 'normal';
   document.getElementById('f-quality-rating').value = 'premium';
+  document.querySelectorAll('#material-checkboxes input[type="checkbox"]').forEach((cb) => { cb.checked = false; });
   document.querySelectorAll('#filters-container input[type="checkbox"]').forEach((cb) => { cb.checked = false; });
   document.getElementById('form-status').textContent = '';
   document.getElementById('form-status').className = 'status-msg';
@@ -432,6 +444,11 @@ function fillFormWithProduct(product) {
   document.getElementById('f-show-in-related').checked = !!product.show_in_related;
   document.getElementById('f-fit-rating').value = product.fit_rating || 'normal';
   document.getElementById('f-quality-rating').value = product.quality_rating || 'premium';
+
+  const productMaterials = new Set((Array.isArray(product.material) ? product.material : []).map(String));
+  document.querySelectorAll('#material-checkboxes input[type="checkbox"]').forEach((cb) => {
+    cb.checked = productMaterials.has(cb.value);
+  });
 
   const reviewPhotosList = document.getElementById('review-photos-list');
   reviewPhotosList.innerHTML = '';
@@ -558,6 +575,7 @@ document.getElementById('product-form').addEventListener('submit', async (e) => 
     showInRelated: document.getElementById('f-show-in-related').checked,
     fitRating: document.getElementById('f-fit-rating').value,
     qualityRating: document.getElementById('f-quality-rating').value,
+    material: Array.from(document.querySelectorAll('#material-checkboxes input[type="checkbox"]:checked')).map((cb) => cb.value),
     reviewPhotos,
     reviews,
     images,

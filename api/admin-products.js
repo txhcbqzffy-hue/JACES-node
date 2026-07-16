@@ -62,6 +62,14 @@ function sanitizeReviewPhotos(reviewPhotos) {
     .filter(Boolean);
 }
 
+const VALID_MATERIALS = new Set(['cuir', 'metal', 'soie', 'laine', 'coton']);
+
+function sanitizeMaterials(materials) {
+  return [...new Set((Array.isArray(materials) ? materials : [])
+    .map((value) => String(value || '').trim().toLowerCase())
+    .filter((value) => VALID_MATERIALS.has(value)))];
+}
+
 function sanitizeReviews(reviews) {
   return (Array.isArray(reviews) ? reviews : [])
     .map((review) => ({
@@ -231,6 +239,7 @@ module.exports = async function handler(req, res) {
       const filterIds = sanitizeFilterIds(body.filterIds);
       const reviewPhotos = sanitizeReviewPhotos(body.reviewPhotos);
       const reviews = sanitizeReviews(body.reviews);
+      const material = sanitizeMaterials(body.material);
 
       if (!name) return res.status(400).json({ error: 'Le nom du produit est requis' });
       if (!images.length) return res.status(400).json({ error: 'Au moins une image est requise' });
@@ -245,6 +254,7 @@ module.exports = async function handler(req, res) {
         fit_rating: fitRating,
         quality_rating: qualityRating,
         review_photos: reviewPhotos,
+        material,
         category: category || null,
         page_type: pageType || null,
         nouveaute_tag: nouveauteTag || null

@@ -130,7 +130,7 @@ function buildProductCard(product, pageType) {
   card.dataset.collection = getProductCollectionSeason(product);
   card.dataset.collabView = product.collaborationView ? `all ${String(product.collaborationView).toLowerCase()}` : 'all';
   card.dataset.nouveauteTags = Array.isArray(product.nouveauteTags) ? product.nouveauteTags.join(' ') : '';
-  card.dataset.material = slugifyToken(product.material || '');
+  card.dataset.material = (Array.isArray(product.material) ? product.material : [product.material]).map(slugifyToken).filter(Boolean).join(' ');
   card.dataset.color = colors.map(slugifyToken).filter(Boolean).join(' ');
   card.dataset.size = sizes.map(slugifyToken).filter(Boolean).join(' ');
   card.dataset.pageType = pageType || String(product.type || '').toLowerCase();
