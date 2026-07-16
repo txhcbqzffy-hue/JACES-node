@@ -407,7 +407,13 @@ async function loadFilters() {
     // else (Nouveautés, Collaborations, Saison) can still have several checked.
     const radioNameByMenu = { categories: 'filter-category', accessoires: 'filter-accessory-type' };
     const radioName = radioNameByMenu[menu];
-    filtersByMenu[menu].forEach((filter) => {
+    // "Tout voir" is no longer a pickable category here - every product now
+    // needs a real classification, so this catch-all doesn't belong among
+    // the choices (its underlying filter row stays untouched in Supabase).
+    const menuOptions = menu === 'categories'
+      ? filtersByMenu[menu].filter((filter) => (filter.label || filter.name) !== 'Tout voir')
+      : filtersByMenu[menu];
+    menuOptions.forEach((filter) => {
       const label = document.createElement('label');
       const inputAttrs = radioName ? `type="radio" name="${radioName}"` : 'type="checkbox"';
       label.innerHTML = `<input ${inputAttrs} value="${filter.id}"> ${filter.label || filter.name}`;
