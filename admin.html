@@ -401,9 +401,14 @@ async function loadFilters() {
 
     const grid = document.createElement('div');
     grid.className = 'checkbox-grid';
+    // A product belongs to exactly one Collection category (Robes/Tops/...),
+    // so those options are mutually exclusive - everything else (Nouveautés,
+    // Accessoires, Collaborations, Saison) can still have several checked.
+    const isSingleChoice = menu === 'categories';
     filtersByMenu[menu].forEach((filter) => {
       const label = document.createElement('label');
-      label.innerHTML = `<input type="checkbox" value="${filter.id}"> ${filter.label || filter.name}`;
+      const inputAttrs = isSingleChoice ? 'type="radio" name="filter-category"' : 'type="checkbox"';
+      label.innerHTML = `<input ${inputAttrs} value="${filter.id}"> ${filter.label || filter.name}`;
       grid.appendChild(label);
     });
     fieldset.appendChild(grid);
@@ -429,7 +434,7 @@ function resetForm() {
   document.getElementById('f-fit-rating').value = 'normal';
   document.getElementById('f-quality-rating').value = 'premium';
   document.querySelectorAll('#material-checkboxes input[type="checkbox"]').forEach((cb) => { cb.checked = false; });
-  document.querySelectorAll('#filters-container input[type="checkbox"]').forEach((cb) => { cb.checked = false; });
+  document.querySelectorAll('#filters-container input').forEach((cb) => { cb.checked = false; });
   document.getElementById('material-required-hint').hidden = true;
   document.getElementById('form-status').textContent = '';
   document.getElementById('form-status').className = 'status-msg';
@@ -477,7 +482,7 @@ function fillFormWithProduct(product) {
   });
 
   const filterIds = new Set((product.filter_ids || []).map(String));
-  document.querySelectorAll('#filters-container input[type="checkbox"]').forEach((cb) => {
+  document.querySelectorAll('#filters-container input').forEach((cb) => {
     cb.checked = filterIds.has(String(cb.value));
   });
   updateMaterialRequiredHint();
@@ -560,7 +565,7 @@ document.getElementById('product-form').addEventListener('submit', async (e) => 
     text: row.querySelector('.review-text').value.trim()
   })).filter((r) => r.text);
 
-  const filterIds = Array.from(document.querySelectorAll('#filters-container input[type="checkbox"]:checked'))
+  const filterIds = Array.from(document.querySelectorAll('#filters-container input:checked'))
     .map((cb) => Number(cb.value));
 
   const checkedFilters = filterIds
@@ -569,6 +574,18 @@ document.getElementById('product-form').addEventListener('submit', async (e) => 
   const category = checkedFilters.find((f) => f.menu === 'categories')?.label || '';
   const pageType = checkedFilters.find((f) => f.menu !== 'categories')?.menu || (category ? 'collection' : '');
   const nouveauteTag = checkedFilters.find((f) => f.menu === 'nouveautes')?.slug || '';
+
+  // Every product needs a classification: either a Collection category
+  // (Robes/Tops/.../Accessoires - mutually exclusive, radio buttons) or an
+  // Accessoires type (Sacs/Bijoux/Ceintures/Foulards).
+  const hasCategory = checkedFilters.some((f) => f.menu === 'categories');
+  const hasAccessoryType = checkedFilters.some((f) => f.menu === 'accessoires');
+  if (!hasCategory && !hasAccessoryType) {
+    statusEl.textContent = 'Erreur: choisissez une catégorie (Robes/Tops/...) ou un type d\'accessoire (Sacs/Bijoux/...).';
+    statusEl.className = 'status-msg error';
+    submitBtn.disabled = false;
+    return;
+  }
 
   // Accessoires (Sacs/Bijoux/Ceintures/Foulards) need Matière and at least
   // one couleur+stock entry - "taille" doesn't apply the way it does to
@@ -630,7 +647,7 @@ document.getElementById('product-form').addEventListener('submit', async (e) => 
 
 function updateMaterialRequiredHint() {
   const accessoryIds = new Set((filtersByMenu.accessoires || []).map((f) => String(f.id)));
-  const isAccessory = Array.from(document.querySelectorAll('#filters-container input[type="checkbox"]:checked'))
+  const isAccessory = Array.from(document.querySelectorAll('#filters-container input:checked'))
     .some((cb) => accessoryIds.has(cb.value));
   document.getElementById('material-required-hint').hidden = !isAccessory;
 }
