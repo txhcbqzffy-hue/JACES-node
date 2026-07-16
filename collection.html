@@ -739,11 +739,13 @@
       const categoryTokens = (card.getAttribute('data-category') || '').split(' ').filter(Boolean);
       const cardCollection = card.getAttribute('data-collection') || 'all';
       const matchesCollection = collectionView === 'all' || cardCollection === collectionView;
-      const matchesCategory = !currentCategoryFilter
+      // "Toutes les collections" no longer needs a "tout-voir" tag - every
+      // product has exactly one Collection category now (that catch-all was
+      // removed as a pickable admin option), so the untargeted view just
+      // shows everything instead of requiring a tag nothing can have anymore.
+      const matchesCategory = !currentCategoryFilter || currentCategoryFilter === 'all'
         ? true
-        : currentCategoryFilter === 'all'
-          ? categoryTokens.includes('tout-voir')
-          : categoryTokens.includes(currentCategoryFilter);
+        : categoryTokens.includes(currentCategoryFilter);
       const variantData = getCardVariantData(card);
       const matchesSize = !selectedSizes.length || variantData.sizes.some((size) => selectedSizes.includes(normalizeVariantToken(size)));
       const matchesColor = !selectedColors.length || variantData.colors.some((color) => selectedColors.includes(normalizeVariantToken(color)));

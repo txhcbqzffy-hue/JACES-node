@@ -601,8 +601,15 @@
         const cats = (card.getAttribute('data-category') || '').split(' ').filter(Boolean);
         const tagTokens = (card.getAttribute('data-nouveaute-tags') || '').split(' ').filter(Boolean);
         const variantData = getCardVariantData(card);
+        // "Toutes les nouveautés" no longer needs a "tout-voir" category tag
+        // - every product has exactly one Collection category now (that
+        // catch-all was removed as a pickable admin option there), so the
+        // untargeted view just shows everything instead of requiring a tag
+        // nothing can have anymore. (This is the Catégories menu's
+        // "tout-voir" - unrelated to the Nouveautés tag "tout-voir" used in
+        // matchesTag below, which is untouched.)
         const matchesCategory = currentCategoryFilter === 'all'
-          ? cats.includes('tout-voir')
+          ? true
           : cats.includes(currentCategoryFilter);
         // "Tout voir" is a wildcard: a product tagged with it matches every
         // specific tag filter (Drop été, Édition limitée, Pièces signature)
