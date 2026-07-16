@@ -382,6 +382,21 @@ document.getElementById('add-variant-btn').addEventListener('click', () => {
   updateVariantSizeAvailability();
 });
 
+// Native radios can't be unchecked by clicking the already-selected one -
+// clicking it again clears the whole group instead, so a category or
+// accessory type can be picked "by mistake" and then cleared back to none.
+document.getElementById('filters-container').addEventListener('mousedown', (event) => {
+  const input = event.target.closest('input[type="radio"]');
+  if (input) input.dataset.wasChecked = input.checked ? '1' : '';
+});
+document.getElementById('filters-container').addEventListener('click', (event) => {
+  const input = event.target.closest('input[type="radio"]');
+  if (input && input.dataset.wasChecked === '1') {
+    input.checked = false;
+    input.dispatchEvent(new Event('change', { bubbles: true }));
+  }
+});
+
 async function loadFilters() {
   const res = await apiFetch('/api/filters');
   const rows = await res.json();
