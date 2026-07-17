@@ -553,7 +553,7 @@ function resetForm() {
   document.querySelectorAll('#material-checkboxes input[type="checkbox"]').forEach((cb) => { cb.checked = false; });
   document.querySelectorAll('#filters-container input:not([name="material"])').forEach((cb) => { cb.checked = false; });
   updateAccessoryTypeFieldsetVisibility();
-  updateNouveauteFieldsetsVisibility();
+  updateCollaborationHiddenFieldsets();
   updateMaterialCheckboxAvailability();
   document.getElementById('form-status').textContent = '';
   document.getElementById('form-status').className = 'status-msg';
@@ -609,7 +609,7 @@ function fillFormWithProduct(product) {
   // so a saved accessory product's Sacs/Bijoux/... selection isn't wiped.
   const accessoryTypeFieldset = document.getElementById('accessoires-type-fieldset');
   if (accessoryTypeFieldset) accessoryTypeFieldset.hidden = !isAccessoryCategorySelected();
-  ['nouveautes', 'nouveautes_categories'].forEach((menu) => {
+  ['categories', 'collections', 'nouveautes', 'nouveautes_categories'].forEach((menu) => {
     const fieldset = document.querySelector(`#filters-container fieldset[data-menu="${menu}"]`);
     if (fieldset) fieldset.hidden = isCollaborationSelected();
   });
@@ -904,13 +904,13 @@ function isCollaborationSelected() {
   return document.querySelectorAll('#filters-container input[data-menu="collaborations"]:checked').length > 0;
 }
 
-// A Collaboration product doesn't use the Nouveautés classification - both
-// the badge fieldset (Tout voir/Drop été/...) and the Nouveautés-only
-// category fieldset stay hidden (and cleared) once a Collaboration is
-// checked.
-function updateNouveauteFieldsetsVisibility() {
+// A Collaboration product doesn't use the regular Catégories/Saison
+// classification or the Nouveautés one - once a Collaboration is checked,
+// all four of those fieldsets hide (and clear) since a product is either
+// a "regular" catalog item or a Collaboration, never both.
+function updateCollaborationHiddenFieldsets() {
   const hide = isCollaborationSelected();
-  ['nouveautes', 'nouveautes_categories'].forEach((menu) => {
+  ['categories', 'collections', 'nouveautes', 'nouveautes_categories'].forEach((menu) => {
     const fieldset = document.querySelector(`#filters-container fieldset[data-menu="${menu}"]`);
     if (!fieldset) return;
     fieldset.hidden = hide;
@@ -922,7 +922,7 @@ function updateNouveauteFieldsetsVisibility() {
 
 document.getElementById('filters-container').addEventListener('change', (event) => {
   enforceCollaborationExclusivity(event);
-  updateNouveauteFieldsetsVisibility();
+  updateCollaborationHiddenFieldsets();
   autoCheckNouveauteToutVoir(event);
   updateAccessoryTypeFieldsetVisibility();
   updateVariantSizeAvailability();
