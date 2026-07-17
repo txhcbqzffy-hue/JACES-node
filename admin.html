@@ -184,8 +184,8 @@
 
             <div id="filters-container"></div>
 
-            <div class="field" id="material-field" hidden>
-              <label>Mati&egrave;re (filtre Accessoires)</label>
+            <details class="field field-collapsible" id="material-field" hidden open>
+              <summary>Mati&egrave;re (filtre Accessoires)</summary>
               <div class="checkbox-grid" id="material-checkboxes">
                 <label><input type="checkbox" name="material" value="cuir"> Cuir</label>
                 <label><input type="checkbox" name="material" value="metal"> M&eacute;tal</label>
@@ -194,7 +194,7 @@
                 <label><input type="checkbox" name="material" value="coton"> Coton</label>
               </div>
               <p class="field-hint" id="material-required-hint">Obligatoire : au moins une mati&egrave;re, car un accessoire (Sacs/Bijoux/Ceintures/Foulards) est coch&eacute; ci-dessus.</p>
-            </div>
+            </details>
 
             <div class="field">
               <label style="display:flex;align-items:center;gap:8px;font-weight:normal;">
@@ -506,6 +506,13 @@ async function loadFilters() {
     }
 
     container.appendChild(fieldset);
+
+    // Matière only makes sense right after picking an accessory type, so
+    // it's moved to sit directly under this fieldset instead of at the
+    // bottom of the whole classification block.
+    if (menu === 'accessoires') {
+      fieldset.insertAdjacentElement('afterend', document.getElementById('material-field'));
+    }
   });
 }
 
