@@ -15,7 +15,7 @@
     color: #1b1a17;
   }
   header {
-    padding: 16px 24px;
+    padding: 9px 18px;
     background: #171411;
     color: #f6f1ea;
     display: flex;
@@ -25,20 +25,20 @@
     top: 0;
     z-index: 20;
   }
-  header h1 { font-size: 1.05rem; margin: 0; letter-spacing: 0.03em; }
+  header h1 { font-size: 0.86rem; margin: 0; letter-spacing: 0.03em; }
   header .header-actions { display: flex; gap: 8px; align-items: center; }
   header a, header button {
     background: transparent;
     border: 1px solid #6b645c;
     color: #f6f1ea;
-    padding: 7px 12px;
-    font-size: 0.74rem;
+    padding: 5px 10px;
+    font-size: 0.68rem;
     cursor: pointer;
     text-decoration: none;
     border-radius: 3px;
   }
   header a:hover, header button:hover { background: rgba(255,255,255,0.08); }
-  main { max-width: 1160px; margin: 0 auto; padding: 24px; }
+  main { max-width: 1160px; margin: 0 auto; padding: 12px 16px; }
   .gate {
     max-width: 360px;
     margin: 15vh auto;
@@ -63,115 +63,116 @@
   }
   .gate-error { color: #a5321f; font-size: 0.8rem; min-height: 1.2em; }
 
-  .layout { display: grid; grid-template-columns: minmax(0,1fr) 320px; gap: 24px; align-items: start; }
+  .layout { display: grid; grid-template-columns: minmax(0,1fr) 280px; gap: 14px; align-items: start; }
   @media (max-width: 880px) { .layout { grid-template-columns: 1fr; } }
 
-  .progress-card {
-    background: #fff; border: 1px solid #d8cfc2; border-radius: 8px; padding: 16px 18px; margin-bottom: 18px;
+  .progress-bar {
+    display: flex; align-items: center; gap: 10px; background: #fff; border: 1px solid #d8cfc2; border-radius: 6px;
+    padding: 7px 12px; margin-bottom: 10px; font-size: 0.72rem; color: #8a8175; flex-wrap: wrap;
   }
-  .progress-card h2 { margin: 0 0 10px; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; color: #595149; }
-  .progress-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
-  .progress-list li { display: flex; align-items: center; gap: 8px; font-size: 0.84rem; color: #6f675f; }
-  .progress-list li.done { color: #2f6b3a; }
-  .progress-list li .dot {
-    width: 16px; height: 16px; border-radius: 50%; border: 1.5px solid #c8bfb3; flex: 0 0 auto;
-    display: flex; align-items: center; justify-content: center; font-size: 0.62rem; color: transparent;
+  .progress-bar .p-item { display: flex; align-items: center; gap: 4px; }
+  .progress-bar .p-item.done { color: #2f6b3a; }
+  .progress-bar .dot {
+    width: 12px; height: 12px; border-radius: 50%; border: 1.5px solid #c8bfb3; flex: 0 0 auto;
+    display: flex; align-items: center; justify-content: center; font-size: 0.5rem; color: transparent;
   }
-  .progress-list li.done .dot { background: #2f6b3a; border-color: #2f6b3a; color: #fff; }
+  .progress-bar .p-item.done .dot { background: #2f6b3a; border-color: #2f6b3a; color: #fff; }
 
   .step {
-    background: #fff; border: 1px solid #d8cfc2; border-radius: 8px; padding: 20px 22px; margin-bottom: 18px;
+    background: #fff; border: 1px solid #d8cfc2; border-radius: 6px; padding: 10px 14px; margin-bottom: 8px;
   }
-  .step.optional { border-style: dashed; }
-  .step-head { display: flex; align-items: baseline; gap: 10px; margin-bottom: 4px; }
-  .step-num {
-    display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px;
-    background: #171411; color: #f6f1ea; border-radius: 50%; font-size: 0.74rem; font-weight: 700; flex: 0 0 auto;
+  .step.optional { border-style: dashed; padding: 0; overflow: hidden; }
+  .step.optional summary {
+    cursor: pointer; padding: 10px 14px; font-size: 0.8rem; font-weight: 700; list-style: none;
   }
-  .step h2 { margin: 0; font-size: 1rem; }
+  .step.optional summary::-webkit-details-marker { display: none; }
+  .step.optional summary::before { content: '▸ '; color: #8a8175; }
+  .step.optional[open] summary::before { content: '▾ '; }
+  .step.optional summary::marker { display: none; }
+  .step.optional .step-body { padding: 0 14px 12px; }
+  .step-head { display: flex; align-items: baseline; gap: 8px; margin-bottom: 2px; }
+  .step h2 { margin: 0; font-size: 0.8rem; font-weight: 700; }
   .step-badge {
-    margin-left: auto; font-size: 0.66rem; text-transform: uppercase; letter-spacing: 0.05em;
-    padding: 3px 8px; border-radius: 10px; background: #f1ece2; color: #8a8175;
+    margin-left: auto; font-size: 0.62rem; text-transform: uppercase; letter-spacing: 0.05em;
+    padding: 2px 7px; border-radius: 10px; background: #f1ece2; color: #8a8175;
   }
-  .step-help { margin: 4px 0 16px 34px; font-size: 0.82rem; color: #6f675f; line-height: 1.5; }
+  .step-help { margin: 0 0 8px; font-size: 0.7rem; color: #8a8175; line-height: 1.35; }
 
-  .field { margin-bottom: 14px; }
-  .field label { display: block; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 5px; color: #595149; }
+  .field { margin-bottom: 8px; }
+  .field label { display: block; font-size: 0.64rem; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 3px; color: #595149; }
   .field input, .field textarea, .field select {
-    width: 100%; padding: 10px 11px; border: 1px solid #c8bfb3; font-size: 0.9rem; background: #fffcf7; color: #15120f; border-radius: 4px;
+    width: 100%; padding: 7px 9px; border: 1px solid #c8bfb3; font-size: 0.85rem; background: #fffcf7; color: #15120f; border-radius: 4px;
   }
-  .field textarea { min-height: 70px; resize: vertical; }
-  .row { display: flex; gap: 12px; }
+  .field textarea { min-height: 44px; resize: vertical; }
+  .row { display: flex; gap: 10px; }
   .row .field { flex: 1; }
 
-  .type-picker { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 12px; margin: 0 0 18px 34px; }
+  .type-picker { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 8px; margin: 0 0 10px; }
   @media (max-width: 640px) { .type-picker { grid-template-columns: 1fr; } }
   .type-card {
-    display: flex; flex-direction: column; align-items: center; gap: 8px; text-align: center;
-    padding: 18px 14px; border: 1.5px solid #d8cfc2; border-radius: 8px; background: #fffcf7; cursor: pointer;
+    display: flex; flex-direction: row; align-items: center; justify-content: center; gap: 6px;
+    padding: 9px 8px; border: 1.5px solid #d8cfc2; border-radius: 6px; background: #fffcf7; cursor: pointer;
     font-family: inherit; color: #1b1a17;
   }
-  .type-card .emoji { font-size: 1.6rem; }
-  .type-card .title { font-size: 0.88rem; font-weight: 700; }
-  .type-card .desc { font-size: 0.72rem; color: #8a8175; line-height: 1.4; }
+  .type-card .emoji { font-size: 1.05rem; }
+  .type-card .title { font-size: 0.78rem; font-weight: 700; }
   .type-card:hover { border-color: #a89f8f; }
   .type-card.is-active { border-color: #171411; background: #171411; color: #f6f1ea; }
-  .type-card.is-active .desc { color: #cfc7ba; }
 
-  .type-fields { margin: 0 0 18px 34px; padding: 16px; background: #faf6ee; border: 1px solid #eee3d2; border-radius: 6px; }
-  .type-fields .field-title { font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; color: #595149; margin: 0 0 10px; }
+  .type-fields { margin: 0 0 10px; padding: 10px 12px; background: #faf6ee; border: 1px solid #eee3d2; border-radius: 6px; }
+  .type-fields .field-title { font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; color: #595149; margin: 0 0 6px; }
   .type-fields .field-title .req { color: #a5321f; font-weight: 400; text-transform: none; letter-spacing: 0; }
-  .type-fields + .type-fields { margin-top: 12px; }
+  .type-fields + .type-fields { margin-top: 8px; }
 
-  .pill-group { display: flex; flex-wrap: wrap; gap: 8px; }
+  .pill-group { display: flex; flex-wrap: wrap; gap: 6px; }
   .pill {
-    border: 1px solid #c8bfb3; background: #fff; color: #1b1a17; padding: 8px 14px; border-radius: 999px;
-    font-size: 0.82rem; cursor: pointer; font-family: inherit;
+    border: 1px solid #c8bfb3; background: #fff; color: #1b1a17; padding: 5px 11px; border-radius: 999px;
+    font-size: 0.76rem; cursor: pointer; font-family: inherit;
   }
   .pill:hover { border-color: #8a8175; }
   .pill.is-active { background: #171411; border-color: #171411; color: #fff; }
   .pill.is-disabled { opacity: 0.4; cursor: not-allowed; }
-  .pill-hint { margin: 10px 0 0; font-size: 0.76rem; color: #6f675f; }
+  .pill-hint { margin: 6px 0 0; font-size: 0.68rem; color: #8a8175; }
   .pill-hint.error { color: #a5321f; font-weight: 600; }
 
-  .checkbox-line { display: flex; align-items: center; gap: 8px; font-size: 0.84rem; margin-top: 10px; }
+  .checkbox-line { display: flex; align-items: center; gap: 6px; font-size: 0.78rem; margin-top: 6px; }
   .checkbox-line input { width: auto; }
 
-  .list-row { display: flex; gap: 8px; margin-bottom: 8px; align-items: center; }
+  .list-row { display: flex; gap: 6px; margin-bottom: 5px; align-items: center; }
   .list-row input { flex: 1; }
   .variant-row select, .variant-row input { flex: 1; }
   .variant-row .variant-size-wrap { flex: 1; }
-  #reviews-list { max-height: 260px; overflow-y: auto; padding-right: 4px; }
+  #reviews-list { max-height: 180px; overflow-y: auto; padding-right: 4px; }
   .review-row { align-items: flex-start; }
-  .review-row input { flex: 0 0 130px; }
-  .review-row select { flex: 0 0 64px; }
-  .review-row textarea { flex: 1; min-height: 40px; resize: vertical; }
+  .review-row input { flex: 0 0 110px; }
+  .review-row select { flex: 0 0 58px; }
+  .review-row textarea { flex: 1; min-height: 32px; resize: vertical; }
   .list-row button, .add-btn {
-    background: #ece5d8; border: 1px solid #c8bfb3; padding: 8px 12px; cursor: pointer; font-size: 0.75rem; border-radius: 4px;
+    background: #ece5d8; border: 1px solid #c8bfb3; padding: 6px 10px; cursor: pointer; font-size: 0.7rem; border-radius: 4px;
   }
-  .add-btn { margin-top: 4px; }
+  .add-btn { margin-top: 2px; }
 
-  .actions { display: flex; gap: 10px; margin-top: 4px; }
-  .actions button { flex: 1; padding: 12px; font-size: 0.82rem; letter-spacing: 0.04em; text-transform: uppercase; cursor: pointer; border-radius: 4px; }
+  .actions { display: flex; gap: 8px; margin-top: 4px; }
+  .actions button { flex: 1; padding: 9px; font-size: 0.76rem; letter-spacing: 0.04em; text-transform: uppercase; cursor: pointer; border-radius: 4px; }
   .btn-secondary { background: #ece5d8; border: 1px solid #c8bfb3; color: #1b1a17; }
-  .status-msg { font-size: 0.85rem; margin: 12px 0; min-height: 1.2em; }
+  .status-msg { font-size: 0.78rem; margin: 6px 0; min-height: 1.1em; }
   .status-msg.error { color: #a5321f; }
   .status-msg.ok { color: #2f6b3a; }
 
-  .side-card { background: #fff; border: 1px solid #d8cfc2; border-radius: 8px; padding: 18px; }
-  .side-card h2 { margin: 0 0 12px; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.04em; }
+  .side-card { background: #fff; border: 1px solid #d8cfc2; border-radius: 6px; padding: 12px; max-height: calc(100vh - 90px); overflow-y: auto; position: sticky; top: 62px; }
+  .side-card h2 { margin: 0 0 8px; font-size: 0.76rem; text-transform: uppercase; letter-spacing: 0.04em; }
   .side-card input[type="search"] {
-    width: 100%; padding: 9px 10px; border: 1px solid #c8bfb3; font-size: 0.85rem; border-radius: 4px; margin-bottom: 12px;
+    width: 100%; padding: 6px 8px; border: 1px solid #c8bfb3; font-size: 0.78rem; border-radius: 4px; margin-bottom: 8px;
   }
   .product-list-item {
-    display: flex; gap: 10px; align-items: center; padding: 9px; border: 1px solid #e4ddd1; margin-bottom: 8px; cursor: pointer; background: #fff; border-radius: 6px;
+    display: flex; gap: 8px; align-items: center; padding: 6px; border: 1px solid #e4ddd1; margin-bottom: 6px; cursor: pointer; background: #fff; border-radius: 5px;
   }
   .product-list-item:hover { background: #f8f3eb; }
-  .product-list-item img { width: 42px; height: 52px; object-fit: cover; background: #eee; border-radius: 3px; }
+  .product-list-item img { width: 32px; height: 40px; object-fit: cover; background: #eee; border-radius: 3px; }
   .product-list-item .meta { flex: 1; min-width: 0; }
-  .product-list-item .meta strong { display: block; font-size: 0.84rem; }
-  .product-list-item .meta .price { font-size: 0.74rem; color: #6f675f; }
-  .product-list-item .meta .badges { display: flex; gap: 4px; flex-wrap: wrap; margin-top: 4px; }
+  .product-list-item .meta strong { display: block; font-size: 0.76rem; }
+  .product-list-item .meta .price { font-size: 0.68rem; color: #6f675f; }
+  .product-list-item .meta .badges { display: flex; gap: 4px; flex-wrap: wrap; margin-top: 2px; }
   .badge {
     font-size: 0.62rem; text-transform: uppercase; letter-spacing: 0.03em; padding: 2px 6px; border-radius: 8px;
     background: #f1ece2; color: #6f675f;
@@ -203,17 +204,12 @@
   <main>
     <div class="layout">
       <div>
-        <div class="progress-card">
-          <h2>Progression</h2>
-          <ul class="progress-list" id="progress-list"></ul>
-        </div>
+        <div class="progress-bar" id="progress-list"></div>
 
         <form id="product-form">
           <input type="hidden" id="product-id">
 
           <section class="step">
-            <div class="step-head"><span class="step-num">1</span><h2>Informations générales</h2></div>
-            <p class="step-help">Le nom, le prix et au moins une photo sont obligatoires.</p>
             <div class="row">
               <div class="field">
                 <label for="f-name">Nom *</label>
@@ -231,29 +227,23 @@
             <div class="field">
               <label>Images (liens Cloudinary / Dropbox) *</label>
               <div id="images-list"></div>
-              <button type="button" class="add-btn" id="add-image-btn">+ Ajouter une image</button>
+              <button type="button" class="add-btn" id="add-image-btn">+ Image</button>
             </div>
           </section>
 
           <section class="step">
-            <div class="step-head"><span class="step-num">2</span><h2>Type de produit</h2></div>
-            <p class="step-help">Choisissez ce qu'est ce produit — ça détermine automatiquement où il apparaît sur le site et quels champs sont utiles en dessous.</p>
-
             <div class="type-picker">
-              <button type="button" class="type-card" data-type="vetement">
+              <button type="button" class="type-card" data-type="vetement" title="Robe, top, jupe, pantalon, veste — visible sur la page Collection.">
                 <span class="emoji">👗</span>
                 <span class="title">Vêtement</span>
-                <span class="desc">Robe, top, jupe, pantalon, veste — visible sur la page Collection.</span>
               </button>
-              <button type="button" class="type-card" data-type="accessoire">
+              <button type="button" class="type-card" data-type="accessoire" title="Sac, bijou, ceinture, foulard — visible sur la page Accessoires.">
                 <span class="emoji">👜</span>
                 <span class="title">Accessoire</span>
-                <span class="desc">Sac, bijou, ceinture, foulard — visible sur la page Accessoires.</span>
               </button>
-              <button type="button" class="type-card" data-type="collaboration">
+              <button type="button" class="type-card" data-type="collaboration" title="JACES x une marque, ou une création exclusive.">
                 <span class="emoji">🤝</span>
                 <span class="title">Collaboration</span>
-                <span class="desc">JACES x une marque, ou une création exclusive.</span>
               </button>
             </div>
 
@@ -263,9 +253,9 @@
             </div>
 
             <div id="type-accessoire-fields" class="type-fields" hidden>
-              <p class="field-title">Type d'accessoire <span class="req">(obligatoire, une seule valeur)</span></p>
+              <p class="field-title">Type d'accessoire <span class="req">(obligatoire)</span></p>
               <div class="pill-group" id="accessoire-type-pills"></div>
-              <p class="field-title" style="margin-top:16px;">Matière <span class="req">(obligatoire, plusieurs possibles)</span></p>
+              <p class="field-title" style="margin-top:10px;">Matière <span class="req">(obligatoire)</span></p>
               <div class="pill-group" id="material-pills">
                 <button type="button" class="pill" data-material="cuir">Cuir</button>
                 <button type="button" class="pill" data-material="metal">Métal</button>
@@ -273,15 +263,15 @@
                 <button type="button" class="pill" data-material="laine">Laine</button>
                 <button type="button" class="pill" data-material="coton">Coton</button>
               </div>
-              <p class="pill-hint">Un accessoire n'a pas de taille vêtement — dans l'étape 3, la colonne "Taille" est masquée et remplacée par couleur + stock uniquement.</p>
+              <p class="pill-hint">Pas de taille pour un accessoire — juste couleur + stock ci-dessous.</p>
             </div>
 
             <div id="type-collaboration-fields" class="type-fields" hidden>
-              <p class="field-title">Collaboration de marque <span class="req">(une seule, optionnel si "Créations exclusives" seul suffit)</span></p>
+              <p class="field-title">Collaboration <span class="req">(ou "Créations exclusives" seul)</span></p>
               <div class="pill-group" id="collaboration-brand-pills"></div>
               <label class="checkbox-line">
                 <input type="checkbox" id="f-collab-exclusive">
-                Créations exclusives (peut se combiner avec la marque ci-dessus)
+                Créations exclusives
               </label>
             </div>
 
@@ -289,15 +279,14 @@
           </section>
 
           <section class="step">
-            <div class="step-head"><span class="step-num">3</span><h2>Variantes</h2></div>
-            <p class="step-help" id="variant-step-help">Taille, couleur et stock disponibles pour ce produit.</p>
+            <p class="step-help" id="variant-step-help">Taille, couleur et stock.</p>
             <div id="variants-list"></div>
-            <button type="button" class="add-btn" id="add-variant-btn">+ Ajouter une variante</button>
+            <button type="button" class="add-btn" id="add-variant-btn">+ Variante</button>
           </section>
 
-          <section class="step optional">
-            <div class="step-head"><span class="step-num">4</span><h2>Visibilité secondaire</h2><span class="step-badge">Optionnel</span></div>
-            <p class="step-help">Un produit peut en plus apparaître dans une saison Collection et/ou dans Nouveautés, indépendamment de son type ci-dessus.</p>
+          <details class="step optional">
+            <summary>Plus d'options — saison, Nouveautés, avis clients (optionnel)</summary>
+            <div class="step-body">
 
             <div class="type-fields">
               <p class="field-title">Saison (page Collection)</p>
@@ -305,63 +294,62 @@
             </div>
 
             <div class="type-fields">
-              <p class="field-title">Apparition dans Nouveautés</p>
+              <p class="field-title">Nouveautés</p>
               <label class="checkbox-line">
                 <input type="checkbox" id="f-nouveaute-tout-voir">
                 Afficher aussi dans Nouveautés
               </label>
               <p class="pill-hint" id="nouveaute-category-preview"></p>
-              <p class="field-title" style="margin-top:16px;">Badge spécial <span class="req">(optionnel)</span></p>
+              <p class="field-title" style="margin-top:10px;">Badge spécial <span class="req">(optionnel)</span></p>
               <div class="pill-group" id="nouveaute-tag-pills"></div>
-              <p class="pill-hint">Choisir un badge (Drop été / Édition limitée / Pièces signature) suffit aussi à apparaître dans "Toutes les nouveautés", même sans cocher la case ci-dessus.</p>
+              <p class="pill-hint">Un badge (Drop été / Édition limitée / Pièces signature) suffit aussi pour apparaître dans "Toutes les nouveautés".</p>
             </div>
-          </section>
 
-          <section class="step optional">
-            <div class="step-head"><span class="step-num">5</span><h2>Contenu enrichi</h2><span class="step-badge">Optionnel</span></div>
-            <p class="step-help">Textes et avis affichés sur la fiche produit. Rien de tout ceci n'est obligatoire.</p>
-
-            <div class="field">
-              <label for="f-style-notes">Porté et style / Taille et coupe</label>
-              <textarea id="f-style-notes"></textarea>
-            </div>
-            <div class="field">
-              <label for="f-care-instructions">Entretien</label>
-              <textarea id="f-care-instructions"></textarea>
-            </div>
-            <div class="row">
+            <div class="type-fields">
               <div class="field">
-                <label for="f-fit-rating">Porté</label>
-                <select id="f-fit-rating">
-                  <option value="petit">Petit</option>
-                  <option value="normal" selected>Normal</option>
-                  <option value="grand">Grand</option>
-                </select>
+                <label for="f-style-notes">Porté et style / Taille et coupe</label>
+                <textarea id="f-style-notes"></textarea>
               </div>
               <div class="field">
-                <label for="f-quality-rating">Qualité</label>
-                <select id="f-quality-rating">
-                  <option value="moyenne">Moyenne</option>
-                  <option value="bonne">Bonne</option>
-                  <option value="premium" selected>Premium</option>
-                </select>
+                <label for="f-care-instructions">Entretien</label>
+                <textarea id="f-care-instructions"></textarea>
               </div>
+              <div class="row">
+                <div class="field">
+                  <label for="f-fit-rating">Porté</label>
+                  <select id="f-fit-rating">
+                    <option value="petit">Petit</option>
+                    <option value="normal" selected>Normal</option>
+                    <option value="grand">Grand</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label for="f-quality-rating">Qualité</label>
+                  <select id="f-quality-rating">
+                    <option value="moyenne">Moyenne</option>
+                    <option value="bonne">Bonne</option>
+                    <option value="premium" selected>Premium</option>
+                  </select>
+                </div>
+              </div>
+              <div class="field">
+                <label>Photos clientes</label>
+                <div id="review-photos-list"></div>
+                <button type="button" class="add-btn" id="add-review-photo-btn">+ Photo cliente</button>
+              </div>
+              <div class="field">
+                <label>Avis clients</label>
+                <div id="reviews-list"></div>
+                <button type="button" class="add-btn" id="add-review-btn">+ Avis</button>
+              </div>
+              <label class="checkbox-line">
+                <input type="checkbox" id="f-show-in-related">
+                Afficher en bas des fiches produit ("En ce moment")
+              </label>
             </div>
-            <div class="field">
-              <label>Photos clientes (liens Cloudinary / Dropbox)</label>
-              <div id="review-photos-list"></div>
-              <button type="button" class="add-btn" id="add-review-photo-btn">+ Ajouter une photo cliente</button>
+
             </div>
-            <div class="field">
-              <label>Avis clients</label>
-              <div id="reviews-list"></div>
-              <button type="button" class="add-btn" id="add-review-btn">+ Ajouter un avis</button>
-            </div>
-            <label class="checkbox-line">
-              <input type="checkbox" id="f-show-in-related">
-              Afficher en bas des fiches produit ("En ce moment")
-            </label>
-          </section>
+          </details>
 
           <p class="status-msg" id="form-status"></p>
           <div class="actions">
@@ -757,16 +745,16 @@ function updateProgress() {
   const typeComplete = hasType && getTypeCompletion();
 
   const items = [
-    { label: 'Nom du produit', done: hasName },
+    { label: 'Nom', done: hasName },
     { label: 'Prix', done: hasPrice },
-    { label: 'Au moins une image', done: hasImage },
-    { label: 'Type de produit choisi', done: hasType },
-    { label: 'Détails du type complétés', done: typeComplete }
+    { label: 'Image', done: hasImage },
+    { label: 'Type', done: hasType },
+    { label: 'Détails du type', done: typeComplete }
   ];
 
   const list = document.getElementById('progress-list');
   list.innerHTML = items.map((item) => `
-    <li class="${item.done ? 'done' : ''}"><span class="dot">${item.done ? '✓' : ''}</span>${item.label}</li>
+    <span class="p-item${item.done ? ' done' : ''}"><span class="dot">${item.done ? '✓' : ''}</span>${item.label}</span>
   `).join('');
 
   return items.every((item) => item.done);
