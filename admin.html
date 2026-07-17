@@ -31,7 +31,7 @@
     font-size: 0.75rem;
     cursor: pointer;
   }
-  main { max-width: 1080px; margin: 0 auto; padding: 24px; }
+  main { max-width: 1440px; margin: 0 auto; padding: 24px; }
   .gate {
     max-width: 360px;
     margin: 15vh auto;
@@ -53,7 +53,7 @@
     cursor: pointer;
   }
   .gate-error { color: #a5321f; font-size: 0.8rem; min-height: 1.2em; }
-  .layout { display: grid; grid-template-columns: 1fr 340px; gap: 24px; align-items: start; }
+  .layout { display: grid; grid-template-columns: minmax(0,1fr) 360px; gap: 24px; align-items: start; }
   .card { background: #fff; border: 1px solid #d8cfc2; padding: 20px; margin-bottom: 20px; }
   .card h2 { margin-top: 0; font-size: 0.95rem; text-transform: uppercase; letter-spacing: 0.05em; }
   .field { margin-bottom: 14px; }
@@ -66,6 +66,11 @@
   .row .field { flex: 1; }
   .list-row { display: flex; gap: 8px; margin-bottom: 8px; align-items: center; }
   .list-row input { flex: 1; }
+  .field-wide { background: #faf6ee; border: 1px solid #eee3d2; padding: 14px 16px; }
+  .field-wide label { font-size: 0.8rem; margin-bottom: 8px; }
+  .field-wide .list-row { margin-bottom: 10px; }
+  .field-wide .list-row input, .field-wide .list-row select { padding: 11px 12px; font-size: 0.95rem; }
+  .field-wide .add-btn { padding: 10px 14px; font-size: 0.8rem; }
   #reviews-list { max-height: 260px; overflow-y: auto; padding-right: 4px; }
   .review-row { align-items: flex-start; }
   .review-row input { flex: 0 0 130px; }
@@ -127,6 +132,19 @@
                 <input type="number" id="f-price" min="0" step="0.01" required>
               </div>
             </div>
+
+            <div class="field field-wide">
+              <label>Images (liens Cloudinary / Dropbox)</label>
+              <div id="images-list"></div>
+              <button type="button" class="add-btn" id="add-image-btn">+ Ajouter une image</button>
+            </div>
+
+            <div class="field field-wide">
+              <label>Variantes (taille / couleur / stock)</label>
+              <div id="variants-list"></div>
+              <button type="button" class="add-btn" id="add-variant-btn">+ Ajouter une variante</button>
+            </div>
+
             <div class="field">
               <label for="f-description">Description</label>
               <textarea id="f-description"></textarea>
@@ -140,18 +158,6 @@
             <div class="field">
               <label for="f-care-instructions">Entretien</label>
               <textarea id="f-care-instructions"></textarea>
-            </div>
-
-            <div class="field">
-              <label>Images (liens Cloudinary / Dropbox)</label>
-              <div id="images-list"></div>
-              <button type="button" class="add-btn" id="add-image-btn">+ Ajouter une image</button>
-            </div>
-
-            <div class="field">
-              <label>Variantes (taille / couleur / stock)</label>
-              <div id="variants-list"></div>
-              <button type="button" class="add-btn" id="add-variant-btn">+ Ajouter une variante</button>
             </div>
 
             <div class="field">
@@ -332,15 +338,15 @@ function variantRow(size = '', color = '', stock = '') {
   const row = document.createElement('div');
   row.className = 'list-row';
   row.innerHTML = `
-    <select class="variant-size" style="max-width:90px">
+    <select class="variant-size" style="max-width:140px">
       <option value="">Taille</option>
       ${buildOptionsHtml(SIZE_OPTIONS, size)}
     </select>
-    <select class="variant-color" style="max-width:120px">
+    <select class="variant-color" style="max-width:180px">
       <option value="">Couleur</option>
       ${buildOptionsHtml(COLOR_OPTIONS, color)}
     </select>
-    <input type="number" placeholder="Stock" min="0" value="${stock}" style="max-width:90px">
+    <input type="number" placeholder="Stock" min="0" value="${stock}" style="max-width:130px">
     <button type="button">✕</button>`;
   row.querySelector('button').addEventListener('click', () => row.remove());
   return row;
