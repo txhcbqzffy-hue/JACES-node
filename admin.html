@@ -507,10 +507,15 @@ async function loadFilters() {
 
     container.appendChild(fieldset);
 
-    // Matière only makes sense right after picking an accessory type, so
-    // it's moved to sit directly under this fieldset instead of at the
-    // bottom of the whole classification block.
+    // Sacs/Bijoux/Ceintures/Foulards only make sense once "Accessoires" is
+    // picked as the Collection category, so this whole fieldset stays
+    // hidden until then instead of always being visible.
     if (menu === 'accessoires') {
+      fieldset.id = 'accessoires-type-fieldset';
+      fieldset.hidden = true;
+      // Matière only makes sense right after picking an accessory type, so
+      // it's moved to sit directly under this fieldset instead of at the
+      // bottom of the whole classification block.
       fieldset.insertAdjacentElement('afterend', document.getElementById('material-field'));
     }
   });
@@ -535,6 +540,7 @@ function resetForm() {
   document.getElementById('f-quality-rating').value = 'premium';
   document.querySelectorAll('#material-checkboxes input[type="checkbox"]').forEach((cb) => { cb.checked = false; });
   document.querySelectorAll('#filters-container input').forEach((cb) => { cb.checked = false; });
+  updateAccessoryTypeFieldsetVisibility();
   updateMaterialCheckboxAvailability();
   document.getElementById('form-status').textContent = '';
   document.getElementById('form-status').className = 'status-msg';
@@ -585,6 +591,11 @@ function fillFormWithProduct(product) {
   document.querySelectorAll('#filters-container input').forEach((cb) => {
     cb.checked = filterIds.has(String(cb.value));
   });
+  // Reveal the Accessoires-type fieldset first (based on the just-restored
+  // checked state) before clearing/evaluating anything that depends on it,
+  // so a saved accessory product's Sacs/Bijoux/... selection isn't wiped.
+  const accessoryTypeFieldset = document.getElementById('accessoires-type-fieldset');
+  if (accessoryTypeFieldset) accessoryTypeFieldset.hidden = !isAccessoryCategorySelected();
   updateVariantSizeAvailability();
   updateMaterialCheckboxAvailability();
 
@@ -793,6 +804,33 @@ function isAccessoryTypeSelected() {
     .some((cb) => accessoryIds.has(cb.value));
 }
 
+// Only true for the generic "Accessoires" Collection category checkbox
+// specifically (not the Sacs/Bijoux/... sub-types themselves).
+function isAccessoryCategorySelected() {
+  const accessoryCategoryIds = new Set(
+    (filtersByMenu.categories || [])
+      .filter((f) => (f.label || f.name) === 'Accessoires')
+      .map((f) => String(f.id))
+  );
+  return Array.from(document.querySelectorAll('#filters-container input:checked'))
+    .some((cb) => accessoryCategoryIds.has(cb.value));
+}
+
+// Sacs/Bijoux/Ceintures/Foulards only make sense once "Accessoires" is
+// picked as the Collection category - the whole fieldset stays hidden
+// (and any previously checked sub-type cleared) until then.
+function updateAccessoryTypeFieldsetVisibility() {
+  const enable = isAccessoryCategorySelected();
+  const fieldset = document.getElementById('accessoires-type-fieldset');
+  if (!fieldset) return;
+  fieldset.hidden = !enable;
+  if (!enable) {
+    // Sacs/Bijoux/Ceintures/Foulards render as radio inputs (single-choice
+    // within the menu), not checkboxes - clear whichever type is present.
+    fieldset.querySelectorAll('input').forEach((cb) => { cb.checked = false; });
+  }
+}
+
 // Accessoires don't use a clothing size, so the Taille select in each
 // variant row is locked (and cleared) once an accessory type is checked.
 function updateVariantSizeAvailability() {
@@ -837,6 +875,7 @@ function enforceCollaborationExclusivity(event) {
 
 document.getElementById('filters-container').addEventListener('change', (event) => {
   enforceCollaborationExclusivity(event);
+  updateAccessoryTypeFieldsetVisibility();
   updateVariantSizeAvailability();
   updateMaterialCheckboxAvailability();
 });
