@@ -703,9 +703,9 @@ document.getElementById('product-form').addEventListener('submit', async (e) => 
 
   try {
     await adminPost(payload);
+    resetForm();
     statusEl.textContent = 'Enregistré ✓';
     statusEl.className = 'status-msg ok';
-    resetForm();
     loadProductList();
   } catch (error) {
     if (error.message === 'unauthorized') return;
