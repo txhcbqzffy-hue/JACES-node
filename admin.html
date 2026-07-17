@@ -780,17 +780,11 @@ document.getElementById('product-form').addEventListener('submit', async (e) => 
 });
 
 function isAccessorySelected() {
-  // Either the "Accessoires" Collection category itself, or a specific
-  // accessory type (Sacs/Bijoux/Ceintures/Foulards), counts - both mean the
-  // product isn't clothing and shouldn't use a clothing size.
-  const accessoryIds = new Set((filtersByMenu.accessoires || []).map((f) => String(f.id)));
-  const accessoryCategoryIds = new Set(
-    (filtersByMenu.categories || [])
-      .filter((f) => (f.label || f.name) === 'Accessoires')
-      .map((f) => String(f.id))
-  );
-  return Array.from(document.querySelectorAll('#filters-container input:not([name="material"]):checked'))
-    .some((cb) => accessoryIds.has(cb.value) || accessoryCategoryIds.has(cb.value));
+  // Either an "Accessoires" category checkbox (Collection or Nouveautés)
+  // or a specific accessory type (Sacs/Bijoux/Ceintures/Foulards) counts -
+  // any of these mean the product isn't clothing and shouldn't use a
+  // clothing size.
+  return isAccessoryCategorySelected() || isAccessoryTypeSelected();
 }
 
 // Narrower than isAccessorySelected() - only true once a specific accessory
@@ -807,8 +801,13 @@ function isAccessoryTypeSelected() {
 // Only true for the generic "Accessoires" Collection category checkbox
 // specifically (not the Sacs/Bijoux/... sub-types themselves).
 function isAccessoryCategorySelected() {
+  // Both the real "Accessoires" (Catégories visible sur Collection) and its
+  // Nouveautés-only look-alike (Catégories visible sur Nouveautés) reveal
+  // Sacs/Bijoux/Ceintures/Foulards - whichever one the admin clicks first,
+  // the intent ("this is an accessory") is the same either way.
   const accessoryCategoryIds = new Set(
-    (filtersByMenu.categories || [])
+    ['categories', 'nouveautes_categories']
+      .flatMap((menu) => filtersByMenu[menu] || [])
       .filter((f) => (f.label || f.name) === 'Accessoires')
       .map((f) => String(f.id))
   );
