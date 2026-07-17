@@ -539,7 +539,7 @@ function resetForm() {
   document.getElementById('f-fit-rating').value = 'normal';
   document.getElementById('f-quality-rating').value = 'premium';
   document.querySelectorAll('#material-checkboxes input[type="checkbox"]').forEach((cb) => { cb.checked = false; });
-  document.querySelectorAll('#filters-container input').forEach((cb) => { cb.checked = false; });
+  document.querySelectorAll('#filters-container input:not([name="material"])').forEach((cb) => { cb.checked = false; });
   updateAccessoryTypeFieldsetVisibility();
   updateMaterialCheckboxAvailability();
   document.getElementById('form-status').textContent = '';
@@ -588,7 +588,7 @@ function fillFormWithProduct(product) {
   });
 
   const filterIds = new Set((product.filter_ids || []).map(String));
-  document.querySelectorAll('#filters-container input').forEach((cb) => {
+  document.querySelectorAll('#filters-container input:not([name="material"])').forEach((cb) => {
     cb.checked = filterIds.has(String(cb.value));
   });
   // Reveal the Accessoires-type fieldset first (based on the just-restored
@@ -677,7 +677,7 @@ document.getElementById('product-form').addEventListener('submit', async (e) => 
     text: row.querySelector('.review-text').value.trim()
   })).filter((r) => r.text);
 
-  const filterIds = Array.from(document.querySelectorAll('#filters-container input:checked'))
+  const filterIds = Array.from(document.querySelectorAll('#filters-container input:not([name="material"]):checked'))
     .map((cb) => Number(cb.value));
 
   const checkedFilters = filterIds
@@ -789,7 +789,7 @@ function isAccessorySelected() {
       .filter((f) => (f.label || f.name) === 'Accessoires')
       .map((f) => String(f.id))
   );
-  return Array.from(document.querySelectorAll('#filters-container input:checked'))
+  return Array.from(document.querySelectorAll('#filters-container input:not([name="material"]):checked'))
     .some((cb) => accessoryIds.has(cb.value) || accessoryCategoryIds.has(cb.value));
 }
 
@@ -800,7 +800,7 @@ function isAccessorySelected() {
 // four types before the product can be saved anyway.
 function isAccessoryTypeSelected() {
   const accessoryIds = new Set((filtersByMenu.accessoires || []).map((f) => String(f.id)));
-  return Array.from(document.querySelectorAll('#filters-container input:checked'))
+  return Array.from(document.querySelectorAll('#filters-container input:not([name="material"]):checked'))
     .some((cb) => accessoryIds.has(cb.value));
 }
 
@@ -812,7 +812,7 @@ function isAccessoryCategorySelected() {
       .filter((f) => (f.label || f.name) === 'Accessoires')
       .map((f) => String(f.id))
   );
-  return Array.from(document.querySelectorAll('#filters-container input:checked'))
+  return Array.from(document.querySelectorAll('#filters-container input:not([name="material"]):checked'))
     .some((cb) => accessoryCategoryIds.has(cb.value));
 }
 
