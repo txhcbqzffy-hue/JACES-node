@@ -488,7 +488,8 @@ async function loadFilters() {
       const isStandaloneCollab = menu === 'collaborations' && filterLabel === 'Créations exclusives';
       const isStandaloneNouveaute = menu === 'nouveautes' && filterLabel.trim() === 'Tout voir';
       const inputAttrs = radioName && !isStandaloneCollab && !isStandaloneNouveaute ? `type="radio" name="${radioName}"` : 'type="checkbox"';
-      label.innerHTML = `<input ${inputAttrs} value="${filter.id}" data-menu="${menu}"> ${filterLabel}`;
+      const toutVoirAttr = isStandaloneNouveaute ? ' data-nouveaute-tout-voir="true"' : '';
+      label.innerHTML = `<input ${inputAttrs} value="${filter.id}" data-menu="${menu}"${toutVoirAttr}> ${filterLabel}`;
       grid.appendChild(label);
     });
     fieldset.appendChild(grid);
@@ -872,8 +873,20 @@ function enforceCollaborationExclusivity(event) {
   }
 }
 
+// Picking a specific Nouveautés badge (Drop été/Édition limitée/Pièces
+// signature) also checks "Tout voir" automatically, since a product with
+// any of the three already shows up under "Toutes les nouveautés" on the
+// site - this just makes that visible in the admin form too.
+function autoCheckNouveauteToutVoir(event) {
+  const input = event.target;
+  if (input.name !== 'filter-nouveaute-tag' || !input.checked) return;
+  const toutVoir = document.querySelector('#filters-container input[data-nouveaute-tout-voir="true"]');
+  if (toutVoir) toutVoir.checked = true;
+}
+
 document.getElementById('filters-container').addEventListener('change', (event) => {
   enforceCollaborationExclusivity(event);
+  autoCheckNouveauteToutVoir(event);
   updateAccessoryTypeFieldsetVisibility();
   updateVariantSizeAvailability();
   updateMaterialCheckboxAvailability();
