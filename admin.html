@@ -67,6 +67,12 @@
   .list-row { display: flex; gap: 6px; margin-bottom: 5px; align-items: center; }
   .list-row input { flex: 1; }
   .field-wide { background: #faf6ee; border: 1px solid #eee3d2; padding: 9px 10px; }
+  .field-collapsible { margin-bottom: 8px; }
+  .field-collapsible summary { cursor: pointer; font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.05em; color: #595149; padding: 4px 0; list-style: none; }
+  .field-collapsible summary::-webkit-details-marker { display: none; }
+  .field-collapsible summary::before { content: '▸ '; }
+  .field-collapsible[open] summary::before { content: '▾ '; }
+  .field-collapsible .field:first-of-type { margin-top: 6px; }
   .field-wide label { font-size: 0.7rem; margin-bottom: 5px; }
   .field-wide .list-row { margin-bottom: 6px; }
   .field-wide .list-row input, .field-wide .list-row select { padding: 8px 9px; font-size: 0.85rem; }
@@ -147,18 +153,21 @@
 
             <div class="field">
               <label for="f-description">Description</label>
-              <textarea id="f-description"></textarea>
+              <textarea id="f-description" required></textarea>
             </div>
 
-            <div class="field">
-              <label for="f-style-notes">Porté et style / Taille et coupe</label>
-              <textarea id="f-style-notes"></textarea>
-            </div>
+            <details class="field-collapsible">
+              <summary>Porté et style / Entretien (optionnel)</summary>
+              <div class="field">
+                <label for="f-style-notes">Porté et style / Taille et coupe</label>
+                <textarea id="f-style-notes"></textarea>
+              </div>
 
-            <div class="field">
-              <label for="f-care-instructions">Entretien</label>
-              <textarea id="f-care-instructions"></textarea>
-            </div>
+              <div class="field">
+                <label for="f-care-instructions">Entretien</label>
+                <textarea id="f-care-instructions"></textarea>
+              </div>
+            </details>
 
             <div class="field">
               <label>Photos clientes (liens Cloudinary / Dropbox)</label>
@@ -644,6 +653,17 @@ document.getElementById('product-form').addEventListener('submit', async (e) => 
   const hasCollaboration = checkedFilters.some((f) => f.menu === 'collaborations');
   if (!hasCategory && !hasAccessoryType && !hasCollaboration) {
     statusEl.textContent = 'Erreur: choisissez une catégorie (Robes/Tops/...), un type d\'accessoire (Sacs/Bijoux/...) ou une collaboration.';
+    statusEl.className = 'status-msg error';
+    submitBtn.disabled = false;
+    return;
+  }
+
+  // Nom, Prix (native "required"), Description ("required" on the
+  // textarea) and Variantes are the mandatory fields - Porté et
+  // style/Entretien stay optional (collapsed by default in the UI).
+  const hasValidVariant = variants.some((v) => (v.size || v.color) && v.stock > 0);
+  if (!hasValidVariant) {
+    statusEl.textContent = 'Erreur: ajoutez au moins une variante (taille/couleur et stock).';
     statusEl.className = 'status-msg error';
     submitBtn.disabled = false;
     return;
