@@ -181,7 +181,9 @@
               </div>
             </details>
 
-            <div class="field">
+            <div id="filters-container"></div>
+
+            <div class="field" id="material-field" hidden>
               <label>Mati&egrave;re (filtre Accessoires)</label>
               <div class="checkbox-grid" id="material-checkboxes">
                 <label><input type="checkbox" name="material" value="cuir"> Cuir</label>
@@ -190,10 +192,8 @@
                 <label><input type="checkbox" name="material" value="laine"> Laine</label>
                 <label><input type="checkbox" name="material" value="coton"> Coton</label>
               </div>
-              <p class="field-hint" id="material-required-hint" hidden>Obligatoire : au moins une mati&egrave;re, car un accessoire (Sacs/Bijoux/Ceintures/Foulards) est coch&eacute; ci-dessous.</p>
+              <p class="field-hint" id="material-required-hint">Obligatoire : au moins une mati&egrave;re, car un accessoire (Sacs/Bijoux/Ceintures/Foulards) est coch&eacute; ci-dessus.</p>
             </div>
-
-            <div id="filters-container"></div>
 
             <div class="field">
               <label style="display:flex;align-items:center;gap:8px;font-weight:normal;">
@@ -514,7 +514,6 @@ function resetForm() {
   document.getElementById('f-quality-rating').value = 'premium';
   document.querySelectorAll('#material-checkboxes input[type="checkbox"]').forEach((cb) => { cb.checked = false; });
   document.querySelectorAll('#filters-container input').forEach((cb) => { cb.checked = false; });
-  document.getElementById('material-required-hint').hidden = true;
   updateMaterialCheckboxAvailability();
   document.getElementById('form-status').textContent = '';
   document.getElementById('form-status').className = 'status-msg';
@@ -565,7 +564,6 @@ function fillFormWithProduct(product) {
   document.querySelectorAll('#filters-container input').forEach((cb) => {
     cb.checked = filterIds.has(String(cb.value));
   });
-  updateMaterialRequiredHint();
   updateVariantSizeAvailability();
   updateMaterialCheckboxAvailability();
 
@@ -763,10 +761,6 @@ function isAccessorySelected() {
     .some((cb) => accessoryIds.has(cb.value) || accessoryCategoryIds.has(cb.value));
 }
 
-function updateMaterialRequiredHint() {
-  document.getElementById('material-required-hint').hidden = !isAccessorySelected();
-}
-
 // Accessoires don't use a clothing size, so the Taille select in each
 // variant row is locked (and cleared) once an accessory type is checked.
 function updateVariantSizeAvailability() {
@@ -777,10 +771,12 @@ function updateVariantSizeAvailability() {
   });
 }
 
-// Matière only makes sense for an accessory - locked (and cleared) unless
-// Sacs/Bijoux/Ceintures/Foulards is checked.
+// Matière only makes sense for an accessory - the whole field stays
+// hidden (not just disabled) until Accessoires/Sacs/Bijoux/Ceintures/
+// Foulards is checked, so it's never "asked" before that.
 function updateMaterialCheckboxAvailability() {
   const enable = isAccessorySelected();
+  document.getElementById('material-field').hidden = !enable;
   document.querySelectorAll('#material-checkboxes input[type="checkbox"]').forEach((cb) => {
     cb.disabled = !enable;
     if (!enable) cb.checked = false;
@@ -809,7 +805,6 @@ function enforceCollaborationExclusivity(event) {
 
 document.getElementById('filters-container').addEventListener('change', (event) => {
   enforceCollaborationExclusivity(event);
-  updateMaterialRequiredHint();
   updateVariantSizeAvailability();
   updateMaterialCheckboxAvailability();
 });
