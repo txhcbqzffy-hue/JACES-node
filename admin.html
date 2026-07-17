@@ -782,6 +782,17 @@ function isAccessorySelected() {
     .some((cb) => accessoryIds.has(cb.value) || accessoryCategoryIds.has(cb.value));
 }
 
+// Narrower than isAccessorySelected() - only true once a specific accessory
+// type (Sacs/Bijoux/Ceintures/Foulards) is checked, not just the generic
+// "Accessoires" Collection category. Matière only opens at that point,
+// since picking "Accessoires" alone still requires choosing one of those
+// four types before the product can be saved anyway.
+function isAccessoryTypeSelected() {
+  const accessoryIds = new Set((filtersByMenu.accessoires || []).map((f) => String(f.id)));
+  return Array.from(document.querySelectorAll('#filters-container input:checked'))
+    .some((cb) => accessoryIds.has(cb.value));
+}
+
 // Accessoires don't use a clothing size, so the Taille select in each
 // variant row is locked (and cleared) once an accessory type is checked.
 function updateVariantSizeAvailability() {
@@ -796,7 +807,7 @@ function updateVariantSizeAvailability() {
 // hidden (not just disabled) until Accessoires/Sacs/Bijoux/Ceintures/
 // Foulards is checked, so it's never "asked" before that.
 function updateMaterialCheckboxAvailability() {
-  const enable = isAccessorySelected();
+  const enable = isAccessoryTypeSelected();
   document.getElementById('material-field').hidden = !enable;
   document.querySelectorAll('#material-checkboxes input[type="checkbox"]').forEach((cb) => {
     cb.disabled = !enable;
