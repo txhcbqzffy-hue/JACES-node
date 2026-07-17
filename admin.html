@@ -100,6 +100,7 @@
   .status-msg.error { color: #a5321f; }
   .status-msg.ok { color: #2f6b3a; }
   .field-hint { margin: 6px 0 0; font-size: 0.78rem; color: #a5321f; }
+  .field-hint-neutral { color: #8a8175; font-style: italic; }
   fieldset[data-menu="categories"], fieldset[data-menu="accessoires"] { border-left-color: #2f5a80; background: #f3f7fb; }
   fieldset[data-menu="categories"] legend, fieldset[data-menu="accessoires"] legend { color: #2f5a80; }
   fieldset[data-menu="collaborations"] { border-left-color: #6a2f80; background: #f8f3fb; }
@@ -324,9 +325,9 @@ let filtersByMenu = {};
 let editingId = null;
 
 const MENU_LABELS = {
-  categories: 'Catégories (visible sur Collection)',
+  categories: 'Catégories (visible sur Collection) — choisissez ici en premier',
   nouveautes: 'Nouveautés (visible sur Accueil + Nouveautés)',
-  nouveautes_categories: 'Catégories (visible sur Nouveautés)',
+  nouveautes_categories: 'Catégories (visible sur Nouveautés) — optionnel, en plus de la vraie catégorie ci-dessus',
   accessoires: 'Accessoires (visible sur Accessoires)',
   collaborations: 'Collaborations (visible sur Collaborations)',
   collections: 'Saison (visible sur Collection)'
@@ -491,6 +492,19 @@ async function loadFilters() {
       grid.appendChild(label);
     });
     fieldset.appendChild(grid);
+
+    // This "Accessoires" option looks identical to the real one in
+    // Catégories (visible sur Collection) but is a separate, independent
+    // tag just for the Nouveautés page - clicking it alone doesn't make
+    // Matière appear and doesn't satisfy the "choisissez une catégorie"
+    // requirement, which confused testers, so it gets its own reminder.
+    if (menu === 'nouveautes_categories') {
+      const note = document.createElement('p');
+      note.className = 'field-hint field-hint-neutral';
+      note.textContent = 'Ceci ne remplace pas la vraie catégorie (Catégories visible sur Collection, ci-dessus) - cochez toujours celle-là en premier.';
+      fieldset.appendChild(note);
+    }
+
     container.appendChild(fieldset);
   });
 }
