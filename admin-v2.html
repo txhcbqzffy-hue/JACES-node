@@ -566,7 +566,10 @@ document.getElementById('add-review-btn').addEventListener('click', () => {
 });
 document.getElementById('add-variant-btn').addEventListener('click', () => {
   document.getElementById('variants-list').appendChild(variantRow());
+  updateProgress();
 });
+document.getElementById('variants-list').addEventListener('input', updateProgress);
+document.getElementById('variants-list').addEventListener('change', updateProgress);
 
 function rebuildVariantRows() {
   // Re-render existing rows when switching product type, so the Taille
@@ -603,6 +606,7 @@ function renderCategoryPills() {
   const options = (filtersByMenu.categories || []).filter((f) => (f.label || f.name) !== 'Accessoires' && (f.label || f.name) !== 'Tout voir');
   renderSinglePillGroup(document.getElementById('vetement-category-pills'), options, state.categoryId, (id) => {
     state.categoryId = id;
+    renderCategoryPills();
     updateProgress();
     updateNouveauteCategoryPreview();
   });
@@ -612,6 +616,7 @@ function renderAccessoryTypePills() {
   const options = filtersByMenu.accessoires || [];
   renderSinglePillGroup(document.getElementById('accessoire-type-pills'), options, state.accessoryTypeId, (id) => {
     state.accessoryTypeId = id;
+    renderAccessoryTypePills();
     updateProgress();
     updateNouveauteCategoryPreview();
   });
@@ -621,6 +626,7 @@ function renderCollaborationPills() {
   const options = (filtersByMenu.collaborations || []).filter((f) => (f.label || f.name) !== 'Créations exclusives' && (f.label || f.name) !== 'Tout voir');
   renderSinglePillGroup(document.getElementById('collaboration-brand-pills'), options, state.collaborationId, (id) => {
     state.collaborationId = id;
+    renderCollaborationPills();
     updateProgress();
   });
 }
@@ -628,6 +634,7 @@ function renderCollaborationPills() {
 function renderSeasonPills() {
   renderSinglePillGroup(document.getElementById('season-pills'), filtersByMenu.collections || [], state.seasonId, (id) => {
     state.seasonId = id;
+    renderSeasonPills();
   });
 }
 
@@ -635,6 +642,7 @@ function renderNouveauteTagPills() {
   const options = (filtersByMenu.nouveautes || []).filter((f) => (f.label || f.name || '').trim() !== 'Tout voir');
   renderSinglePillGroup(document.getElementById('nouveaute-tag-pills'), options, state.nouveauteTagId, (id) => {
     state.nouveauteTagId = id;
+    renderNouveauteTagPills();
   });
 }
 
