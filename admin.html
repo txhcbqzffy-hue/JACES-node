@@ -453,7 +453,18 @@ async function loadFilters() {
 
   const container = document.getElementById('filters-container');
   container.innerHTML = '';
-  Object.keys(filtersByMenu).forEach((menu) => {
+  // Explicit display order (Saison before Collaborations) instead of the
+  // API's alphabetical menu order.
+  const MENU_ORDER = ['accessoires', 'categories', 'collections', 'collaborations', 'nouveautes', 'nouveautes_categories'];
+  const menuKeys = Object.keys(filtersByMenu).sort((a, b) => {
+    const indexA = MENU_ORDER.indexOf(a);
+    const indexB = MENU_ORDER.indexOf(b);
+    if (indexA === -1 && indexB === -1) return a.localeCompare(b);
+    if (indexA === -1) return 1;
+    if (indexB === -1) return -1;
+    return indexA - indexB;
+  });
+  menuKeys.forEach((menu) => {
     const fieldset = document.createElement('fieldset');
     fieldset.dataset.menu = menu;
     const legend = document.createElement('legend');
