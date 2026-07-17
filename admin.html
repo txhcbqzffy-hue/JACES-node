@@ -455,7 +455,7 @@ async function loadFilters() {
   container.innerHTML = '';
   // Explicit display order (Saison before Collaborations) instead of the
   // API's alphabetical menu order.
-  const MENU_ORDER = ['accessoires', 'categories', 'collections', 'collaborations', 'nouveautes', 'nouveautes_categories'];
+  const MENU_ORDER = ['accessoires', 'categories', 'collections', 'collaborations', 'nouveautes_categories', 'nouveautes'];
   const menuKeys = Object.keys(filtersByMenu).sort((a, b) => {
     const indexA = MENU_ORDER.indexOf(a);
     const indexB = MENU_ORDER.indexOf(b);
