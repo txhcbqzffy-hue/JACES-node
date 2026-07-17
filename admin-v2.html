@@ -66,18 +66,6 @@
   .layout { display: grid; grid-template-columns: minmax(0,1fr) 280px; gap: 14px; align-items: start; }
   @media (max-width: 880px) { .layout { grid-template-columns: 1fr; } }
 
-  .progress-bar {
-    display: flex; align-items: center; gap: 10px; background: #fff; border: 1px solid #d8cfc2; border-radius: 6px;
-    padding: 7px 12px; margin-bottom: 10px; font-size: 0.72rem; color: #8a8175; flex-wrap: wrap;
-  }
-  .progress-bar .p-item { display: flex; align-items: center; gap: 4px; }
-  .progress-bar .p-item.done { color: #2f6b3a; }
-  .progress-bar .dot {
-    width: 12px; height: 12px; border-radius: 50%; border: 1.5px solid #c8bfb3; flex: 0 0 auto;
-    display: flex; align-items: center; justify-content: center; font-size: 0.5rem; color: transparent;
-  }
-  .progress-bar .p-item.done .dot { background: #2f6b3a; border-color: #2f6b3a; color: #fff; }
-
   .step {
     background: #fff; border: 1px solid #d8cfc2; border-radius: 6px; padding: 10px 14px; margin-bottom: 8px;
   }
@@ -204,8 +192,6 @@
   <main>
     <div class="layout">
       <div>
-        <div class="progress-bar" id="progress-list"></div>
-
         <form id="product-form">
           <input type="hidden" id="product-id">
 
@@ -728,45 +714,7 @@ document.getElementById('f-nouveaute-tout-voir').addEventListener('change', (e) 
   updateNouveauteCategoryPreview();
 });
 
-// ---------------------------------------------------------------------
-// Progress checklist
-// ---------------------------------------------------------------------
-function getTypeCompletion() {
-  if (state.productType === 'vetement') return !!state.categoryId;
-  if (state.productType === 'accessoire') {
-    const hasVariant = Array.from(document.querySelectorAll('#variants-list .variant-row')).some((row) => {
-      const color = row.querySelector('.variant-color')?.value;
-      const stock = Number(row.querySelector('input[type="number"]')?.value) || 0;
-      return color && stock > 0;
-    });
-    return !!state.accessoryTypeId && state.materials.size > 0 && hasVariant;
-  }
-  if (state.productType === 'collaboration') return !!(state.collaborationId || state.exclusive);
-  return false;
-}
-
-function updateProgress() {
-  const hasName = !!document.getElementById('f-name').value.trim();
-  const hasPrice = Number(document.getElementById('f-price').value) > 0;
-  const hasImage = Array.from(document.querySelectorAll('#images-list input')).some((i) => i.value.trim());
-  const hasType = !!state.productType;
-  const typeComplete = hasType && getTypeCompletion();
-
-  const items = [
-    { label: 'Nom', done: hasName },
-    { label: 'Prix', done: hasPrice },
-    { label: 'Image', done: hasImage },
-    { label: 'Type', done: hasType },
-    { label: 'Détails du type', done: typeComplete }
-  ];
-
-  const list = document.getElementById('progress-list');
-  list.innerHTML = items.map((item) => `
-    <span class="p-item${item.done ? ' done' : ''}"><span class="dot">${item.done ? '✓' : ''}</span>${item.label}</span>
-  `).join('');
-
-  return items.every((item) => item.done);
-}
+function updateProgress() {}
 
 ['f-name', 'f-price'].forEach((id) => {
   document.getElementById(id).addEventListener('input', updateProgress);
