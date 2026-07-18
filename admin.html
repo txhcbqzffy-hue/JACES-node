@@ -8,12 +8,16 @@
 <style>
   :root { color-scheme: light; }
   * { box-sizing: border-box; }
+  html, body { height: 100%; }
   body {
     margin: 0;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Manrope, sans-serif;
     background: #f5f1ea;
     color: #1b1a17;
+    overflow: hidden;
   }
+  #app { display: flex; flex-direction: column; height: 100vh; }
+  #app[hidden] { display: none; }
   header {
     padding: 10px 18px;
     background: #171411;
@@ -21,6 +25,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
+    flex: 0 0 auto;
   }
   header h1 { font-size: 1.05rem; margin: 0; letter-spacing: 0.04em; text-transform: uppercase; }
   header button {
@@ -31,7 +36,8 @@
     font-size: 0.78rem;
     cursor: pointer;
   }
-  main { max-width: 1440px; margin: 0 auto; padding: 14px; }
+  main { max-width: 1440px; margin: 0 auto; padding: 14px; flex: 1 1 auto; min-height: 0; width: 100%; }
+  .layout, .layout > div { height: 100%; min-height: 0; }
   .gate {
     max-width: 360px;
     margin: 15vh auto;
@@ -53,7 +59,8 @@
     cursor: pointer;
   }
   .gate-error { color: #a5321f; font-size: 0.8rem; min-height: 1.2em; }
-  .layout { display: grid; grid-template-columns: minmax(0,1fr) 300px; gap: 14px; align-items: start; }
+  .layout { display: grid; grid-template-columns: minmax(0,1fr) 300px; gap: 14px; align-items: stretch; }
+  .layout > div:first-child { overflow-y: auto; padding-right: 4px; }
   .card { background: #fff; border: 1px solid #d8cfc2; padding: 16px 18px; margin-bottom: 12px; }
   .card h2 { margin-top: 0; margin-bottom: 10px; font-size: 0.92rem; text-transform: uppercase; letter-spacing: 0.05em; }
   .field { margin-bottom: 11px; }
@@ -70,6 +77,7 @@
   @media (max-width: 900px) { .field-wide-row { grid-template-columns: 1fr; } }
   .field-wide-row .field { margin-bottom: 0; }
   .field-wide { background: #faf6ee; border: 1px solid #eee3d2; padding: 12px 13px; }
+  #images-list, #variants-list { max-height: 140px; overflow-y: auto; padding-right: 4px; }
   .field-collapsible { margin-bottom: 10px; }
   .field-collapsible summary { cursor: pointer; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.05em; color: #595149; padding: 5px 0; list-style: none; }
   .field-collapsible summary::-webkit-details-marker { display: none; }
@@ -99,7 +107,7 @@
     display: flex; gap: 10px; margin-top: 12px; position: sticky; bottom: 0; z-index: 10;
     background: #fff; padding: 12px 0 6px; border-top: 1px solid #e4ddd1;
   }
-  .sidebar-col { position: sticky; top: 14px; max-height: calc(100vh - 28px); overflow-y: auto; }
+  .sidebar-col { overflow-y: auto; }
   .actions button { flex: 1; padding: 10px; font-size: 0.82rem; letter-spacing: 0.05em; text-transform: uppercase; cursor: pointer; }
   .btn-secondary { background: #ece5d8; border: 1px solid #c8bfb3; color: #1b1a17; }
   .status-msg { font-size: 0.84rem; margin-top: 8px; min-height: 1.2em; }
@@ -115,6 +123,14 @@
   fieldset[data-menu="nouveautes"] legend, fieldset[data-menu="nouveautes_categories"] legend { color: #a5601f; }
   fieldset[data-menu="collections"] { border-left-color: #2f6b3a; background: #f2f8f3; }
   fieldset[data-menu="collections"] legend { color: #2f6b3a; }
+  .is-locked { opacity: 0.45; }
+  .is-locked .checkbox-grid label, .is-locked label { cursor: not-allowed; }
+  .material-field-compact {
+    padding: 7px 9px; background: #f7f5f0; border: 1px dashed #d8cfc2;
+  }
+  .material-field-compact label { font-size: 0.66rem; margin-bottom: 4px; }
+  .material-field-compact .checkbox-grid label { font-size: 0.74rem; }
+  .material-field-compact .field-hint { font-size: 0.66rem; margin-top: 4px; }
   #product-filter-select {
     width: 100%; padding: 7px 9px; border: 1px solid #c8bfb3; font-size: 0.8rem; background: #fffcf7; color: #15120f; margin-bottom: 10px;
   }
@@ -191,8 +207,8 @@
 
             <div id="filters-container"></div>
 
-            <details class="field field-collapsible" id="material-field" hidden open>
-              <summary>Mati&egrave;re (filtre Accessoires)</summary>
+            <div class="field material-field-compact is-locked" id="material-field">
+              <label>Mati&egrave;re (filtre Accessoires)</label>
               <div class="checkbox-grid" id="material-checkboxes">
                 <label><input type="checkbox" name="material" value="cuir"> Cuir</label>
                 <label><input type="checkbox" name="material" value="metal"> M&eacute;tal</label>
@@ -201,7 +217,7 @@
                 <label><input type="checkbox" name="material" value="coton"> Coton</label>
               </div>
               <p class="field-hint" id="material-required-hint">Obligatoire : au moins une mati&egrave;re, car un accessoire (Sacs/Bijoux/Ceintures/Foulards) est coch&eacute; ci-dessus.</p>
-            </details>
+            </div>
 
             <details class="field-collapsible">
               <summary>Style, entretien, avis clients, photos (optionnel)</summary>
@@ -542,12 +558,12 @@ async function loadFilters() {
 
     container.appendChild(fieldset);
 
-    // Sacs/Bijoux/Ceintures/Foulards only make sense once "Accessoires" is
-    // picked as the Collection category, so this whole fieldset stays
-    // hidden until then instead of always being visible.
+    // Sacs/Bijoux/Ceintures/Foulards stays visible but locked (greyed out,
+    // radios disabled) until "Accessoires" is picked as the Collection
+    // category - not hidden, so it's always clear the option exists.
     if (menu === 'accessoires') {
       fieldset.id = 'accessoires-type-fieldset';
-      fieldset.hidden = true;
+      fieldset.classList.add('is-locked');
       // Matière only makes sense right after picking an accessory type, so
       // it's moved to sit directly under this fieldset instead of at the
       // bottom of the whole classification block.
@@ -654,11 +670,12 @@ function fillFormWithProduct(product) {
   document.querySelectorAll('#filters-container input:not([name="material"])').forEach((cb) => {
     cb.checked = filterIds.has(String(cb.value));
   });
-  // Reveal the Accessoires-type fieldset first (based on the just-restored
-  // checked state) before clearing/evaluating anything that depends on it,
-  // so a saved accessory product's Sacs/Bijoux/... selection isn't wiped.
-  const accessoryTypeFieldset = document.getElementById('accessoires-type-fieldset');
-  if (accessoryTypeFieldset) accessoryTypeFieldset.hidden = !isAccessoryCategorySelected();
+  // Accessoires-type/Matière stay visible (just locked/unlocked based on
+  // the just-restored checked state), so it's safe to call the normal
+  // update functions here - they only clear a checkbox when disabling it,
+  // which is a no-op if the restored state already left it unchecked.
+  updateAccessoryTypeFieldsetVisibility();
+  updateMaterialCheckboxAvailability();
   ['categories', 'collections', 'nouveautes', 'nouveautes_categories'].forEach((menu) => {
     const fieldset = document.querySelector(`#filters-container fieldset[data-menu="${menu}"]`);
     if (fieldset) fieldset.hidden = isCollaborationSelected();
@@ -666,7 +683,6 @@ function fillFormWithProduct(product) {
   const collaborationFieldset = document.querySelector('#filters-container fieldset[data-menu="collaborations"]');
   if (collaborationFieldset) collaborationFieldset.hidden = isRegularClassificationSelected();
   updateVariantSizeAvailability();
-  updateMaterialCheckboxAvailability();
 
   document.getElementById('form-status').textContent = '';
   window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -912,12 +928,11 @@ function updateAccessoryTypeFieldsetVisibility() {
   const enable = isAccessoryCategorySelected();
   const fieldset = document.getElementById('accessoires-type-fieldset');
   if (!fieldset) return;
-  fieldset.hidden = !enable;
-  if (!enable) {
-    // Sacs/Bijoux/Ceintures/Foulards render as radio inputs (single-choice
-    // within the menu), not checkboxes - clear whichever type is present.
-    fieldset.querySelectorAll('input').forEach((cb) => { cb.checked = false; });
-  }
+  fieldset.classList.toggle('is-locked', !enable);
+  fieldset.querySelectorAll('input').forEach((cb) => {
+    cb.disabled = !enable;
+    if (!enable) cb.checked = false;
+  });
 }
 
 // Accessoires don't use a clothing size, so the Taille select in each
@@ -935,7 +950,7 @@ function updateVariantSizeAvailability() {
 // Foulards is checked, so it's never "asked" before that.
 function updateMaterialCheckboxAvailability() {
   const enable = isAccessoryTypeSelected();
-  document.getElementById('material-field').hidden = !enable;
+  document.getElementById('material-field').classList.toggle('is-locked', !enable);
   document.querySelectorAll('#material-checkboxes input[type="checkbox"]').forEach((cb) => {
     cb.disabled = !enable;
     if (!enable) cb.checked = false;
