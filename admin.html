@@ -1062,8 +1062,9 @@ function resetForm() {
   document.getElementById('f-care-instructions').value = '';
   document.getElementById('f-show-in-related').checked = false;
   document.getElementById('images-list').innerHTML = '';
-  document.getElementById('images-list').appendChild(imageRow());
+  for (let i = 0; i < 4; i++) document.getElementById('images-list').appendChild(imageRow());
   document.getElementById('variants-list').innerHTML = '';
+  document.getElementById('variants-list').appendChild(variantColorGroup());
   document.getElementById('review-photos-list').innerHTML = '';
   document.getElementById('reviews-list').innerHTML = '';
   document.getElementById('f-fit-rating').value = 'normal';
