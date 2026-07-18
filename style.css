@@ -6569,6 +6569,20 @@ body.header-scrolled .header .submenu a.submenu-link-active {
   background: #1b1a17;
 }
 
+.collection-page-body .header .nav a.active,
+.collection-page-body .header .nav a[aria-current="page"],
+.home-page .header .nav a.active,
+.home-page .header .nav a[aria-current="page"] {
+  color: #c1517a;
+}
+
+.collection-page-body .header .nav a.active::after,
+.collection-page-body .header .nav a[aria-current="page"]::after,
+.home-page .header .nav a.active::after,
+.home-page .header .nav a[aria-current="page"]::after {
+  background: #c1517a;
+}
+
 .collection-page .section-intro {
   max-width: 840px;
   text-align: center;
