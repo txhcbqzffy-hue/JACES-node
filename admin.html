@@ -1288,14 +1288,17 @@ document.getElementById('product-form').addEventListener('submit', async (e) => 
   const nouveauteTag = checkedFilters.find((f) => f.menu === 'nouveautes')?.slug || '';
 
   // Every product needs exactly one classification: a Collection category
-  // (Robes/Tops/.../Accessoires), an Accessoires type (Sacs/Bijoux/...), or
-  // a Collaboration (Tout voir/JACES x .../...) - all mutually exclusive
-  // radio groups, enforced live by enforceCollaborationExclusivity.
+  // (Robes/Tops/.../Accessoires), an Accessoires type (Sacs/Bijoux/...), a
+  // Collaboration (Tout voir/JACES x .../...), or a Nouveautés category on
+  // its own (the cross-lock only makes the Catégories match optional, not
+  // required) - all mutually exclusive radio groups, enforced live by
+  // enforceCollaborationExclusivity.
   const hasCategory = checkedFilters.some((f) => f.menu === 'categories');
   const hasAccessoryType = checkedFilters.some((f) => f.menu === 'accessoires');
   const hasCollaboration = checkedFilters.some((f) => f.menu === 'collaborations');
-  if (!hasCategory && !hasAccessoryType && !hasCollaboration) {
-    statusEl.textContent = 'Erreur: choisissez une catégorie (Robes/Tops/...), un type d\'accessoire (Sacs/Bijoux/...) ou une collaboration.';
+  const hasNouveauteCategory = checkedFilters.some((f) => f.menu === 'nouveautes_categories');
+  if (!hasCategory && !hasAccessoryType && !hasCollaboration && !hasNouveauteCategory) {
+    statusEl.textContent = 'Erreur: choisissez une catégorie (Robes/Tops/...), un type d\'accessoire (Sacs/Bijoux/...), une collaboration ou une catégorie Nouveautés.';
     statusEl.className = 'status-msg error';
     submitBtn.disabled = false;
     return;
