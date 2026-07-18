@@ -48,7 +48,7 @@ function getPageMenus(pageName) {
 
   const map = {
     'collection': ['categories', 'collections'],
-    'nouveautes': ['nouveautes'],
+    'nouveautes': ['nouveautes', 'nouveautes_categories'],
     'collaborations': ['collaborations'],
     'collaboration': ['collaborations'],
     'accessoires': ['accessoires']
