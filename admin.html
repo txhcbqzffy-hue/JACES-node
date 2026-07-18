@@ -64,6 +64,18 @@
   .placeholder-card h2 { margin: 0 0 6px; font-size: 1.05rem; }
   .step-help-note { font-size: 0.82rem; color: #8a8175; margin: 0 0 14px; line-height: 1.5; }
   .marketing-grid { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 4px 14px; }
+  .marketing-group { border: 1px solid #d8cfc2; border-left-width: 4px; border-radius: 8px; padding: 12px 14px 14px; margin-top: 14px; }
+  .marketing-group .field-title { margin: 0 0 8px; font-size: 0.76rem; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 700; }
+  .marketing-group--global { border-left-color: #8a8175; background: #f7f5f0; }
+  .marketing-group--global .field-title { color: #6f675f; }
+  .marketing-group--nouveautes { border-left-color: #a5601f; background: #fbf5ec; }
+  .marketing-group--nouveautes .field-title { color: #a5601f; }
+  .marketing-group--collection { border-left-color: #2f6b3a; background: #f2f8f3; }
+  .marketing-group--collection .field-title { color: #2f6b3a; }
+  .marketing-group--collaborations { border-left-color: #6a2f80; background: #f8f3fb; }
+  .marketing-group--collaborations .field-title { color: #6a2f80; }
+  .marketing-group--accessoires { border-left-color: #2f5a80; background: #f3f7fb; }
+  .marketing-group--accessoires .field-title { color: #2f5a80; }
   .placeholder-card p { margin: 0; color: #8a8175; font-size: 0.88rem; }
 
   .gate {
@@ -377,21 +389,25 @@
       <div class="placeholder-card"><span class="placeholder-icon">👤</span><h2>Clients</h2><p>Bientôt disponible.</p></div>
     </div>
     <div id="section-marketing" class="section-panel" hidden>
-      <div class="card" style="max-width:640px;">
+      <div class="card" style="max-width:700px;">
         <h2>Contenu marketing</h2>
         <p class="step-help-note">Modifie le bandeau affiché en haut de toutes les pages et les vignettes de catégories sur la page Nouveautés - visible immédiatement sur tout le site.</p>
         <form id="marketing-form">
-          <div class="field">
-            <label for="mk-banner-text">Bandeau (toutes les pages)</label>
-            <input type="text" id="mk-banner-text" placeholder="Livraison offerte dès 79 € | Retours offerts">
+          <div class="marketing-group marketing-group--global">
+            <p class="field-title">Réglages globaux</p>
+            <div class="field">
+              <label for="mk-banner-text">Bandeau (toutes les pages)</label>
+              <input type="text" id="mk-banner-text" placeholder="Livraison offerte dès 79 € | Retours offerts">
+            </div>
+
+            <div class="field">
+              <label for="mk-hero-image">Image de couverture (page d'accueil)</label>
+              <input type="url" id="mk-hero-image" placeholder="https://...">
+            </div>
           </div>
 
-          <div class="field">
-            <label for="mk-hero-image">Image de couverture (page d'accueil)</label>
-            <input type="url" id="mk-hero-image" placeholder="https://...">
-          </div>
-
-          <p class="field-title" style="margin-top:16px;">Vignettes de catégories (page Nouveautés)</p>
+          <div class="marketing-group marketing-group--nouveautes">
+          <p class="field-title">Vignettes de catégories (page Nouveautés)</p>
           <div class="marketing-grid">
             <div class="field">
               <label for="mk-thumb-all">Tout voir</label>
@@ -422,8 +438,10 @@
               <input type="url" id="mk-thumb-accessoires" placeholder="https://...">
             </div>
           </div>
+          </div>
 
-          <p class="field-title" style="margin-top:16px;">Vignettes de catégories (page Collection)</p>
+          <div class="marketing-group marketing-group--collection">
+          <p class="field-title">Vignettes de catégories (page Collection)</p>
           <div class="marketing-grid">
             <div class="field">
               <label for="mk-col-thumb-all">Tout voir</label>
@@ -454,8 +472,10 @@
               <input type="url" id="mk-col-thumb-accessoires" placeholder="https://...">
             </div>
           </div>
+          </div>
 
-          <p class="field-title" style="margin-top:16px;">Vignettes de marques (page Collaborations)</p>
+          <div class="marketing-group marketing-group--collaborations">
+          <p class="field-title">Vignettes de marques (page Collaborations)</p>
           <div class="marketing-grid">
             <div class="field">
               <label for="mk-cb-thumb-all">Tout voir</label>
@@ -482,8 +502,10 @@
               <input type="url" id="mk-cb-thumb-saint-laurent" placeholder="https://...">
             </div>
           </div>
+          </div>
 
-          <p class="field-title" style="margin-top:16px;">Vignettes de catégories (page Accessoires)</p>
+          <div class="marketing-group marketing-group--accessoires">
+          <p class="field-title">Vignettes de catégories (page Accessoires)</p>
           <div class="marketing-grid">
             <div class="field">
               <label for="mk-acc-thumb-all">Tout voir</label>
@@ -505,6 +527,7 @@
               <label for="mk-acc-thumb-foulards">Foulards</label>
               <input type="url" id="mk-acc-thumb-foulards" placeholder="https://...">
             </div>
+          </div>
           </div>
 
           <p class="status-msg" id="marketing-status"></p>
