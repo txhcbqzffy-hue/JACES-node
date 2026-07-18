@@ -117,6 +117,10 @@
   .checkbox-grid { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 5px; }
   .checkbox-grid label { display: flex; align-items: center; gap: 6px; font-size: 0.86rem; text-transform: none; letter-spacing: 0; color: #1b1a17; }
   .checkbox-grid input { width: auto; }
+  /* Scoped to fieldsets that aren't already dimmed via .is-locked (which
+     disables ALL its own inputs at once) - stacking both opacities would
+     make an already-locked fieldset's text nearly invisible. */
+  fieldset:not(.is-locked) .checkbox-grid label:has(input:disabled) { opacity: 0.4; cursor: not-allowed; }
   .actions {
     display: flex; gap: 10px; margin-top: 12px; position: sticky; bottom: 0; z-index: 10;
     background: #fff; padding: 12px 0 6px; border-top: 1px solid #e4ddd1;
@@ -670,6 +674,7 @@ function resetForm() {
   updateAccessoryTypeFieldsetVisibility();
   updateCollaborationHiddenFieldsets();
   updateCollaborationFieldsetVisibility();
+  updateCategoryCrossLock();
   updateMaterialCheckboxAvailability();
   document.getElementById('form-status').textContent = '';
   document.getElementById('form-status').className = 'status-msg';
@@ -739,6 +744,7 @@ function fillFormWithProduct(product) {
   // which is a no-op if the restored state already left it unchecked.
   updateAccessoryTypeFieldsetVisibility();
   updateMaterialCheckboxAvailability();
+  updateCategoryCrossLock();
   ['categories', 'collections', 'nouveautes', 'nouveautes_categories'].forEach((menu) => {
     const fieldset = document.querySelector(`#filters-container fieldset[data-menu="${menu}"]`);
     if (fieldset) fieldset.hidden = isCollaborationSelected();
@@ -1099,6 +1105,52 @@ function updateCollaborationHiddenFieldsets() {
   });
 }
 
+// The real category (Catégories visible sur Collection, or Sacs/Bijoux/...
+// implying "Accessoires") and Catégories (visible sur Nouveautés) lock
+// each other, but only PARTIALLY: whichever gets picked first is the
+// source and stays fully open; in the OTHER fieldset, every MISMATCHED
+// option disables, but the matching one stays enabled and optional - it's
+// a possibility, not a requirement, so the admin can also just leave that
+// side unchecked entirely if they don't want the product tagged there.
+function updateCategoryCrossLock() {
+  const categoryInput = document.querySelector('#filters-container input[data-menu="categories"]:checked:not(:disabled)');
+  const accessoryTypeInput = document.querySelector('#filters-container input[data-menu="accessoires"]:checked:not(:disabled)');
+  const nouveauteCategoryInput = document.querySelector('#filters-container input[data-menu="nouveautes_categories"]:checked:not(:disabled)');
+
+  let label = null;
+  let source = null;
+  if (categoryInput) {
+    const filter = (filtersByMenu.categories || []).find((f) => String(f.id) === categoryInput.value);
+    label = filter ? (filter.label || filter.name) : null;
+    source = 'categories';
+  } else if (accessoryTypeInput) {
+    label = 'Accessoires';
+    source = 'categories';
+  } else if (nouveauteCategoryInput) {
+    const filter = (filtersByMenu.nouveautes_categories || []).find((f) => String(f.id) === nouveauteCategoryInput.value);
+    label = filter ? (filter.label || filter.name) : null;
+    source = 'nouveautes';
+  }
+
+  document.querySelectorAll('#filters-container input[data-menu="nouveautes_categories"]').forEach((input) => {
+    if (source === 'nouveautes') { input.disabled = false; return; }
+    const filter = (filtersByMenu.nouveautes_categories || []).find((f) => String(f.id) === input.value);
+    const optionLabel = filter ? (filter.label || filter.name) : '';
+    const mismatched = !!label && optionLabel !== label;
+    input.disabled = mismatched;
+    if (mismatched && input.checked) input.checked = false;
+  });
+
+  document.querySelectorAll('#filters-container input[data-menu="categories"]').forEach((input) => {
+    if (source === 'categories') { input.disabled = false; return; }
+    const filter = (filtersByMenu.categories || []).find((f) => String(f.id) === input.value);
+    const optionLabel = filter ? (filter.label || filter.name) : '';
+    const mismatched = !!label && optionLabel !== label;
+    input.disabled = mismatched;
+    if (mismatched && input.checked) input.checked = false;
+  });
+}
+
 function isRegularClassificationSelected() {
   return document.querySelectorAll('#filters-container input[data-menu="categories"]:checked, #filters-container input[data-menu="accessoires"]:checked, #filters-container input[data-menu="collections"]:checked').length > 0;
 }
@@ -1121,6 +1173,7 @@ document.getElementById('filters-container').addEventListener('change', (event) 
   enforceCollaborationExclusivity(event);
   updateCollaborationHiddenFieldsets();
   updateCollaborationFieldsetVisibility();
+  updateCategoryCrossLock();
   autoCheckNouveauteToutVoir(event);
   updateAccessoryTypeFieldsetVisibility();
   updateVariantSizeAvailability();
