@@ -554,6 +554,7 @@ function resetForm() {
   document.querySelectorAll('#filters-container input:not([name="material"])').forEach((cb) => { cb.checked = false; });
   updateAccessoryTypeFieldsetVisibility();
   updateCollaborationHiddenFieldsets();
+  updateCollaborationFieldsetVisibility();
   updateMaterialCheckboxAvailability();
   document.getElementById('form-status').textContent = '';
   document.getElementById('form-status').className = 'status-msg';
@@ -613,6 +614,8 @@ function fillFormWithProduct(product) {
     const fieldset = document.querySelector(`#filters-container fieldset[data-menu="${menu}"]`);
     if (fieldset) fieldset.hidden = isCollaborationSelected();
   });
+  const collaborationFieldset = document.querySelector('#filters-container fieldset[data-menu="collaborations"]');
+  if (collaborationFieldset) collaborationFieldset.hidden = isRegularClassificationSelected();
   updateVariantSizeAvailability();
   updateMaterialCheckboxAvailability();
 
@@ -920,9 +923,28 @@ function updateCollaborationHiddenFieldsets() {
   });
 }
 
+function isRegularClassificationSelected() {
+  return document.querySelectorAll('#filters-container input[data-menu="categories"]:checked, #filters-container input[data-menu="accessoires"]:checked, #filters-container input[data-menu="collections"]:checked').length > 0;
+}
+
+// Mirror of updateCollaborationHiddenFieldsets(): a "regular" catalog item
+// (Catégorie/Accessoire/Saison) doesn't use Collaborations either - hides
+// (and clears) just that one fieldset, since Nouveautés stays independent
+// and usable alongside a regular category.
+function updateCollaborationFieldsetVisibility() {
+  const hide = isRegularClassificationSelected();
+  const fieldset = document.querySelector('#filters-container fieldset[data-menu="collaborations"]');
+  if (!fieldset) return;
+  fieldset.hidden = hide;
+  if (hide) {
+    fieldset.querySelectorAll('input').forEach((cb) => { cb.checked = false; });
+  }
+}
+
 document.getElementById('filters-container').addEventListener('change', (event) => {
   enforceCollaborationExclusivity(event);
   updateCollaborationHiddenFieldsets();
+  updateCollaborationFieldsetVisibility();
   autoCheckNouveauteToutVoir(event);
   updateAccessoryTypeFieldsetVisibility();
   updateVariantSizeAvailability();
