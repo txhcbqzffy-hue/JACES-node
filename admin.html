@@ -66,6 +66,9 @@
   .row .field { flex: 1; }
   .list-row { display: flex; gap: 7px; margin-bottom: 6px; align-items: center; }
   .list-row input { flex: 1; }
+  .field-wide-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 11px; }
+  @media (max-width: 900px) { .field-wide-row { grid-template-columns: 1fr; } }
+  .field-wide-row .field { margin-bottom: 0; }
   .field-wide { background: #faf6ee; border: 1px solid #eee3d2; padding: 12px 13px; }
   .field-collapsible { margin-bottom: 10px; }
   .field-collapsible summary { cursor: pointer; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.05em; color: #595149; padding: 5px 0; list-style: none; }
@@ -84,7 +87,10 @@
   .review-row textarea { flex: 1; min-height: 36px; resize: vertical; }
   .list-row button, .add-btn { background: #ece5d8; border: 1px solid #c8bfb3; padding: 7px 10px; cursor: pointer; font-size: 0.78rem; }
   .add-btn { margin-top: 4px; }
-  fieldset { border: 1px solid #d8cfc2; margin-bottom: 10px; padding: 9px 11px; border-left-width: 4px; }
+  #filters-container { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; align-items: start; }
+  #filters-container > * { margin-bottom: 0; }
+  @media (max-width: 900px) { #filters-container { grid-template-columns: 1fr; } }
+  fieldset { border: 1px solid #d8cfc2; margin-bottom: 0; padding: 9px 11px; border-left-width: 4px; }
   legend { font-size: 0.76rem; text-transform: uppercase; letter-spacing: 0.05em; color: #595149; padding: 0 6px; font-weight: 700; }
   .checkbox-grid { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 5px; }
   .checkbox-grid label { display: flex; align-items: center; gap: 6px; font-size: 0.86rem; text-transform: none; letter-spacing: 0; color: #1b1a17; }
@@ -164,35 +170,24 @@
               </div>
             </div>
 
-            <div class="field field-wide">
-              <label>Images (liens Cloudinary / Dropbox)</label>
-              <div id="images-list"></div>
-              <button type="button" class="add-btn" id="add-image-btn">+ Ajouter une image</button>
-            </div>
+            <div class="field-wide-row">
+              <div class="field field-wide">
+                <label>Images (liens Cloudinary / Dropbox)</label>
+                <div id="images-list"></div>
+                <button type="button" class="add-btn" id="add-image-btn">+ Ajouter une image</button>
+              </div>
 
-            <div class="field field-wide">
-              <label>Variantes (taille / couleur / stock)</label>
-              <div id="variants-list"></div>
-              <button type="button" class="add-btn" id="add-variant-btn">+ Ajouter une variante</button>
+              <div class="field field-wide">
+                <label>Variantes (taille / couleur / stock)</label>
+                <div id="variants-list"></div>
+                <button type="button" class="add-btn" id="add-variant-btn">+ Ajouter une variante</button>
+              </div>
             </div>
 
             <div class="field">
               <label for="f-description">Description</label>
               <textarea id="f-description" required></textarea>
             </div>
-
-            <details class="field-collapsible">
-              <summary>Porté et style / Entretien (optionnel)</summary>
-              <div class="field">
-                <label for="f-style-notes">Porté et style / Taille et coupe</label>
-                <textarea id="f-style-notes"></textarea>
-              </div>
-
-              <div class="field">
-                <label for="f-care-instructions">Entretien</label>
-                <textarea id="f-care-instructions"></textarea>
-              </div>
-            </details>
 
             <div id="filters-container"></div>
 
@@ -208,43 +203,56 @@
               <p class="field-hint" id="material-required-hint">Obligatoire : au moins une mati&egrave;re, car un accessoire (Sacs/Bijoux/Ceintures/Foulards) est coch&eacute; ci-dessus.</p>
             </details>
 
-            <div class="field">
-              <label style="display:flex;align-items:center;gap:8px;font-weight:normal;">
-                <input type="checkbox" id="f-show-in-related" style="width:auto;">
-                Afficher en bas des fiches produit ("En ce moment")
-              </label>
-            </div>
-
-            <div class="row">
+            <details class="field-collapsible">
+              <summary>Style, entretien, avis clients, photos (optionnel)</summary>
               <div class="field">
-                <label for="f-fit-rating">Port&eacute;</label>
-                <select id="f-fit-rating">
-                  <option value="petit">Petit</option>
-                  <option value="normal" selected>Normal</option>
-                  <option value="grand">Grand</option>
-                </select>
+                <label for="f-style-notes">Porté et style / Taille et coupe</label>
+                <textarea id="f-style-notes"></textarea>
               </div>
+
               <div class="field">
-                <label for="f-quality-rating">Qualit&eacute;</label>
-                <select id="f-quality-rating">
-                  <option value="moyenne">Moyenne</option>
-                  <option value="bonne">Bonne</option>
-                  <option value="premium" selected>Premium</option>
-                </select>
+                <label for="f-care-instructions">Entretien</label>
+                <textarea id="f-care-instructions"></textarea>
               </div>
-            </div>
 
-            <div class="field">
-              <label>Avis clients</label>
-              <div id="reviews-list"></div>
-              <button type="button" class="add-btn" id="add-review-btn">+ Ajouter un avis</button>
-            </div>
+              <div class="field">
+                <label style="display:flex;align-items:center;gap:8px;font-weight:normal;">
+                  <input type="checkbox" id="f-show-in-related" style="width:auto;">
+                  Afficher en bas des fiches produit ("En ce moment")
+                </label>
+              </div>
 
-            <div class="field">
-              <label>Photos clientes (liens Cloudinary / Dropbox)</label>
-              <div id="review-photos-list"></div>
-              <button type="button" class="add-btn" id="add-review-photo-btn">+ Ajouter une photo cliente</button>
-            </div>
+              <div class="row">
+                <div class="field">
+                  <label for="f-fit-rating">Port&eacute;</label>
+                  <select id="f-fit-rating">
+                    <option value="petit">Petit</option>
+                    <option value="normal" selected>Normal</option>
+                    <option value="grand">Grand</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label for="f-quality-rating">Qualit&eacute;</label>
+                  <select id="f-quality-rating">
+                    <option value="moyenne">Moyenne</option>
+                    <option value="bonne">Bonne</option>
+                    <option value="premium" selected>Premium</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="field">
+                <label>Avis clients</label>
+                <div id="reviews-list"></div>
+                <button type="button" class="add-btn" id="add-review-btn">+ Ajouter un avis</button>
+              </div>
+
+              <div class="field">
+                <label>Photos clientes (liens Cloudinary / Dropbox)</label>
+                <div id="review-photos-list"></div>
+                <button type="button" class="add-btn" id="add-review-photo-btn">+ Ajouter une photo cliente</button>
+              </div>
+            </details>
 
             <p class="status-msg" id="form-status"></p>
 
