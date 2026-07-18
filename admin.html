@@ -459,6 +459,8 @@ function variantColorGroup(color = '', sizeStocks = {}) {
       <div class="variant-accessoire-stock">
         <input type="number" min="0" placeholder="Stock" class="variant-accessoire-stock-input" value="${accessoireValue}">
       </div>
+      <button type="button" class="move-btn move-up" title="Monter">▲</button>
+      <button type="button" class="move-btn move-down" title="Descendre">▼</button>
       <button type="button">✕</button>
     </div>
     <div class="variant-size-chips">
@@ -491,7 +493,15 @@ function variantColorGroup(color = '', sizeStocks = {}) {
     });
   });
 
-  row.querySelector('.variant-color-head button').addEventListener('click', () => row.remove());
+  row.querySelector('.variant-color-head button:not(.move-btn)').addEventListener('click', () => row.remove());
+  row.querySelector('.move-up').addEventListener('click', () => {
+    const prev = row.previousElementSibling;
+    if (prev) row.parentElement.insertBefore(row, prev);
+  });
+  row.querySelector('.move-down').addEventListener('click', () => {
+    const next = row.nextElementSibling;
+    if (next) row.parentElement.insertBefore(next, row);
+  });
   return row;
 }
 
