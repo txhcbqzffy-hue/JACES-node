@@ -1192,13 +1192,17 @@ function isRegularClassificationSelected() {
 // (and clears) just that one fieldset, since Nouveautés stays independent
 // and usable alongside a regular category.
 function updateCollaborationFieldsetVisibility() {
-  const hide = isRegularClassificationSelected();
+  // Always visible now (not hidden) - just locked/greyed like Accessoires-
+  // type/Matière, so it never jumps around the page depending on what's
+  // picked elsewhere.
+  const lock = isRegularClassificationSelected();
   const fieldset = document.querySelector('#filters-container fieldset[data-menu="collaborations"]');
   if (!fieldset) return;
-  fieldset.hidden = hide;
-  if (hide) {
-    fieldset.querySelectorAll('input').forEach((cb) => { cb.checked = false; });
-  }
+  fieldset.classList.toggle('is-locked', lock);
+  fieldset.querySelectorAll('input').forEach((cb) => {
+    cb.disabled = lock;
+    if (lock) cb.checked = false;
+  });
 }
 
 document.getElementById('filters-container').addEventListener('change', (event) => {
