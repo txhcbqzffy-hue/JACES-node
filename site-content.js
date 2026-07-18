@@ -10,14 +10,25 @@
         });
       }
 
-      // Nouveautés category thumbnails (.cat-nav-item only exists on that
-      // page - harmless no-op everywhere else).
-      document.querySelectorAll('.cat-nav-item[data-category]').forEach((item) => {
-        const url = content[`nouveautes_thumb_${item.dataset.category}`];
-        if (!url) return;
-        const img = item.querySelector('.cat-nav-circle img');
-        if (img) img.src = url;
-      });
+      // Category-nav-strip thumbnails (Nouveautés/Collection/Collaborations/
+      // Accessoires all have the same .cat-nav-item markup with overlapping
+      // data-category values like "robes" or "all" - keys are namespaced
+      // per page so editing one page's "Robes" thumbnail never touches
+      // another page's "Robes" thumbnail.
+      const body = document.body;
+      const pagePrefix = body.classList.contains('nouveautes-page') ? 'nouveautes'
+        : body.classList.contains('accessoires-page') ? 'accessoires'
+        : body.classList.contains('collaboration-page') ? 'collaborations'
+        : body.classList.contains('collection-page-body') ? 'collection'
+        : null;
+      if (pagePrefix) {
+        document.querySelectorAll('.cat-nav-item[data-category]').forEach((item) => {
+          const url = content[`${pagePrefix}_thumb_${item.dataset.category}`];
+          if (!url) return;
+          const img = item.querySelector('.cat-nav-circle img');
+          if (img) img.src = url;
+        });
+      }
 
       // Homepage cover image (the full-bleed "Cet été, ose aussi." hero) -
       // only exists on index.html (body.home-page), no-op elsewhere. Keeps

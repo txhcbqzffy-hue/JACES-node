@@ -422,6 +422,90 @@
             </div>
           </div>
 
+          <p class="field-title" style="margin-top:16px;">Vignettes de catégories (page Collection)</p>
+          <div class="marketing-grid">
+            <div class="field">
+              <label for="mk-col-thumb-all">Tout voir</label>
+              <input type="url" id="mk-col-thumb-all" placeholder="https://...">
+            </div>
+            <div class="field">
+              <label for="mk-col-thumb-robes">Robes</label>
+              <input type="url" id="mk-col-thumb-robes" placeholder="https://...">
+            </div>
+            <div class="field">
+              <label for="mk-col-thumb-tops">Tops</label>
+              <input type="url" id="mk-col-thumb-tops" placeholder="https://...">
+            </div>
+            <div class="field">
+              <label for="mk-col-thumb-jupes">Jupes</label>
+              <input type="url" id="mk-col-thumb-jupes" placeholder="https://...">
+            </div>
+            <div class="field">
+              <label for="mk-col-thumb-pantalons">Pantalons</label>
+              <input type="url" id="mk-col-thumb-pantalons" placeholder="https://...">
+            </div>
+            <div class="field">
+              <label for="mk-col-thumb-vestes">Vestes</label>
+              <input type="url" id="mk-col-thumb-vestes" placeholder="https://...">
+            </div>
+            <div class="field">
+              <label for="mk-col-thumb-accessoires">Accessoires</label>
+              <input type="url" id="mk-col-thumb-accessoires" placeholder="https://...">
+            </div>
+          </div>
+
+          <p class="field-title" style="margin-top:16px;">Vignettes de marques (page Collaborations)</p>
+          <div class="marketing-grid">
+            <div class="field">
+              <label for="mk-cb-thumb-all">Tout voir</label>
+              <input type="url" id="mk-cb-thumb-all" placeholder="https://...">
+            </div>
+            <div class="field">
+              <label for="mk-cb-thumb-nike">JACES x Nike</label>
+              <input type="url" id="mk-cb-thumb-nike" placeholder="https://...">
+            </div>
+            <div class="field">
+              <label for="mk-cb-thumb-chloe">JACES x Chloé</label>
+              <input type="url" id="mk-cb-thumb-chloe" placeholder="https://...">
+            </div>
+            <div class="field">
+              <label for="mk-cb-thumb-jacquemus">JACES x Jacquemus</label>
+              <input type="url" id="mk-cb-thumb-jacquemus" placeholder="https://...">
+            </div>
+            <div class="field">
+              <label for="mk-cb-thumb-dior">JACES x Dior</label>
+              <input type="url" id="mk-cb-thumb-dior" placeholder="https://...">
+            </div>
+            <div class="field">
+              <label for="mk-cb-thumb-saint-laurent">JACES x Saint Laurent</label>
+              <input type="url" id="mk-cb-thumb-saint-laurent" placeholder="https://...">
+            </div>
+          </div>
+
+          <p class="field-title" style="margin-top:16px;">Vignettes de catégories (page Accessoires)</p>
+          <div class="marketing-grid">
+            <div class="field">
+              <label for="mk-acc-thumb-all">Tout voir</label>
+              <input type="url" id="mk-acc-thumb-all" placeholder="https://...">
+            </div>
+            <div class="field">
+              <label for="mk-acc-thumb-sacs">Sacs</label>
+              <input type="url" id="mk-acc-thumb-sacs" placeholder="https://...">
+            </div>
+            <div class="field">
+              <label for="mk-acc-thumb-bijoux">Bijoux</label>
+              <input type="url" id="mk-acc-thumb-bijoux" placeholder="https://...">
+            </div>
+            <div class="field">
+              <label for="mk-acc-thumb-ceintures">Ceintures</label>
+              <input type="url" id="mk-acc-thumb-ceintures" placeholder="https://...">
+            </div>
+            <div class="field">
+              <label for="mk-acc-thumb-foulards">Foulards</label>
+              <input type="url" id="mk-acc-thumb-foulards" placeholder="https://...">
+            </div>
+          </div>
+
           <p class="status-msg" id="marketing-status"></p>
           <button type="submit" class="primary-btn" style="width:auto;padding:10px 26px;">Enregistrer</button>
         </form>
@@ -526,7 +610,25 @@ const MARKETING_FIELD_KEYS = {
   'mk-thumb-jupes': 'nouveautes_thumb_jupes',
   'mk-thumb-pantalons': 'nouveautes_thumb_pantalons',
   'mk-thumb-vestes': 'nouveautes_thumb_vestes',
-  'mk-thumb-accessoires': 'nouveautes_thumb_accessoires'
+  'mk-thumb-accessoires': 'nouveautes_thumb_accessoires',
+  'mk-col-thumb-all': 'collection_thumb_all',
+  'mk-col-thumb-robes': 'collection_thumb_robes',
+  'mk-col-thumb-tops': 'collection_thumb_tops',
+  'mk-col-thumb-jupes': 'collection_thumb_jupes',
+  'mk-col-thumb-pantalons': 'collection_thumb_pantalons',
+  'mk-col-thumb-vestes': 'collection_thumb_vestes',
+  'mk-col-thumb-accessoires': 'collection_thumb_accessoires',
+  'mk-cb-thumb-all': 'collaborations_thumb_all',
+  'mk-cb-thumb-nike': 'collaborations_thumb_nike',
+  'mk-cb-thumb-chloe': 'collaborations_thumb_chloe',
+  'mk-cb-thumb-jacquemus': 'collaborations_thumb_jacquemus',
+  'mk-cb-thumb-dior': 'collaborations_thumb_dior',
+  'mk-cb-thumb-saint-laurent': 'collaborations_thumb_saint-laurent',
+  'mk-acc-thumb-all': 'accessoires_thumb_all',
+  'mk-acc-thumb-sacs': 'accessoires_thumb_sacs',
+  'mk-acc-thumb-bijoux': 'accessoires_thumb_bijoux',
+  'mk-acc-thumb-ceintures': 'accessoires_thumb_ceintures',
+  'mk-acc-thumb-foulards': 'accessoires_thumb_foulards'
 };
 
 async function loadMarketingContent() {
