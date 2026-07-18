@@ -439,11 +439,9 @@ function buildOptionsHtml(options, current) {
 function variantColorGroup(color = '', sizeStocks = {}) {
   const row = document.createElement('div');
   row.className = 'variant-color-group';
-  row.draggable = true;
   const accessoireValue = sizeStocks.accessoire !== undefined ? sizeStocks.accessoire : '';
   row.innerHTML = `
     <div class="variant-color-head">
-      <span class="drag-handle" title="Glisser pour réordonner">⠿</span>
       <select class="variant-color">
         <option value="">Couleur</option>
         ${buildOptionsHtml(COLOR_OPTIONS, color)}
@@ -541,7 +539,6 @@ function enableDragReorder(containerId, itemSelector) {
 }
 
 enableDragReorder('images-list', '.list-row');
-enableDragReorder('variants-list', '.variant-color-group');
 
 document.getElementById('add-image-btn').addEventListener('click', () => {
   document.getElementById('images-list').appendChild(imageRow());
