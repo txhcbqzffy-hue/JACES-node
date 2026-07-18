@@ -5696,7 +5696,7 @@ body.account-modal-open {
 
 .nav a.active,
 .nav a[aria-current="page"] {
-  color: #1b1a17;
+  color: #c1517a;
   transition: none;
 }
 
@@ -5733,6 +5733,7 @@ body.header-scrolled .header,
 .nav a.active::after,
 .nav a[aria-current="page"]::after {
   width: 100%;
+  background: #c1517a;
   transition: none;
 }
 
