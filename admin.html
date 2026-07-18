@@ -855,7 +855,9 @@ function enableDragReorder(containerId, itemSelector) {
 enableDragReorder('images-list', '.list-row');
 
 document.getElementById('add-image-btn').addEventListener('click', () => {
-  document.getElementById('images-list').appendChild(imageRow());
+  const row = imageRow();
+  document.getElementById('images-list').appendChild(row);
+  row.scrollIntoView({ block: 'nearest' });
 });
 document.getElementById('add-review-photo-btn').addEventListener('click', () => {
   document.getElementById('review-photos-list').appendChild(reviewPhotoRow());
