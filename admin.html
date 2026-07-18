@@ -690,6 +690,13 @@ function fillFormWithProduct(product) {
 
 let allProducts = [];
 
+function formatDateAdded(value) {
+  if (!value) return '';
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return '';
+  return date.toLocaleDateString('fr-FR', { day: 'numeric', month: 'short', year: 'numeric' });
+}
+
 async function loadProductList() {
   const res = await apiFetch('/api/products');
   allProducts = await res.json();
@@ -718,11 +725,12 @@ function renderProductList() {
       .filter((filter) => (filter.label || filter.name) !== 'Tout voir')
       .map((filter) => `<span class="product-badge badge-${filter.menu}">${filter.label || filter.name}</span>`)
       .join('');
+    const addedDate = formatDateAdded(product.created_at);
     item.innerHTML = `
       ${img}
       <div class="meta">
         <strong>${product.name || 'Sans nom'}</strong>
-        <span class="price">${product.price || 0}€</span>
+        <span class="price">${product.price || 0}€${addedDate ? ` · ajouté le ${addedDate}` : ''}</span>
         ${badges ? `<div class="badges">${badges}</div>` : ''}
       </div>
       <button type="button" class="del" title="Supprimer">🗑</button>
