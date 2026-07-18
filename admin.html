@@ -1137,22 +1137,24 @@ function updateCategoryCrossLock() {
     source = 'nouveautes';
   }
 
+  // The non-source fieldset becomes a fully read-only mirror once there's
+  // a source: EVERY option there gets disabled, including the matching
+  // one (auto-checked to reflect it) - so it's never independently
+  // clickable/togglable from that side, only the source fieldset drives it.
   document.querySelectorAll('#filters-container input[data-menu="nouveautes_categories"]').forEach((input) => {
-    if (source === 'nouveautes') { input.disabled = false; return; }
+    if (source === 'nouveautes' || !label) { input.disabled = false; return; }
     const filter = (filtersByMenu.nouveautes_categories || []).find((f) => String(f.id) === input.value);
     const optionLabel = filter ? (filter.label || filter.name) : '';
-    const mismatched = !!label && optionLabel !== label;
-    input.disabled = mismatched;
-    if (mismatched && input.checked) input.checked = false;
+    input.disabled = true;
+    input.checked = optionLabel === label;
   });
 
   document.querySelectorAll('#filters-container input[data-menu="categories"]').forEach((input) => {
-    if (source === 'categories') { input.disabled = false; return; }
+    if (source === 'categories' || !label) { input.disabled = false; return; }
     const filter = (filtersByMenu.categories || []).find((f) => String(f.id) === input.value);
     const optionLabel = filter ? (filter.label || filter.name) : '';
-    const mismatched = !!label && optionLabel !== label;
-    input.disabled = mismatched;
-    if (mismatched && input.checked) input.checked = false;
+    input.disabled = true;
+    input.checked = optionLabel === label;
   });
 }
 
