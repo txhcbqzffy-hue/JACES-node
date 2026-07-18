@@ -653,18 +653,6 @@ async function loadFilters() {
     });
     fieldset.appendChild(grid);
 
-    // This "Accessoires" option looks identical to the real one in
-    // Catégories (visible sur Collection) but is a separate, independent
-    // tag just for the Nouveautés page - clicking it alone doesn't make
-    // Matière appear and doesn't satisfy the "choisissez une catégorie"
-    // requirement, which confused testers, so it gets its own reminder.
-    if (menu === 'nouveautes_categories') {
-      const note = document.createElement('p');
-      note.className = 'field-hint field-hint-neutral';
-      note.textContent = 'Ceci ne remplace pas la vraie catégorie (Catégories visible sur Collection, ci-dessus) - cochez toujours celle-là en premier.';
-      fieldset.appendChild(note);
-    }
-
     if (menu === 'collections') {
       const wrapper = document.createElement('div');
       wrapper.className = 'filter-pair';
