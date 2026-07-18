@@ -615,10 +615,15 @@
         // specific tags shows up there too - "Tout voir" isn't the only way
         // in anymore.
         const NOUVEAUTE_TAG_SLUGS = ['drop-ete', 'edition-limitee', 'pieces-signature'];
+        // A product with no tag at all but a real Nouveautés category
+        // (cats has more than the always-present "all" token) still
+        // belongs on the default/no-filter view - the tag system and the
+        // category system are independent ways of qualifying for this page.
+        const hasNouveauteCategory = cats.length > 1;
         const matchesTag = tagTokens.indexOf('tout-voir') !== -1
           || (currentNouveauteTagFilter
             ? tagTokens.indexOf(currentNouveauteTagFilter) !== -1
-            : tagTokens.some((token) => NOUVEAUTE_TAG_SLUGS.includes(token)));
+            : (tagTokens.some((token) => NOUVEAUTE_TAG_SLUGS.includes(token)) || hasNouveauteCategory));
         const matchesSize = !selectedSizes.length || variantData.sizes.some((size) => selectedSizes.includes(normalizeVariantToken(size)));
         const matchesColor = !selectedColors.length || variantData.colors.some((color) => selectedColors.includes(normalizeVariantToken(color)));
         const matchesMaterial = !selectedMaterials.length || variantData.materials.some((material) => selectedMaterials.includes(normalizeVariantToken(material)));
