@@ -797,12 +797,8 @@ function fillFormWithProduct(product) {
   updateAccessoryTypeFieldsetVisibility();
   updateMaterialCheckboxAvailability();
   updateCategoryCrossLock();
-  ['categories', 'collections', 'nouveautes', 'nouveautes_categories'].forEach((menu) => {
-    const fieldset = document.querySelector(`#filters-container fieldset[data-menu="${menu}"]`);
-    if (fieldset) fieldset.hidden = isCollaborationSelected();
-  });
-  const collaborationFieldset = document.querySelector('#filters-container fieldset[data-menu="collaborations"]');
-  if (collaborationFieldset) collaborationFieldset.hidden = isRegularClassificationSelected();
+  updateCollaborationHiddenFieldsets();
+  updateCollaborationFieldsetVisibility();
   updateVariantSizeAvailability();
 
   document.getElementById('form-status').textContent = '';
@@ -1146,14 +1142,18 @@ function isCollaborationSelected() {
 // all four of those fieldsets hide (and clear) since a product is either
 // a "regular" catalog item or a Collaboration, never both.
 function updateCollaborationHiddenFieldsets() {
-  const hide = isCollaborationSelected();
+  // Always visible now (not hidden) - just locked/greyed, same as every
+  // other mutual-exclusivity pair, so nothing ever moves/disappears from
+  // the page depending on what's picked elsewhere.
+  const lock = isCollaborationSelected();
   ['categories', 'collections', 'nouveautes', 'nouveautes_categories'].forEach((menu) => {
     const fieldset = document.querySelector(`#filters-container fieldset[data-menu="${menu}"]`);
     if (!fieldset) return;
-    fieldset.hidden = hide;
-    if (hide) {
-      fieldset.querySelectorAll('input').forEach((cb) => { cb.checked = false; });
-    }
+    fieldset.classList.toggle('is-locked', lock);
+    fieldset.querySelectorAll('input').forEach((cb) => {
+      cb.disabled = lock;
+      if (lock) cb.checked = false;
+    });
   });
 }
 
