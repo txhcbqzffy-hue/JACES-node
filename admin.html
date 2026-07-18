@@ -109,15 +109,27 @@
   fieldset[data-menu="nouveautes"] legend, fieldset[data-menu="nouveautes_categories"] legend { color: #a5601f; }
   fieldset[data-menu="collections"] { border-left-color: #2f6b3a; background: #f2f8f3; }
   fieldset[data-menu="collections"] legend { color: #2f6b3a; }
+  #product-filter-select {
+    width: 100%; padding: 7px 9px; border: 1px solid #c8bfb3; font-size: 0.8rem; background: #fffcf7; color: #15120f; margin-bottom: 10px;
+  }
   .product-list-item {
-    display: flex; gap: 9px; align-items: center; padding: 8px; border: 1px solid #e4ddd1; margin-bottom: 7px; cursor: pointer; background: #fff;
+    display: flex; gap: 9px; align-items: flex-start; padding: 8px; border: 1px solid #e4ddd1; margin-bottom: 7px; cursor: pointer; background: #fff;
   }
   .product-list-item:hover { background: #f8f3eb; }
   .product-list-item img { width: 40px; height: 50px; object-fit: cover; background: #eee; }
   .product-list-item .meta { flex: 1; min-width: 0; }
   .product-list-item .meta strong { display: block; font-size: 0.86rem; }
-  .product-list-item .meta span { font-size: 0.76rem; color: #6f675f; }
-  .product-list-item .del { background: none; border: none; color: #a5321f; cursor: pointer; font-size: 0.92rem; padding: 4px 8px; }
+  .product-list-item .meta span.price { font-size: 0.76rem; color: #6f675f; }
+  .product-list-item .badges { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 5px; }
+  .product-badge {
+    font-size: 0.64rem; padding: 2px 7px; border-radius: 10px; white-space: nowrap;
+    background: #f1ece2; color: #6f675f;
+  }
+  .product-badge.badge-categories, .product-badge.badge-accessoires { background: #e7eef5; color: #2f5a80; }
+  .product-badge.badge-collaborations { background: #f2e7f5; color: #6a2f80; }
+  .product-badge.badge-nouveautes, .product-badge.badge-nouveautes_categories { background: #fbf0de; color: #a5601f; }
+  .product-badge.badge-collections { background: #e6f2e8; color: #2f6b3a; }
+  .product-list-item .del { background: none; border: none; color: #a5321f; cursor: pointer; font-size: 0.92rem; padding: 4px 8px; align-self: flex-start; }
 </style>
 </head>
 <body>
@@ -247,6 +259,9 @@
       <div class="sidebar-col">
         <div class="card">
           <h2>Produits existants</h2>
+          <select id="product-filter-select">
+            <option value="">Tous les produits</option>
+          </select>
           <div id="product-list"></div>
         </div>
       </div>
@@ -531,6 +546,32 @@ async function loadFilters() {
       fieldset.insertAdjacentElement('afterend', document.getElementById('material-field'));
     }
   });
+
+  populateProductFilterSelect();
+}
+
+// Lets the admin filter "Produits existants" by any classification value
+// (Catégorie, Accessoire, Collaboration, Saison, Nouveautés...), grouped by
+// menu so it's clear what each option means.
+function populateProductFilterSelect() {
+  const select = document.getElementById('product-filter-select');
+  const currentValue = select.value;
+  select.innerHTML = '<option value="">Tous les produits</option>';
+  const menuOrder = ['categories', 'accessoires', 'collaborations', 'collections', 'nouveautes', 'nouveautes_categories'];
+  menuOrder.forEach((menu) => {
+    const options = (filtersByMenu[menu] || []).filter((filter) => (filter.label || filter.name) !== 'Tout voir' || menu === 'nouveautes');
+    if (!options.length) return;
+    const optgroup = document.createElement('optgroup');
+    optgroup.label = MENU_LABELS[menu] || menu;
+    options.forEach((filter) => {
+      const option = document.createElement('option');
+      option.value = String(filter.id);
+      option.textContent = filter.label || filter.name;
+      optgroup.appendChild(option);
+    });
+    select.appendChild(optgroup);
+  });
+  select.value = currentValue;
 }
 
 function resetForm() {
@@ -623,14 +664,25 @@ function fillFormWithProduct(product) {
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
+let allProducts = [];
+
 async function loadProductList() {
   const res = await apiFetch('/api/products');
-  const products = await res.json();
+  allProducts = await res.json();
+  renderProductList();
+}
+
+function renderProductList() {
   const listEl = document.getElementById('product-list');
+  const filterValue = document.getElementById('product-filter-select').value;
+  const products = filterValue
+    ? allProducts.filter((product) => (product.filter_ids || []).map(String).includes(filterValue))
+    : allProducts;
+
   listEl.innerHTML = '';
 
   if (!products.length) {
-    listEl.innerHTML = '<p style="font-size:0.82rem;color:#6f675f;">Aucun produit pour le moment.</p>';
+    listEl.innerHTML = '<p style="font-size:0.82rem;color:#6f675f;">Aucun produit pour cette sélection.</p>';
     return;
   }
 
@@ -638,9 +690,17 @@ async function loadProductList() {
     const item = document.createElement('div');
     item.className = 'product-list-item';
     const img = product.image_url ? `<img src="${product.image_url}" alt="">` : '<div style="width:34px;height:42px;background:#eee;"></div>';
+    const badges = (Array.isArray(product.filters) ? product.filters : [])
+      .filter((filter) => (filter.label || filter.name) !== 'Tout voir')
+      .map((filter) => `<span class="product-badge badge-${filter.menu}">${filter.label || filter.name}</span>`)
+      .join('');
     item.innerHTML = `
       ${img}
-      <div class="meta"><strong>${product.name || 'Sans nom'}</strong><span>${product.price || 0}€</span></div>
+      <div class="meta">
+        <strong>${product.name || 'Sans nom'}</strong>
+        <span class="price">${product.price || 0}€</span>
+        ${badges ? `<div class="badges">${badges}</div>` : ''}
+      </div>
       <button type="button" class="del" title="Supprimer">🗑</button>
     `;
     item.addEventListener('click', (e) => {
@@ -661,6 +721,8 @@ async function loadProductList() {
     listEl.appendChild(item);
   });
 }
+
+document.getElementById('product-filter-select').addEventListener('change', renderProductList);
 
 document.getElementById('product-form').addEventListener('submit', async (e) => {
   e.preventDefault();
