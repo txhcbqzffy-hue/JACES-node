@@ -12,41 +12,68 @@
   body {
     margin: 0;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Manrope, sans-serif;
-    background: #f5f1ea;
+    background: #f4f2ee;
     color: #1b1a17;
     overflow: hidden;
+    -webkit-font-smoothing: antialiased;
   }
-  #app { display: flex; flex-direction: column; height: 100vh; }
+  #app { display: flex; flex-direction: row; height: 100vh; }
   #app[hidden] { display: none; }
-  header {
-    padding: 10px 18px;
-    background: #171411;
-    color: #f6f1ea;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    flex: 0 0 auto;
+
+  /* --- Left navigation --- */
+  .sidebar-nav {
+    flex: 0 0 208px; background: #171411; color: #cfc7ba; display: flex; flex-direction: column;
+    padding: 18px 10px; gap: 4px;
   }
-  header h1 { font-size: 1.05rem; margin: 0; letter-spacing: 0.04em; text-transform: uppercase; }
-  header button {
-    background: transparent;
-    border: 1px solid #6b645c;
-    color: #f6f1ea;
-    padding: 6px 12px;
-    font-size: 0.78rem;
-    cursor: pointer;
+  .sidebar-brand {
+    font-size: 0.86rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase;
+    color: #fff; padding: 2px 10px 18px;
   }
-  main { max-width: 1440px; margin: 0 auto; padding: 14px; flex: 1 1 auto; min-height: 0; width: 100%; }
+  .nav-items { display: flex; flex-direction: column; gap: 2px; flex: 1 1 auto; }
+  .nav-item {
+    display: flex; align-items: center; gap: 10px; background: transparent; border: none; color: #cfc7ba;
+    padding: 9px 10px; font-size: 0.82rem; text-align: left; cursor: pointer; border-radius: 7px;
+    font-family: inherit; transition: background 0.12s ease, color 0.12s ease;
+  }
+  .nav-item:hover { background: rgba(255,255,255,0.07); color: #fff; }
+  .nav-item.active { background: #f6f1ea; color: #171411; font-weight: 700; }
+  .nav-icon { font-size: 0.98rem; line-height: 1; flex: 0 0 auto; }
+  .nav-logout {
+    background: transparent; border: 1px solid #47423b; color: #cfc7ba; padding: 9px 10px; font-size: 0.76rem;
+    cursor: pointer; border-radius: 7px; margin-top: 10px; font-family: inherit;
+  }
+  .nav-logout:hover { background: rgba(255,255,255,0.07); color: #fff; }
+
+  /* --- Main content shell --- */
+  .app-main { flex: 1 1 auto; display: flex; flex-direction: column; min-width: 0; height: 100vh; }
+  .topbar {
+    padding: 14px 22px; background: #fff; border-bottom: 1px solid #e8e2d6; flex: 0 0 auto;
+  }
+  .topbar h1 { margin: 0; font-size: 1.02rem; font-weight: 700; color: #1b1a17; }
+  main { max-width: 1440px; margin: 0 auto; padding: 16px 20px; flex: 1 1 auto; min-height: 0; width: 100%; overflow: hidden; }
+  .section-panel, .section-panel .layout { height: 100%; }
+  .section-panel[hidden] { display: none; }
   .layout, .layout > div { height: 100%; min-height: 0; }
+
+  .placeholder-card {
+    max-width: 420px; margin: 12vh auto; text-align: center; background: #fff; border: 1px solid #e8e2d6;
+    border-radius: 14px; padding: 42px 32px; box-shadow: 0 1px 3px rgba(23,20,17,0.05);
+  }
+  .placeholder-icon { font-size: 2.1rem; display: block; margin-bottom: 12px; }
+  .placeholder-card h2 { margin: 0 0 6px; font-size: 1.05rem; }
+  .placeholder-card p { margin: 0; color: #8a8175; font-size: 0.88rem; }
+
   .gate {
     max-width: 360px;
     margin: 15vh auto;
     background: #fff;
     padding: 28px;
-    border: 1px solid #d8cfc2;
+    border: 1px solid #e8e2d6;
+    border-radius: 14px;
+    box-shadow: 0 4px 16px rgba(23,20,17,0.08);
   }
   .gate h2 { margin-top: 0; font-size: 1rem; }
-  .gate input { width: 100%; padding: 10px; border: 1px solid #c8bfb3; margin: 10px 0; font-size: 0.9rem; }
+  .gate input { width: 100%; padding: 10px; border: 1px solid #c8bfb3; margin: 10px 0; font-size: 0.9rem; border-radius: 7px; }
   .gate button, .primary-btn {
     width: 100%;
     padding: 11px;
@@ -57,17 +84,19 @@
     letter-spacing: 0.06em;
     text-transform: uppercase;
     cursor: pointer;
+    border-radius: 7px;
   }
   .gate-error { color: #a5321f; font-size: 0.8rem; min-height: 1.2em; }
-  .layout { display: grid; grid-template-columns: minmax(0,1fr) 300px; gap: 14px; align-items: stretch; }
+  .layout { display: grid; grid-template-columns: minmax(0,1fr) 300px; gap: 16px; align-items: stretch; }
   .layout > div:first-child { overflow-y: auto; padding-right: 4px; }
-  .card { background: #fff; border: 1px solid #d8cfc2; padding: 16px 18px; margin-bottom: 12px; }
-  .card h2 { margin-top: 0; margin-bottom: 10px; font-size: 0.92rem; text-transform: uppercase; letter-spacing: 0.05em; }
+  .card { background: #fff; border: 1px solid #e8e2d6; padding: 18px 20px; margin-bottom: 12px; border-radius: 12px; box-shadow: 0 1px 2px rgba(23,20,17,0.03); }
+  .card h2 { margin-top: 0; margin-bottom: 12px; font-size: 0.92rem; text-transform: uppercase; letter-spacing: 0.05em; }
   .field { margin-bottom: 11px; }
   .field label { display: block; font-size: 0.76rem; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px; color: #595149; }
   .field input, .field textarea, .field select {
-    width: 100%; padding: 8px 10px; border: 1px solid #c8bfb3; font-size: 0.94rem; background: #fffcf7; color: #15120f;
+    width: 100%; padding: 8px 10px; border: 1px solid #c8bfb3; font-size: 0.94rem; background: #fffcf7; color: #15120f; border-radius: 7px;
   }
+  .field input:focus, .field textarea:focus, .field select:focus { outline: 2px solid #171411; outline-offset: -1px; }
   .field textarea { min-height: 54px; resize: vertical; }
   .row { display: flex; gap: 10px; }
   .row .field { flex: 1; }
@@ -79,7 +108,7 @@
   .field-wide-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 11px; }
   @media (max-width: 900px) { .field-wide-row { grid-template-columns: 1fr; } }
   .field-wide-row .field { margin-bottom: 0; }
-  .field-wide { background: #faf6ee; border: 1px solid #eee3d2; padding: 12px 13px; }
+  .field-wide { background: #faf6ee; border: 1px solid #eee3d2; padding: 12px 13px; border-radius: 9px; }
   #images-list { max-height: 140px; overflow-y: auto; padding-right: 4px; }
   #variants-list { height: 100px; min-height: 60px; max-height: 500px; overflow: auto; padding-right: 4px; resize: vertical; }
   .variant-color-group { border: 1px solid #e4ddd1; border-radius: 4px; padding: 5px 6px; margin-bottom: 5px; background: #fffcf7; }
@@ -117,7 +146,7 @@
   #filters-container > * { margin-bottom: 0; }
   @media (max-width: 900px) { #filters-container { grid-template-columns: 1fr; } }
   .filter-pair { display: flex; flex-direction: column; gap: 8px; }
-  fieldset { border: 1px solid #d8cfc2; margin-bottom: 0; padding: 9px 11px; border-left-width: 4px; }
+  fieldset { border: 1px solid #d8cfc2; margin-bottom: 0; padding: 9px 11px; border-left-width: 4px; border-radius: 8px; }
   legend { font-size: 0.76rem; text-transform: uppercase; letter-spacing: 0.05em; color: #595149; padding: 0 6px; font-weight: 700; }
   .checkbox-grid { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 5px; }
   .checkbox-grid label { display: flex; align-items: center; gap: 6px; font-size: 0.86rem; text-transform: none; letter-spacing: 0; color: #1b1a17; }
@@ -132,7 +161,7 @@
   }
   .actions { display: flex; gap: 10px; }
   .sidebar-col { overflow-y: auto; }
-  .actions button { flex: 1; padding: 10px; font-size: 0.82rem; letter-spacing: 0.05em; text-transform: uppercase; cursor: pointer; }
+  .actions button { flex: 1; padding: 10px; font-size: 0.82rem; letter-spacing: 0.05em; text-transform: uppercase; cursor: pointer; border-radius: 7px; }
   .btn-secondary { background: #ece5d8; border: 1px solid #c8bfb3; color: #1b1a17; }
   .status-msg { font-size: 0.84rem; margin: 0 0 8px; min-height: 1.2em; font-weight: 600; }
   .status-msg.error { color: #a5321f; }
@@ -162,13 +191,13 @@
   .material-field-compact .checkbox-grid input { width: 12px; height: 12px; }
   .material-field-compact .field-hint { font-size: 0.6rem; margin-top: 2px; }
   #product-filter-select {
-    width: 100%; padding: 7px 9px; border: 1px solid #c8bfb3; font-size: 0.8rem; background: #fffcf7; color: #15120f; margin-bottom: 10px;
+    width: 100%; padding: 7px 9px; border: 1px solid #c8bfb3; font-size: 0.8rem; background: #fffcf7; color: #15120f; margin-bottom: 10px; border-radius: 7px;
   }
   .product-list-item {
-    display: flex; gap: 9px; align-items: flex-start; padding: 8px; border: 1px solid #e4ddd1; margin-bottom: 7px; cursor: pointer; background: #fff;
+    display: flex; gap: 9px; align-items: flex-start; padding: 9px; border: 1px solid #e8e2d6; margin-bottom: 7px; cursor: pointer; background: #fff; border-radius: 9px; transition: background 0.12s ease;
   }
   .product-list-item:hover { background: #f8f3eb; }
-  .product-list-item img { width: 40px; height: 50px; object-fit: cover; background: #eee; }
+  .product-list-item img { width: 40px; height: 50px; object-fit: cover; background: #eee; border-radius: 5px; }
   .product-list-item .meta { flex: 1; min-width: 0; }
   .product-list-item .meta strong { display: block; font-size: 0.86rem; }
   .product-list-item .meta span.price { font-size: 0.76rem; color: #6f675f; }
@@ -194,11 +223,24 @@
 </div>
 
 <div id="app" hidden>
-  <header>
-    <h1>Admin produits JACES</h1>
-    <button id="logout-btn">Déconnexion</button>
+  <nav class="sidebar-nav">
+    <div class="sidebar-brand">JACES</div>
+    <div class="nav-items">
+      <button type="button" class="nav-item active" data-section="produits" data-label="Produits"><span class="nav-icon">🧵</span><span class="nav-label">Produits</span></button>
+      <button type="button" class="nav-item" data-section="dashboard" data-label="Tableau de bord"><span class="nav-icon">📊</span><span class="nav-label">Tableau de bord</span></button>
+      <button type="button" class="nav-item" data-section="commandes" data-label="Commandes"><span class="nav-icon">🧾</span><span class="nav-label">Commandes</span></button>
+      <button type="button" class="nav-item" data-section="clients" data-label="Clients"><span class="nav-icon">👤</span><span class="nav-label">Clients</span></button>
+      <button type="button" class="nav-item" data-section="marketing" data-label="Contenu marketing"><span class="nav-icon">📣</span><span class="nav-label">Contenu marketing</span></button>
+      <button type="button" class="nav-item" data-section="parametres" data-label="Paramètres"><span class="nav-icon">⚙️</span><span class="nav-label">Paramètres</span></button>
+    </div>
+    <button type="button" id="logout-btn" class="nav-logout">Déconnexion</button>
+  </nav>
+  <div class="app-main">
+  <header class="topbar">
+    <h1 id="section-title">Produits</h1>
   </header>
   <main>
+    <div id="section-produits" class="section-panel">
     <div class="layout">
       <div>
         <div class="card">
@@ -320,7 +362,25 @@
         </div>
       </div>
     </div>
+    </div>
+
+    <div id="section-dashboard" class="section-panel" hidden>
+      <div class="placeholder-card"><span class="placeholder-icon">📊</span><h2>Tableau de bord</h2><p>Bientôt disponible.</p></div>
+    </div>
+    <div id="section-commandes" class="section-panel" hidden>
+      <div class="placeholder-card"><span class="placeholder-icon">🧾</span><h2>Commandes</h2><p>Bientôt disponible.</p></div>
+    </div>
+    <div id="section-clients" class="section-panel" hidden>
+      <div class="placeholder-card"><span class="placeholder-icon">👤</span><h2>Clients</h2><p>Bientôt disponible.</p></div>
+    </div>
+    <div id="section-marketing" class="section-panel" hidden>
+      <div class="placeholder-card"><span class="placeholder-icon">📣</span><h2>Contenu marketing</h2><p>Bientôt disponible.</p></div>
+    </div>
+    <div id="section-parametres" class="section-panel" hidden>
+      <div class="placeholder-card"><span class="placeholder-icon">⚙️</span><h2>Paramètres</h2><p>Bientôt disponible.</p></div>
+    </div>
   </main>
+  </div>
 </div>
 
 <script type="module">
@@ -388,6 +448,19 @@ document.getElementById('gate-password').addEventListener('keydown', (e) => {
 document.getElementById('logout-btn').addEventListener('click', () => {
   sessionStorage.removeItem(PASSWORD_KEY);
   showGate('');
+});
+
+// Sidebar navigation - only "Produits" is a real, functional section for
+// now; the rest show a "Bientôt disponible" placeholder since none of
+// that data/backend exists yet.
+document.querySelectorAll('.nav-item').forEach((btn) => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.nav-item').forEach((b) => b.classList.toggle('active', b === btn));
+    document.querySelectorAll('.section-panel').forEach((panel) => {
+      panel.hidden = panel.id !== `section-${btn.dataset.section}`;
+    });
+    document.getElementById('section-title').textContent = btn.dataset.label;
+  });
 });
 
 let filtersByMenu = {};
