@@ -116,7 +116,6 @@
   legend { font-size: 0.76rem; text-transform: uppercase; letter-spacing: 0.05em; color: #595149; padding: 0 6px; font-weight: 700; }
   .checkbox-grid { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 5px; }
   .checkbox-grid label { display: flex; align-items: center; gap: 6px; font-size: 0.86rem; text-transform: none; letter-spacing: 0; color: #1b1a17; }
-  .checkbox-grid label:has(input:disabled) { opacity: 0.4; cursor: not-allowed; }
   .checkbox-grid input { width: auto; }
   .actions {
     display: flex; gap: 10px; margin-top: 12px; position: sticky; bottom: 0; z-index: 10;
@@ -671,7 +670,6 @@ function resetForm() {
   updateAccessoryTypeFieldsetVisibility();
   updateCollaborationHiddenFieldsets();
   updateCollaborationFieldsetVisibility();
-  updateCategoryCrossLock();
   updateMaterialCheckboxAvailability();
   document.getElementById('form-status').textContent = '';
   document.getElementById('form-status').className = 'status-msg';
@@ -741,7 +739,6 @@ function fillFormWithProduct(product) {
   // which is a no-op if the restored state already left it unchecked.
   updateAccessoryTypeFieldsetVisibility();
   updateMaterialCheckboxAvailability();
-  updateCategoryCrossLock();
   ['categories', 'collections', 'nouveautes', 'nouveautes_categories'].forEach((menu) => {
     const fieldset = document.querySelector(`#filters-container fieldset[data-menu="${menu}"]`);
     if (fieldset) fieldset.hidden = isCollaborationSelected();
@@ -1106,61 +1103,6 @@ function isRegularClassificationSelected() {
   return document.querySelectorAll('#filters-container input[data-menu="categories"]:checked, #filters-container input[data-menu="accessoires"]:checked, #filters-container input[data-menu="collections"]:checked').length > 0;
 }
 
-// The real category (Catégories visible sur Collection, or Sacs/Bijoux/...
-// implying "Accessoires") is the source of truth - a product can't be
-// Robes on Collection and Tops on Nouveautés at the same time, so only the
-// matching option (or none) stays pickable in Catégories (visible sur
-// Nouveautés) once a real category is set.
-// Works both ways: whichever of Catégories (Collection) or Catégories
-// (Nouveautés) gets picked FIRST becomes the source of truth, and the
-// OTHER one locks down to only the matching option (or none). The source
-// fieldset itself is left alone - it's already a single-choice radio
-// group, so disabling its own other options would trap the admin unable
-// to switch their pick.
-function updateCategoryCrossLock() {
-  // Exclude disabled inputs - a mirrored (auto-checked but disabled) radio
-  // must never be picked up as if it were a live source, or the source
-  // side would immediately re-lock itself on its own next change.
-  const categoryInput = document.querySelector('#filters-container input[data-menu="categories"]:checked:not(:disabled)');
-  const accessoryTypeInput = document.querySelector('#filters-container input[data-menu="accessoires"]:checked:not(:disabled)');
-  const nouveauteCategoryInput = document.querySelector('#filters-container input[data-menu="nouveautes_categories"]:checked:not(:disabled)');
-
-  let label = null;
-  let source = null;
-  if (categoryInput) {
-    const filter = (filtersByMenu.categories || []).find((f) => String(f.id) === categoryInput.value);
-    label = filter ? (filter.label || filter.name) : null;
-    source = 'categories';
-  } else if (accessoryTypeInput) {
-    label = 'Accessoires';
-    source = 'categories';
-  } else if (nouveauteCategoryInput) {
-    const filter = (filtersByMenu.nouveautes_categories || []).find((f) => String(f.id) === nouveauteCategoryInput.value);
-    label = filter ? (filter.label || filter.name) : null;
-    source = 'nouveautes';
-  }
-
-  // The non-source fieldset becomes a fully read-only mirror once there's
-  // a source: EVERY option there gets disabled, including the matching
-  // one (auto-checked to reflect it) - so it's never independently
-  // clickable/togglable from that side, only the source fieldset drives it.
-  document.querySelectorAll('#filters-container input[data-menu="nouveautes_categories"]').forEach((input) => {
-    if (source === 'nouveautes' || !label) { input.disabled = false; return; }
-    const filter = (filtersByMenu.nouveautes_categories || []).find((f) => String(f.id) === input.value);
-    const optionLabel = filter ? (filter.label || filter.name) : '';
-    input.disabled = true;
-    input.checked = optionLabel === label;
-  });
-
-  document.querySelectorAll('#filters-container input[data-menu="categories"]').forEach((input) => {
-    if (source === 'categories' || !label) { input.disabled = false; return; }
-    const filter = (filtersByMenu.categories || []).find((f) => String(f.id) === input.value);
-    const optionLabel = filter ? (filter.label || filter.name) : '';
-    input.disabled = true;
-    input.checked = optionLabel === label;
-  });
-}
-
 // Mirror of updateCollaborationHiddenFieldsets(): a "regular" catalog item
 // (Catégorie/Accessoire/Saison) doesn't use Collaborations either - hides
 // (and clears) just that one fieldset, since Nouveautés stays independent
@@ -1179,7 +1121,6 @@ document.getElementById('filters-container').addEventListener('change', (event) 
   enforceCollaborationExclusivity(event);
   updateCollaborationHiddenFieldsets();
   updateCollaborationFieldsetVisibility();
-  updateCategoryCrossLock();
   autoCheckNouveauteToutVoir(event);
   updateAccessoryTypeFieldsetVisibility();
   updateVariantSizeAvailability();
