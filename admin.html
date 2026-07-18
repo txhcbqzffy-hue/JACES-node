@@ -72,6 +72,11 @@
   .row { display: flex; gap: 10px; }
   .row .field { flex: 1; }
   .list-row { display: flex; gap: 7px; margin-bottom: 6px; align-items: center; }
+  .move-btn {
+    background: #ece5d8; border: 1px solid #c8bfb3; padding: 4px 6px; cursor: pointer; font-size: 0.68rem;
+    line-height: 1; flex: 0 0 auto;
+  }
+  .move-btn:hover { background: #ddd4c4; }
   .list-row input { flex: 1; }
   .field-wide-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 11px; }
   @media (max-width: 900px) { .field-wide-row { grid-template-columns: 1fr; } }
@@ -402,8 +407,23 @@ const MENU_LABELS = {
 function imageRow(value = '') {
   const row = document.createElement('div');
   row.className = 'list-row';
-  row.innerHTML = `<input type="url" placeholder="https://res.cloudinary.com/..." value="${value.replace(/"/g, '&quot;')}"><button type="button">✕</button>`;
-  row.querySelector('button').addEventListener('click', () => row.remove());
+  // Order matters (the first image is the main photo, the second the
+  // hover photo, etc. on the live site), so each row can move up/down to
+  // swap places with its neighbour instead of only being add/removable.
+  row.innerHTML = `
+    <button type="button" class="move-btn move-up" title="Monter">▲</button>
+    <button type="button" class="move-btn move-down" title="Descendre">▼</button>
+    <input type="url" placeholder="https://res.cloudinary.com/..." value="${value.replace(/"/g, '&quot;')}">
+    <button type="button">✕</button>`;
+  row.querySelector('.move-up').addEventListener('click', () => {
+    const prev = row.previousElementSibling;
+    if (prev) row.parentElement.insertBefore(row, prev);
+  });
+  row.querySelector('.move-down').addEventListener('click', () => {
+    const next = row.nextElementSibling;
+    if (next) row.parentElement.insertBefore(next, row);
+  });
+  row.querySelector('button:not(.move-btn)').addEventListener('click', () => row.remove());
   return row;
 }
 
