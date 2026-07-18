@@ -627,6 +627,7 @@ document.querySelectorAll('.nav-item').forEach((btn) => {
       panel.hidden = panel.id !== `section-${btn.dataset.section}`;
     });
     document.getElementById('section-title').textContent = btn.dataset.label;
+    if (btn.dataset.section === 'produits') resetForm();
   });
 });
 
