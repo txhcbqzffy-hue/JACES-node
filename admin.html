@@ -385,6 +385,11 @@
             <input type="text" id="mk-banner-text" placeholder="Livraison offerte dès 79 € | Retours offerts">
           </div>
 
+          <div class="field">
+            <label for="mk-hero-image">Image de couverture (page d'accueil)</label>
+            <input type="url" id="mk-hero-image" placeholder="https://...">
+          </div>
+
           <p class="field-title" style="margin-top:16px;">Vignettes de catégories (page Nouveautés)</p>
           <div class="marketing-grid">
             <div class="field">
@@ -514,6 +519,7 @@ document.querySelectorAll('.nav-item').forEach((btn) => {
 // same table can grow to hold more fields later without a schema change.
 const MARKETING_FIELD_KEYS = {
   'mk-banner-text': 'banner_text',
+  'mk-hero-image': 'home_hero_image',
   'mk-thumb-all': 'nouveautes_thumb_all',
   'mk-thumb-robes': 'nouveautes_thumb_robes',
   'mk-thumb-tops': 'nouveautes_thumb_tops',

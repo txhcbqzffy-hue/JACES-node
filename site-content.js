@@ -18,6 +18,17 @@
         const img = item.querySelector('.cat-nav-circle img');
         if (img) img.src = url;
       });
+
+      // Homepage cover image (the full-bleed "Cet été, ose aussi." hero) -
+      // only exists on index.html (body.home-page), no-op elsewhere. Keeps
+      // the same dark gradient overlay so the title text stays readable.
+      if (content.home_hero_image) {
+        const hero = document.querySelector('body.home-page .hero');
+        if (hero) {
+          hero.style.backgroundImage =
+            `linear-gradient(rgba(8, 7, 5, 0.44), rgba(8, 7, 5, 0.44)), url("${content.home_hero_image}")`;
+        }
+      }
     })
     // Silent fail - every page already has hardcoded fallback text/images,
     // so a network error here just means nothing gets overridden.
