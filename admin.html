@@ -1165,6 +1165,11 @@ function updateCollaborationHiddenFieldsets() {
 // a possibility, not a requirement, so the admin can also just leave that
 // side unchecked entirely if they don't want the product tagged there.
 function updateCategoryCrossLock() {
+  // When a Collaboration is selected, updateCollaborationHiddenFieldsets()
+  // already locked Catégories/Nouveautés-catégories entirely - leave that
+  // alone here, or this would blindly re-enable them (it sees no category
+  // "source" anywhere and treats that as "nothing to restrict").
+  if (isCollaborationSelected()) return;
   const categoryInput = document.querySelector('#filters-container input[data-menu="categories"]:checked:not(:disabled)');
   const accessoryTypeInput = document.querySelector('#filters-container input[data-menu="accessoires"]:checked:not(:disabled)');
   const nouveauteCategoryInput = document.querySelector('#filters-container input[data-menu="nouveautes_categories"]:checked:not(:disabled)');
