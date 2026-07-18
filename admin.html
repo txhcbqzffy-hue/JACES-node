@@ -78,20 +78,20 @@
   .field-wide-row .field { margin-bottom: 0; }
   .field-wide { background: #faf6ee; border: 1px solid #eee3d2; padding: 12px 13px; }
   #images-list { max-height: 140px; overflow-y: auto; padding-right: 4px; }
-  #variants-list { max-height: 260px; overflow-y: auto; padding-right: 4px; }
-  .variant-color-group { border: 1px solid #e4ddd1; border-radius: 4px; padding: 8px 9px; margin-bottom: 8px; background: #fffcf7; }
-  .variant-color-head { display: flex; gap: 7px; align-items: center; margin-bottom: 7px; }
-  .variant-color-head select { flex: 1; padding: 7px 9px; border: 1px solid #c8bfb3; font-size: 0.86rem; background: #fff; }
-  .variant-color-head .variant-accessoire-stock { flex: 0 0 100px; }
-  .variant-color-head button { background: #ece5d8; border: 1px solid #c8bfb3; padding: 6px 10px; cursor: pointer; font-size: 0.78rem; }
-  .variant-size-chips { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 6px; }
-  .size-chip { border: 1px solid #c8bfb3; background: #fff; padding: 4px 11px; border-radius: 999px; font-size: 0.78rem; cursor: pointer; font-family: inherit; }
+  #variants-list { max-height: 190px; overflow-y: auto; padding-right: 4px; }
+  .variant-color-group { border: 1px solid #e4ddd1; border-radius: 4px; padding: 5px 6px; margin-bottom: 5px; background: #fffcf7; }
+  .variant-color-head { display: flex; gap: 5px; align-items: center; margin-bottom: 4px; }
+  .variant-color-head select { flex: 1; padding: 4px 6px; border: 1px solid #c8bfb3; font-size: 0.78rem; background: #fff; }
+  .variant-color-head .variant-accessoire-stock { flex: 0 0 78px; }
+  .variant-color-head button { background: #ece5d8; border: 1px solid #c8bfb3; padding: 3px 8px; cursor: pointer; font-size: 0.74rem; }
+  .variant-size-chips { display: flex; flex-wrap: wrap; gap: 3px; margin-bottom: 4px; }
+  .size-chip { border: 1px solid #c8bfb3; background: #fff; padding: 2px 8px; border-radius: 999px; font-size: 0.72rem; cursor: pointer; font-family: inherit; }
   .size-chip:hover { border-color: #8a8175; }
   .size-chip.is-active { background: #171411; border-color: #171411; color: #fff; }
-  .variant-size-stocks { display: flex; flex-wrap: wrap; gap: 6px; }
-  .variant-stock-field { display: flex; align-items: center; gap: 5px; font-size: 0.76rem; background: #f1ece2; padding: 4px 7px; border-radius: 4px; }
-  .variant-stock-field input { width: 48px; padding: 3px 4px; border: 1px solid #c8bfb3; font-size: 0.8rem; }
-  .variant-accessoire-stock input { width: 100%; padding: 7px 9px; border: 1px solid #c8bfb3; font-size: 0.86rem; }
+  .variant-size-stocks { display: flex; flex-wrap: wrap; gap: 4px; }
+  .variant-stock-field { display: flex; align-items: center; gap: 3px; font-size: 0.7rem; background: #f1ece2; padding: 2px 5px; border-radius: 4px; }
+  .variant-stock-field input { width: 40px; padding: 2px 3px; border: 1px solid #c8bfb3; font-size: 0.74rem; }
+  .variant-accessoire-stock input { width: 100%; padding: 4px 6px; border: 1px solid #c8bfb3; font-size: 0.78rem; }
   .variant-size-chips[hidden], .variant-size-stocks[hidden], .variant-accessoire-stock[hidden] { display: none; }
   .field-collapsible { margin-bottom: 10px; }
   .field-collapsible summary { cursor: pointer; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.05em; color: #595149; padding: 5px 0; list-style: none; }
@@ -219,7 +219,7 @@
               </div>
 
               <div class="field field-wide">
-                <label>Variantes (taille / couleur / stock)</label>
+                <label>Variantes</label>
                 <div id="variants-list"></div>
                 <button type="button" class="add-btn" id="add-variant-btn">+ Ajouter une couleur</button>
               </div>
