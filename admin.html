@@ -112,6 +112,7 @@
   #filters-container { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; align-items: start; }
   #filters-container > * { margin-bottom: 0; }
   @media (max-width: 900px) { #filters-container { grid-template-columns: 1fr; } }
+  .filter-pair { display: flex; flex-direction: column; gap: 8px; }
   fieldset { border: 1px solid #d8cfc2; margin-bottom: 0; padding: 9px 11px; border-left-width: 4px; }
   legend { font-size: 0.76rem; text-transform: uppercase; letter-spacing: 0.05em; color: #595149; padding: 0 6px; font-weight: 700; }
   .checkbox-grid { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 5px; }
@@ -608,6 +609,13 @@ async function loadFilters() {
     return fieldset;
   }
 
+  // Saison and Collaborations are wrapped together as one grid item so
+  // Collaborations always renders directly under Saison, stacked - in the
+  // 2-column #filters-container grid, DOM order alone doesn't guarantee
+  // visual adjacency (they could land in different columns of the same
+  // row instead), so this forces the pairing explicitly.
+  let saisonCollabWrapper = null;
+
   menuKeys.forEach((menu) => {
     if (menu === 'accessoires') return; // nested under Catégories' "Accessoires" option instead - see below.
     const fieldset = document.createElement('fieldset');
@@ -654,7 +662,18 @@ async function loadFilters() {
       fieldset.appendChild(note);
     }
 
-    container.appendChild(fieldset);
+    if (menu === 'collections') {
+      const wrapper = document.createElement('div');
+      wrapper.className = 'filter-pair';
+      wrapper.appendChild(fieldset);
+      container.appendChild(wrapper);
+      saisonCollabWrapper = wrapper;
+    } else if (menu === 'collaborations' && saisonCollabWrapper) {
+      saisonCollabWrapper.appendChild(fieldset);
+      saisonCollabWrapper = null;
+    } else {
+      container.appendChild(fieldset);
+    }
   });
 
   populateProductFilterSelect();
