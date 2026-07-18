@@ -278,9 +278,8 @@
 
             <div class="field-wide-row">
               <div class="field field-wide">
-                <label>Images (liens Cloudinary)</label>
+                <label>Images (liens Cloudinary) - maximum 4</label>
                 <div id="images-list"></div>
-                <button type="button" class="add-btn" id="add-image-btn">+ Ajouter une image</button>
               </div>
 
               <div class="field field-wide">
@@ -854,11 +853,6 @@ function enableDragReorder(containerId, itemSelector) {
 
 enableDragReorder('images-list', '.list-row');
 
-document.getElementById('add-image-btn').addEventListener('click', () => {
-  const row = imageRow();
-  document.getElementById('images-list').appendChild(row);
-  row.scrollIntoView({ block: 'nearest' });
-});
 document.getElementById('add-review-photo-btn').addEventListener('click', () => {
   document.getElementById('review-photos-list').appendChild(reviewPhotoRow());
 });
