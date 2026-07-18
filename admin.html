@@ -61,6 +61,8 @@
   }
   .placeholder-icon { font-size: 2.1rem; display: block; margin-bottom: 12px; }
   .placeholder-card h2 { margin: 0 0 6px; font-size: 1.05rem; }
+  .step-help-note { font-size: 0.82rem; color: #8a8175; margin: 0 0 14px; line-height: 1.5; }
+  .marketing-grid { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 4px 14px; }
   .placeholder-card p { margin: 0; color: #8a8175; font-size: 0.88rem; }
 
   .gate {
@@ -374,7 +376,51 @@
       <div class="placeholder-card"><span class="placeholder-icon">👤</span><h2>Clients</h2><p>Bientôt disponible.</p></div>
     </div>
     <div id="section-marketing" class="section-panel" hidden>
-      <div class="placeholder-card"><span class="placeholder-icon">📣</span><h2>Contenu marketing</h2><p>Bientôt disponible.</p></div>
+      <div class="card" style="max-width:640px;">
+        <h2>Contenu marketing</h2>
+        <p class="step-help-note">Modifie le bandeau affiché en haut de toutes les pages et les vignettes de catégories sur la page Nouveautés - visible immédiatement sur tout le site.</p>
+        <form id="marketing-form">
+          <div class="field">
+            <label for="mk-banner-text">Bandeau (toutes les pages)</label>
+            <input type="text" id="mk-banner-text" placeholder="Livraison offerte dès 79 € | Retours offerts">
+          </div>
+
+          <p class="field-title" style="margin-top:16px;">Vignettes de catégories (page Nouveautés)</p>
+          <div class="marketing-grid">
+            <div class="field">
+              <label for="mk-thumb-all">Tout voir</label>
+              <input type="url" id="mk-thumb-all" placeholder="https://...">
+            </div>
+            <div class="field">
+              <label for="mk-thumb-robes">Robes</label>
+              <input type="url" id="mk-thumb-robes" placeholder="https://...">
+            </div>
+            <div class="field">
+              <label for="mk-thumb-tops">Tops</label>
+              <input type="url" id="mk-thumb-tops" placeholder="https://...">
+            </div>
+            <div class="field">
+              <label for="mk-thumb-jupes">Jupes</label>
+              <input type="url" id="mk-thumb-jupes" placeholder="https://...">
+            </div>
+            <div class="field">
+              <label for="mk-thumb-pantalons">Pantalons</label>
+              <input type="url" id="mk-thumb-pantalons" placeholder="https://...">
+            </div>
+            <div class="field">
+              <label for="mk-thumb-vestes">Vestes</label>
+              <input type="url" id="mk-thumb-vestes" placeholder="https://...">
+            </div>
+            <div class="field">
+              <label for="mk-thumb-accessoires">Accessoires</label>
+              <input type="url" id="mk-thumb-accessoires" placeholder="https://...">
+            </div>
+          </div>
+
+          <p class="status-msg" id="marketing-status"></p>
+          <button type="submit" class="primary-btn" style="width:auto;padding:10px 26px;">Enregistrer</button>
+        </form>
+      </div>
     </div>
     <div id="section-parametres" class="section-panel" hidden>
       <div class="placeholder-card"><span class="placeholder-icon">⚙️</span><h2>Paramètres</h2><p>Bientôt disponible.</p></div>
@@ -450,9 +496,9 @@ document.getElementById('logout-btn').addEventListener('click', () => {
   showGate('');
 });
 
-// Sidebar navigation - only "Produits" is a real, functional section for
-// now; the rest show a "Bientôt disponible" placeholder since none of
-// that data/backend exists yet.
+// Sidebar navigation - "Produits" and "Contenu marketing" are real,
+// functional sections; the rest show a "Bientôt disponible" placeholder
+// since none of that data/backend exists yet.
 document.querySelectorAll('.nav-item').forEach((btn) => {
   btn.addEventListener('click', () => {
     document.querySelectorAll('.nav-item').forEach((b) => b.classList.toggle('active', b === btn));
@@ -461,6 +507,60 @@ document.querySelectorAll('.nav-item').forEach((btn) => {
     });
     document.getElementById('section-title').textContent = btn.dataset.label;
   });
+});
+
+// Contenu marketing - edits the site-wide announcement banner and the
+// Nouveautés category thumbnails, stored as simple key/value rows so the
+// same table can grow to hold more fields later without a schema change.
+const MARKETING_FIELD_KEYS = {
+  'mk-banner-text': 'banner_text',
+  'mk-thumb-all': 'nouveautes_thumb_all',
+  'mk-thumb-robes': 'nouveautes_thumb_robes',
+  'mk-thumb-tops': 'nouveautes_thumb_tops',
+  'mk-thumb-jupes': 'nouveautes_thumb_jupes',
+  'mk-thumb-pantalons': 'nouveautes_thumb_pantalons',
+  'mk-thumb-vestes': 'nouveautes_thumb_vestes',
+  'mk-thumb-accessoires': 'nouveautes_thumb_accessoires'
+};
+
+async function loadMarketingContent() {
+  try {
+    const res = await fetch('/api/site-content');
+    const content = await res.json();
+    Object.entries(MARKETING_FIELD_KEYS).forEach(([fieldId, key]) => {
+      const input = document.getElementById(fieldId);
+      if (input && content[key]) input.value = content[key];
+    });
+  } catch (error) {
+    // Leave fields blank (placeholder text still shows the live fallback) -
+    // not a blocking error, the site itself already has hardcoded defaults.
+  }
+}
+
+document.getElementById('marketing-form').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const statusEl = document.getElementById('marketing-status');
+  statusEl.className = 'status-msg';
+  statusEl.textContent = 'Enregistrement...';
+  const payload = {};
+  Object.entries(MARKETING_FIELD_KEYS).forEach(([fieldId, key]) => {
+    const input = document.getElementById(fieldId);
+    if (input && input.value.trim()) payload[key] = input.value.trim();
+  });
+  try {
+    const res = await fetch('/api/site-content', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'X-Admin-Password': getPassword() },
+      body: JSON.stringify(payload)
+    });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) throw new Error(data.error || 'Erreur serveur');
+    statusEl.textContent = 'Enregistré ✓';
+    statusEl.className = 'status-msg ok';
+  } catch (error) {
+    statusEl.textContent = 'Erreur: ' + error.message;
+    statusEl.className = 'status-msg error';
+  }
 });
 
 let filtersByMenu = {};
@@ -1351,6 +1451,7 @@ async function init() {
   await loadFilters();
   resetForm();
   await loadProductList();
+  loadMarketingContent();
 }
 
 if (getPassword()) {
