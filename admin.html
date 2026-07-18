@@ -1118,9 +1118,12 @@ function isRegularClassificationSelected() {
 // group, so disabling its own other options would trap the admin unable
 // to switch their pick.
 function updateCategoryCrossLock() {
-  const categoryInput = document.querySelector('#filters-container input[data-menu="categories"]:checked');
-  const accessoryTypeInput = document.querySelector('#filters-container input[data-menu="accessoires"]:checked');
-  const nouveauteCategoryInput = document.querySelector('#filters-container input[data-menu="nouveautes_categories"]:checked');
+  // Exclude disabled inputs - a mirrored (auto-checked but disabled) radio
+  // must never be picked up as if it were a live source, or the source
+  // side would immediately re-lock itself on its own next change.
+  const categoryInput = document.querySelector('#filters-container input[data-menu="categories"]:checked:not(:disabled)');
+  const accessoryTypeInput = document.querySelector('#filters-container input[data-menu="accessoires"]:checked:not(:disabled)');
+  const nouveauteCategoryInput = document.querySelector('#filters-container input[data-menu="nouveautes_categories"]:checked:not(:disabled)');
 
   let label = null;
   let source = null;
