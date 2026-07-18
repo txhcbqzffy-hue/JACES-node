@@ -860,6 +860,10 @@ function enableDragReorder(containerId, itemSelector) {
 
 enableDragReorder('images-list', '.list-row');
 
+document.querySelector('.field-collapsible').addEventListener('toggle', (e) => {
+  if (e.target.open) e.target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+});
+
 document.getElementById('add-review-photo-btn').addEventListener('click', () => {
   // Newest first, matching how reviews are ordered everywhere else.
   const row = reviewPhotoRow();
