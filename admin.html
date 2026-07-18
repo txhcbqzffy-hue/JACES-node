@@ -151,11 +151,13 @@
      they unfold in place instead of squeezing into one column. */
   .nested-fieldset { grid-column: 1 / -1; margin-top: 4px; }
   .material-field-compact {
-    padding: 7px 9px; background: #f7f5f0; border: 1px dashed #d8cfc2;
+    padding: 4px 6px; background: #f7f5f0; border: 1px dashed #d8cfc2;
   }
-  .material-field-compact label { font-size: 0.66rem; margin-bottom: 4px; }
-  .material-field-compact .checkbox-grid label { font-size: 0.74rem; }
-  .material-field-compact .field-hint { font-size: 0.66rem; margin-top: 4px; }
+  .material-field-compact label { font-size: 0.6rem; margin-bottom: 2px; }
+  .material-field-compact .checkbox-grid { grid-template-columns: repeat(3, minmax(0,1fr)); gap: 2px 6px; }
+  .material-field-compact .checkbox-grid label { font-size: 0.66rem; gap: 3px; }
+  .material-field-compact .checkbox-grid input { width: 12px; height: 12px; }
+  .material-field-compact .field-hint { font-size: 0.6rem; margin-top: 2px; }
   #product-filter-select {
     width: 100%; padding: 7px 9px; border: 1px solid #c8bfb3; font-size: 0.8rem; background: #fffcf7; color: #15120f; margin-bottom: 10px;
   }
