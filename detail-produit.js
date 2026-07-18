@@ -122,7 +122,29 @@
     };
   }
 
+  // Which of Nouveautés/Collections/Collaborations/Accessoires the
+  // breadcrumb and mega-menu highlight should reflect is determined by the
+  // product's actual admin-assigned classification (filter_menus), not by
+  // which link the visitor happened to click through - a direct link, a
+  // favorite, or a search result can carry no/wrong origin params, but the
+  // product's real classification is always correct.
+  const ORIGIN_BY_MENU = {
+    categories: { key: 'collection', label: 'Collections', url: 'collection.html', navKey: 'collection' },
+    accessoires: { key: 'accessoires', label: 'Accessoires', url: 'accessoires.html', navKey: 'accessoires' },
+    collaborations: { key: 'collaboration', label: 'Collaborations', url: 'collaborations.html', navKey: 'collaboration' },
+    nouveautes_categories: { key: 'nouveautes', label: 'Nouveautés', url: 'nouveautes.html', navKey: 'nouveautes' },
+    nouveautes: { key: 'nouveautes', label: 'Nouveautés', url: 'nouveautes.html', navKey: 'nouveautes' }
+  };
+
+  function resolveOriginFromProduct(product, fallbackOrigin) {
+    const menus = product?.filter_menus || {};
+    const menu = ['categories', 'accessoires', 'collaborations', 'nouveautes_categories', 'nouveautes']
+      .find((name) => Array.isArray(menus[name]) && menus[name].length);
+    return menu ? ORIGIN_BY_MENU[menu] : fallbackOrigin;
+  }
+
   function applyOriginContext(origin, productName) {
+    const breadcrumb = document.querySelector('.product-detail-breadcrumb');
     const breadcrumbCurrent = document.getElementById('product-detail-breadcrumb-current');
     const breadcrumbOrigin = document.getElementById('product-detail-breadcrumb-origin');
 
@@ -131,6 +153,7 @@
       breadcrumbOrigin.textContent = origin?.label || 'Collection';
       breadcrumbOrigin.setAttribute('href', origin?.url || 'collection.html');
     }
+    if (breadcrumb) breadcrumb.classList.remove('is-loading');
 
     document.querySelectorAll('.nav a[data-product-origin-nav]').forEach((link) => {
       const isActive = link.dataset.productOriginNav === (origin?.navKey || origin?.key || 'collection');
@@ -959,9 +982,10 @@
       return;
     }
 
-    applyOriginContext(origin, product.name);
+    const resolvedOrigin = resolveOriginFromProduct(product, origin);
+    applyOriginContext(resolvedOrigin, product.name);
 
-    const isAccessory = isAccessoryProduct(product, origin);
+    const isAccessory = isAccessoryProduct(product, resolvedOrigin);
     const isUnique = !isAccessory && hasUniqueSize(product);
     // Trust the real tagged sizes, not the accessory guess: a product
     // categorized "Accessoires" that still has actual size variants (e.g.
@@ -1016,7 +1040,7 @@
         return `<button class="product-detail-size-chip${selectedClass}${recommendedClass}${disabledClass}" type="button" data-size="${size}">${size}</button>`;
       }).join('')
       : '';
-    const relatedProducts = getRelatedProducts(product, origin, allProducts);
+    const relatedProducts = getRelatedProducts(product, resolvedOrigin, allProducts);
     const rawReviewData = getProductReviewData(product);
     const reviewBreakdown = getReviewBreakdown(rawReviewData);
     const hasCustomRating = String(product?.ratingValue ?? '').trim() !== '';

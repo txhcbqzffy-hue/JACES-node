@@ -2804,6 +2804,10 @@ body.account-modal-open {
   text-transform: uppercase;
 }
 
+.product-detail-breadcrumb.is-loading {
+  visibility: hidden;
+}
+
 .product-detail-breadcrumb a {
   color: inherit;
 }
