@@ -82,6 +82,7 @@
   .variant-color-group { border: 1px solid #e4ddd1; border-radius: 4px; padding: 8px 9px; margin-bottom: 8px; background: #fffcf7; }
   .variant-color-head { display: flex; gap: 7px; align-items: center; margin-bottom: 7px; }
   .variant-color-head select { flex: 1; padding: 7px 9px; border: 1px solid #c8bfb3; font-size: 0.86rem; background: #fff; }
+  .variant-color-head .variant-accessoire-stock { flex: 0 0 100px; }
   .variant-color-head button { background: #ece5d8; border: 1px solid #c8bfb3; padding: 6px 10px; cursor: pointer; font-size: 0.78rem; }
   .variant-size-chips { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 6px; }
   .size-chip { border: 1px solid #c8bfb3; background: #fff; padding: 4px 11px; border-radius: 999px; font-size: 0.78rem; cursor: pointer; font-family: inherit; }
@@ -90,7 +91,7 @@
   .variant-size-stocks { display: flex; flex-wrap: wrap; gap: 6px; }
   .variant-stock-field { display: flex; align-items: center; gap: 5px; font-size: 0.76rem; background: #f1ece2; padding: 4px 7px; border-radius: 4px; }
   .variant-stock-field input { width: 48px; padding: 3px 4px; border: 1px solid #c8bfb3; font-size: 0.8rem; }
-  .variant-accessoire-stock input { max-width: 140px; padding: 7px 9px; border: 1px solid #c8bfb3; font-size: 0.86rem; }
+  .variant-accessoire-stock input { width: 100%; padding: 7px 9px; border: 1px solid #c8bfb3; font-size: 0.86rem; }
   .variant-size-chips[hidden], .variant-size-stocks[hidden], .variant-accessoire-stock[hidden] { display: none; }
   .field-collapsible { margin-bottom: 10px; }
   .field-collapsible summary { cursor: pointer; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.05em; color: #595149; padding: 5px 0; list-style: none; }
@@ -433,15 +434,15 @@ function variantColorGroup(color = '', sizeStocks = {}) {
         <option value="">Couleur</option>
         ${buildOptionsHtml(COLOR_OPTIONS, color)}
       </select>
+      <div class="variant-accessoire-stock">
+        <input type="number" min="0" placeholder="Stock" class="variant-accessoire-stock-input" value="${accessoireValue}">
+      </div>
       <button type="button">✕</button>
     </div>
     <div class="variant-size-chips">
       ${SIZE_OPTIONS.map((size) => `<button type="button" class="size-chip${sizeStocks[size] !== undefined ? ' is-active' : ''}" data-size="${size}">${size}</button>`).join('')}
     </div>
-    <div class="variant-size-stocks"></div>
-    <div class="variant-accessoire-stock">
-      <input type="number" min="0" placeholder="Stock" class="variant-accessoire-stock-input" value="${accessoireValue}">
-    </div>`;
+    <div class="variant-size-stocks"></div>`;
 
   const stocksContainer = row.querySelector('.variant-size-stocks');
   function addStockField(size, value) {
