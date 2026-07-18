@@ -77,7 +77,20 @@
   @media (max-width: 900px) { .field-wide-row { grid-template-columns: 1fr; } }
   .field-wide-row .field { margin-bottom: 0; }
   .field-wide { background: #faf6ee; border: 1px solid #eee3d2; padding: 12px 13px; }
-  #images-list, #variants-list { max-height: 140px; overflow-y: auto; padding-right: 4px; }
+  #images-list { max-height: 140px; overflow-y: auto; padding-right: 4px; }
+  #variants-list { max-height: 260px; overflow-y: auto; padding-right: 4px; }
+  .variant-color-group { border: 1px solid #e4ddd1; border-radius: 4px; padding: 8px 9px; margin-bottom: 8px; background: #fffcf7; }
+  .variant-color-head { display: flex; gap: 7px; align-items: center; margin-bottom: 7px; }
+  .variant-color-head select { flex: 1; padding: 7px 9px; border: 1px solid #c8bfb3; font-size: 0.86rem; background: #fff; }
+  .variant-color-head button { background: #ece5d8; border: 1px solid #c8bfb3; padding: 6px 10px; cursor: pointer; font-size: 0.78rem; }
+  .variant-size-chips { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 6px; }
+  .size-chip { border: 1px solid #c8bfb3; background: #fff; padding: 4px 11px; border-radius: 999px; font-size: 0.78rem; cursor: pointer; font-family: inherit; }
+  .size-chip:hover { border-color: #8a8175; }
+  .size-chip.is-active { background: #171411; border-color: #171411; color: #fff; }
+  .variant-size-stocks { display: flex; flex-wrap: wrap; gap: 6px; }
+  .variant-stock-field { display: flex; align-items: center; gap: 5px; font-size: 0.76rem; background: #f1ece2; padding: 4px 7px; border-radius: 4px; }
+  .variant-stock-field input { width: 48px; padding: 3px 4px; border: 1px solid #c8bfb3; font-size: 0.8rem; }
+  .variant-accessoire-stock input { max-width: 140px; padding: 7px 9px; border: 1px solid #c8bfb3; font-size: 0.86rem; }
   .field-collapsible { margin-bottom: 10px; }
   .field-collapsible summary { cursor: pointer; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.05em; color: #595149; padding: 5px 0; list-style: none; }
   .field-collapsible summary::-webkit-details-marker { display: none; }
@@ -102,6 +115,7 @@
   legend { font-size: 0.76rem; text-transform: uppercase; letter-spacing: 0.05em; color: #595149; padding: 0 6px; font-weight: 700; }
   .checkbox-grid { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 5px; }
   .checkbox-grid label { display: flex; align-items: center; gap: 6px; font-size: 0.86rem; text-transform: none; letter-spacing: 0; color: #1b1a17; }
+  .checkbox-grid label:has(input:disabled) { opacity: 0.4; cursor: not-allowed; }
   .checkbox-grid input { width: auto; }
   .actions {
     display: flex; gap: 10px; margin-top: 12px; position: sticky; bottom: 0; z-index: 10;
@@ -196,7 +210,7 @@
               <div class="field field-wide">
                 <label>Variantes (taille / couleur / stock)</label>
                 <div id="variants-list"></div>
-                <button type="button" class="add-btn" id="add-variant-btn">+ Ajouter une variante</button>
+                <button type="button" class="add-btn" id="add-variant-btn">+ Ajouter une couleur</button>
               </div>
             </div>
 
@@ -395,21 +409,56 @@ function buildOptionsHtml(options, current) {
   return known + options.map((value) => `<option value="${value}"${value === resolvedCurrent ? ' selected' : ''}>${value}</option>`).join('');
 }
 
-function variantRow(size = '', color = '', stock = '') {
+// One color group = one couleur + as many tailles as needed, each with its
+// own stock - lets one color have several sizes without repeating the
+// couleur dropdown for each one. sizeStocks looks like { '36': 5, '38': 2 }
+// for a normal product, or { accessoire: 3 } for an accessoire (no taille).
+function variantColorGroup(color = '', sizeStocks = {}) {
   const row = document.createElement('div');
-  row.className = 'list-row';
+  row.className = 'variant-color-group';
+  const accessoireValue = sizeStocks.accessoire !== undefined ? sizeStocks.accessoire : '';
   row.innerHTML = `
-    <select class="variant-size" style="max-width:140px">
-      <option value="">Taille</option>
-      ${buildOptionsHtml(SIZE_OPTIONS, size)}
-    </select>
-    <select class="variant-color" style="max-width:180px">
-      <option value="">Couleur</option>
-      ${buildOptionsHtml(COLOR_OPTIONS, color)}
-    </select>
-    <input type="number" placeholder="Stock" min="0" value="${stock}" style="max-width:130px">
-    <button type="button">✕</button>`;
-  row.querySelector('button').addEventListener('click', () => row.remove());
+    <div class="variant-color-head">
+      <select class="variant-color">
+        <option value="">Couleur</option>
+        ${buildOptionsHtml(COLOR_OPTIONS, color)}
+      </select>
+      <button type="button">✕</button>
+    </div>
+    <div class="variant-size-chips">
+      ${SIZE_OPTIONS.map((size) => `<button type="button" class="size-chip${sizeStocks[size] !== undefined ? ' is-active' : ''}" data-size="${size}">${size}</button>`).join('')}
+    </div>
+    <div class="variant-size-stocks"></div>
+    <div class="variant-accessoire-stock">
+      <input type="number" min="0" placeholder="Stock" class="variant-accessoire-stock-input" value="${accessoireValue}">
+    </div>`;
+
+  const stocksContainer = row.querySelector('.variant-size-stocks');
+  function addStockField(size, value) {
+    const field = document.createElement('label');
+    field.className = 'variant-stock-field';
+    field.dataset.size = size;
+    field.innerHTML = `<span>${size}</span><input type="number" min="0" class="variant-stock-input" data-size="${size}" value="${value === undefined ? '' : value}">`;
+    stocksContainer.appendChild(field);
+  }
+  SIZE_OPTIONS.forEach((size) => {
+    if (sizeStocks[size] !== undefined) addStockField(size, sizeStocks[size]);
+  });
+
+  row.querySelectorAll('.size-chip').forEach((chip) => {
+    chip.addEventListener('click', () => {
+      const size = chip.dataset.size;
+      chip.classList.toggle('is-active');
+      const existing = stocksContainer.querySelector(`.variant-stock-field[data-size="${size}"]`);
+      if (chip.classList.contains('is-active')) {
+        if (!existing) addStockField(size, '');
+      } else if (existing) {
+        existing.remove();
+      }
+    });
+  });
+
+  row.querySelector('.variant-color-head button').addEventListener('click', () => row.remove());
   return row;
 }
 
@@ -446,7 +495,8 @@ document.getElementById('add-review-btn').addEventListener('click', () => {
   document.getElementById('reviews-list').prepend(reviewRow());
 });
 document.getElementById('add-variant-btn').addEventListener('click', () => {
-  document.getElementById('variants-list').appendChild(variantRow());
+  // Newest first, same as Avis clients.
+  document.getElementById('variants-list').prepend(variantColorGroup());
   updateVariantSizeAvailability();
 });
 
@@ -620,6 +670,7 @@ function resetForm() {
   updateAccessoryTypeFieldsetVisibility();
   updateCollaborationHiddenFieldsets();
   updateCollaborationFieldsetVisibility();
+  updateNouveauteCategoryLock();
   updateMaterialCheckboxAvailability();
   document.getElementById('form-status').textContent = '';
   document.getElementById('form-status').className = 'status-msg';
@@ -662,8 +713,21 @@ function fillFormWithProduct(product) {
 
   const variantsList = document.getElementById('variants-list');
   variantsList.innerHTML = '';
+  // Group the flat saved variants back into one color group per couleur,
+  // each carrying whichever tailles (or the single accessoire stock) it had.
+  const variantsByColor = new Map();
   (product.variants || []).forEach((variant) => {
-    variantsList.appendChild(variantRow(variant.size || '', variant.color || '', variant.stock ?? ''));
+    const color = variant.color || '';
+    if (!variantsByColor.has(color)) variantsByColor.set(color, {});
+    const sizeStocks = variantsByColor.get(color);
+    if (variant.size) {
+      sizeStocks[variant.size] = variant.stock ?? 0;
+    } else {
+      sizeStocks.accessoire = variant.stock ?? 0;
+    }
+  });
+  variantsByColor.forEach((sizeStocks, color) => {
+    variantsList.appendChild(variantColorGroup(color, sizeStocks));
   });
 
   const filterIds = new Set((product.filter_ids || []).map(String));
@@ -676,6 +740,7 @@ function fillFormWithProduct(product) {
   // which is a no-op if the restored state already left it unchecked.
   updateAccessoryTypeFieldsetVisibility();
   updateMaterialCheckboxAvailability();
+  updateNouveauteCategoryLock();
   ['categories', 'collections', 'nouveautes', 'nouveautes_categories'].forEach((menu) => {
     const fieldset = document.querySelector(`#filters-container fieldset[data-menu="${menu}"]`);
     if (fieldset) fieldset.hidden = isCollaborationSelected();
@@ -772,12 +837,22 @@ document.getElementById('product-form').addEventListener('submit', async (e) => 
       .filter(Boolean)
   )];
 
-  const variants = Array.from(document.querySelectorAll('#variants-list .list-row')).map((row) => {
-    const size = row.querySelector('.variant-size').value.trim();
-    const color = row.querySelector('.variant-color').value.trim();
-    const stock = Number(row.querySelector('input[type="number"]').value) || 0;
-    return { size, color, stock };
-  }).filter((v) => v.size || v.color);
+  // Each color group expands into one {size, color, stock} entry per
+  // checked taille (or a single sizeless entry in accessoire mode) - the
+  // payload shape stays identical to before, only the entry UI changed.
+  const variants = Array.from(document.querySelectorAll('#variants-list .variant-color-group')).flatMap((group) => {
+    const color = group.querySelector('.variant-color').value.trim();
+    if (!color) return [];
+    if (group.querySelector('.variant-accessoire-stock').hidden === false) {
+      const stock = Number(group.querySelector('.variant-accessoire-stock-input').value) || 0;
+      return [{ size: '', color, stock }];
+    }
+    return Array.from(group.querySelectorAll('.variant-stock-input')).map((input) => ({
+      size: input.dataset.size,
+      color,
+      stock: Number(input.value) || 0
+    }));
+  });
 
   const reviewPhotos = [...new Set(
     Array.from(document.querySelectorAll('#review-photos-list input'))
@@ -947,9 +1022,19 @@ function updateAccessoryTypeFieldsetVisibility() {
 // variant row is locked (and cleared) once an accessory type is checked.
 function updateVariantSizeAvailability() {
   const disable = isAccessorySelected();
-  document.querySelectorAll('#variants-list .variant-size').forEach((select) => {
-    select.disabled = disable;
-    if (disable) select.value = '';
+  document.querySelectorAll('#variants-list .variant-color-group').forEach((group) => {
+    const chips = group.querySelector('.variant-size-chips');
+    const stocks = group.querySelector('.variant-size-stocks');
+    const accessoireStock = group.querySelector('.variant-accessoire-stock');
+    chips.hidden = disable;
+    stocks.hidden = disable;
+    accessoireStock.hidden = !disable;
+    // Only clear taille selections on the transition into accessoire mode -
+    // never touch the accessoire stock value here, it's the real number.
+    if (disable && chips.querySelector('.size-chip.is-active')) {
+      chips.querySelectorAll('.size-chip.is-active').forEach((chip) => chip.classList.remove('is-active'));
+      stocks.innerHTML = '';
+    }
   });
 }
 
@@ -1020,6 +1105,33 @@ function isRegularClassificationSelected() {
   return document.querySelectorAll('#filters-container input[data-menu="categories"]:checked, #filters-container input[data-menu="accessoires"]:checked, #filters-container input[data-menu="collections"]:checked').length > 0;
 }
 
+// The real category (Catégories visible sur Collection, or Sacs/Bijoux/...
+// implying "Accessoires") is the source of truth - a product can't be
+// Robes on Collection and Tops on Nouveautés at the same time, so only the
+// matching option (or none) stays pickable in Catégories (visible sur
+// Nouveautés) once a real category is set.
+function getRealCategoryLabel() {
+  const categoryInput = document.querySelector('#filters-container input[data-menu="categories"]:checked');
+  if (categoryInput) {
+    const filter = (filtersByMenu.categories || []).find((f) => String(f.id) === categoryInput.value);
+    return filter ? (filter.label || filter.name) : null;
+  }
+  const accessoryTypeInput = document.querySelector('#filters-container input[data-menu="accessoires"]:checked');
+  if (accessoryTypeInput) return 'Accessoires';
+  return null;
+}
+
+function updateNouveauteCategoryLock() {
+  const realLabel = getRealCategoryLabel();
+  document.querySelectorAll('#filters-container input[data-menu="nouveautes_categories"]').forEach((input) => {
+    const filter = (filtersByMenu.nouveautes_categories || []).find((f) => String(f.id) === input.value);
+    const label = filter ? (filter.label || filter.name) : '';
+    const mismatched = !!realLabel && label !== realLabel;
+    input.disabled = mismatched;
+    if (mismatched && input.checked) input.checked = false;
+  });
+}
+
 // Mirror of updateCollaborationHiddenFieldsets(): a "regular" catalog item
 // (Catégorie/Accessoire/Saison) doesn't use Collaborations either - hides
 // (and clears) just that one fieldset, since Nouveautés stays independent
@@ -1038,6 +1150,7 @@ document.getElementById('filters-container').addEventListener('change', (event) 
   enforceCollaborationExclusivity(event);
   updateCollaborationHiddenFieldsets();
   updateCollaborationFieldsetVisibility();
+  updateNouveauteCategoryLock();
   autoCheckNouveauteToutVoir(event);
   updateAccessoryTypeFieldsetVisibility();
   updateVariantSizeAvailability();
