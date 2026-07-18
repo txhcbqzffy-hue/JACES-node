@@ -121,14 +121,15 @@
      disables ALL its own inputs at once) - stacking both opacities would
      make an already-locked fieldset's text nearly invisible. */
   fieldset:not(.is-locked) .checkbox-grid label:has(input:disabled) { opacity: 0.4; cursor: not-allowed; }
-  .actions {
-    display: flex; gap: 10px; margin-top: 12px; position: sticky; bottom: 0; z-index: 10;
-    background: #fff; padding: 12px 0 6px; border-top: 1px solid #e4ddd1;
+  .actions-wrap {
+    position: sticky; bottom: 0; z-index: 10; margin-top: 12px;
+    background: #fff; padding: 10px 0 6px; border-top: 1px solid #e4ddd1;
   }
+  .actions { display: flex; gap: 10px; }
   .sidebar-col { overflow-y: auto; }
   .actions button { flex: 1; padding: 10px; font-size: 0.82rem; letter-spacing: 0.05em; text-transform: uppercase; cursor: pointer; }
   .btn-secondary { background: #ece5d8; border: 1px solid #c8bfb3; color: #1b1a17; }
-  .status-msg { font-size: 0.84rem; margin-top: 8px; min-height: 1.2em; }
+  .status-msg { font-size: 0.84rem; margin: 0 0 8px; min-height: 1.2em; font-weight: 600; }
   .status-msg.error { color: #a5321f; }
   .status-msg.ok { color: #2f6b3a; }
   .field-hint { margin: 6px 0 0; font-size: 0.78rem; color: #a5321f; }
@@ -143,6 +144,10 @@
   fieldset[data-menu="collections"] legend { color: #2f6b3a; }
   .is-locked { opacity: 0.45; }
   .is-locked .checkbox-grid label, .is-locked label { cursor: not-allowed; }
+  /* Accessoires-type/Matière nest inside Catégories' own checkbox-grid
+     (a 2-column grid) right under "Accessoires" - span both columns so
+     they unfold in place instead of squeezing into one column. */
+  .nested-fieldset { grid-column: 1 / -1; margin-top: 4px; }
   .material-field-compact {
     padding: 7px 9px; background: #f7f5f0; border: 1px dashed #d8cfc2;
   }
@@ -206,7 +211,7 @@
 
             <div class="field-wide-row">
               <div class="field field-wide">
-                <label>Images (liens Cloudinary / Dropbox)</label>
+                <label>Images (liens Cloudinary)</label>
                 <div id="images-list"></div>
                 <button type="button" class="add-btn" id="add-image-btn">+ Ajouter une image</button>
               </div>
@@ -234,7 +239,6 @@
                 <label><input type="checkbox" name="material" value="laine"> Laine</label>
                 <label><input type="checkbox" name="material" value="coton"> Coton</label>
               </div>
-              <p class="field-hint" id="material-required-hint">Obligatoire : au moins une mati&egrave;re, car un accessoire (Sacs/Bijoux/Ceintures/Foulards) est coch&eacute; ci-dessus.</p>
             </div>
 
             <details class="field-collapsible">
@@ -282,17 +286,18 @@
               </div>
 
               <div class="field">
-                <label>Photos clientes (liens Cloudinary / Dropbox)</label>
+                <label>Photos clientes (liens Cloudinary)</label>
                 <div id="review-photos-list"></div>
                 <button type="button" class="add-btn" id="add-review-photo-btn">+ Ajouter une photo cliente</button>
               </div>
             </details>
 
-            <p class="status-msg" id="form-status"></p>
-
-            <div class="actions">
-              <button type="submit" class="primary-btn">Enregistrer</button>
-              <button type="button" class="btn-secondary" id="cancel-edit-btn">Nouveau produit</button>
+            <div class="actions-wrap">
+              <p class="status-msg" id="form-status"></p>
+              <div class="actions">
+                <button type="submit" class="primary-btn">Enregistrer</button>
+                <button type="button" class="btn-secondary" id="cancel-edit-btn">Nouveau produit</button>
+              </div>
             </div>
           </form>
         </div>
@@ -382,9 +387,9 @@ let filtersByMenu = {};
 let editingId = null;
 
 const MENU_LABELS = {
-  categories: 'Catégories (visible sur Collection) — choisissez ici en premier',
-  nouveautes: 'Nouveautés (visible sur Accueil + Nouveautés)',
-  nouveautes_categories: 'Catégories (visible sur Nouveautés) — optionnel, en plus de la vraie catégorie ci-dessus',
+  categories: 'Catégories (visible sur Collection)',
+  nouveautes: 'Nouveautés',
+  nouveautes_categories: 'Catégories (visible sur Nouveautés)',
   accessoires: 'Accessoires (visible sur Accessoires)',
   collaborations: 'Collaborations (visible sur Collaborations)',
   collections: 'Saison (visible sur Collection)'
@@ -557,7 +562,54 @@ async function loadFilters() {
     if (indexB === -1) return -1;
     return indexA - indexB;
   });
+  // A product belongs to exactly one Collection category (Robes/Tops/...),
+  // one accessory type (Sacs/Bijoux/...) if it's an accessory, one
+  // Collaboration if it's a collaboration, one Saison, and one Nouveautés
+  // tag (Drop été/Édition limitée/Pièces signature) - all mutually
+  // exclusive radio groups within their menu (Catégories/Accessoires/
+  // Collaborations are additionally exclusive with each other, enforced
+  // below).
+  const radioNameByMenu = { categories: 'filter-category', accessoires: 'filter-accessory-type', collaborations: 'filter-collaboration', collections: 'filter-season', nouveautes: 'filter-nouveaute-tag', nouveautes_categories: 'filter-nouveaute-category' };
+
+  function buildOptionLabel(menu, filter) {
+    const label = document.createElement('label');
+    const filterLabel = filter.label || filter.name;
+    const radioName = radioNameByMenu[menu];
+    // "Créations exclusives" isn't a brand collab, and Nouveautés' "Tout
+    // voir" isn't a specific tag - both can be checked alongside their
+    // group's radio option instead of being mutually exclusive with it.
+    const isStandaloneCollab = menu === 'collaborations' && filterLabel === 'Créations exclusives';
+    const isStandaloneNouveaute = menu === 'nouveautes' && filterLabel.trim() === 'Tout voir';
+    const inputAttrs = radioName && !isStandaloneCollab && !isStandaloneNouveaute ? `type="radio" name="${radioName}"` : 'type="checkbox"';
+    const toutVoirAttr = isStandaloneNouveaute ? ' data-nouveaute-tout-voir="true"' : '';
+    label.innerHTML = `<input ${inputAttrs} value="${filter.id}" data-menu="${menu}"${toutVoirAttr}> ${filterLabel}`;
+    return label;
+  }
+
+  // Sacs/Bijoux/Ceintures/Foulards is built separately from the main loop
+  // below so it can nest directly under the "Accessoires" checkbox inside
+  // Catégories, instead of floating as its own grid item elsewhere - that
+  // used to make the whole 2-column layout jump around whenever it (or
+  // Matière) showed/hid. It's still visible-but-locked, same as before.
+  function buildAccessoiresTypeFieldset() {
+    const fieldset = document.createElement('fieldset');
+    fieldset.id = 'accessoires-type-fieldset';
+    fieldset.dataset.menu = 'accessoires';
+    fieldset.classList.add('is-locked', 'nested-fieldset');
+    const legend = document.createElement('legend');
+    legend.textContent = MENU_LABELS.accessoires || 'accessoires';
+    fieldset.appendChild(legend);
+    const grid = document.createElement('div');
+    grid.className = 'checkbox-grid';
+    (filtersByMenu.accessoires || []).forEach((filter) => {
+      grid.appendChild(buildOptionLabel('accessoires', filter));
+    });
+    fieldset.appendChild(grid);
+    return fieldset;
+  }
+
   menuKeys.forEach((menu) => {
+    if (menu === 'accessoires') return; // nested under Catégories' "Accessoires" option instead - see below.
     const fieldset = document.createElement('fieldset');
     fieldset.dataset.menu = menu;
     const legend = document.createElement('legend');
@@ -566,15 +618,6 @@ async function loadFilters() {
 
     const grid = document.createElement('div');
     grid.className = 'checkbox-grid';
-    // A product belongs to exactly one Collection category (Robes/Tops/...),
-    // one accessory type (Sacs/Bijoux/...) if it's an accessory, one
-    // Collaboration if it's a collaboration, one Saison, and one Nouveautés
-    // tag (Drop été/Édition limitée/Pièces signature) - all mutually
-    // exclusive radio groups within their menu (Catégories/Accessoires/
-    // Collaborations are additionally exclusive with each other, enforced
-    // below).
-    const radioNameByMenu = { categories: 'filter-category', accessoires: 'filter-accessory-type', collaborations: 'filter-collaboration', collections: 'filter-season', nouveautes: 'filter-nouveaute-tag', nouveautes_categories: 'filter-nouveaute-category' };
-    const radioName = radioNameByMenu[menu];
     // "Tout voir" is no longer pickable in Catégories/Collaborations - every
     // product now needs a real classification, so this catch-all doesn't
     // belong among those choices (its filter rows stay untouched). In
@@ -584,17 +627,18 @@ async function loadFilters() {
       ? filtersByMenu[menu].filter((filter) => (filter.label || filter.name) !== 'Tout voir')
       : filtersByMenu[menu];
     menuOptions.forEach((filter) => {
-      const label = document.createElement('label');
       const filterLabel = filter.label || filter.name;
-      // "Créations exclusives" isn't a brand collab, and Nouveautés' "Tout
-      // voir" isn't a specific tag - both can be checked alongside their
-      // group's radio option instead of being mutually exclusive with it.
-      const isStandaloneCollab = menu === 'collaborations' && filterLabel === 'Créations exclusives';
-      const isStandaloneNouveaute = menu === 'nouveautes' && filterLabel.trim() === 'Tout voir';
-      const inputAttrs = radioName && !isStandaloneCollab && !isStandaloneNouveaute ? `type="radio" name="${radioName}"` : 'type="checkbox"';
-      const toutVoirAttr = isStandaloneNouveaute ? ' data-nouveaute-tout-voir="true"' : '';
-      label.innerHTML = `<input ${inputAttrs} value="${filter.id}" data-menu="${menu}"${toutVoirAttr}> ${filterLabel}`;
-      grid.appendChild(label);
+      grid.appendChild(buildOptionLabel(menu, filter));
+
+      // Right after "Accessoires" itself - unfolds in place when clicked
+      // instead of shifting other fieldsets around the page.
+      if (menu === 'categories' && filterLabel === 'Accessoires') {
+        const accessoiresFieldset = buildAccessoiresTypeFieldset();
+        grid.appendChild(accessoiresFieldset);
+        const materialField = document.getElementById('material-field');
+        materialField.classList.add('nested-fieldset');
+        grid.appendChild(materialField);
+      }
     });
     fieldset.appendChild(grid);
 
@@ -611,18 +655,6 @@ async function loadFilters() {
     }
 
     container.appendChild(fieldset);
-
-    // Sacs/Bijoux/Ceintures/Foulards stays visible but locked (greyed out,
-    // radios disabled) until "Accessoires" is picked as the Collection
-    // category - not hidden, so it's always clear the option exists.
-    if (menu === 'accessoires') {
-      fieldset.id = 'accessoires-type-fieldset';
-      fieldset.classList.add('is-locked');
-      // Matière only makes sense right after picking an accessory type, so
-      // it's moved to sit directly under this fieldset instead of at the
-      // bottom of the whole classification block.
-      fieldset.insertAdjacentElement('afterend', document.getElementById('material-field'));
-    }
   });
 
   populateProductFilterSelect();
