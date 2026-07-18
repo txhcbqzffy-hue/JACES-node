@@ -118,16 +118,26 @@
       key: originKey,
       label: originLabel,
       url: originUrl,
-      navKey: params.get('originNav') || originKey
+      navKey: params.get('originNav') || originKey,
+      // Was an origin actually carried in the URL (came from clicking a
+      // product card on some listing page), or is this the silent
+      // "collection" default because no origin param was present at all
+      // (direct link, favorite, search result)? Only the latter case
+      // should fall back to guessing from the product's classification -
+      // a real click-through origin (e.g. from Nouveautés) must win even
+      // if the product is also tagged under a main Catégorie, so clicking
+      // a product from "Toutes les nouveautés" keeps you in Nouveautés.
+      isExplicit: params.has('origin') || params.has('originNav')
     };
   }
 
   // Which of Nouveautés/Collections/Collaborations/Accessoires the
-  // breadcrumb and mega-menu highlight should reflect is determined by the
-  // product's actual admin-assigned classification (filter_menus), not by
-  // which link the visitor happened to click through - a direct link, a
-  // favorite, or a search result can carry no/wrong origin params, but the
-  // product's real classification is always correct.
+  // breadcrumb and mega-menu highlight should reflect: trust the page the
+  // visitor actually clicked through from when known (see isExplicit
+  // above); only when that's missing (direct link, favorite, search
+  // result with no origin context) fall back to the product's real
+  // admin-assigned classification (filter_menus) instead of defaulting to
+  // "Collections".
   const ORIGIN_BY_MENU = {
     categories: { key: 'collection', label: 'Collections', url: 'collection.html', navKey: 'collection' },
     accessoires: { key: 'accessoires', label: 'Accessoires', url: 'accessoires.html', navKey: 'accessoires' },
@@ -137,6 +147,7 @@
   };
 
   function resolveOriginFromProduct(product, fallbackOrigin) {
+    if (fallbackOrigin?.isExplicit) return fallbackOrigin;
     const menus = product?.filter_menus || {};
     const menu = ['categories', 'accessoires', 'collaborations', 'nouveautes_categories', 'nouveautes']
       .find((name) => Array.isArray(menus[name]) && menus[name].length);
