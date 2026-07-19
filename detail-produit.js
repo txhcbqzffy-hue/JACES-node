@@ -353,6 +353,25 @@
     });
   }
 
+  // Highlights the category submenu entry (Robes/Tops/.../Accessoires,
+  // or the Collaborations brand list) matching the breadcrumb's category
+  // segment - scoped to the given page file so e.g. "Pantalons" in the
+  // Nouveautés submenu doesn't light up while viewing a Collection product.
+  function applyCategorySubmenuHighlight(pageFile, slug) {
+    document.querySelectorAll('.submenu-categories a[href*="category="]').forEach((link) => {
+      let linkSlug = '';
+      let linkPage = '';
+      try {
+        const parsed = new URL(link.getAttribute('href'), window.location.href);
+        linkPage = parsed.pathname.split('/').pop() || '';
+        linkSlug = parsed.searchParams.get('category') || '';
+      } catch (error) {
+        linkSlug = '';
+      }
+      link.classList.toggle('submenu-link-active', Boolean(slug) && linkPage === pageFile && linkSlug === slug);
+    });
+  }
+
   function ensureHeaderSubmenus() {
     const nav = document.querySelector('.nav');
     if (!nav || nav.querySelector('.submenu')) return;
@@ -368,12 +387,12 @@
         '</div>',
         '<div class="submenu-categories">',
         '  <p class="submenu-title">FEMME</p>',
-        '  <a href="nouveautes.html">Robes</a>',
-        '  <a href="nouveautes.html">Tops</a>',
-        '  <a href="nouveautes.html">Jupes</a>',
-        '  <a href="nouveautes.html">Pantalons</a>',
-        '  <a href="nouveautes.html">Vestes</a>',
-        '  <a href="nouveautes.html">Accessoires</a>',
+        '  <a href="nouveautes.html?category=robes">Robes</a>',
+        '  <a href="nouveautes.html?category=tops">Tops</a>',
+        '  <a href="nouveautes.html?category=jupes">Jupes</a>',
+        '  <a href="nouveautes.html?category=pantalons">Pantalons</a>',
+        '  <a href="nouveautes.html?category=vestes">Vestes</a>',
+        '  <a href="nouveautes.html?category=accessoires">Accessoires</a>',
         '</div>'
       ].join(''),
       'collection.html': [
@@ -383,12 +402,12 @@
         '  <a href="collection.html?collection=all" class="underline-link">Toutes les collections</a>',
         '</div>',
         '<div class="submenu-categories">',
-        '  <a href="collection.html">Robes</a>',
-        '  <a href="collection.html">Tops</a>',
-        '  <a href="collection.html">Jupes</a>',
-        '  <a href="collection.html">Pantalons</a>',
-        '  <a href="collection.html">Vestes</a>',
-        '  <a href="collection.html">Accessoires</a>',
+        '  <a href="collection.html?category=robes">Robes</a>',
+        '  <a href="collection.html?category=tops">Tops</a>',
+        '  <a href="collection.html?category=jupes">Jupes</a>',
+        '  <a href="collection.html?category=pantalons">Pantalons</a>',
+        '  <a href="collection.html?category=vestes">Vestes</a>',
+        '  <a href="collection.html?category=accessoires">Accessoires</a>',
         '</div>'
       ].join(''),
       'collaborations.html': [
@@ -399,20 +418,20 @@
         '  <a href="collaborations.html" class="underline-link">Toutes les collaborations</a>',
         '</div>',
         '<div class="submenu-categories">',
-        '  <a href="collaborations.html">JACES x Nike</a>',
-        '  <a href="collaborations.html">JACES x Chloé</a>',
-        '  <a href="collaborations.html">JACES x Jacquemus</a>',
-        '  <a href="collaborations.html">JACES x Dior</a>',
-        '  <a href="collaborations.html">JACES x Saint Laurent</a>',
+        '  <a href="collaborations.html?category=nike">JACES x Nike</a>',
+        '  <a href="collaborations.html?category=chloe">JACES x Chloé</a>',
+        '  <a href="collaborations.html?category=jacquemus">JACES x Jacquemus</a>',
+        '  <a href="collaborations.html?category=dior">JACES x Dior</a>',
+        '  <a href="collaborations.html?category=saint-laurent">JACES x Saint Laurent</a>',
         '</div>'
       ].join(''),
       'accessoires.html': [
         '<div>',
         '  <p class="submenu-title">ACCESSOIRES</p>',
-        '  <a href="accessoires.html">Sacs</a>',
-        '  <a href="accessoires.html">Bijoux</a>',
-        '  <a href="accessoires.html">Ceintures</a>',
-        '  <a href="accessoires.html">Foulards</a>',
+        '  <a href="accessoires.html?category=sacs">Sacs</a>',
+        '  <a href="accessoires.html?category=bijoux">Bijoux</a>',
+        '  <a href="accessoires.html?category=ceintures">Ceintures</a>',
+        '  <a href="accessoires.html?category=foulards">Foulards</a>',
         '</div>'
       ].join(''),
       'defile.html': [
@@ -1169,6 +1188,16 @@
     }
     applySeasonSubmenuHighlight(enrichedOrigin.key === 'collection' ? modifierSlug : '');
     applyNouveauteTagSubmenuHighlight(enrichedOrigin.key === 'nouveautes' ? modifierSlug : '');
+
+    let categorySlug = '';
+    if (enrichedOrigin.categoryUrl) {
+      try {
+        categorySlug = new URL(enrichedOrigin.categoryUrl, window.location.href).searchParams.get('category') || '';
+      } catch (error) {
+        categorySlug = '';
+      }
+    }
+    applyCategorySubmenuHighlight(enrichedOrigin.url || '', categorySlug);
 
     const isAccessory = isAccessoryProduct(product, resolvedOrigin);
     const isUnique = !isAccessory && hasUniqueSize(product);
