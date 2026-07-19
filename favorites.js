@@ -494,7 +494,18 @@ if (path === 'collection.html' || path === 'nouveautes.html' || path === 'access
     }
 
     if (typeof window.JacesCatalog.getPageContext === 'function') {
-      return window.JacesCatalog.getPageContext();
+      const context = window.JacesCatalog.getPageContext();
+      if (!context) return context;
+      // Carry the CURRENT page's own active Nouveautés-tag/season filter
+      // through to the product link (see getProductUrl below), so the
+      // detail page can tell "I actually browsed this specific filtered
+      // view" apart from "the product just happens to also carry that
+      // classification elsewhere" - only the former should show a tag/
+      // season breadcrumb segment or mega-menu highlight.
+      const params = new URLSearchParams(window.location.search || '');
+      context.nouveauteTag = params.get('nouveauteTag') || '';
+      context.collection = params.get('collection') || '';
+      return context;
     }
 
     return null;
@@ -503,10 +514,23 @@ if (path === 'collection.html' || path === 'nouveautes.html' || path === 'access
   function getProductUrl(product, context) {
     const builtProduct = buildProduct(product);
     const resolvedContext = context || getNavigationContext();
+    let url;
     if (window.JacesCatalog && typeof window.JacesCatalog.getProductUrl === 'function') {
-      return window.JacesCatalog.getProductUrl(builtProduct, resolvedContext);
+      url = window.JacesCatalog.getProductUrl(builtProduct, resolvedContext);
+    } else {
+      url = builtProduct.url || ('detail-produit.html?id=' + encodeURIComponent(builtProduct.id));
     }
-    return builtProduct.url || ('detail-produit.html?id=' + encodeURIComponent(builtProduct.id));
+    if (resolvedContext?.nouveauteTag || resolvedContext?.collection) {
+      try {
+        const parsed = new URL(url, window.location.href);
+        if (resolvedContext.nouveauteTag) parsed.searchParams.set('nouveauteTag', resolvedContext.nouveauteTag);
+        if (resolvedContext.collection) parsed.searchParams.set('collection', resolvedContext.collection);
+        url = parsed.pathname + parsed.search;
+      } catch (error) {
+        // leave url unchanged
+      }
+    }
+    return url;
   }
 
   function getProductFromCard(card) {

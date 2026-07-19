@@ -127,7 +127,14 @@
       // a real click-through origin (e.g. from Nouveautés) must win even
       // if the product is also tagged under a main Catégorie, so clicking
       // a product from "Toutes les nouveautés" keeps you in Nouveautés.
-      isExplicit: params.has('origin') || params.has('originNav')
+      isExplicit: params.has('origin') || params.has('originNav'),
+      // The specific Nouveautés tag / Collection season filter that was
+      // ACTIVE on the page you clicked from, if any (carried through by
+      // favorites.js's card click handler). Only present when you actually
+      // browsed that filtered view - a product can carry a tag/season
+      // classification that has nothing to do with how you got here.
+      explicitNouveauteTag: params.get('nouveauteTag') || '',
+      explicitCollection: params.get('collection') || ''
     };
   }
 
@@ -185,8 +192,8 @@
   // e.g. "Nouveautés / Drop été / Pantalons / <product>". Independent from
   // the category segment above (different filter menu).
   const MODIFIER_CONFIG_BY_ORIGIN_KEY = {
-    nouveautes: { menu: 'nouveautes', param: 'nouveauteTag', mapSlug: (slug) => slug },
-    collection: { menu: 'collections', param: 'collection', mapSlug: (slug) => SEASON_SLUG_TO_TOKEN[slug] || slug }
+    nouveautes: { menu: 'nouveautes', param: 'nouveauteTag', explicitKey: 'explicitNouveauteTag', mapSlug: (slug) => slug },
+    collection: { menu: 'collections', param: 'collection', explicitKey: 'explicitCollection', mapSlug: (slug) => SEASON_SLUG_TO_TOKEN[slug] || slug }
   };
 
   // Picking a Nouveautés tag (Drop été/Édition limitée/Pièces signature)
@@ -204,11 +211,32 @@
 
   function withModifierDeepLink(origin, product) {
     const config = MODIFIER_CONFIG_BY_ORIGIN_KEY[origin?.key];
-    const entries = config ? product?.filter_menus?.[config.menu] : null;
-    const entry = config?.menu === 'nouveautes' ? pickRealNouveauteEntry(entries) : (Array.isArray(entries) ? entries[0] : null);
-    if (!config || !entry?.slug) return origin;
+    if (!config) return origin;
     const baseUrl = origin.url || (origin.key === 'nouveautes' ? 'nouveautes.html' : 'collection.html');
     const separator = baseUrl.includes('?') ? '&' : '?';
+
+    if (origin.isExplicit) {
+      // Trust the page you actually clicked from: only show a tag/season
+      // segment if that specific filter was active there - a product
+      // tagged "Drop été" shouldn't show that just because you happened
+      // to browse in from the general "Toutes les nouveautés" view.
+      const explicitSlug = origin[config.explicitKey];
+      if (!explicitSlug) return origin;
+      const entries = product?.filter_menus?.[config.menu];
+      const matchedEntry = Array.isArray(entries)
+        ? entries.find((entry) => entry?.slug === explicitSlug || config.mapSlug(entry?.slug) === explicitSlug)
+        : null;
+      return Object.assign({}, origin, {
+        modifierLabel: matchedEntry?.label || explicitSlug,
+        modifierUrl: `${baseUrl}${separator}${config.param}=${encodeURIComponent(explicitSlug)}`
+      });
+    }
+
+    // Cold/direct link with no click-through context at all - fall back
+    // to the product's own real classification.
+    const entries = product?.filter_menus?.[config.menu];
+    const entry = config.menu === 'nouveautes' ? pickRealNouveauteEntry(entries) : (Array.isArray(entries) ? entries[0] : null);
+    if (!entry?.slug) return origin;
     return Object.assign({}, origin, {
       modifierLabel: entry.label || entry.slug,
       modifierUrl: `${baseUrl}${separator}${config.param}=${encodeURIComponent(config.mapSlug(entry.slug))}`
@@ -297,10 +325,11 @@
     'automne-hiver-2026': 'aw26'
   };
 
-  function applySeasonSubmenuHighlight(product) {
-    const entries = product?.filter_menus?.collections;
-    const rawSlug = Array.isArray(entries) && entries[0]?.slug ? entries[0].slug : '';
-    const slug = SEASON_SLUG_TO_TOKEN[rawSlug] || rawSlug;
+  // Both take a plain slug (the SAME one resolved for the breadcrumb's
+  // modifier segment - see withModifierDeepLink) rather than re-deriving
+  // it from the product independently, so the mega-menu highlight can
+  // never disagree with what the breadcrumb actually shows.
+  function applySeasonSubmenuHighlight(slug) {
     document.querySelectorAll('.submenu a[href*="collection.html?collection="]').forEach((link) => {
       let linkSlug = '';
       try {
@@ -312,11 +341,7 @@
     });
   }
 
-  // Same idea as applySeasonSubmenuHighlight but for the Nouveautés tag
-  // submenu (Drop été/Édition limitée/Pièces signature).
-  function applyNouveauteTagSubmenuHighlight(product) {
-    const entry = pickRealNouveauteEntry(product?.filter_menus?.nouveautes);
-    const slug = entry?.slug || '';
+  function applyNouveauteTagSubmenuHighlight(slug) {
     document.querySelectorAll('.submenu a[href*="nouveautes.html?nouveauteTag="]').forEach((link) => {
       let linkSlug = '';
       try {
@@ -1132,8 +1157,18 @@
     const resolvedOrigin = resolveOriginFromProduct(product, origin);
     const enrichedOrigin = withCategoryDeepLink(withModifierDeepLink(resolvedOrigin, product), product);
     applyOriginContext(enrichedOrigin, product.name);
-    applySeasonSubmenuHighlight(product);
-    applyNouveauteTagSubmenuHighlight(product);
+
+    let modifierSlug = '';
+    if (enrichedOrigin.modifierUrl) {
+      try {
+        const modifierParam = MODIFIER_CONFIG_BY_ORIGIN_KEY[enrichedOrigin.key]?.param;
+        modifierSlug = new URL(enrichedOrigin.modifierUrl, window.location.href).searchParams.get(modifierParam) || '';
+      } catch (error) {
+        modifierSlug = '';
+      }
+    }
+    applySeasonSubmenuHighlight(enrichedOrigin.key === 'collection' ? modifierSlug : '');
+    applyNouveauteTagSubmenuHighlight(enrichedOrigin.key === 'nouveautes' ? modifierSlug : '');
 
     const isAccessory = isAccessoryProduct(product, resolvedOrigin);
     const isUnique = !isAccessory && hasUniqueSize(product);
