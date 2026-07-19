@@ -178,7 +178,11 @@
     const entries = menu ? product?.filter_menus?.[menu] : null;
     const entry = Array.isArray(entries) ? entries[0] : null;
     if (!entry?.slug) return origin;
-    const baseUrl = origin.url || 'collection.html';
+    // Build on top of the modifier link (season/tag) when one exists, so
+    // clicking "Robes" from "Collection / Automne-Hiver 2026 / Robes /
+    // <product>" lands on collection.html?collection=aw26&category=robes -
+    // keeping the season filter - instead of losing it.
+    const baseUrl = origin.modifierUrl || origin.url || 'collection.html';
     const separator = baseUrl.includes('?') ? '&' : '?';
     return Object.assign({}, origin, {
       categoryLabel: entry.label || entry.slug,
