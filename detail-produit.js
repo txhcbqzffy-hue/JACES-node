@@ -169,22 +169,38 @@
   function withCategoryDeepLink(origin, product) {
     const menu = CATEGORY_MENU_BY_ORIGIN_KEY[origin?.key];
     const entries = menu ? product?.filter_menus?.[menu] : null;
-    const slug = Array.isArray(entries) && entries[0]?.slug ? entries[0].slug : '';
-    if (!slug) return origin;
+    const entry = Array.isArray(entries) ? entries[0] : null;
+    if (!entry?.slug) return origin;
     const baseUrl = origin.url || 'collection.html';
     const separator = baseUrl.includes('?') ? '&' : '?';
-    return Object.assign({}, origin, { url: `${baseUrl}${separator}category=${encodeURIComponent(slug)}` });
+    return Object.assign({}, origin, {
+      categoryLabel: entry.label || entry.slug,
+      categoryUrl: `${baseUrl}${separator}category=${encodeURIComponent(entry.slug)}`
+    });
   }
 
   function applyOriginContext(origin, productName) {
     const breadcrumb = document.querySelector('.product-detail-breadcrumb');
     const breadcrumbCurrent = document.getElementById('product-detail-breadcrumb-current');
     const breadcrumbOrigin = document.getElementById('product-detail-breadcrumb-origin');
+    const breadcrumbCategory = document.getElementById('product-detail-breadcrumb-category');
+    const breadcrumbCategorySep = document.getElementById('product-detail-breadcrumb-category-sep');
 
     if (breadcrumbCurrent) breadcrumbCurrent.textContent = productName || 'Produit';
     if (breadcrumbOrigin) {
       breadcrumbOrigin.textContent = origin?.label || 'Collection';
       breadcrumbOrigin.setAttribute('href', origin?.url || 'collection.html');
+    }
+    if (breadcrumbCategory && breadcrumbCategorySep) {
+      if (origin?.categoryLabel && origin?.categoryUrl) {
+        breadcrumbCategory.textContent = origin.categoryLabel;
+        breadcrumbCategory.setAttribute('href', origin.categoryUrl);
+        breadcrumbCategory.hidden = false;
+        breadcrumbCategorySep.hidden = false;
+      } else {
+        breadcrumbCategory.hidden = true;
+        breadcrumbCategorySep.hidden = true;
+      }
     }
     if (breadcrumb) breadcrumb.classList.remove('is-loading');
 
