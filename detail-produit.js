@@ -327,15 +327,7 @@
     }
     if (breadcrumb) breadcrumb.classList.remove('is-loading');
 
-    document.querySelectorAll('.nav a[data-product-origin-nav]').forEach((link) => {
-      const isActive = link.dataset.productOriginNav === (origin?.navKey || origin?.key || 'collection');
-      link.classList.toggle('active', isActive);
-      if (isActive) {
-        link.setAttribute('aria-current', 'page');
-      } else {
-        link.removeAttribute('aria-current');
-      }
-    });
+    applyTopNavActiveState(origin);
 
     if (breadcrumbOrigin) {
       breadcrumbOrigin.addEventListener('click', (event) => {
@@ -351,6 +343,23 @@
         }
       });
     }
+  }
+
+  // Split out of applyOriginContext so it can also run immediately, before
+  // the product fetch resolves, whenever the origin is already known from
+  // the click-through URL (isExplicit) - otherwise the top nav item starts
+  // with no highlight at all and visibly "pops" into color once the async
+  // fetch finishes, on every single product page load.
+  function applyTopNavActiveState(origin) {
+    document.querySelectorAll('.nav a[data-product-origin-nav]').forEach((link) => {
+      const isActive = link.dataset.productOriginNav === (origin?.navKey || origin?.key || 'collection');
+      link.classList.toggle('active', isActive);
+      if (isActive) {
+        link.setAttribute('aria-current', 'page');
+      } else {
+        link.removeAttribute('aria-current');
+      }
+    });
   }
 
   // The mega-menu's season submenu (Printemps-Été / Automne-Hiver) only
@@ -1168,6 +1177,12 @@
     const queryProduct = getProductFromQuery();
     const queryName = queryParams.get('name') || queryProduct?.name || '';
     const origin = getOriginContext();
+    // Don't wait on the product fetch to light up the top nav item when we
+    // already know it from the click-through URL - avoids the "no
+    // highlight -> pops into color" flash on every single product page
+    // load. The submenu-level highlights (season/tag/category) still need
+    // real product data and stay deferred to applyOriginContext below.
+    if (origin.isExplicit) applyTopNavActiveState(origin);
     shell.innerHTML = [
       '<div class="product-detail-empty">',
       '  <p class="favorites-empty-kicker">Chargement du produit</p>',
