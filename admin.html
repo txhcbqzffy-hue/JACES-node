@@ -1285,7 +1285,11 @@ document.getElementById('product-form').addEventListener('submit', async (e) => 
     .filter(Boolean);
   const category = checkedFilters.find((f) => f.menu === 'categories')?.label || '';
   const pageType = checkedFilters.find((f) => f.menu !== 'categories')?.menu || (category ? 'collection' : '');
-  const nouveauteTag = checkedFilters.find((f) => f.menu === 'nouveautes')?.slug || '';
+  // "Tout voir" gets auto-checked alongside a real tag (Drop été/Édition
+  // limitée/Pièces signature) - prefer the real tag when both are checked,
+  // "Tout voir" is only the tag when it's the only one checked.
+  const nouveauteFilters = checkedFilters.filter((f) => f.menu === 'nouveautes');
+  const nouveauteTag = (nouveauteFilters.find((f) => f.slug !== 'tout-voir') || nouveauteFilters[0])?.slug || '';
 
   // Every product needs exactly one classification: a Collection category
   // (Robes/Tops/.../Accessoires), an Accessoires type (Sacs/Bijoux/...), a

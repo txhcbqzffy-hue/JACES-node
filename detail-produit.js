@@ -189,10 +189,20 @@
     collection: { menu: 'collections', param: 'collection', mapSlug: (slug) => SEASON_SLUG_TO_TOKEN[slug] || slug }
   };
 
+  // Picking a Nouveautés tag (Drop été/Édition limitée/Pièces signature)
+  // in admin also auto-checks the standalone "Tout voir" filter, so a
+  // product can carry both - always prefer the real, more specific tag
+  // over "Tout voir" when both are present (matches the same fix applied
+  // in admin.html's own save-time nouveauteTag resolution).
+  function pickRealNouveauteEntry(entries) {
+    if (!Array.isArray(entries)) return null;
+    return entries.find((entry) => entry?.slug !== 'tout-voir') || entries[0] || null;
+  }
+
   function withModifierDeepLink(origin, product) {
     const config = MODIFIER_CONFIG_BY_ORIGIN_KEY[origin?.key];
     const entries = config ? product?.filter_menus?.[config.menu] : null;
-    const entry = Array.isArray(entries) ? entries[0] : null;
+    const entry = config?.menu === 'nouveautes' ? pickRealNouveauteEntry(entries) : (Array.isArray(entries) ? entries[0] : null);
     if (!config || !entry?.slug) return origin;
     const baseUrl = origin.url || (origin.key === 'nouveautes' ? 'nouveautes.html' : 'collection.html');
     const separator = baseUrl.includes('?') ? '&' : '?';
@@ -302,8 +312,8 @@
   // Same idea as applySeasonSubmenuHighlight but for the Nouveautés tag
   // submenu (Drop été/Édition limitée/Pièces signature).
   function applyNouveauteTagSubmenuHighlight(product) {
-    const entries = product?.filter_menus?.nouveautes;
-    const slug = Array.isArray(entries) && entries[0]?.slug ? entries[0].slug : '';
+    const entry = pickRealNouveauteEntry(product?.filter_menus?.nouveautes);
+    const slug = entry?.slug || '';
     document.querySelectorAll('.submenu a[href*="nouveautes.html?nouveauteTag="]').forEach((link) => {
       let linkSlug = '';
       try {
