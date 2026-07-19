@@ -196,7 +196,10 @@
   // in admin.html's own save-time nouveauteTag resolution).
   function pickRealNouveauteEntry(entries) {
     if (!Array.isArray(entries)) return null;
-    return entries.find((entry) => entry?.slug !== 'tout-voir') || entries[0] || null;
+    // If the only entry is the auto-checked "Tout voir" placeholder (no
+    // real Drop été/Édition limitée/Pièces signature tag), there's no
+    // modifier to show at all - unlike before, do NOT fall back to it.
+    return entries.find((entry) => entry?.slug !== 'tout-voir') || null;
   }
 
   function withModifierDeepLink(origin, product) {
