@@ -1019,10 +1019,14 @@
     return 'selection';
   }
 
-  function isAccessoryProduct(product, origin) {
+  function isAccessoryProduct(product) {
+    // The real, authoritative signal: an Accessoires type (Sacs/Bijoux/
+    // Ceintures/Foulards) explicitly checked in admin.
+    if (Array.isArray(product?.filter_menus?.accessoires) && product.filter_menus.accessoires.length) return true;
+
+    // Fallbacks for products missing filter_menus data for any reason.
     const type = String(product?.type || '').toLowerCase();
     const category = String(product?.category || '').toLowerCase();
-    const sourceOrigin = String(origin || '').toLowerCase();
     const tags = Array.isArray(product?.tags)
       ? product.tags.map((tag) => String(tag || '').toLowerCase())
       : [];
@@ -1030,7 +1034,6 @@
 
     if (['accessoires', 'accessoire', 'bijoux', 'bijou'].includes(type)) return true;
     if (['accessoires', 'accessoire', 'bijoux', 'bijou'].includes(category)) return true;
-    if (sourceOrigin === 'accessoires') return true;
     if (tags.includes('accessoires') || tags.includes('accessoire') || tags.includes('bijoux') || tags.includes('bijou')) return true;
     return family === 'accessoires' || family === 'bijoux';
   }
@@ -1281,13 +1284,11 @@
     }
     applyCategorySubmenuHighlight(enrichedOrigin.url || '', categorySlug);
 
-    const isAccessory = isAccessoryProduct(product, resolvedOrigin);
+    const isAccessory = isAccessoryProduct(product);
     const isUnique = !isAccessory && hasUniqueSize(product);
-    // Trust the real tagged sizes, not the accessory guess: a product
-    // categorized "Accessoires" that still has actual size variants (e.g.
-    // a dress cross-tagged for the Accessoires filter) must keep showing
-    // its size picker.
-    const noSize = hasNoSize(product);
+    // A product classified as an Accessoire in admin never shows a size
+    // picker, even if it happens to still carry size-tagged variants.
+    const noSize = isAccessory || hasNoSize(product);
     const gallery = buildGallery(product);
     const detailSubtitle = clampSingleLineText(getProductDetailSubtitle(product), 70);
     const colors = (product.colors && product.colors.length) ? product.colors : [];
@@ -1355,7 +1356,7 @@
     const fitMeter = FIT_METER_STEPS[product.fit_rating] || FIT_METER_STEPS.normal;
     const qualityMeter = QUALITY_METER_STEPS[product.quality_rating] || QUALITY_METER_STEPS.premium;
     const getQuickBuyMarkup = (entryProduct) => {
-      if (isAccessoryProduct(entryProduct, origin)) return '';
+      if (isAccessoryProduct(entryProduct)) return '';
       const quickBuySizes = Array.isArray(entryProduct?.sizes)
         ? entryProduct.sizes.map((size) => String(size || '').trim()).filter((size) => size && size.toLowerCase() !== 'unique')
         : [];

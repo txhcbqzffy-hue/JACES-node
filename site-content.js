@@ -40,6 +40,32 @@
             `linear-gradient(rgba(8, 7, 5, 0.44), rgba(8, 7, 5, 0.44)), url("${content.home_hero_image}")`;
         }
       }
+
+      // Header logo: an image replaces the plain "JACES" text once set,
+      // otherwise (site name only, no logo image) the text itself updates.
+      if (content.site_logo) {
+        document.querySelectorAll('a.logo').forEach((el) => {
+          el.innerHTML = '';
+          const img = document.createElement('img');
+          img.className = 'logo-image';
+          img.src = content.site_logo;
+          img.alt = content.site_name || 'JACES';
+          el.appendChild(img);
+        });
+      } else if (content.site_name) {
+        document.querySelectorAll('a.logo').forEach((el) => {
+          el.textContent = content.site_name;
+        });
+      }
+
+      if (content.site_name) {
+        document.title = document.title.replace('JACES', content.site_name);
+      }
+
+      if (content.favicon_url) {
+        const favicon = document.getElementById('site-favicon');
+        if (favicon) favicon.setAttribute('href', content.favicon_url);
+      }
     })
     // Silent fail - every page already has hardcoded fallback text/images,
     // so a network error here just means nothing gets overridden.

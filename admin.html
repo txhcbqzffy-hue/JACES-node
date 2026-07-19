@@ -414,6 +414,21 @@
               <label for="mk-hero-image">Image de couverture (page d'accueil)</label>
               <input type="url" id="mk-hero-image" placeholder="https://...">
             </div>
+
+            <div class="field">
+              <label for="mk-site-name">Nom du site</label>
+              <input type="text" id="mk-site-name" placeholder="JACES">
+            </div>
+
+            <div class="field">
+              <label for="mk-site-logo">Logo (image sans fond, remplace le texte "JACES" en haut de page)</label>
+              <input type="url" id="mk-site-logo" placeholder="https://...">
+            </div>
+
+            <div class="field">
+              <label for="mk-favicon">Favicon (icône dans l'onglet du navigateur)</label>
+              <input type="url" id="mk-favicon" placeholder="https://...">
+            </div>
           </div>
 
           <div class="marketing-group marketing-group--nouveautes">
@@ -643,6 +658,9 @@ document.querySelectorAll('.nav-item').forEach((btn) => {
 const MARKETING_FIELD_KEYS = {
   'mk-banner-text': 'banner_text',
   'mk-hero-image': 'home_hero_image',
+  'mk-site-name': 'site_name',
+  'mk-site-logo': 'site_logo',
+  'mk-favicon': 'favicon_url',
   'mk-thumb-all': 'nouveautes_thumb_all',
   'mk-thumb-robes': 'nouveautes_thumb_robes',
   'mk-thumb-tops': 'nouveautes_thumb_tops',

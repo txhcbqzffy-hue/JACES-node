@@ -136,7 +136,10 @@ function buildProductCard(product, pageType) {
   // the standard 34-44 range, show that whole range with the unavailable
   // ones greyed out, instead of only listing what happens to be in stock.
   const isNumericSizeSubset = sizes.length > 0 && sizes.every((size) => NUMERIC_SIZE_ORDER.includes(size));
-  const displaySizes = isNumericSizeSubset ? NUMERIC_SIZE_ORDER : sizes;
+  // A product classified as an Accessoire in admin never shows a size
+  // picker, even if it happens to still carry size-tagged variants.
+  const isAccessory = Array.isArray(product?.filter_menus?.accessoires) && product.filter_menus.accessoires.length > 0;
+  const displaySizes = isAccessory ? [] : (isNumericSizeSubset ? NUMERIC_SIZE_ORDER : sizes);
   const quickBuyMarkup = displaySizes.length
     ? `<p class="quick-buy-title"><strong>Achat rapide</strong> (Selectionnez votre taille)</p><div class="quick-buy-grid">${displaySizes.map((size) => {
       const isAvailable = sizes.includes(size);
