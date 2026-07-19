@@ -238,9 +238,20 @@
   // same "submenu-link-active" class here, based on the product's real
   // season classification, so e.g. a product tagged Automne-Hiver 2026
   // shows that submenu entry in rose while viewing the product itself.
+  // Filters store the long-form slug (e.g. "automne-hiver-2026") but the
+  // submenu links (and every other page's own season filtering) use the
+  // short ?collection= token - same mapping as products-page.js's
+  // SEASON_SLUG_TO_TOKEN, duplicated here since this file doesn't share a
+  // module with that one.
+  const SEASON_SLUG_TO_TOKEN = {
+    'printemps-ete-2026': 'ss26',
+    'automne-hiver-2026': 'aw26'
+  };
+
   function applySeasonSubmenuHighlight(product) {
     const entries = product?.filter_menus?.collections;
-    const slug = Array.isArray(entries) && entries[0]?.slug ? entries[0].slug : '';
+    const rawSlug = Array.isArray(entries) && entries[0]?.slug ? entries[0].slug : '';
+    const slug = SEASON_SLUG_TO_TOKEN[rawSlug] || rawSlug;
     document.querySelectorAll('.submenu a[href*="collection.html?collection="]').forEach((link) => {
       let linkSlug = '';
       try {
