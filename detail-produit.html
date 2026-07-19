@@ -74,6 +74,24 @@
       <div class="nav-item"><a href="defile.html" data-product-origin-nav="defile"><em>Défilé</em></a></div>
       <div class="nav-item"><a href="univers.html" data-product-origin-nav="univers"><em>Univers</em></a></div>
     </nav>
+    <script>
+      // Truly instant nav highlight: runs synchronously right here as the
+      // HTML is parsed, before any of the 6 external scripts below have
+      // even started downloading - detail-produit.js re-does this same
+      // work later (see applyTopNavActiveState) once it's actually loaded,
+      // this is only to avoid a "no highlight, then it pops in" flash.
+      (function () {
+        var params = new URLSearchParams(window.location.search);
+        var navKey = params.get('originNav') || params.get('origin');
+        if (!navKey) return;
+        document.querySelectorAll('.nav a[data-product-origin-nav]').forEach(function (link) {
+          if (link.dataset.productOriginNav === navKey) {
+            link.classList.add('active');
+            link.setAttribute('aria-current', 'page');
+          }
+        });
+      })();
+    </script>
   </header>
 
   <main class="product-detail-main">
