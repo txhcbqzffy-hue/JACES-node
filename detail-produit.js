@@ -154,6 +154,28 @@
     return menu ? ORIGIN_BY_MENU[menu] : fallbackOrigin;
   }
 
+  // The listing pages (collection.html, nouveautes.html, accessoires.html,
+  // collaborations.html) all support a ?category=<slug> deep link into a
+  // specific tab. The breadcrumb's "back" link should use the product's own
+  // category (e.g. Robes -> ?category=robes) so clicking it lands straight
+  // on the relevant filtered view instead of the generic "Tout voir" page.
+  const CATEGORY_MENU_BY_ORIGIN_KEY = {
+    collection: 'categories',
+    accessoires: 'accessoires',
+    collaboration: 'collaborations',
+    nouveautes: 'nouveautes_categories'
+  };
+
+  function withCategoryDeepLink(origin, product) {
+    const menu = CATEGORY_MENU_BY_ORIGIN_KEY[origin?.key];
+    const entries = menu ? product?.filter_menus?.[menu] : null;
+    const slug = Array.isArray(entries) && entries[0]?.slug ? entries[0].slug : '';
+    if (!slug) return origin;
+    const baseUrl = origin.url || 'collection.html';
+    const separator = baseUrl.includes('?') ? '&' : '?';
+    return Object.assign({}, origin, { url: `${baseUrl}${separator}category=${encodeURIComponent(slug)}` });
+  }
+
   function applyOriginContext(origin, productName) {
     const breadcrumb = document.querySelector('.product-detail-breadcrumb');
     const breadcrumbCurrent = document.getElementById('product-detail-breadcrumb-current');
@@ -994,7 +1016,7 @@
     }
 
     const resolvedOrigin = resolveOriginFromProduct(product, origin);
-    applyOriginContext(resolvedOrigin, product.name);
+    applyOriginContext(withCategoryDeepLink(resolvedOrigin, product), product.name);
 
     const isAccessory = isAccessoryProduct(product, resolvedOrigin);
     const isUnique = !isAccessory && hasUniqueSize(product);
