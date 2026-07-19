@@ -179,17 +179,53 @@
     });
   }
 
+  // A second, higher-level breadcrumb segment: the Nouveautés tag (Drop
+  // été/Édition limitée/Pièces signature) or the Collection season
+  // (Printemps-Été/Automne-Hiver) the product is tagged with, if any -
+  // e.g. "Nouveautés / Drop été / Pantalons / <product>". Independent from
+  // the category segment above (different filter menu).
+  const MODIFIER_CONFIG_BY_ORIGIN_KEY = {
+    nouveautes: { menu: 'nouveautes', param: 'nouveauteTag', mapSlug: (slug) => slug },
+    collection: { menu: 'collections', param: 'collection', mapSlug: (slug) => SEASON_SLUG_TO_TOKEN[slug] || slug }
+  };
+
+  function withModifierDeepLink(origin, product) {
+    const config = MODIFIER_CONFIG_BY_ORIGIN_KEY[origin?.key];
+    const entries = config ? product?.filter_menus?.[config.menu] : null;
+    const entry = Array.isArray(entries) ? entries[0] : null;
+    if (!config || !entry?.slug) return origin;
+    const baseUrl = origin.url || (origin.key === 'nouveautes' ? 'nouveautes.html' : 'collection.html');
+    const separator = baseUrl.includes('?') ? '&' : '?';
+    return Object.assign({}, origin, {
+      modifierLabel: entry.label || entry.slug,
+      modifierUrl: `${baseUrl}${separator}${config.param}=${encodeURIComponent(config.mapSlug(entry.slug))}`
+    });
+  }
+
   function applyOriginContext(origin, productName) {
     const breadcrumb = document.querySelector('.product-detail-breadcrumb');
     const breadcrumbCurrent = document.getElementById('product-detail-breadcrumb-current');
     const breadcrumbOrigin = document.getElementById('product-detail-breadcrumb-origin');
     const breadcrumbCategory = document.getElementById('product-detail-breadcrumb-category');
     const breadcrumbCategorySep = document.getElementById('product-detail-breadcrumb-category-sep');
+    const breadcrumbModifier = document.getElementById('product-detail-breadcrumb-modifier');
+    const breadcrumbModifierSep = document.getElementById('product-detail-breadcrumb-modifier-sep');
 
     if (breadcrumbCurrent) breadcrumbCurrent.textContent = productName || 'Produit';
     if (breadcrumbOrigin) {
       breadcrumbOrigin.textContent = origin?.label || 'Collection';
       breadcrumbOrigin.setAttribute('href', origin?.url || 'collection.html');
+    }
+    if (breadcrumbModifier && breadcrumbModifierSep) {
+      if (origin?.modifierLabel && origin?.modifierUrl) {
+        breadcrumbModifier.textContent = origin.modifierLabel;
+        breadcrumbModifier.setAttribute('href', origin.modifierUrl);
+        breadcrumbModifier.hidden = false;
+        breadcrumbModifierSep.hidden = false;
+      } else {
+        breadcrumbModifier.hidden = true;
+        breadcrumbModifierSep.hidden = true;
+      }
     }
     if (breadcrumbCategory && breadcrumbCategorySep) {
       if (origin?.categoryLabel && origin?.categoryUrl) {
@@ -263,6 +299,22 @@
     });
   }
 
+  // Same idea as applySeasonSubmenuHighlight but for the Nouveautés tag
+  // submenu (Drop été/Édition limitée/Pièces signature).
+  function applyNouveauteTagSubmenuHighlight(product) {
+    const entries = product?.filter_menus?.nouveautes;
+    const slug = Array.isArray(entries) && entries[0]?.slug ? entries[0].slug : '';
+    document.querySelectorAll('.submenu a[href*="nouveautes.html?nouveauteTag="]').forEach((link) => {
+      let linkSlug = '';
+      try {
+        linkSlug = new URL(link.getAttribute('href'), window.location.href).searchParams.get('nouveauteTag') || '';
+      } catch (error) {
+        linkSlug = '';
+      }
+      link.classList.toggle('submenu-link-active', Boolean(slug) && linkSlug === slug);
+    });
+  }
+
   function ensureHeaderSubmenus() {
     const nav = document.querySelector('.nav');
     if (!nav || nav.querySelector('.submenu')) return;
@@ -271,10 +323,10 @@
       'nouveautes.html': [
         '<div>',
         '  <p class="submenu-title">NOUVEAUTES</p>',
-        '  <a href="nouveautes.html">Drop ete</a>',
-        '  <a href="nouveautes.html">Edition limitee</a>',
-        '  <a href="nouveautes.html">Pieces signature</a>',
-        '  <a href="nouveautes.html" class="underline-link">Tout voir</a>',
+        '  <a href="nouveautes.html?nouveauteTag=drop-ete">Drop ete</a>',
+        '  <a href="nouveautes.html?nouveauteTag=edition-limitee">Edition limitee</a>',
+        '  <a href="nouveautes.html?nouveauteTag=pieces-signature">Pieces signature</a>',
+        '  <a href="nouveautes.html?category=all" class="underline-link">Tout voir</a>',
         '</div>',
         '<div class="submenu-categories">',
         '  <p class="submenu-title">FEMME</p>',
@@ -1065,8 +1117,10 @@
     }
 
     const resolvedOrigin = resolveOriginFromProduct(product, origin);
-    applyOriginContext(withCategoryDeepLink(resolvedOrigin, product), product.name);
+    const enrichedOrigin = withCategoryDeepLink(withModifierDeepLink(resolvedOrigin, product), product);
+    applyOriginContext(enrichedOrigin, product.name);
     applySeasonSubmenuHighlight(product);
+    applyNouveauteTagSubmenuHighlight(product);
 
     const isAccessory = isAccessoryProduct(product, resolvedOrigin);
     const isUnique = !isAccessory && hasUniqueSize(product);
