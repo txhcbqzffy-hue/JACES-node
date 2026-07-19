@@ -173,10 +173,33 @@
     nouveautes: 'nouveautes_categories'
   };
 
+  // Admin stores the full brand filter slug ("jaces-x-chloe") but
+  // collaborations.html's own ?category= filtering only recognizes the
+  // short brand token ("chloe") - same mapping as products-page.js's
+  // COLLAB_SLUG_TO_TOKEN, duplicated here for the same reason as
+  // SEASON_SLUG_TO_TOKEN above.
+  const COLLAB_SLUG_TO_TOKEN = {
+    'jaces-x-nike': 'nike',
+    'jaces-x-chloe': 'chloe',
+    'jaces-x-jacquemus': 'jacquemus',
+    'jaces-x-dior': 'dior',
+    'jaces-x-saint-laurent': 'saint-laurent'
+  };
+
+  // A product tagged with a specific brand also ends up with a
+  // "collabView" entry (Créations exclusives/Pop-up stores/Événements)
+  // checked in the same "collaborations" filter menu - same shape as the
+  // Nouveautés "Tout voir" auto-check, so prefer the real, recognized
+  // brand entry over whichever happens to be checked first.
+  function pickRealCollaborationEntry(entries) {
+    if (!Array.isArray(entries)) return null;
+    return entries.find((entry) => COLLAB_SLUG_TO_TOKEN[entry?.slug]) || null;
+  }
+
   function withCategoryDeepLink(origin, product) {
     const menu = CATEGORY_MENU_BY_ORIGIN_KEY[origin?.key];
     const entries = menu ? product?.filter_menus?.[menu] : null;
-    const entry = Array.isArray(entries) ? entries[0] : null;
+    const entry = menu === 'collaborations' ? pickRealCollaborationEntry(entries) : (Array.isArray(entries) ? entries[0] : null);
     if (!entry?.slug) return origin;
     // Build on top of the modifier link (season/tag) when one exists, so
     // clicking "Robes" from "Collection / Automne-Hiver 2026 / Robes /
@@ -184,9 +207,10 @@
     // keeping the season filter - instead of losing it.
     const baseUrl = origin.modifierUrl || origin.url || 'collection.html';
     const separator = baseUrl.includes('?') ? '&' : '?';
+    const urlSlug = menu === 'collaborations' ? (COLLAB_SLUG_TO_TOKEN[entry.slug] || entry.slug) : entry.slug;
     return Object.assign({}, origin, {
       categoryLabel: entry.label || entry.slug,
-      categoryUrl: `${baseUrl}${separator}category=${encodeURIComponent(entry.slug)}`
+      categoryUrl: `${baseUrl}${separator}category=${encodeURIComponent(urlSlug)}`
     });
   }
 
