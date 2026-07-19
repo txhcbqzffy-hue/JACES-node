@@ -1572,4 +1572,13 @@
   } else {
     renderDetailPage();
   }
+
+  // Safety net: the breadcrumb starts with visibility:hidden and is only
+  // revealed once applyOriginContext runs inside renderDetailPage. If that
+  // never happens for any unforeseen reason (a thrown error before it's
+  // reached, a stuck fetch, etc.), force it visible anyway after a few
+  // seconds - permanently invisible is a worse failure than briefly wrong.
+  setTimeout(() => {
+    document.querySelector('.product-detail-breadcrumb')?.classList.remove('is-loading');
+  }, 4000);
 })();
