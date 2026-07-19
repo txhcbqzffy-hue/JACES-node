@@ -505,6 +505,7 @@ if (path === 'collection.html' || path === 'nouveautes.html' || path === 'access
       const params = new URLSearchParams(window.location.search || '');
       context.nouveauteTag = params.get('nouveauteTag') || '';
       context.collection = params.get('collection') || '';
+      context.collabView = params.get('collabView') || '';
       return context;
     }
 
@@ -520,11 +521,12 @@ if (path === 'collection.html' || path === 'nouveautes.html' || path === 'access
     } else {
       url = builtProduct.url || ('detail-produit.html?id=' + encodeURIComponent(builtProduct.id));
     }
-    if (resolvedContext?.nouveauteTag || resolvedContext?.collection) {
+    if (resolvedContext?.nouveauteTag || resolvedContext?.collection || resolvedContext?.collabView) {
       try {
         const parsed = new URL(url, window.location.href);
         if (resolvedContext.nouveauteTag) parsed.searchParams.set('nouveauteTag', resolvedContext.nouveauteTag);
         if (resolvedContext.collection) parsed.searchParams.set('collection', resolvedContext.collection);
+        if (resolvedContext.collabView) parsed.searchParams.set('collabView', resolvedContext.collabView);
         url = parsed.pathname + parsed.search;
       } catch (error) {
         // leave url unchanged

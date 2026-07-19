@@ -134,7 +134,8 @@
       // browsed that filtered view - a product can carry a tag/season
       // classification that has nothing to do with how you got here.
       explicitNouveauteTag: params.get('nouveauteTag') || '',
-      explicitCollection: params.get('collection') || ''
+      explicitCollection: params.get('collection') || '',
+      explicitCollabView: params.get('collabView') || ''
     };
   }
 
@@ -196,6 +197,20 @@
     return entries.find((entry) => COLLAB_SLUG_TO_TOKEN[entry?.slug]) || null;
   }
 
+  // The reverse of the brand entry above: "Créations exclusives" is a
+  // collabView, not a brand, and lives in the same "collaborations" filter
+  // menu - collaborations.html only actually supports matching products
+  // against this one collabView from real filter data (Pop-up stores/
+  // Événements have no equivalent product-side matching on that page yet).
+  const COLLAB_VIEW_SLUG_TO_TOKEN = {
+    'creations-exclusives': 'exclusives'
+  };
+
+  function pickRealCollabViewEntry(entries) {
+    if (!Array.isArray(entries)) return null;
+    return entries.find((entry) => COLLAB_VIEW_SLUG_TO_TOKEN[entry?.slug]) || null;
+  }
+
   function withCategoryDeepLink(origin, product) {
     const menu = CATEGORY_MENU_BY_ORIGIN_KEY[origin?.key];
     const entries = menu ? product?.filter_menus?.[menu] : null;
@@ -221,7 +236,8 @@
   // the category segment above (different filter menu).
   const MODIFIER_CONFIG_BY_ORIGIN_KEY = {
     nouveautes: { menu: 'nouveautes', param: 'nouveauteTag', explicitKey: 'explicitNouveauteTag', mapSlug: (slug) => slug },
-    collection: { menu: 'collections', param: 'collection', explicitKey: 'explicitCollection', mapSlug: (slug) => SEASON_SLUG_TO_TOKEN[slug] || slug }
+    collection: { menu: 'collections', param: 'collection', explicitKey: 'explicitCollection', mapSlug: (slug) => SEASON_SLUG_TO_TOKEN[slug] || slug },
+    collaboration: { menu: 'collaborations', param: 'collabView', explicitKey: 'explicitCollabView', mapSlug: (slug) => COLLAB_VIEW_SLUG_TO_TOKEN[slug] || slug }
   };
 
   // Picking a Nouveautés tag (Drop été/Édition limitée/Pièces signature)
@@ -249,7 +265,7 @@
       // tagged "Drop été" shouldn't show that just because you happened
       // to browse in from the general "Toutes les nouveautés" view.
       const explicitSlug = origin[config.explicitKey];
-      if (!explicitSlug) return origin;
+      if (!explicitSlug || explicitSlug === 'all') return origin;
       const entries = product?.filter_menus?.[config.menu];
       const matchedEntry = Array.isArray(entries)
         ? entries.find((entry) => entry?.slug === explicitSlug || config.mapSlug(entry?.slug) === explicitSlug)
@@ -263,7 +279,9 @@
     // Cold/direct link with no click-through context at all - fall back
     // to the product's own real classification.
     const entries = product?.filter_menus?.[config.menu];
-    const entry = config.menu === 'nouveautes' ? pickRealNouveauteEntry(entries) : (Array.isArray(entries) ? entries[0] : null);
+    const entry = config.menu === 'nouveautes' ? pickRealNouveauteEntry(entries)
+      : config.menu === 'collaborations' ? pickRealCollabViewEntry(entries)
+      : (Array.isArray(entries) ? entries[0] : null);
     if (!entry?.slug) return origin;
     return Object.assign({}, origin, {
       modifierLabel: entry.label || entry.slug,
@@ -374,6 +392,18 @@
       let linkSlug = '';
       try {
         linkSlug = new URL(link.getAttribute('href'), window.location.href).searchParams.get('nouveauteTag') || '';
+      } catch (error) {
+        linkSlug = '';
+      }
+      link.classList.toggle('submenu-link-active', Boolean(slug) && linkSlug === slug);
+    });
+  }
+
+  function applyCollabViewSubmenuHighlight(slug) {
+    document.querySelectorAll('.submenu a[href*="collaborations.html?collabView="]').forEach((link) => {
+      let linkSlug = '';
+      try {
+        linkSlug = new URL(link.getAttribute('href'), window.location.href).searchParams.get('collabView') || '';
       } catch (error) {
         linkSlug = '';
       }
@@ -1222,6 +1252,7 @@
     }
     applySeasonSubmenuHighlight(enrichedOrigin.key === 'collection' ? modifierSlug : '');
     applyNouveauteTagSubmenuHighlight(enrichedOrigin.key === 'nouveautes' ? modifierSlug : '');
+    applyCollabViewSubmenuHighlight(enrichedOrigin.key === 'collaboration' ? modifierSlug : '');
 
     // Category only lights up when there's no season/tag to show instead -
     // one active submenu link at a time, never both.
