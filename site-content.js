@@ -1,27 +1,8 @@
 (function () {
-  // The category-nav-strip circles start with opacity:0 (see style.css
-  // .cat-nav-circle img) so admin-edited thumbnails never show the
-  // hardcoded HTML default first and then visibly swap to the real one -
-  // revealCatNavImages() only runs once we know the final src for every
-  // circle (either the admin override, once it has actually loaded, or
-  // the untouched hardcoded default).
-  function revealCatNavImages() {
-    document.querySelectorAll('.cat-nav-circle img').forEach((img) => {
-      img.classList.add('is-ready');
-    });
-  }
-
-  // Safety net: never leave the thumbnails invisible indefinitely if the
-  // fetch hangs or an override image fails to load.
-  setTimeout(revealCatNavImages, 4000);
-
   fetch('/api/site-content')
     .then((res) => (res.ok ? res.json() : null))
     .then((content) => {
-      if (!content) {
-        revealCatNavImages();
-        return;
-      }
+      if (!content) return;
 
       if (content.banner_text) {
         document.querySelectorAll('.topbar').forEach((el) => {
@@ -40,40 +21,13 @@
         : body.classList.contains('collaboration-page') ? 'collaborations'
         : body.classList.contains('collection-page-body') ? 'collection'
         : null;
-
-      const items = pagePrefix
-        ? Array.from(document.querySelectorAll('.cat-nav-item[data-category]'))
-        : [];
-
-      if (!items.length) {
-        revealCatNavImages();
-      } else {
-        let pending = 0;
-        let settled = false;
-        const finish = () => {
-          if (settled) return;
-          settled = true;
-          revealCatNavImages();
-        };
-
-        items.forEach((item) => {
+      if (pagePrefix) {
+        document.querySelectorAll('.cat-nav-item[data-category]').forEach((item) => {
           const url = content[`${pagePrefix}_thumb_${item.dataset.category}`];
+          if (!url) return;
           const img = item.querySelector('.cat-nav-circle img');
-          if (!img || !url || url === img.getAttribute('src')) return;
-          // Swap only once the new image has actually finished loading, so
-          // revealing it never shows a half-loaded/broken frame either.
-          pending += 1;
-          const onSettle = () => {
-            pending -= 1;
-            if (pending === 0) finish();
-          };
-          const probe = new Image();
-          probe.onload = () => { img.src = url; onSettle(); };
-          probe.onerror = onSettle;
-          probe.src = url;
+          if (img) img.src = url;
         });
-
-        if (pending === 0) finish();
       }
 
       // Homepage cover image (the full-bleed "Cet été, ose aussi." hero) -
@@ -89,7 +43,5 @@
     })
     // Silent fail - every page already has hardcoded fallback text/images,
     // so a network error here just means nothing gets overridden.
-    .catch(() => {
-      revealCatNavImages();
-    });
+    .catch(() => {});
 })();

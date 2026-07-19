@@ -6442,12 +6442,7 @@ body.header-scrolled .header .submenu a.submenu-link-active {
   height: 100%;
   object-fit: cover;
   display: block;
-  opacity: 0;
-  transition: transform 0.3s ease, opacity 0.15s ease;
-}
-
-.cat-nav-circle img.is-ready {
-  opacity: 1;
+  transition: transform 0.3s ease;
 }
 
 .cat-nav-item:hover .cat-nav-circle img {
