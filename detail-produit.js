@@ -230,6 +230,28 @@
     }
   }
 
+  // The mega-menu's season submenu (Printemps-Été / Automne-Hiver) only
+  // highlights itself on collection.html, based on that page's own
+  // ?collection= query param (see auth.js's syncActiveSubmenuLinksFromLocation) -
+  // it has no idea what page it's rendered on when arriving on
+  // detail-produit.html, so it never highlights anything here. Mirror that
+  // same "submenu-link-active" class here, based on the product's real
+  // season classification, so e.g. a product tagged Automne-Hiver 2026
+  // shows that submenu entry in rose while viewing the product itself.
+  function applySeasonSubmenuHighlight(product) {
+    const entries = product?.filter_menus?.collections;
+    const slug = Array.isArray(entries) && entries[0]?.slug ? entries[0].slug : '';
+    document.querySelectorAll('.submenu a[href*="collection.html?collection="]').forEach((link) => {
+      let linkSlug = '';
+      try {
+        linkSlug = new URL(link.getAttribute('href'), window.location.href).searchParams.get('collection') || '';
+      } catch (error) {
+        linkSlug = '';
+      }
+      link.classList.toggle('submenu-link-active', Boolean(slug) && linkSlug === slug);
+    });
+  }
+
   function ensureHeaderSubmenus() {
     const nav = document.querySelector('.nav');
     if (!nav || nav.querySelector('.submenu')) return;
@@ -1033,6 +1055,7 @@
 
     const resolvedOrigin = resolveOriginFromProduct(product, origin);
     applyOriginContext(withCategoryDeepLink(resolvedOrigin, product), product.name);
+    applySeasonSubmenuHighlight(product);
 
     const isAccessory = isAccessoryProduct(product, resolvedOrigin);
     const isUnique = !isAccessory && hasUniqueSize(product);
