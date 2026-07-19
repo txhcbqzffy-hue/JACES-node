@@ -353,24 +353,6 @@
     });
   }
 
-  // Highlights the category submenu entry (Robes/Tops/.../Accessoires,
-  // or the Collaborations brand list) matching the breadcrumb's category
-  // segment - scoped to the given page file so e.g. "Pantalons" in the
-  // Nouveautés submenu doesn't light up while viewing a Collection product.
-  function applyCategorySubmenuHighlight(pageFile, slug) {
-    document.querySelectorAll('.submenu-categories a[href*="category="]').forEach((link) => {
-      let linkSlug = '';
-      let linkPage = '';
-      try {
-        const parsed = new URL(link.getAttribute('href'), window.location.href);
-        linkPage = parsed.pathname.split('/').pop() || '';
-        linkSlug = parsed.searchParams.get('category') || '';
-      } catch (error) {
-        linkSlug = '';
-      }
-      link.classList.toggle('submenu-link-active', Boolean(slug) && linkPage === pageFile && linkSlug === slug);
-    });
-  }
 
   function ensureHeaderSubmenus() {
     const nav = document.querySelector('.nav');
@@ -1188,16 +1170,6 @@
     }
     applySeasonSubmenuHighlight(enrichedOrigin.key === 'collection' ? modifierSlug : '');
     applyNouveauteTagSubmenuHighlight(enrichedOrigin.key === 'nouveautes' ? modifierSlug : '');
-
-    let categorySlug = '';
-    if (enrichedOrigin.categoryUrl) {
-      try {
-        categorySlug = new URL(enrichedOrigin.categoryUrl, window.location.href).searchParams.get('category') || '';
-      } catch (error) {
-        categorySlug = '';
-      }
-    }
-    applyCategorySubmenuHighlight(enrichedOrigin.url || '', categorySlug);
 
     const isAccessory = isAccessoryProduct(product, resolvedOrigin);
     const isUnique = !isAccessory && hasUniqueSize(product);
