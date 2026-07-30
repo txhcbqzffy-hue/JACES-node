@@ -4,8 +4,15 @@
     .then((content) => {
       if (!content) return;
 
+      try {
+        localStorage.setItem('jaces-site-content-cache', JSON.stringify(content));
+      } catch (error) {
+        // Ignore storage failures (private browsing, quota) - the page still
+        // works, it just won't have the instant-thumbnail cache next visit.
+      }
+
       if (content.banner_text) {
-        document.querySelectorAll('.topbar').forEach((el) => {
+        document.querySelectorAll('#topbar-banner-text').forEach((el) => {
           el.textContent = content.banner_text;
         });
       }
@@ -26,7 +33,12 @@
           const url = content[`${pagePrefix}_thumb_${item.dataset.category}`];
           if (!url) return;
           const img = item.querySelector('.cat-nav-circle img');
-          if (img) img.src = url;
+          if (!img) return;
+          img.src = url;
+          const position = content[`${pagePrefix}_thumb_${item.dataset.category}_position`];
+          if (position) img.style.objectPosition = position;
+          const zoom = content[`${pagePrefix}_thumb_${item.dataset.category}_zoom`];
+          if (zoom && Number(zoom) !== 100) img.style.transform = `scale(${(Number(zoom) / 100).toFixed(2)})`;
         });
       }
 

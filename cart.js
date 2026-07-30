@@ -1,9 +1,9 @@
 (function () {
   const STORAGE_KEY = 'jaces-cart';
+  const MAX_ADDRESSES = 3;
   const CART_SYNC_EVENT = 'jaces:cart-sync';
   const FREE_SHIPPING_THRESHOLD = 79;
   const STANDARD_SHIPPING_FEE = 8;
-  const EXPRESS_SHIPPING_FEE = 15;
   const ACCOUNT_SESSION_KEY = 'jaces-account-session';
   const ACCOUNT_PROFILES_KEY = 'jaces-account-profiles';
   const MAX_STORED_ORDERS = 20;
@@ -170,9 +170,34 @@
     });
   }
 
+  const GUEST_CART_KEY = `${STORAGE_KEY}:guest`;
+
+  // Adding to / viewing the cart never requires an account - only checkout
+  // does. Guests get their own fixed key; once they log in (typically at
+  // checkout), whatever they built up as a guest is folded into their
+  // account cart so nothing gets lost.
   function getScopedStorageKey() {
     const email = getAccountEmail();
-    return email ? `${STORAGE_KEY}:${email}` : '';
+    return email ? `${STORAGE_KEY}:${email}` : GUEST_CART_KEY;
+  }
+
+  function mergeGuestCartIntoAccount(email) {
+    if (!email) return;
+    const guestRaw = window.localStorage.getItem(GUEST_CART_KEY);
+    if (!guestRaw) return;
+    try {
+      const guestItems = normalizeCartItems(JSON.parse(guestRaw));
+      if (!guestItems.length) {
+        window.localStorage.removeItem(GUEST_CART_KEY);
+        return;
+      }
+      const accountKey = `${STORAGE_KEY}:${email}`;
+      const accountItems = normalizeCartItems(readJsonStorage(accountKey, []));
+      window.localStorage.setItem(accountKey, JSON.stringify(normalizeCartItems([...guestItems, ...accountItems])));
+      window.localStorage.removeItem(GUEST_CART_KEY);
+    } catch (error) {
+      // Ignore malformed guest cart data.
+    }
   }
 
   function emitCartSync() {
@@ -247,6 +272,84 @@
     return new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR', minimumFractionDigits: 0, maximumFractionDigits: 2 }).format(value || 0);
   }
 
+  const PHONE_COUNTRIES = [
+    ['fr', 'France', '+33'],
+    ['be', 'Belgique', '+32'],
+    ['ch', 'Suisse', '+41'],
+    ['lu', 'Luxembourg', '+352'],
+    ['de', 'Allemagne', '+49'],
+    ['es', 'Espagne', '+34'],
+    ['it', 'Italie', '+39'],
+    ['gb', 'Royaume-Uni', '+44'],
+    ['ie', 'Irlande', '+353'],
+    ['pt', 'Portugal', '+351'],
+    ['nl', 'Pays-Bas', '+31'],
+    ['at', 'Autriche', '+43'],
+    ['us', 'États-Unis', '+1'],
+    ['ca', 'Canada', '+1'],
+    ['ma', 'Maroc', '+212'],
+    ['dz', 'Algérie', '+213'],
+    ['tn', 'Tunisie', '+216'],
+    ['sn', 'Sénégal', '+221'],
+    ['ci', 'Côte d’Ivoire', '+225'],
+    ['cm', 'Cameroun', '+237'],
+    ['mu', 'Maurice', '+230'],
+    ['re', 'La Réunion', '+262'],
+    ['gp', 'Guadeloupe', '+590'],
+    ['mq', 'Martinique', '+596'],
+    ['gf', 'Guyane', '+594'],
+    ['ru', 'Russie', '+7'],
+    ['cn', 'Chine', '+86'],
+    ['jp', 'Japon', '+81'],
+    ['au', 'Australie', '+61'],
+    ['br', 'Brésil', '+55'],
+    ['in', 'Inde', '+91']
+  ];
+
+  function parsePhoneValue(rawPhone) {
+    const raw = String(rawPhone || '').trim();
+    const sortedByCodeLength = PHONE_COUNTRIES.slice().sort((a, b) => b[2].length - a[2].length);
+    const match = sortedByCodeLength.find(([, , dialCode]) => raw.startsWith(dialCode));
+    if (match) {
+      return { iso: match[0], dialCode: match[2], localNumber: raw.slice(match[2].length).trim() };
+    }
+    return { iso: 'fr', dialCode: '+33', localNumber: raw };
+  }
+
+  const PHONE_MAX_DIGITS = {
+    fr: 10, be: 9, ch: 9, lu: 9, de: 11, es: 9, it: 10, gb: 10, ie: 9, pt: 9, nl: 9, at: 11,
+    us: 10, ca: 10,
+    ma: 9, dz: 9, tn: 8, sn: 9, ci: 10, cm: 9, mu: 8, re: 9, gp: 9, mq: 9, gf: 9,
+    ru: 10, cn: 11, jp: 10, au: 9, br: 11, in: 10
+  };
+
+  const PHONE_GROUPING_3_3_4 = new Set(['us', 'ca']);
+
+  function isValidPhoneNumber(iso, localNumber) {
+    const digits = String(localNumber || '').replace(/\D/g, '');
+    if (!digits) return true;
+    const max = PHONE_MAX_DIGITS[iso] || 12;
+    return digits.length >= max - 1 && digits.length <= max;
+  }
+
+  function renderPhoneField(rawPhone) {
+    const { iso, dialCode, localNumber } = parsePhoneValue(rawPhone);
+    const flagUrl = (code) => `https://flagcdn.com/w40/${code}.png`;
+    return [
+      '<div class="account-phone-field">',
+      '  <div class="jc-select account-phone-country" data-select-name="phoneCountry">',
+      `    <button type="button" class="jc-select-trigger account-phone-trigger" data-select-trigger aria-haspopup="listbox" aria-expanded="false"><img src="${flagUrl(iso)}" alt="" class="account-phone-flag"><span>${dialCode}</span><svg class="jc-select-caret" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M5 7.5l5 5 5-5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>`,
+      '    <ul class="jc-select-panel account-phone-panel" role="listbox" data-select-panel hidden>',
+      PHONE_COUNTRIES.map(([code, name, dial]) => `<li class="jc-select-option account-phone-option${code === iso ? ' is-selected' : ''}" role="option" data-value="${dial}" data-iso="${code}"><img src="${flagUrl(code)}" alt="" class="account-phone-flag">${name} (${dial})</li>`).join(''),
+      '    </ul>',
+      `    <input type="hidden" name="phoneDialCode" data-select-value value="${dialCode}">`,
+      `    <input type="hidden" name="phoneIso" data-select-iso value="${iso}">`,
+      '  </div>',
+      `  <input type="tel" name="phone" value="${localNumber}" placeholder="Téléphone (optionnel)" class="account-phone-number" autocomplete="tel-national">`,
+      '</div>'
+    ].join('');
+  }
+
   function formatVariantMeta(item) {
     const size = String(item?.size || '').trim();
     const color = String(item?.color || '').trim();
@@ -259,9 +362,27 @@
     return items.reduce((total, item) => total + (parsePrice(item.price) * (Number(item.quantity) || 1)), 0);
   }
 
-  function getShippingFee(subtotal, shippingMode) {
+  function getShippingFee(subtotal) {
     if (subtotal >= FREE_SHIPPING_THRESHOLD) return 0;
-    return shippingMode === 'express' ? EXPRESS_SHIPPING_FEE : STANDARD_SHIPPING_FEE;
+    return STANDARD_SHIPPING_FEE;
+  }
+
+  // Partner codes (generated per-influencer in admin) aren't known ahead of
+  // time like JACES10, so they're checked against the server once and cached
+  // here - getPromoDiscount itself stays synchronous since it runs on every
+  // render, not just when the code is first submitted.
+  const resolvedPromoCodes = {};
+
+  async function verifyPromoCodeRemotely(code) {
+    const normalizedCode = String(code || '').trim().toUpperCase();
+    if (!normalizedCode || normalizedCode === 'JACES10' || resolvedPromoCodes[normalizedCode] != null) return;
+    try {
+      const res = await fetch(`/api/admin-email-subscribers?promoCode=${encodeURIComponent(normalizedCode)}`);
+      const data = await res.json().catch(() => ({}));
+      if (data.valid) resolvedPromoCodes[normalizedCode] = data.discountPercent;
+    } catch (error) {
+      // offline/unreachable - the code just won't apply a discount this time
+    }
   }
 
   function getPromoDiscount(subtotal, promoCode) {
@@ -269,17 +390,13 @@
     if (normalizedCode === 'JACES10') {
       return Math.round(subtotal * 0.1 * 100) / 100;
     }
+    if (resolvedPromoCodes[normalizedCode] != null) {
+      return Math.round(subtotal * (resolvedPromoCodes[normalizedCode] / 100) * 100) / 100;
+    }
     return 0;
   }
 
   function addItem(product, size, quantity, color) {
-    if (!getAccountEmail()) {
-      if (window.JacesAuth && typeof window.JacesAuth.requireAuth === 'function') {
-        window.JacesAuth.requireAuth();
-      }
-      return false;
-    }
-
     const builtProduct = window.JacesCatalog && typeof window.JacesCatalog.buildProduct === 'function'
       ? window.JacesCatalog.buildProduct(product)
       : product;
@@ -377,6 +494,7 @@
           <h2 id="cart-panel-title">Mon panier</h2>
           <button class="cart-panel-close-btn" id="cart-panel-close" aria-label="Fermer le panier" type="button">×</button>
         </div>
+        <div class="cart-panel-summary" id="cart-panel-summary"></div>
         <div class="cart-panel-action" id="cart-panel-action"></div>
         <div class="cart-panel-list" id="cart-panel-list"></div>
       </aside>
@@ -417,30 +535,10 @@
     ensureCartPanel();
 
     const title = document.getElementById('cart-panel-title');
+    const summary = document.getElementById('cart-panel-summary');
     const action = document.getElementById('cart-panel-action');
     const list = document.getElementById('cart-panel-list');
-    if (!title || !action || !list) return;
-
-    if (!getAccountEmail()) {
-      title.textContent = 'Mon panier';
-      action.innerHTML = '<button class="cart-panel-checkout-link" id="cart-panel-login" type="button">Commander</button>';
-      list.innerHTML = [
-        '<p class="cart-panel-empty">Connectez-vous pour retrouver votre panier JACES.</p>',
-        '<div class="cart-panel-footer">',
-        '  <button class="cart-panel-secondary-link" id="cart-panel-login-secondary" type="button">Se connecter</button>',
-        '</div>'
-      ].join('');
-
-      const login = () => {
-        if (window.JacesAuth && typeof window.JacesAuth.requireAuth === 'function') {
-          window.JacesAuth.requireAuth();
-        }
-      };
-
-      action.querySelector('#cart-panel-login')?.addEventListener('click', login);
-      list.querySelector('#cart-panel-login-secondary')?.addEventListener('click', login);
-      return;
-    }
+    if (!title || !summary || !action || !list) return;
 
     const items = getCart();
     const count = items.reduce((total, item) => total + (Number(item.quantity) || 0), 0);
@@ -454,6 +552,7 @@
     });
 
     if (!items.length) {
+      summary.innerHTML = '';
       list.innerHTML = [
         '<p class="cart-panel-empty">Aucune pièce dans votre panier pour le moment.</p>',
         '<div class="cart-panel-footer">',
@@ -462,6 +561,11 @@
       ].join('');
       return;
     }
+
+    summary.innerHTML = `
+      <div class="cart-panel-summary-row"><span>Sous-total</span><strong>${formatPrice(subtotal)}</strong></div>
+      <p class="cart-panel-note">Livraison et taxes calculées à l’étape suivante.</p>
+    `;
 
     list.innerHTML = `
       <div class="cart-panel-items">
@@ -486,10 +590,6 @@
             </article>
           `;
         }).join('')}
-      </div>
-      <div class="cart-panel-summary">
-        <div class="cart-panel-summary-row"><span>Sous-total</span><strong>${formatPrice(subtotal)}</strong></div>
-        <p class="cart-panel-note">Livraison et taxes calculées à l’étape suivante.</p>
       </div>
     `;
 
@@ -583,49 +683,48 @@
     bindHorizontalSlider(track, prevBtn, nextBtn);
   }
 
-  function formatCardNumberValue(value) {
-    const digits = String(value || '').replace(/\D+/g, '').slice(0, 16);
-    return digits.replace(/(\d{4})(?=\d)/g, '$1 ').trim();
+  const STRIPE_PUBLISHABLE_KEY = 'pk_test_51TwhinIrrHc9hAHOzBRaZdUXvQ7WuriSEX95DZDI2rpSNRAtv9VG2Zi67vm4MLYPeLEi00iGylLskRTZqz8myYCd00GWie7saa';
+  let stripeInstance = null;
+  let stripeCardElement = null;
+
+  function getStripe() {
+    if (!window.Stripe) return null;
+    if (!stripeInstance) stripeInstance = window.Stripe(STRIPE_PUBLISHABLE_KEY);
+    return stripeInstance;
   }
 
-  function formatExpiryValue(value) {
-    const digits = String(value || '').replace(/\D+/g, '').slice(0, 4);
-    if (digits.length <= 2) return digits;
-    return `${digits.slice(0, 2)}/${digits.slice(2)}`;
-  }
+  // Real, PCI-compliant card entry (Stripe's own hosted iframe) replaces the
+  // old plain number/expiry/cvc inputs - card digits never touch our own
+  // JS/server. Re-mounted every render since renderCartPage() rebuilds the
+  // whole form on every payment-method change.
+  function initStripeCardElement(shell) {
+    stripeCardElement = null;
+    const mountPoint = shell.querySelector('#stripe-card-element');
+    if (!mountPoint) return;
 
-  function formatCvcValue(value) {
-    return String(value || '').replace(/\D+/g, '').slice(0, 3);
-  }
-
-  function bindCheckoutCardFieldFormatting(shell) {
-    const form = shell.querySelector('#cart-checkout-form');
-    if (!(form instanceof HTMLFormElement)) return;
-
-    const cardInput = form.querySelector('input[name="card"]');
-    const expiryInput = form.querySelector('input[name="expiry"]');
-    const cvcInput = form.querySelector('input[name="cvc"]');
-
-    if (cardInput instanceof HTMLInputElement) {
-      cardInput.value = formatCardNumberValue(cardInput.value);
-      cardInput.addEventListener('input', () => {
-        cardInput.value = formatCardNumberValue(cardInput.value);
-      });
+    const stripe = getStripe();
+    if (!stripe) {
+      mountPoint.textContent = 'Le paiement par carte est momentanément indisponible.';
+      return;
     }
 
-    if (expiryInput instanceof HTMLInputElement) {
-      expiryInput.value = formatExpiryValue(expiryInput.value);
-      expiryInput.addEventListener('input', () => {
-        expiryInput.value = formatExpiryValue(expiryInput.value);
-      });
-    }
-
-    if (cvcInput instanceof HTMLInputElement) {
-      cvcInput.value = formatCvcValue(cvcInput.value);
-      cvcInput.addEventListener('input', () => {
-        cvcInput.value = formatCvcValue(cvcInput.value);
-      });
-    }
+    const elements = stripe.elements();
+    stripeCardElement = elements.create('card', {
+      style: {
+        base: {
+          fontFamily: '"Manrope", sans-serif',
+          fontSize: '15px',
+          color: '#2d1216',
+          '::placeholder': { color: '#a89a8c' }
+        },
+        invalid: { color: '#a5321f' }
+      }
+    });
+    stripeCardElement.mount(mountPoint);
+    stripeCardElement.on('change', (event) => {
+      const errorsEl = shell.querySelector('#stripe-card-errors');
+      if (errorsEl) errorsEl.textContent = event.error ? event.error.message : '';
+    });
   }
 
   function bindBillingAddressToggle(shell) {
@@ -667,38 +766,20 @@
     const totalEl = document.getElementById('cart-page-total');
     if (!shell) return;
 
-    if (!getAccountEmail()) {
-      if (totalEl) totalEl.textContent = '0 article';
-      shell.innerHTML = [
-        '<div class="cart-empty-state">',
-        '  <p class="favorites-empty-kicker">Connexion requise</p>',
-        '  <h2>Connectez-vous pour retrouver votre panier JACES.</h2>',
-        '  <p>Votre sélection, vos quantités et votre récapitulatif d’achat sont désormais associés à votre compte.</p>',
-        '  <div class="cart-empty-actions">',
-        '    <button class="favorites-empty-link" id="cart-login-button" type="button">Se connecter</button>',
-        '    <a class="favorites-hero-link" href="collection.html">Continuer la sélection</a>',
-        '  </div>',
-        '</div>'
-      ].join('');
-      shell.querySelector('#cart-login-button')?.addEventListener('click', () => {
-        if (window.JacesAuth && typeof window.JacesAuth.requireAuth === 'function') {
-          window.JacesAuth.requireAuth();
-        }
-      });
-      return;
-    }
-
     const items = getCart();
     const session = getAccountSession() || {};
     const savedAddresses = getCheckoutAddresses(session);
     const selectedAddressId = shell.dataset.selectedAddressId || (savedAddresses.find((address) => address.isDefault)?.id || savedAddresses[0]?.id || '');
-    const selectedAddress = savedAddresses.find((address) => address.id === selectedAddressId) || null;
+    const isAddingNewAddress = selectedAddressId === '__new__' || !savedAddresses.length;
+    const selectedAddress = isAddingNewAddress ? null : (savedAddresses.find((address) => address.id === selectedAddressId) || null);
+    const isEditingAddress = !isAddingNewAddress && !!selectedAddress && shell.dataset.editingAddressId === selectedAddressId;
+    const showAddressForm = isAddingNewAddress || isEditingAddress;
     const shippingMode = shell.dataset.shippingMode || 'standard';
     const promoCode = shell.dataset.promoCode || '';
     const paymentMethod = shell.dataset.paymentMethod || 'card';
     const subtotal = getSubtotal(items);
     const promoDiscount = getPromoDiscount(subtotal, promoCode);
-    const shippingFee = getShippingFee(Math.max(0, subtotal - promoDiscount), shippingMode);
+    const shippingFee = getShippingFee(Math.max(0, subtotal - promoDiscount));
     const total = Math.max(0, subtotal - promoDiscount) + shippingFee;
     const taxAmount = total * 0.2;
 
@@ -726,6 +807,10 @@
       <div class="cart-page-layout">
         <aside class="cart-page-recap" aria-label="Récapitulatif de commande">
           <div class="cart-page-recap-card">
+            <div class="cart-page-recap-title-row">
+              <svg class="cart-page-recap-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="4" y="3" width="16" height="18" rx="1"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>
+              <h2>Récapitulatif</h2>
+            </div>
             <div class="cart-page-recap-items">
               ${items.map((item) => {
                 const lineTotal = parsePrice(item.price) * (Number(item.quantity) || 1);
@@ -757,8 +842,16 @@
             </form>
             <div class="cart-page-totals">
               <div class="cart-page-summary-row"><span>Sous-total</span><strong>${formatPrice(subtotal)}</strong></div>
-              <div class="cart-page-summary-row"><span>Livraison</span><strong>${shippingFee === 0 ? 'Gratuite' : formatPrice(shippingFee)}</strong></div>
-              ${promoDiscount > 0 ? `<div class="cart-page-summary-row"><span>Réduction</span><strong>− ${formatPrice(promoDiscount)}</strong></div>` : ''}
+              <div class="cart-page-summary-row">
+                <span>Livraison
+                  <button type="button" class="cart-page-shipping-info" data-shipping-info aria-label="Détail des frais de livraison">i</button>
+                </span>
+                <strong>${shippingFee === 0 ? 'Gratuite' : formatPrice(shippingFee)}</strong>
+              </div>
+              <div class="cart-page-shipping-tooltip" id="cart-shipping-tooltip" hidden>
+                <p>Livraison standard : ${formatPrice(STANDARD_SHIPPING_FEE)}, gratuite dès ${formatPrice(FREE_SHIPPING_THRESHOLD)} d'achat.</p>
+              </div>
+              ${promoDiscount > 0 ? `<div class="cart-page-summary-row cart-page-summary-row-discount"><span>Réduction</span><strong>− ${formatPrice(promoDiscount)}</strong></div>` : ''}
               <div class="cart-page-summary-row cart-page-summary-row-total"><span>Total</span><strong>${formatPrice(total)}</strong></div>
               <p class="cart-page-tax-note">Taxes (${formatPrice(taxAmount)} incluses)</p>
             </div>
@@ -779,104 +872,134 @@
           </div>
         </aside>
         <section class="cart-page-checkout-panel" aria-label="Finaliser l’achat">
-          <div class="cart-page-checkout-express">
-            <p class="cart-page-express-title">Paiement express</p>
-            <div class="cart-page-express-grid">
-              <button class="cart-page-express-button cart-page-express-button-paypal" type="button" aria-label="PayPal">
-                <span class="cart-page-paypal-wordmark" aria-hidden="true"><span>Pay</span><span>Pal</span></span>
-              </button>
-              <button class="cart-page-express-button cart-page-express-button-gpay" type="button" aria-label="Google Pay">
-                <span class="cart-page-gpay-wordmark" aria-hidden="true"><span class="cart-page-gpay-g"><span>G</span></span><span>Pay</span></span>
-              </button>
-            </div>
-            <p class="cart-page-or">OU</p>
-          </div>
           <form class="cart-page-form" id="cart-checkout-form">
             <div class="cart-page-form-section-head">
+              <svg class="cart-page-section-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M4 6h16v12H4z"/><path d="M4 7l8 6 8-6"/></svg>
               <h2>Vos coordonnées</h2>
             </div>
-            <label class="cart-page-field cart-page-field-full">
-              <input type="email" name="email" value="${session.email || ''}" placeholder="Votre e-mail" required>
-            </label>
+            ${!showAddressForm ? `
+              <label class="cart-page-field cart-page-field-full">
+                <input type="email" name="email" value="${session.email || ''}" placeholder="Votre e-mail" required>
+              </label>
+            ` : ''}
 
-            <div class="cart-page-form-section-head cart-page-form-section-head-delivery">
-              <h2>Détails de livraison</h2>
-            </div>
             ${savedAddresses.length ? `
               <div class="cart-page-address-book" aria-label="Mes adresses enregistrées">
                 <p class="cart-page-address-book-title">Mes adresses</p>
                 <div class="cart-page-address-options">
                   ${savedAddresses.map((address) => `
-                    <button class="cart-page-address-option${address.id === selectedAddressId ? ' is-selected' : ''}" type="button" data-checkout-address="${address.id}">
-                      <strong>${address.label}</strong>
-                      <span>${address.address}</span>
-                      <span>${address.postalCode} ${address.city}</span>
-                    </button>
+                    <div class="cart-page-address-card">
+                      <button class="cart-page-address-option${address.id === selectedAddressId ? ' is-selected' : ''}" type="button" data-checkout-address="${address.id}">
+                        <strong>${address.label}</strong>
+                        <span>${address.address}</span>
+                        <span>${address.postalCode} ${address.city}</span>
+                      </button>
+                      <div class="cart-page-address-actions">
+                        <button class="cart-page-address-edit" type="button" data-edit-address="${address.id}" aria-label="Modifier cette adresse">Modifier</button>
+                        <button class="cart-page-address-edit cart-page-address-edit-delete" type="button" data-delete-address="${address.id}" aria-label="Supprimer cette adresse">Supprimer</button>
+                      </div>
+                    </div>
                   `).join('')}
+                  ${savedAddresses.length < MAX_ADDRESSES ? `
+                    <button class="cart-page-address-option cart-page-address-option-new${isAddingNewAddress ? ' is-selected' : ''}" type="button" data-checkout-address="__new__">
+                      <strong>+ Nouvelle adresse</strong>
+                      <span>Ajouter une autre adresse de livraison</span>
+                    </button>
+                  ` : ''}
                 </div>
               </div>
             ` : ''}
-            <label class="cart-page-field cart-page-field-full">
-              <span>Pays/Région</span>
-              <select name="country">
-                <option value="France" ${((selectedAddress?.country || session.country || 'France') === 'France') ? 'selected' : ''}>France</option>
-                <option value="Belgique" ${((selectedAddress?.country || session.country || 'France') === 'Belgique') ? 'selected' : ''}>Belgique</option>
-                <option value="Suisse" ${((selectedAddress?.country || session.country || 'France') === 'Suisse') ? 'selected' : ''}>Suisse</option>
-              </select>
-            </label>
-            <div class="cart-page-field-grid cart-page-field-grid-identity">
-              <label class="cart-page-field">
-                <input type="text" name="firstName" placeholder="Prénom" value="${selectedAddress?.firstName || session.firstName || ''}" required>
+            ${showAddressForm ? `
+              <label class="cart-page-field cart-page-field-full">
+                <span>Libellé</span>
+                <input type="text" name="addressLabel" placeholder="Domicile, Travail…" value="${selectedAddress?.label && selectedAddress.label !== 'Adresse principale' ? selectedAddress.label : ''}" maxlength="25">
               </label>
-              <label class="cart-page-field">
-                <input type="text" name="lastName" placeholder="Nom" value="${selectedAddress?.lastName || session.lastName || ''}" required>
+              <label class="cart-page-field cart-page-field-full">
+                <span>E-mail</span>
+                <input type="email" name="addressEmail" placeholder="Votre e-mail" value="${session.email || ''}" required>
               </label>
-            </div>
-            <label class="cart-page-field cart-page-field-full">
-              <input type="text" name="company" placeholder="Société (optionnel)">
-            </label>
-            <label class="cart-page-field cart-page-field-full">
-              <input type="text" name="address" placeholder="Adresse" value="${selectedAddress?.address || session.deliveryAddress || ''}" required>
-            </label>
-            <label class="cart-page-field cart-page-field-full">
-              <input type="text" name="address2" placeholder="Appartement, suite, etc. (optionnel)" value="${selectedAddress?.address2 || ''}">
-            </label>
-            <div class="cart-page-field-grid cart-page-field-grid-city">
-              <label class="cart-page-field">
-                <input type="text" name="postalCode" placeholder="Code postal" value="${selectedAddress?.postalCode || session.postalCode || ''}" required>
+              <label class="cart-page-field cart-page-field-full">
+                <span>Pays/Région</span>
+                <select name="country">
+                  <option value="France" ${((selectedAddress?.country || session.country || 'France') === 'France') ? 'selected' : ''}>France</option>
+                  <option value="Belgique" ${((selectedAddress?.country || session.country || 'France') === 'Belgique') ? 'selected' : ''}>Belgique</option>
+                  <option value="Suisse" ${((selectedAddress?.country || session.country || 'France') === 'Suisse') ? 'selected' : ''}>Suisse</option>
+                </select>
               </label>
-              <label class="cart-page-field">
-                <input type="text" name="city" placeholder="Ville" value="${selectedAddress?.city || session.city || ''}" required>
+              <div class="cart-page-field-grid cart-page-field-grid-identity">
+                <label class="cart-page-field">
+                  <input type="text" name="firstName" placeholder="Prénom" value="${selectedAddress?.firstName || session.firstName || ''}" required>
+                </label>
+                <label class="cart-page-field">
+                  <input type="text" name="lastName" placeholder="Nom" value="${selectedAddress?.lastName || session.lastName || ''}" required>
+                </label>
+              </div>
+              <label class="cart-page-field cart-page-field-full">
+                <input type="text" name="address" placeholder="Adresse" value="${selectedAddress?.address || session.deliveryAddress || ''}" required>
               </label>
-            </div>
-            <label class="cart-page-field cart-page-field-full">
-              <input type="tel" name="phone" placeholder="Téléphone (optionnel)" value="${selectedAddress?.phone || session.phone || ''}">
-            </label>
+              <label class="cart-page-field cart-page-field-full">
+                <input type="text" name="address2" placeholder="Appartement, suite, etc. (optionnel)" value="${selectedAddress?.address2 || ''}">
+              </label>
+              <div class="cart-page-field-grid cart-page-field-grid-city">
+                <label class="cart-page-field">
+                  <input type="text" name="postalCode" placeholder="Code postal" value="${selectedAddress?.postalCode || session.postalCode || ''}" required>
+                </label>
+                <label class="cart-page-field">
+                  <input type="text" name="city" placeholder="Ville" value="${selectedAddress?.city || session.city || ''}" required>
+                </label>
+              </div>
+              <label class="cart-page-field cart-page-field-full">
+                ${renderPhoneField(selectedAddress?.phone || session.phone || '')}
+              </label>
+              <div class="cart-page-address-form-actions">
+                <button type="button" class="cart-page-address-save" data-save-address>Enregistrer l’adresse</button>
+                <p class="cart-page-address-message" id="cart-address-message" aria-live="polite"></p>
+              </div>
+            ` : `
+              <input type="hidden" name="country" value="${selectedAddress?.country || 'France'}">
+              <input type="hidden" name="firstName" value="${selectedAddress?.firstName || ''}">
+              <input type="hidden" name="lastName" value="${selectedAddress?.lastName || ''}">
+              <input type="hidden" name="address" value="${selectedAddress?.address || ''}">
+              <input type="hidden" name="address2" value="${selectedAddress?.address2 || ''}">
+              <input type="hidden" name="postalCode" value="${selectedAddress?.postalCode || ''}">
+              <input type="hidden" name="city" value="${selectedAddress?.city || ''}">
+              <input type="hidden" name="phoneDialCode" value="${parsePhoneValue(selectedAddress?.phone).dialCode}">
+              <input type="hidden" name="phoneIso" value="${parsePhoneValue(selectedAddress?.phone).iso}">
+              <input type="hidden" name="phone" value="${parsePhoneValue(selectedAddress?.phone).localNumber}">
+            `}
 
             <div class="cart-page-form-section-head cart-page-form-section-head-method">
+              <svg class="cart-page-section-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>
               <h2>Méthode de paiement</h2>
             </div>
             <p class="cart-page-payment-note">Toutes les transactions sont sécurisées et chiffrées</p>
             <div class="cart-page-payment-methods">
               <label class="cart-page-payment-option${paymentMethod === 'card' ? ' is-selected' : ''}">
                 <input type="radio" name="paymentMethod" value="card" ${paymentMethod === 'card' ? 'checked' : ''}>
-                <span>Carte de crédit</span>
+                <span>Stripe</span>
+                <span class="cart-page-card-brands" aria-hidden="true">
+                  <span class="cart-page-card-brand cart-page-card-brand-visa">VISA</span>
+                  <span class="cart-page-card-brand cart-page-card-brand-mastercard"><i></i><i></i></span>
+                </span>
               </label>
+              <label class="cart-page-payment-option${paymentMethod === 'alma' ? ' is-selected' : ''}">
+                <input type="radio" name="paymentMethod" value="alma" ${paymentMethod === 'alma' ? 'checked' : ''}>
+                <span>Alma - Paiement en plusieurs fois</span>
+              </label>
+              ${paymentMethod === 'alma' ? '<p class="cart-page-method-placeholder">Vous serez redirigé(e) vers Alma pour choisir votre échéancier et finaliser le paiement.</p>' : ''}
+              <label class="cart-page-payment-option${paymentMethod === 'klarna' ? ' is-selected' : ''}">
+                <input type="radio" name="paymentMethod" value="klarna" ${paymentMethod === 'klarna' ? 'checked' : ''}>
+                <span>Klarna</span>
+              </label>
+              ${paymentMethod === 'klarna' ? '<p class="cart-page-method-placeholder">Vous serez redirigé(e) vers Klarna pour finaliser le paiement.</p>' : ''}
               <div class="cart-page-payment-fields${paymentMethod === 'card' ? ' is-active' : ''}">
-                <label class="cart-page-field cart-page-field-full">
-                  <input type="text" name="card" inputmode="numeric" maxlength="19" autocomplete="cc-number" placeholder="Numéro de carte" ${paymentMethod === 'card' ? 'required' : ''}>
-                </label>
-                <div class="cart-page-field-grid cart-page-field-grid-payment">
-                  <label class="cart-page-field">
-                    <input type="text" name="expiry" inputmode="numeric" maxlength="5" autocomplete="cc-exp" placeholder="Date d'expiration (MM/AA)" ${paymentMethod === 'card' ? 'required' : ''}>
-                  </label>
-                  <label class="cart-page-field">
-                    <input type="text" name="cvc" inputmode="numeric" maxlength="3" autocomplete="cc-csc" placeholder="Code de sécurité" ${paymentMethod === 'card' ? 'required' : ''}>
-                  </label>
-                </div>
                 <label class="cart-page-field cart-page-field-full">
                   <input type="text" name="cardName" placeholder="Nom sur la carte" ${paymentMethod === 'card' ? 'required' : ''}>
                 </label>
+                <div class="cart-page-field cart-page-field-full">
+                  <div id="stripe-card-element" class="cart-page-stripe-element"></div>
+                  <p class="cart-page-stripe-errors" id="stripe-card-errors" role="alert"></p>
+                </div>
                 <label class="cart-page-check cart-page-check-highlight">
                   <input type="checkbox" name="billingSame" checked>
                   <span>Utiliser l’adresse d’expédition comme adresse de facturation</span>
@@ -917,12 +1040,12 @@
               </div>
             </div>
 
-            <button class="cart-page-submit" type="submit">Valider le paiement</button>
+            <button class="cart-page-submit" type="submit">Valider le paiement (${formatPrice(total)})</button>
             <p class="cart-page-checkout-message" id="cart-checkout-message" aria-live="polite"></p>
             <div class="cart-page-legal-links">
-              <a href="#">Politique de remboursement</a>
-              <a href="#">Politique de confidentialité</a>
-              <a href="#">Conditions d'utilisation</a>
+              <a href="retours-gratuits.html">Politique de remboursement</a>
+              <a href="politique-confidentialite.html">Politique de confidentialité</a>
+              <a href="cgu.html">Conditions d'utilisation</a>
             </div>
           </form>
         </section>
@@ -937,13 +1060,6 @@
       });
     });
 
-    shell.querySelectorAll('input[name="cart-shipping"]').forEach((input) => {
-      input.addEventListener('change', () => {
-        shell.dataset.shippingMode = input.value;
-        renderCartPage();
-      });
-    });
-
     shell.querySelectorAll('input[name="paymentMethod"]').forEach((input) => {
       input.addEventListener('change', () => {
         shell.dataset.paymentMethod = input.value;
@@ -951,39 +1067,213 @@
       });
     });
 
+    if (!shell.dataset.phoneSelectBound) {
+      shell.dataset.phoneSelectBound = 'true';
+      shell.addEventListener('input', (event) => {
+        const target = event.target;
+        if (!(target instanceof HTMLInputElement) || !target.classList.contains('account-phone-number')) return;
+        const iso = target.closest('.account-phone-field')?.querySelector('[data-select-iso]')?.value || 'fr';
+        const maxDigits = PHONE_MAX_DIGITS[iso] || 12;
+        const digits = target.value.replace(/\D/g, '').slice(0, maxDigits);
+        let formatted;
+        if (PHONE_GROUPING_3_3_4.has(iso)) {
+          const p1 = digits.slice(0, 3);
+          const p2 = digits.slice(3, 6);
+          const p3 = digits.slice(6, 10);
+          formatted = p1 ? (p2 ? `(${p1}) ${p2}${p3 ? `-${p3}` : ''}` : `(${p1}`) : '';
+        } else {
+          formatted = digits.replace(/(\d{2})(?=\d)/g, '$1 ').trim();
+        }
+        target.value = formatted;
+      });
+
+      shell.addEventListener('click', (event) => {
+        const selectTrigger = event.target.closest('[data-select-trigger]');
+        if (selectTrigger) {
+          event.preventDefault();
+          const panel = selectTrigger.nextElementSibling;
+          const willOpen = panel && panel.hidden;
+          shell.querySelectorAll('[data-select-panel]').forEach((otherPanel) => {
+            if (otherPanel !== panel) otherPanel.hidden = true;
+          });
+          if (panel) {
+            panel.hidden = !willOpen;
+            selectTrigger.setAttribute('aria-expanded', String(willOpen));
+          }
+          return;
+        }
+
+        const selectOption = event.target.closest('.jc-select-option');
+        if (selectOption) {
+          event.preventDefault();
+          const jcSelect = selectOption.closest('.jc-select');
+          if (jcSelect) {
+            const value = selectOption.getAttribute('data-value') || '';
+            const iso = selectOption.getAttribute('data-iso') || '';
+            const hiddenInput = jcSelect.querySelector('[data-select-value]');
+            const isoInput = jcSelect.querySelector('[data-select-iso]');
+            const trigger = jcSelect.querySelector('[data-select-trigger]');
+            if (hiddenInput) hiddenInput.value = value;
+            if (isoInput) isoInput.value = iso;
+            if (trigger) {
+              const triggerText = trigger.querySelector('span');
+              if (triggerText) triggerText.textContent = value;
+              const triggerFlag = trigger.querySelector('img');
+              const optionFlag = selectOption.querySelector('img');
+              if (triggerFlag && optionFlag) triggerFlag.src = optionFlag.src;
+              trigger.setAttribute('aria-expanded', 'false');
+            }
+            jcSelect.querySelectorAll('.jc-select-option').forEach((option) => {
+              option.classList.toggle('is-selected', option === selectOption);
+            });
+          }
+          shell.querySelectorAll('[data-select-panel]').forEach((otherPanel) => { otherPanel.hidden = true; });
+          return;
+        }
+
+        if (!event.target.closest('.jc-select')) {
+          shell.querySelectorAll('[data-select-panel]').forEach((otherPanel) => { otherPanel.hidden = true; });
+        }
+      });
+    }
+
     shell.querySelectorAll('[data-checkout-address]').forEach((button) => {
       button.addEventListener('click', () => {
         shell.dataset.selectedAddressId = button.getAttribute('data-checkout-address') || '';
+        delete shell.dataset.editingAddressId;
         renderCartPage();
       });
     });
 
-    bindCheckoutCardFieldFormatting(shell);
+    shell.querySelectorAll('[data-edit-address]').forEach((button) => {
+      button.addEventListener('click', () => {
+        const addressId = button.getAttribute('data-edit-address') || '';
+        shell.dataset.selectedAddressId = addressId;
+        shell.dataset.editingAddressId = addressId;
+        renderCartPage();
+      });
+    });
+
+    shell.querySelectorAll('[data-delete-address]').forEach((button) => {
+      button.addEventListener('click', () => {
+        const addressId = button.getAttribute('data-delete-address') || '';
+        const email = getAccountEmail();
+        if (!email) return;
+        const nextAddresses = savedAddresses.filter((address) => address.id !== addressId);
+        if (nextAddresses.length && !nextAddresses.some((address) => address.isDefault)) {
+          nextAddresses[0].isDefault = true;
+        }
+        persistCheckoutProfile({ email, addresses: nextAddresses });
+        shell.dataset.selectedAddressId = nextAddresses.find((address) => address.isDefault)?.id || nextAddresses[0]?.id || '__new__';
+        delete shell.dataset.editingAddressId;
+        renderCartPage();
+      });
+    });
+
+    shell.querySelector('[data-save-address]')?.addEventListener('click', () => {
+      const addressForm = shell.querySelector('#cart-checkout-form');
+      const addressMessage = shell.querySelector('#cart-address-message');
+      if (!(addressForm instanceof HTMLFormElement)) return;
+
+      const formData = new FormData(addressForm);
+      const email = String(formData.get('addressEmail') || formData.get('email') || '').trim();
+      const newLabel = String(formData.get('addressLabel') || '').trim().slice(0, 25);
+      const newFirstName = String(formData.get('firstName') || '').trim();
+      const newLastName = String(formData.get('lastName') || '').trim();
+      const newAddress = String(formData.get('address') || '').trim();
+      const newAddress2 = String(formData.get('address2') || '').trim();
+      const newPostalCode = String(formData.get('postalCode') || '').trim();
+      const newCity = String(formData.get('city') || '').trim();
+      const newCountry = String(formData.get('country') || 'France').trim();
+      const newPhoneDialCode = String(formData.get('phoneDialCode') || '+33').trim();
+      const newPhoneIso = String(formData.get('phoneIso') || 'fr').trim();
+      const newPhoneLocalNumber = String(formData.get('phone') || '').trim();
+      const newPhone = newPhoneLocalNumber ? `${newPhoneDialCode} ${newPhoneLocalNumber}`.trim() : '';
+
+      if (!email) {
+        if (addressMessage) addressMessage.textContent = 'Renseignez votre e-mail avant d’enregistrer une adresse.';
+        return;
+      }
+      if (!newFirstName || !newLastName || !newAddress || !newPostalCode || !newCity) {
+        if (addressMessage) addressMessage.textContent = 'Complétez tous les champs obligatoires de l’adresse.';
+        return;
+      }
+      if (!isValidPhoneNumber(newPhoneIso, newPhoneLocalNumber)) {
+        if (addressMessage) addressMessage.textContent = 'Le numéro de téléphone ne correspond pas au format attendu pour le pays sélectionné.';
+        return;
+      }
+      if (isAddingNewAddress && savedAddresses.length >= MAX_ADDRESSES) {
+        if (addressMessage) addressMessage.textContent = 'Vous avez atteint le maximum de 3 adresses. Modifiez ou supprimez-en une pour en ajouter une nouvelle.';
+        return;
+      }
+
+      const targetId = isAddingNewAddress ? '' : selectedAddressId;
+      const nextAddresses = upsertCheckoutAddress(savedAddresses, {
+        id: targetId,
+        label: newLabel || selectedAddress?.label || 'Adresse principale',
+        firstName: newFirstName,
+        lastName: newLastName,
+        address: newAddress,
+        address2: newAddress2,
+        postalCode: newPostalCode,
+        city: newCity,
+        country: newCountry,
+        phone: newPhone,
+        isDefault: selectedAddress ? selectedAddress.isDefault : true
+      }, targetId);
+
+      persistCheckoutProfile({ email, addresses: nextAddresses });
+
+      shell.dataset.selectedAddressId = nextAddresses[0]?.id || '';
+      delete shell.dataset.editingAddressId;
+      renderCartPage();
+    });
+
+    if (paymentMethod === 'card') initStripeCardElement(shell);
     bindBillingAddressToggle(shell);
 
-    shell.querySelector('#cart-promo-form')?.addEventListener('submit', (event) => {
+    const shippingInfoButton = shell.querySelector('[data-shipping-info]');
+    const shippingTooltip = shell.querySelector('#cart-shipping-tooltip');
+    if (shippingInfoButton && shippingTooltip) {
+      shippingInfoButton.addEventListener('click', (event) => {
+        event.preventDefault();
+        shippingTooltip.hidden = !shippingTooltip.hidden;
+      });
+      document.addEventListener('click', (event) => {
+        if (shippingTooltip.hidden) return;
+        if (event.target === shippingInfoButton || shippingTooltip.contains(event.target)) return;
+        shippingTooltip.hidden = true;
+      });
+    }
+
+    shell.querySelector('#cart-promo-form')?.addEventListener('submit', async (event) => {
       event.preventDefault();
       const form = event.currentTarget;
       if (!(form instanceof HTMLFormElement)) return;
       const nextCode = String(new FormData(form).get('promo') || '').trim().toUpperCase();
+      await verifyPromoCodeRemotely(nextCode);
       shell.dataset.promoCode = nextCode;
       renderCartPage();
     });
 
-    shell.querySelector('#cart-checkout-form')?.addEventListener('submit', (event) => {
+    shell.querySelector('#cart-checkout-form')?.addEventListener('submit', async (event) => {
       event.preventDefault();
       const form = event.currentTarget;
       const message = shell.querySelector('#cart-checkout-message');
+      const submitButton = form.querySelector('.cart-page-submit');
       if (!(form instanceof HTMLFormElement)) return;
       const formData = new FormData(form);
-      const email = String(formData.get('email') || '').trim();
+      const email = String(formData.get('addressEmail') || formData.get('email') || '').trim();
+      const addressLabel = String(formData.get('addressLabel') || '').trim().slice(0, 25);
       const country = String(formData.get('country') || 'France').trim();
       const address = String(formData.get('address') || '').trim();
-      const company = String(formData.get('company') || '').trim();
       const address2 = String(formData.get('address2') || '').trim();
       const postalCode = String(formData.get('postalCode') || '').trim();
       const city = String(formData.get('city') || '').trim();
-      const phone = String(formData.get('phone') || '').trim();
+      const phoneDialCode = String(formData.get('phoneDialCode') || '+33').trim();
+      const phoneIso = String(formData.get('phoneIso') || 'fr').trim();
+      const phoneLocalNumber = String(formData.get('phone') || '').trim();
+      const phone = phoneLocalNumber ? `${phoneDialCode} ${phoneLocalNumber}`.trim() : '';
       const firstName = String(formData.get('firstName') || '').trim();
       const lastName = String(formData.get('lastName') || '').trim();
       const billingSame = formData.get('billingSame') === 'on';
@@ -993,18 +1283,58 @@
       const billingPostalCode = String(formData.get('billingPostalCode') || '').trim();
       const billingCity = String(formData.get('billingCity') || '').trim();
       const selectedPaymentMethod = String(formData.get('paymentMethod') || paymentMethod || 'card');
-      const card = String(formData.get('card') || '').replace(/\s+/g, '');
-      const expiry = String(formData.get('expiry') || '').trim();
-      const cvc = String(formData.get('cvc') || '').trim();
-      const validExpiry = /^(0[1-9]|1[0-2])\/\d{2}$/.test(expiry);
+      const cardName = String(formData.get('cardName') || '').trim();
 
       const missingIdentity = !email || !address || !firstName || !lastName || !postalCode || !city;
       const missingBilling = !billingSame && (!billingFirstName || !billingLastName || !billingAddress || !billingPostalCode || !billingCity);
-      const invalidCard = selectedPaymentMethod === 'card' && (!/^\d{16}$/.test(card) || !validExpiry || !/^\d{3}$/.test(cvc));
+      const missingCardName = selectedPaymentMethod === 'card' && !cardName;
 
-      if (missingIdentity || missingBilling || invalidCard) {
+      if (missingIdentity || missingBilling || missingCardName) {
         if (message) message.textContent = 'Complétez vos informations de livraison et de paiement pour finaliser la commande.';
         return;
+      }
+      if (!isValidPhoneNumber(phoneIso, phoneLocalNumber)) {
+        if (message) message.textContent = 'Le numéro de téléphone ne correspond pas au format attendu pour le pays sélectionné.';
+        return;
+      }
+
+      if (selectedPaymentMethod === 'card') {
+        const stripe = getStripe();
+        if (!stripe || !stripeCardElement) {
+          if (message) message.textContent = 'Le paiement par carte est momentanément indisponible, réessayez dans un instant.';
+          return;
+        }
+
+        if (submitButton) submitButton.disabled = true;
+        if (message) message.textContent = 'Paiement en cours…';
+
+        try {
+          const intentRes = await fetch('/api/products?createPaymentIntent=1', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              items: items.map((item) => ({ id: item.id, quantity: item.quantity })),
+              promoCode,
+              shippingMode
+            })
+          });
+          const intentData = await intentRes.json();
+          if (!intentRes.ok) throw new Error(intentData.error || 'Échec de la préparation du paiement');
+
+          const confirmResult = await stripe.confirmCardPayment(intentData.clientSecret, {
+            payment_method: {
+              card: stripeCardElement,
+              billing_details: { name: cardName, email }
+            }
+          });
+
+          if (confirmResult.error) throw new Error(confirmResult.error.message || 'Paiement refusé');
+          if (confirmResult.paymentIntent?.status !== 'succeeded') throw new Error('Paiement non abouti, réessayez.');
+        } catch (paymentError) {
+          if (submitButton) submitButton.disabled = false;
+          if (message) message.textContent = paymentError.message || 'Le paiement a échoué, réessayez.';
+          return;
+        }
       }
 
       persistCheckoutProfile({
@@ -1013,14 +1343,13 @@
         lastName,
         deliveryAddress: address,
         country,
-        company,
         address2,
         postalCode,
         city,
         phone,
         addresses: upsertCheckoutAddress(savedAddresses, {
-          id: selectedAddressId,
-          label: selectedAddress?.label || 'Adresse principale',
+          id: isAddingNewAddress ? '' : selectedAddressId,
+          label: addressLabel || selectedAddress?.label || 'Adresse principale',
           firstName,
           lastName,
           address,
@@ -1030,7 +1359,7 @@
           country,
           phone,
           isDefault: true
-        }, selectedAddressId)
+        }, isAddingNewAddress ? '' : selectedAddressId)
       });
 
       const confirmedOrder = {
@@ -1146,7 +1475,9 @@
     init();
   }
 
-  window.addEventListener('jaces:account-sync', () => {
+  window.addEventListener('jaces:account-sync', (event) => {
+    const email = String(event?.detail?.session?.email || '').trim().toLowerCase();
+    if (email) mergeGuestCartIntoAccount(email);
     updateHeaderCount();
     renderCartPage();
     renderCartPanel();

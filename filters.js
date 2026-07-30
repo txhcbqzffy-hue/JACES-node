@@ -135,8 +135,8 @@
 
       // NOUVEAUTÉS : ne pas remplacer — la colonne FEMME est hardcodée et correcte
 
-      // COLLABORATIONS : ne pas remplacer — les slugs API (jaces-x-nike) ne correspondent
-      // pas aux catégories attendues par la page (nike, chloe, etc.)
+      // COLLABORATIONS : ne pas remplacer — les slugs API (jaces-x-from-future) ne correspondent
+      // pas aux catégories attendues par la page (from-future, hoka, etc.)
 
       // ACCESSOIRES : remplace les catégories (Sacs, Bijoux, etc.)
       const accessoiresFilters = filters.filter((f) => normalizeMenu(f.menu) === 'accessoires');

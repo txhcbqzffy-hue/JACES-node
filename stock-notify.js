@@ -6,16 +6,23 @@
     return '';
   }
 
+  function getAccountFirstName() {
+    if (window.JacesAuth && typeof window.JacesAuth.getSession === 'function') {
+      return String(window.JacesAuth.getSession()?.firstName || '').trim();
+    }
+    return '';
+  }
+
   function isValidEmail(value) {
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(value || '').trim());
   }
 
-  async function submitNotification(productId, size, email) {
+  async function submitNotification(productId, size, email, color, firstName) {
     try {
       const res = await fetch('/api/stock-notifications', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ productId, size, email })
+        body: JSON.stringify({ productId, size, email, color, firstName })
       });
       return res.ok;
     } catch (error) {
@@ -23,7 +30,7 @@
     }
   }
 
-  function openStockNotify(productId, size, productName) {
+  function openStockNotify(productId, size, productName, color) {
     document.querySelectorAll('.stock-notify-overlay').forEach((node) => node.remove());
 
     const overlay = document.createElement('div');
@@ -55,6 +62,7 @@
 
     function renderForm(errorMessage) {
       const accountEmail = getAccountEmail();
+      const accountFirstName = getAccountFirstName();
       overlay.innerHTML = `
         <div class="stock-notify-modal">
           <button class="stock-notify-close" type="button" data-close="true" aria-label="Fermer">×</button>
@@ -63,6 +71,10 @@
           <label class="stock-notify-field">
             <span>E-mail</span>
             <input type="email" id="stock-notify-email" placeholder="vous@exemple.com" value="${accountEmail.replace(/"/g, '&quot;')}">
+          </label>
+          <label class="stock-notify-field">
+            <span>Pr&eacute;nom (optionnel)</span>
+            <input type="text" id="stock-notify-name" placeholder="Votre pr&eacute;nom" value="${accountFirstName.replace(/"/g, '&quot;')}">
           </label>
           ${errorMessage ? `<p class="stock-notify-error">${errorMessage}</p>` : ''}
           <button type="button" class="stock-notify-primary" data-submit="true">M'avertir</button>
@@ -79,19 +91,20 @@
 
       if (event.target.closest('[data-submit="true"]')) {
         const email = overlay.querySelector('#stock-notify-email')?.value || '';
+        const firstName = overlay.querySelector('#stock-notify-name')?.value || '';
         if (!isValidEmail(email)) {
           renderForm('Entrez une adresse e-mail valide.');
           return;
         }
         renderLoading();
-        const ok = await submitNotification(productId, size, email.trim());
+        const ok = await submitNotification(productId, size, email.trim(), color || '', firstName.trim());
         if (ok) renderConfirmed();
         else renderForm('Une erreur est survenue, r&eacute;essayez.');
       }
     });
 
     overlay.addEventListener('keydown', (event) => {
-      if (event.key === 'Enter' && event.target.id === 'stock-notify-email') {
+      if (event.key === 'Enter' && (event.target.id === 'stock-notify-email' || event.target.id === 'stock-notify-name')) {
         event.preventDefault();
         overlay.querySelector('[data-submit="true"]')?.click();
       }
@@ -100,7 +113,7 @@
     const accountEmail = getAccountEmail();
     if (accountEmail) {
       renderLoading();
-      submitNotification(productId, size, accountEmail).then((ok) => {
+      submitNotification(productId, size, accountEmail, color || '', getAccountFirstName()).then((ok) => {
         if (ok) renderConfirmed();
         else renderForm('Une erreur est survenue, r&eacute;essayez.');
       });

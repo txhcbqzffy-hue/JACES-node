@@ -10,6 +10,15 @@
   const FAVORITE_SELECTION_SYNC_EVENT = 'jaces:favorite-selection-sync';
   const NUMERIC_SIZE_ORDER = ['34', '36', '38', '40', '42', '44'];
 
+  function formatPrice(value) {
+    if (value === null || value === undefined || value === '') return '';
+    const raw = String(value).trim();
+    if (raw.includes('€')) return raw;
+    const numeric = Number(raw);
+    if (!Number.isFinite(numeric)) return raw;
+    return new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR', minimumFractionDigits: 0, maximumFractionDigits: 2 }).format(numeric);
+  }
+
   const colorLabels = {
     black: 'Noir',
     beige: 'Beige',
@@ -59,9 +68,41 @@
     return !!getAccountEmail();
   }
 
+  // Favoris/historique/sélections ne demandent jamais de compte pour être
+  // consultés ou modifiés - les invités ont leur propre clé fixe, fusionnée
+  // dans leur compte dès qu'ils se connectent (voir mergeGuestDataIntoAccount).
   function getScopedStorageKey(baseKey) {
     const email = getAccountEmail();
-    return email ? `${baseKey}:${email}` : '';
+    return `${baseKey}:${email || 'guest'}`;
+  }
+
+  // Folds whatever a guest built up (favoris/historique/sélections taille-
+  // couleur) into their account the moment they log in, so browsing before
+  // creating an account never loses anything.
+  function mergeGuestDataIntoAccount(email) {
+    if (!email) return;
+    [STORAGE_KEY, HISTORY_STORAGE_KEY, SELECTIONS_STORAGE_KEY].forEach((baseKey) => {
+      const guestKey = `${baseKey}:guest`;
+      const guestRaw = localStorage.getItem(guestKey);
+      if (!guestRaw) return;
+      try {
+        const guestValue = JSON.parse(guestRaw);
+        const accountKey = `${baseKey}:${email}`;
+        if (Array.isArray(guestValue)) {
+          if (!guestValue.length) return;
+          const accountValue = JSON.parse(localStorage.getItem(accountKey) || '[]');
+          const existingIds = new Set((Array.isArray(accountValue) ? accountValue : []).map((item) => item?.id));
+          const merged = [...guestValue.filter((item) => !existingIds.has(item?.id)), ...(Array.isArray(accountValue) ? accountValue : [])];
+          localStorage.setItem(accountKey, JSON.stringify(merged));
+        } else if (guestValue && typeof guestValue === 'object') {
+          const accountValue = JSON.parse(localStorage.getItem(accountKey) || '{}');
+          localStorage.setItem(accountKey, JSON.stringify(Object.assign({}, guestValue, accountValue)));
+        }
+        localStorage.removeItem(guestKey);
+      } catch (error) {
+        // Ignore malformed guest data.
+      }
+    });
   }
 
   function requireAccount(options) {
@@ -350,7 +391,7 @@
   }
 
   function saveProductSelection(id, field, value) {
-    if (!id || !field || !isAuthenticated()) return;
+    if (!id || !field) return;
     const selections = getSelections();
     const current = selections[id] || { color: '', size: '', suggestedSize: '', alternateSuggestedSize: '' };
     selections[id] = Object.assign({}, current, { [field]: value || '' });
@@ -454,7 +495,6 @@ if (path === 'collection.html' || path === 'nouveautes.html' || path === 'access
   }
 
   function toggleFavorite(product) {
-    if (!isAuthenticated()) return null;
     const favs = getFavorites();
     const idx = favs.findIndex(f => f.id === product.id);
     if (idx >= 0) {
@@ -668,45 +708,13 @@ if (path === 'collection.html' || path === 'nouveautes.html' || path === 'access
     });
   }
 
-  function ensurePanelAction() {
-    const panel = document.getElementById('fav-panel');
-    const header = panel?.querySelector('.fav-panel-header');
-    const list = document.getElementById('fav-panel-list');
-    if (!panel || !header || !list) return null;
-
-    let action = document.getElementById('fav-panel-action');
-    if (!action) {
-      action = document.createElement('div');
-      action.className = 'fav-panel-action';
-      action.id = 'fav-panel-action';
-      panel.insertBefore(action, list);
-    }
-
-    return action;
-  }
-
   function renderPanel() {
     const favs = getFavorites().map(buildProduct);
     const history = getHistory().map(buildProduct);
     const list = document.getElementById('fav-panel-list');
     if (!list) return;
-    const action = ensurePanelAction();
     const title = document.getElementById('fav-panel-title');
-    if (title) title.textContent = 'Mes Favoris (' + favs.length + ')';
-    if (action) {
-      action.innerHTML = '';
-    }
-
-    if (!isAuthenticated()) {
-      list.innerHTML = [
-        '<p class="fav-panel-empty">Connectez-vous pour enregistrer vos coups de coeur.</p>',
-        '<div class="fav-panel-footer">',
-        '  <button class="fav-panel-link" id="fav-panel-login" type="button">Se connecter</button>',
-        '</div>'
-      ].join('');
-      list.querySelector('#fav-panel-login')?.addEventListener('click', () => requireAccount());
-      return;
-    }
+    if (title) title.innerHTML = 'Ma Wishlist <span class="fav-panel-count">(' + favs.length + ')</span>';
 
     if (favs.length === 0 && history.length === 0) {
       list.innerHTML = [
@@ -719,6 +727,18 @@ if (path === 'collection.html' || path === 'nouveautes.html' || path === 'access
     }
 
     const favoriteMarkup = favs.length ? favs.map(f => {
+      const selection = getSavedSelection(f.id, f);
+      const hasSelection = !!(selection.color && (selection.size || hasUniqueSize(f)));
+      const selectionLabel = hasSelection
+        ? [!hasUniqueSize(f) ? `Taille ${selection.size}` : '', normalizeColorLabel(selection.color)].filter(Boolean).join(' · ')
+        : '';
+      const actionMarkup = hasSelection
+        ? `
+          <p class="fav-panel-selection">${selectionLabel}</p>
+          <button class="fav-panel-add-btn" type="button" data-fav-add-id="${f.id}">Ajouter au panier</button>
+          <a class="fav-panel-edit-link" href="${getProductUrl(f)}">Modifier la taille/couleur</a>
+        `
+        : `<a class="fav-panel-link fav-panel-item-link" href="${getProductUrl(f)}">Choisir et ajouter</a>`;
       return `
       <div class="fav-panel-item">
         <a class="fav-panel-entry" href="${getProductUrl(f)}">
@@ -729,13 +749,13 @@ if (path === 'collection.html' || path === 'nouveautes.html' || path === 'access
         </a>
         <div class="fav-panel-controls">
           <a class="fav-panel-title-link" href="${getProductUrl(f)}">${f.name}</a>
-          <p class="fav-panel-price">${f.price}</p>
-          <a class="fav-panel-link fav-panel-item-link" href="${getProductUrl(f)}">Choisir et ajouter</a>
+          <p class="fav-panel-price">${formatPrice(f.price)}</p>
+          ${actionMarkup}
         </div>
         <button class="fav-panel-remove" data-fav-id="${f.id}" aria-label="Retirer des favoris" type="button">×</button>
       </div>
     `;
-    }).join('') : '<p class="fav-panel-empty">Aucun favori actif pour le moment.</p>';
+    }).join('') : '<p class="fav-panel-empty">Aucun favori pour le moment.</p>';
 
     const historyMarkup = history.length ? [
       '<section class="fav-history-section">',
@@ -743,20 +763,17 @@ if (path === 'collection.html' || path === 'nouveautes.html' || path === 'access
          history.map(item => {
            return `
         <div class="fav-history-item">
-          <a class="fav-history-title" href="${getProductUrl(item)}">${item.name}</a>
-          <div class="fav-history-body">
-            <a class="fav-history-entry" href="${getProductUrl(item)}">
-              ${item.img
-                ? `<img src="${item.img}" alt="${item.name}" class="fav-panel-img">`
-                : `<div class="fav-panel-img fav-panel-img-placeholder"></div>`
-              }
-            </a>
-            <div class="fav-history-controls">
-              <p class="fav-history-price">${item.price}</p>
-                <a class="fav-panel-link fav-history-link" href="${getProductUrl(item)}">Choisir et ajouter</a>
-              <button class="fav-history-restore" data-fav-id="${item.id}" type="button">Remettre en favoris</button>
-              </div>
-            </div>
+          <a class="fav-history-entry" href="${getProductUrl(item)}">
+            ${item.img
+              ? `<img src="${item.img}" alt="${item.name}" class="fav-panel-img">`
+              : `<div class="fav-panel-img fav-panel-img-placeholder"></div>`
+            }
+          </a>
+          <div class="fav-history-controls">
+            <a class="fav-history-title" href="${getProductUrl(item)}">${item.name}</a>
+            <p class="fav-history-price">${formatPrice(item.price)}</p>
+            <a class="fav-panel-add-btn fav-history-link" href="${getProductUrl(item)}">Choisir et ajouter</a>
+            <button class="fav-history-restore" data-fav-id="${item.id}" type="button">Remettre en favoris</button>
           </div>
         </div>`;
          }).join(''),
@@ -772,13 +789,29 @@ if (path === 'collection.html' || path === 'nouveautes.html' || path === 'access
     list.querySelectorAll('.fav-history-restore').forEach((button) => {
       button.addEventListener('click', () => restoreFromHistory(button.dataset.favId));
     });
+
+    // Taille/couleur déjà choisies (depuis la fiche produit) - on ajoute au
+    // panier directement, sans repasser par la fiche produit.
+    list.querySelectorAll('[data-fav-add-id]').forEach((button) => {
+      button.addEventListener('click', () => {
+        const id = button.dataset.favAddId;
+        const product = favs.find((item) => item.id === id);
+        if (!product || !window.JacesCart || typeof window.JacesCart.addItem !== 'function') return;
+        const selection = getSavedSelection(id, product);
+        const added = window.JacesCart.addItem(product, selection.size, 1, selection.color);
+        if (!added) return;
+        const originalText = button.textContent;
+        button.textContent = 'Ajouté ✓';
+        button.disabled = true;
+        window.setTimeout(() => {
+          button.textContent = originalText;
+          button.disabled = false;
+        }, 1600);
+      });
+    });
   }
 
   function openPanel() {
-    if (!isAuthenticated()) {
-      requireAccount();
-      return;
-    }
     document.getElementById('fav-panel')?.classList.add('open');
     document.getElementById('fav-overlay')?.classList.add('open');
     renderPanel();
@@ -898,7 +931,23 @@ if (path === 'collection.html' || path === 'nouveautes.html' || path === 'access
     });
   }
 
+  function ensureFavPanel() {
+    if (document.getElementById('fav-panel') && document.getElementById('fav-overlay')) return;
+
+    document.body.insertAdjacentHTML('beforeend', `
+      <div class="fav-overlay" id="fav-overlay"></div>
+      <div class="fav-panel" id="fav-panel" role="dialog" aria-label="Ma wishlist">
+        <div class="fav-panel-header">
+          <h2 id="fav-panel-title">Ma Wishlist <span class="fav-panel-count">(0)</span></h2>
+          <button class="fav-panel-close-btn" id="fav-panel-close" aria-label="Fermer" type="button">×</button>
+        </div>
+        <div class="fav-panel-list" id="fav-panel-list"></div>
+      </div>
+    `);
+  }
+
   function init() {
+    ensureFavPanel();
     installCategoryScrollBridge();
     ensureFavoriteButtons();
     restoreHeartStates();
@@ -917,10 +966,6 @@ if (path === 'collection.html' || path === 'nouveautes.html' || path === 'access
       const card = btn.closest('.product-card, .home-slider-card');
       if (!card) return;
       e.stopPropagation();
-      if (!isAuthenticated()) {
-        requireAccount({ button: document.querySelector('.icon-button[aria-label="Compte"]') });
-        return;
-      }
       const product = getProductFromCard(card);
       const added = toggleFavorite(product);
       if (added === null) return;
@@ -1029,7 +1074,9 @@ if (path === 'collection.html' || path === 'nouveautes.html' || path === 'access
       }).observe(root, { childList: true, subtree: true });
     });
 
-    window.addEventListener('jaces:account-sync', () => {
+    window.addEventListener('jaces:account-sync', (event) => {
+      const email = String(event?.detail?.session?.email || '').trim().toLowerCase();
+      if (email) mergeGuestDataIntoAccount(email);
       closePanel();
       restoreHeartStates();
       updateHeaderCount();

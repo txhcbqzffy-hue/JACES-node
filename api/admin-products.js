@@ -1,32 +1,11 @@
-const { createClient } = require('@supabase/supabase-js');
-const { sendRestockEmail } = require('../lib/brevo');
-
-function getSupabaseAdmin() {
-  const url = process.env.SUPABASE_URL || 'https://uxhzrobxhumreuntxrzw.supabase.co';
-  // Prefer a real service-role key (bypasses RLS for writes). Fall back to the
-  // existing SUPABASE_KEY so this works out of the box, but that var usually
-  // holds the anon/publishable key, which RLS may block from writing.
-  const serviceKey = process.env.SUPABASE_SERVICE_KEY || process.env.SUPABASE_KEY;
-
-  if (!serviceKey) {
-    throw new Error('Aucune cle Supabase configuree (SUPABASE_SERVICE_KEY ou SUPABASE_KEY).');
-  }
-
-  return createClient(url, serviceKey);
-}
+const { buildRestockEmailContent, sendEmail } = require('../lib/brevo');
+const { getSupabaseAdmin, isAuthorized } = require('../lib/adminAuth');
 
 function withRlsHint(message) {
   if (/permission denied|rls|policy|not allowed/i.test(String(message || ''))) {
     return message + ' -- La cle Supabase utilisee n\'a probablement pas les droits d\'ecriture: ajoutez SUPABASE_SERVICE_KEY (cle service_role, pas anon) dans les variables d\'environnement Vercel.';
   }
   return message;
-}
-
-function isAuthorized(req) {
-  const expected = process.env.ADMIN_PASSWORD;
-  if (!expected) return false;
-  const provided = req.headers['x-admin-password'];
-  return typeof provided === 'string' && provided === expected;
 }
 
 function toPrice(value) {
@@ -166,21 +145,51 @@ function getRestockedSizes(beforeStockBySize, afterVariants) {
 async function notifyRestockedSizes(supabase, productId, productName, restockedSizes) {
   if (!restockedSizes.length) return;
 
+  // Admin-editable copy (Marketing section) - falls back to the built-in
+  // wording in lib/brevo.js when nothing has been saved yet.
+  const { data: templateRows } = await supabase
+    .from('site_content')
+    .select('key, value')
+    .in('key', ['restock_email_subject', 'restock_email_html']);
+  const subjectTemplate = templateRows?.find((row) => row.key === 'restock_email_subject')?.value || '';
+  const htmlTemplate = templateRows?.find((row) => row.key === 'restock_email_html')?.value || '';
+
+  const { data: images } = await supabase
+    .from('product_images')
+    .select('url, position')
+    .eq('product_id', productId)
+    .order('position', { ascending: true, nullsFirst: true })
+    .limit(1);
+  const productImageUrl = images?.[0]?.url || '';
+
   for (const size of restockedSizes) {
     try {
       const { data: pending, error } = await supabase
         .from('stock_notifications')
-        .select('id, email')
+        .select('id, email, color, first_name')
         .eq('product_id', productId)
         .eq('size', size)
         .eq('notified', false);
 
       if (error || !pending || !pending.length) continue;
 
-      const productUrl = `https://jaces-node.vercel.app/detail-produit.html?id=${productId}`;
-
       for (const row of pending) {
-        const result = await sendRestockEmail({ toEmail: row.email, productName, size, productUrl });
+        // Pre-selects the size (and color, when known) on the product page
+        // so the link in the email lands the visitor exactly where they need to be.
+        const productUrl = `https://jaces-node.vercel.app/detail-produit.html?id=${productId}&selectedSize=${encodeURIComponent(size)}`
+          + (row.color ? `&selectedColor=${encodeURIComponent(row.color)}` : '');
+        const { subject, html } = buildRestockEmailContent({
+          toEmail: row.email,
+          productName,
+          size,
+          color: row.color,
+          productUrl,
+          productImageUrl,
+          firstName: row.first_name,
+          subjectTemplate,
+          htmlTemplate
+        });
+        const result = await sendEmail({ toEmail: row.email, subject, htmlContent: html });
         if (result.ok) {
           await supabase.from('stock_notifications').update({ notified: true }).eq('id', row.id);
         } else if (!result.skipped) {

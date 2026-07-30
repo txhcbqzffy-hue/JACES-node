@@ -38,6 +38,12 @@
   .nav-item:hover { background: rgba(255,255,255,0.07); color: #fff; }
   .nav-item.active { background: #f6f1ea; color: #171411; font-weight: 700; }
   .nav-icon { font-size: 0.98rem; line-height: 1; flex: 0 0 auto; }
+  .nav-label { flex: 1 1 auto; }
+  .nav-badge {
+    flex: 0 0 auto; min-width: 18px; height: 18px; padding: 0 5px; border-radius: 9px; background: #a5321f; color: #fff;
+    font-size: 0.68rem; font-weight: 700; display: flex; align-items: center; justify-content: center; line-height: 1;
+  }
+  .nav-item.active .nav-badge { background: #7b3d3e; }
   .nav-logout {
     background: transparent; border: 1px solid #47423b; color: #cfc7ba; padding: 9px 10px; font-size: 0.76rem;
     cursor: pointer; border-radius: 7px; margin-top: 10px; font-family: inherit;
@@ -78,6 +84,62 @@
   .marketing-group--collaborations .field-title { color: #6a2f80; }
   .marketing-group--accessoires { border-left-color: #2f5a80; background: #f3f7fb; }
   .marketing-group--accessoires .field-title { color: #2f5a80; }
+
+  .vignette-drop {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    min-height: 84px;
+    padding: 10px;
+    border: 1.5px dashed #b3a494;
+    border-radius: 6px;
+    background: #fff;
+    cursor: pointer;
+    text-align: center;
+    overflow: hidden;
+    transition: border-color 0.15s ease, background 0.15s ease;
+  }
+  .vignette-drop:hover { border-color: #7b3d3e; }
+  .vignette-drop.is-dragover { border-color: #7b3d3e; background: #fbf1ec; }
+  .vignette-drop.is-uploading { opacity: 0.6; pointer-events: none; }
+  .vignette-drop-circle {
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 1.5px solid #d8d8d8;
+    background: #f5f5f5;
+    cursor: grab;
+    touch-action: none;
+  }
+  .vignette-drop-circle:active { cursor: grabbing; }
+  .vignette-drop-circle[hidden] { display: none; }
+  .vignette-drop-preview { width: 100%; height: 100%; object-fit: cover; display: block; pointer-events: none; user-select: none; -webkit-user-drag: none; }
+  .vignette-drop-reposition-hint { font-size: 0.62rem; color: #9a8f81; }
+  .vignette-drop-hint { font-size: 0.68rem; color: #9a8f81; line-height: 1.3; }
+  .vignette-drop-hint[hidden] { display: none; }
+  .vignette-drop-status { font-size: 0.66rem; font-weight: 700; min-height: 1em; }
+  .vignette-drop-status.ok { color: #2f6b3a; }
+  .vignette-drop-status.error { color: #b23d31; }
+  .vignette-drop-delete {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    width: 20px;
+    height: 20px;
+    border: none;
+    border-radius: 50%;
+    background: rgba(27, 26, 23, 0.75);
+    color: #fff;
+    font-size: 11px;
+    line-height: 1;
+    cursor: pointer;
+  }
+  .vignette-drop-delete[hidden] { display: none; }
+  .vignette-drop-delete:hover { background: #a5321f; }
   .placeholder-card p { margin: 0; color: #8a8175; font-size: 0.88rem; }
 
   .gate {
@@ -122,12 +184,30 @@
   .drag-handle:active { cursor: grabbing; }
   .list-row.dragging, .variant-color-group.dragging { opacity: 0.4; }
   .list-row input { flex: 1; }
+  .image-row-preview {
+    flex: 1 1 auto; position: relative; height: 150px; min-width: 0;
+    border: 1.5px dashed #c8bfb3; background: #faf6ee; cursor: pointer;
+    display: flex; align-items: center; justify-content: center; overflow: hidden;
+    transition: height 0.15s;
+  }
+  /* Big while empty (so you can see what you're picking) - once a photo is
+     in place, shrink back down so 4 filled slots don't take over the page. */
+  .image-row-preview.has-image { height: 56px; }
+  .image-row-preview:hover { border-color: #a5601f; }
+  .image-row-preview.is-dragover { border-color: #a5601f; background: #f4e9d8; }
+  .image-row-preview.is-uploading { opacity: 0.55; pointer-events: none; }
+  .image-row-preview-img { width: 100%; height: 100%; object-fit: contain; pointer-events: none; }
+  .image-row-preview-img[hidden] { display: none; }
+  .image-row-preview-icon { color: #a89f8f; font-size: 1.8rem; pointer-events: none; }
+  .image-row-preview-icon[hidden] { display: none; }
+  .image-row-status { flex: 0 0 auto; font-size: 0.66rem; font-weight: 700; min-width: 54px; }
+  .image-row-status.ok { color: #2f6b3a; }
+  .image-row-status.error { color: #b23d31; }
   .field-wide-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 11px; }
   @media (max-width: 900px) { .field-wide-row { grid-template-columns: 1fr; } }
   .field-wide-row .field { margin-bottom: 0; }
   .field-wide { background: #faf6ee; border: 1px solid #eee3d2; padding: 12px 13px; border-radius: 9px; }
-  #images-list { max-height: 182px; overflow-y: auto; padding-right: 4px; }
-  #review-photos-list { max-height: 182px; overflow-y: auto; padding-right: 4px; }
+  #images-list { max-height: 650px; overflow-y: auto; padding-right: 4px; }
   #variants-list { height: 212px; min-height: 60px; max-height: 500px; overflow: auto; padding-right: 4px; resize: vertical; }
   .variant-color-group { border: 1px solid #e4ddd1; border-radius: 4px; padding: 5px 6px; margin-bottom: 5px; background: #fffcf7; }
   .variant-color-head { display: flex; gap: 5px; align-items: center; margin-bottom: 4px; }
@@ -159,13 +239,9 @@
   .field-wide .list-row { margin-bottom: 7px; }
   .field-wide .list-row input, .field-wide .list-row select { padding: 9px 10px; font-size: 0.95rem; }
   .field-wide .add-btn { padding: 8px 12px; font-size: 0.82rem; }
-  #reviews-list { max-height: 210px; overflow-y: auto; padding-right: 4px; }
-  .review-row { align-items: flex-start; }
-  .review-row input { flex: 0 0 120px; }
-  .review-row select { flex: 0 0 62px; }
-  .review-row textarea { flex: 1; min-height: 36px; resize: vertical; }
   .list-row button, .add-btn { background: #ece5d8; border: 1px solid #c8bfb3; padding: 7px 10px; cursor: pointer; font-size: 0.78rem; }
   .add-btn { margin-top: 4px; }
+  .add-btn:disabled { opacity: 0.5; cursor: default; }
   #filters-container { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; align-items: start; }
   #filters-container > * { margin-bottom: 0; }
   @media (max-width: 900px) { #filters-container { grid-template-columns: 1fr; } }
@@ -231,10 +307,85 @@
     background: #f1ece2; color: #6f675f;
   }
   .product-badge.badge-categories, .product-badge.badge-accessoires { background: #e7eef5; color: #2f5a80; }
+
+  /* --- Influencer request cards --- */
+  .influencer-card { padding: 16px; border-bottom: 1px solid #f1ece2; }
+  .influencer-card:last-child { border-bottom: none; }
+  .influencer-card-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+  .influencer-name { display: block; font-size: 0.95rem; color: #171411; margin-bottom: 6px; }
+  .influencer-meta { display: flex; flex-wrap: wrap; gap: 6px 14px; font-size: 0.78rem; color: #8a8175; }
+  .influencer-meta span { display: inline-flex; align-items: center; gap: 4px; }
+  .influencer-delete-btn {
+    background: none; border: 1px solid #a5321f; color: #a5321f; border-radius: 6px; cursor: pointer; font-size: 0.74rem; padding: 5px 10px; flex: 0 0 auto;
+  }
+  .influencer-delete-btn:hover { background: #a5321f; color: #fff; }
+  .influencer-send-btn {
+    background: #2d1216; border: 1px solid #2d1216; color: #fff; border-radius: 6px; cursor: pointer; font-size: 0.74rem; padding: 5px 10px;
+  }
+  .influencer-send-btn:hover { background: #451d22; }
+  .influencer-send-btn:disabled { opacity: 0.6; cursor: default; }
+  .influencer-promo { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+  .influencer-promo-code {
+    font-family: monospace; font-size: 0.9rem; font-weight: 700; padding: 4px 10px; border-radius: 6px; background: #f6efe6; color: #2d1216; letter-spacing: 0.03em;
+    border: 1px solid transparent; width: 110px;
+  }
+  .influencer-promo-code:focus { outline: none; border-color: #7b3d3e; background: #fff; }
+  .influencer-promo-code.inactive { background: #f1ece2; color: #a89f92; text-decoration: line-through; }
+  .influencer-promo-meta { font-size: 0.78rem; color: #8a8175; }
+  .influencer-promo-toggle { display: flex; align-items: center; gap: 5px; font-size: 0.78rem; font-weight: 400; }
+  .influencer-promo-copy {
+    background: none; border: 1px solid #e8e2d6; color: #6f675f; border-radius: 6px; cursor: pointer; font-size: 0.72rem; padding: 3px 8px;
+  }
+  .influencer-promo-copy:hover { background: #f6f1ea; }
+  .influencer-promo-percent-edit { display: flex; align-items: center; gap: 2px; font-size: 0.82rem; color: #2d1216; }
+  .influencer-promo-percent-input {
+    width: 44px; padding: 3px 4px; border: 1px solid #e8e2d6; border-radius: 5px; font-size: 0.82rem; text-align: center;
+  }
+  .influencer-promo-save {
+    background: #7b3d3e; border: 1px solid #7b3d3e; color: #fff; border-radius: 6px; cursor: pointer; font-size: 0.74rem; padding: 5px 10px;
+  }
+  .influencer-promo-save:hover { background: #5f2e2f; }
+  .influencer-promo-save:disabled { opacity: 0.6; cursor: default; }
+  .influencer-promo-delete {
+    background: none; border: 1px solid #e8e2d6; color: #a5321f; border-radius: 50%; cursor: pointer; font-size: 0.85rem; width: 22px; height: 22px; line-height: 1; padding: 0;
+  }
+  .influencer-promo-delete:hover { background: #a5321f; color: #fff; border-color: #a5321f; }
+  .influencer-code-btn {
+    background: none; border: 1px solid #7b3d3e; color: #7b3d3e; border-radius: 6px; cursor: pointer; font-size: 0.76rem; padding: 5px 10px;
+  }
+  .influencer-code-btn:hover { background: #7b3d3e; color: #fff; }
+  .influencer-code-btn:disabled { opacity: 0.6; cursor: default; }
+  .influencer-section-label {
+    font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.08em; color: #a89f92; margin: 14px 0 6px;
+  }
+  .influencer-networks { display: flex; flex-wrap: wrap; gap: 8px; }
+  .influencer-network-badge {
+    display: inline-flex; flex-direction: column; gap: 3px; font-size: 0.78rem; padding: 8px 12px; border: 1px solid #e8e2d6; border-radius: 8px; color: #2d1216; text-decoration: none; max-width: 240px; background: #fbfaf7;
+  }
+  .influencer-network-badge:hover { border-color: #d8baab; }
+  .influencer-network-badge .net-line1 strong { color: #171411; }
+  .influencer-network-badge .net-line2 { color: #7b3d3e; font-size: 0.72rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .influencer-network-badge .net-line2.not-link { color: #a89f92; text-decoration: none; }
+  .influencer-details-box {
+    margin: 0; font-size: 0.84rem; line-height: 1.55; color: #4a4438; background: #f6efe6; padding: 10px 12px; border-radius: 8px; white-space: pre-wrap;
+  }
+  .influencer-screenshots { display: flex; gap: 10px; flex-wrap: wrap; }
+  .influencer-screenshots a {
+    display: block; width: 96px; height: 96px; border-radius: 8px; overflow: hidden; border: 1px solid #e8e2d6; transition: transform 0.12s ease, border-color 0.12s ease;
+  }
+  .influencer-screenshots a:hover { transform: scale(1.04); border-color: #d8baab; }
+  .influencer-screenshots img { width: 100%; height: 100%; object-fit: cover; display: block; }
   .product-badge.badge-collaborations { background: #f2e7f5; color: #6a2f80; }
   .product-badge.badge-nouveautes, .product-badge.badge-nouveautes_categories { background: #fbf0de; color: #a5601f; }
   .product-badge.badge-collections { background: #e6f2e8; color: #2f6b3a; }
   .product-list-item .del { background: none; border: none; color: #a5321f; cursor: pointer; font-size: 0.92rem; padding: 4px 8px; align-self: flex-start; }
+  #tpl-html.code-light { background: #fdfcfa; color: #2b241c; border: 1px solid #e0dacd; }
+  #tpl-html.code-dark { background: #1e1a16; color: #e8d8c4; border: 1px solid #3a332a; }
+  .stat-box { display: flex; flex-direction: column; gap: 4px; padding: 14px 16px; border: 1px solid #e8e2d6; border-radius: 8px; background: #fafaf8; }
+  .stat-value { font-size: 1.6rem; font-weight: 700; color: #2d1216; }
+  .stat-label { font-size: 0.74rem; color: #8a8175; text-transform: uppercase; letter-spacing: 0.04em; }
+  .cookie-consent-row { display: flex; justify-content: space-between; gap: 12px; padding: 6px 0; border-bottom: 1px solid #f1ece2; }
+  .cookie-consent-row:last-child { border-bottom: none; }
 </style>
 </head>
 <body>
@@ -253,7 +404,7 @@
       <button type="button" class="nav-item" data-section="dashboard" data-label="Tableau de bord"><span class="nav-label">Tableau de bord</span></button>
       <button type="button" class="nav-item active" data-section="produits" data-label="Produits"><span class="nav-label">Produits</span></button>
       <button type="button" class="nav-item" data-section="vignettes" data-label="Vignettes"><span class="nav-label">Vignettes</span></button>
-      <button type="button" class="nav-item" data-section="marketing" data-label="Marketing"><span class="nav-label">Marketing</span></button>
+      <button type="button" class="nav-item" data-section="marketing" data-label="Marketing"><span class="nav-label">Marketing</span><span class="nav-badge" id="marketing-badge" hidden>0</span></button>
       <button type="button" class="nav-item" data-section="commandes" data-label="Commandes"><span class="nav-label">Commandes</span></button>
       <button type="button" class="nav-item" data-section="clients" data-label="Clients"><span class="nav-label">Clients</span></button>
       <button type="button" class="nav-item" data-section="parametres" data-label="Paramètres"><span class="nav-label">Paramètres</span></button>
@@ -287,6 +438,7 @@
               <div class="field field-wide">
                 <label>Images (liens Cloudinary) - maximum 4</label>
                 <div id="images-list"></div>
+                <button type="button" class="add-btn" id="add-image-btn">+ Ajouter une image</button>
               </div>
 
               <div class="field field-wide">
@@ -315,7 +467,7 @@
             </div>
 
             <details class="field-collapsible">
-              <summary>Style, entretien, avis clients, photos (optionnel)</summary>
+              <summary>Style, entretien (optionnel)</summary>
               <div class="field">
                 <label for="f-style-notes">Porté et style / Taille et coupe</label>
                 <textarea id="f-style-notes"></textarea>
@@ -350,18 +502,6 @@
                     <option value="premium" selected>Premium</option>
                   </select>
                 </div>
-              </div>
-
-              <div class="field">
-                <label>Avis clients</label>
-                <div id="reviews-list"></div>
-                <button type="button" class="add-btn" id="add-review-btn">+ Ajouter un avis</button>
-              </div>
-
-              <div class="field">
-                <label>Photos clientes (liens Cloudinary)</label>
-                <div id="review-photos-list"></div>
-                <button type="button" class="add-btn" id="add-review-photo-btn">+ Ajouter une photo cliente</button>
               </div>
             </details>
 
@@ -507,24 +647,20 @@
               <input type="url" id="mk-cb-thumb-all" placeholder="https://...">
             </div>
             <div class="field">
-              <label for="mk-cb-thumb-nike">JACES x Nike</label>
-              <input type="url" id="mk-cb-thumb-nike" placeholder="https://...">
+              <label for="mk-cb-thumb-maureen-di-carlo">JACES x Maureen Di Carlo</label>
+              <input type="url" id="mk-cb-thumb-maureen-di-carlo" placeholder="https://...">
             </div>
             <div class="field">
-              <label for="mk-cb-thumb-chloe">JACES x Chloé</label>
-              <input type="url" id="mk-cb-thumb-chloe" placeholder="https://...">
+              <label for="mk-cb-thumb-from-future">JACES x From Future</label>
+              <input type="url" id="mk-cb-thumb-from-future" placeholder="https://...">
             </div>
             <div class="field">
-              <label for="mk-cb-thumb-jacquemus">JACES x Jacquemus</label>
-              <input type="url" id="mk-cb-thumb-jacquemus" placeholder="https://...">
+              <label for="mk-cb-thumb-hoka">JACES x Hoka</label>
+              <input type="url" id="mk-cb-thumb-hoka" placeholder="https://...">
             </div>
             <div class="field">
-              <label for="mk-cb-thumb-dior">JACES x Dior</label>
-              <input type="url" id="mk-cb-thumb-dior" placeholder="https://...">
-            </div>
-            <div class="field">
-              <label for="mk-cb-thumb-saint-laurent">JACES x Saint Laurent</label>
-              <input type="url" id="mk-cb-thumb-saint-laurent" placeholder="https://...">
+              <label for="mk-cb-thumb-mamy-grand">JACES x Mamy Grand</label>
+              <input type="url" id="mk-cb-thumb-mamy-grand" placeholder="https://...">
             </div>
           </div>
           </div>
@@ -562,10 +698,101 @@
       </div>
     </div>
     <div id="section-marketing" class="section-panel" hidden>
-      <div class="placeholder-card"><span class="placeholder-icon">📈</span><h2>Marketing</h2><p>Bientôt disponible.</p></div>
+      <div class="card">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;">
+          <h2 style="margin:0;">Email de retour en stock (automatique)</h2>
+          <button type="button" id="tpl-toggle-code" class="primary-btn" style="width:auto;padding:6px 16px;font-size:0.78rem;">Voir le code HTML</button>
+        </div>
+        <form id="restock-template-form">
+          <div id="tpl-html-wrapper" hidden>
+            <div class="field">
+              <label for="tpl-subject">Sujet</label>
+              <input type="text" id="tpl-subject" placeholder="La taille {{size}} est de nouveau disponible !">
+            </div>
+            <div class="field">
+              <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;">
+                <label for="tpl-html" style="margin:0;">Contenu HTML</label>
+                <button type="button" id="tpl-code-theme" class="primary-btn" style="width:auto;padding:4px 12px;font-size:0.72rem;">Thème sombre</button>
+              </div>
+              <textarea id="tpl-html" rows="16" placeholder="<div>...</div>" class="code-light" style="width:100%;font-family:monospace;font-size:0.85rem;border-radius:8px;padding:10px;transition:background 0.15s, color 0.15s;"></textarea>
+            </div>
+            <div class="field">
+              <label>Aperçu (avec des valeurs d'exemple : taille M, "Produit test")</label>
+              <iframe id="tpl-preview" title="Aperçu de l'email" style="width:100%;height:520px;border:1px solid #e8e2d6;border-radius:8px;background:#fafaf8;"></iframe>
+            </div>
+            <p class="status-msg" id="tpl-status"></p>
+            <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
+              <button type="submit" class="primary-btn" style="width:auto;padding:10px 26px;">Enregistrer</button>
+              <input type="email" id="tpl-test-email" placeholder="email de test" style="flex:1;min-width:200px;">
+              <button type="button" id="tpl-test-send" class="primary-btn" style="width:auto;padding:10px 26px;">Envoyer un test</button>
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <div class="card">
+        <h2>Envoyer un email aux inscrits</h2>
+        <p class="step-help-note">Compose un email et choisis les destinataires parmi les personnes inscrites aux alertes de stock.</p>
+        <form id="broadcast-form">
+          <div class="field">
+            <label for="bc-subject">Sujet</label>
+            <input type="text" id="bc-subject">
+          </div>
+          <div class="field">
+            <label for="bc-html">Contenu HTML</label>
+            <textarea id="bc-html" rows="10" style="width:100%;font-family:monospace;font-size:0.85rem;"></textarea>
+          </div>
+          <div class="field">
+            <label style="display:flex;align-items:center;gap:8px;font-weight:600;">
+              <input type="checkbox" id="bc-select-all" style="width:auto;"> Tout sélectionner
+            </label>
+            <div id="bc-subscribers-list" style="max-height:280px;overflow-y:auto;border:1px solid #e8e2d6;border-radius:8px;padding:10px;"></div>
+          </div>
+          <p class="status-msg" id="bc-status"></p>
+          <button type="submit" class="primary-btn" style="width:auto;padding:10px 26px;">Envoyer</button>
+        </form>
+      </div>
+
+      <div class="card">
+        <h2>Abonnés newsletter</h2>
+        <p class="step-help-note">Liste des inscrits à la newsletter (via le pop-up ou le formulaire du site). Décoche une catégorie pour la retirer, ou supprime complètement quelqu'un pour qu'il/elle repasse dans le cycle du pop-up de sortie.</p>
+        <p class="status-msg" id="newsletter-subs-status"></p>
+        <div id="newsletter-subs-list" style="max-height:400px;overflow-y:auto;border:1px solid #e8e2d6;border-radius:8px;"></div>
+      </div>
+
+      <div class="card">
+        <h2>Demandes Influence</h2>
+        <p class="step-help-note">Candidatures reçues via la page Partenariat. Vérifie les profils avant de répondre - le lien de chaque réseau est cliquable. Le bouton "E-mail" ouvre Gmail avec un message pré-rempli qui mentionne le devis ci-dessous : télécharge-le d'abord pour pouvoir le joindre manuellement (Gmail ne permet pas d'attacher un fichier automatiquement via un lien).</p>
+        <p style="margin:0 0 12px;">
+          <a href="https://res.cloudinary.com/dnplvtg6h/raw/upload/jaces/documents/jaces-partenariat-media-kit.pdf" target="_blank" rel="noopener" class="primary-btn" style="display:inline-block;width:auto;padding:8px 18px;font-size:0.8rem;text-decoration:none;">📄 Télécharger le devis partenariat (.pdf)</a>
+        </p>
+        <p class="status-msg" id="influencer-status"></p>
+        <div id="influencer-list" style="max-height:440px;overflow-y:auto;border:1px solid #e8e2d6;border-radius:8px;"></div>
+      </div>
     </div>
     <div id="section-parametres" class="section-panel" hidden>
-      <div class="placeholder-card"><span class="placeholder-icon">⚙️</span><h2>Paramètres</h2><p>Bientôt disponible.</p></div>
+      <div class="card">
+        <h2>Consentement cookies</h2>
+        <p class="step-help-note">Choix anonymes enregistrés depuis le bandeau cookies du site (aucune IP, aucun identifiant).</p>
+        <div id="cookie-stats-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin:16px 0;">
+          <div class="stat-box"><span class="stat-value" id="cookie-stat-total">–</span><span class="stat-label">Choix enregistrés</span></div>
+          <div class="stat-box"><span class="stat-value" id="cookie-stat-30d">–</span><span class="stat-label">30 derniers jours</span></div>
+          <div class="stat-box"><span class="stat-value" id="cookie-stat-analytics">–</span><span class="stat-label">Analyse acceptée</span></div>
+          <div class="stat-box"><span class="stat-value" id="cookie-stat-marketing">–</span><span class="stat-label">Marketing accepté</span></div>
+          <div class="stat-box"><span class="stat-value" id="cookie-stat-reject">–</span><span class="stat-label">Tout refusé</span></div>
+        </div>
+        <p class="status-msg" id="cookie-stats-status"></p>
+        <div id="cookie-stats-list" style="max-height:320px;overflow-y:auto;border:1px solid #e8e2d6;border-radius:8px;padding:10px;font-size:0.85rem;"></div>
+      </div>
+
+      <div class="card">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;">
+          <h2 style="margin:0;">Bandeau cookies - pages déployées</h2>
+          <button type="button" id="cookie-pages-refresh" class="primary-btn" style="width:auto;padding:6px 16px;font-size:0.78rem;">Revérifier</button>
+        </div>
+        <p class="step-help-note">Va chercher chaque page en direct sur le site et vérifie si le script du bandeau cookies (et donc Analytics) y est bien présent - utile pour repérer une page oubliée après un ajout.</p>
+        <div id="cookie-pages-list" style="display:flex;flex-direction:column;gap:0;border:1px solid #e8e2d6;border-radius:8px;overflow:hidden;"></div>
+      </div>
     </div>
   </main>
   </div>
@@ -649,8 +876,81 @@ document.querySelectorAll('.nav-item').forEach((btn) => {
     });
     document.getElementById('section-title').textContent = btn.dataset.label;
     if (btn.dataset.section === 'produits') resetForm();
+    if (btn.dataset.section === 'marketing') {
+      localStorage.setItem(INFLUENCER_SEEN_KEY, String(Date.now()));
+      document.getElementById('marketing-badge').hidden = true;
+      loadMarketingSection();
+    }
+    if (btn.dataset.section === 'parametres') { loadCookieStats(); checkCookiePagesDeployment(); }
   });
 });
+
+async function loadCookieStats() {
+  const statusEl = document.getElementById('cookie-stats-status');
+  const listEl = document.getElementById('cookie-stats-list');
+  statusEl.textContent = 'Chargement...';
+  statusEl.className = 'status-msg';
+  try {
+    const res = await fetch('/api/cookie-consent-log', {
+      headers: { 'X-Admin-Password': getPassword() }
+    });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) throw new Error(data.error || 'Erreur serveur');
+
+    document.getElementById('cookie-stat-total').textContent = data.total;
+    document.getElementById('cookie-stat-30d').textContent = data.last30Days;
+    document.getElementById('cookie-stat-analytics').textContent = data.analyticsCount;
+    document.getElementById('cookie-stat-marketing').textContent = data.marketingCount;
+    document.getElementById('cookie-stat-reject').textContent = data.rejectAllCount;
+    statusEl.textContent = '';
+
+    if (!data.latest || !data.latest.length) {
+      listEl.textContent = 'Aucun choix enregistré pour le moment.';
+      return;
+    }
+
+    listEl.innerHTML = data.latest.map((row) => {
+      const date = new Date(row.created_at).toLocaleString('fr-FR', { dateStyle: 'medium', timeStyle: 'short' });
+      const parts = [];
+      parts.push(row.analytics ? 'Analyse ✓' : 'Analyse ✗');
+      parts.push(row.marketing ? 'Marketing ✓' : 'Marketing ✗');
+      return `<div class="cookie-consent-row"><span>${date}</span><span>${parts.join(' · ')}</span></div>`;
+    }).join('');
+  } catch (error) {
+    statusEl.textContent = 'Erreur: ' + error.message;
+    statusEl.className = 'status-msg error';
+  }
+}
+
+// Public-facing pages that should carry the cookie banner / Analytics
+// script - admin.html is intentionally excluded, it's not a visitor page.
+const COOKIE_BANNER_PAGES = [
+  'index.html', 'nouveautes.html', 'collection.html', 'collaborations.html',
+  'accessoires.html', 'defile.html', 'univers.html', 'produits.html',
+  'detail-produit.html', 'panier.html', 'mes-favoris.html', 'mon-compte.html',
+  'contact.html', 'politique-confidentialite.html', 'reset-password.html'
+];
+
+async function checkCookiePagesDeployment() {
+  const listEl = document.getElementById('cookie-pages-list');
+  listEl.innerHTML = COOKIE_BANNER_PAGES.map((page) =>
+    `<div class="cookie-consent-row" data-page-row="${page}"><span>${page}</span><span>Vérification...</span></div>`
+  ).join('');
+
+  await Promise.all(COOKIE_BANNER_PAGES.map(async (page) => {
+    const row = listEl.querySelector(`[data-page-row="${page}"]`);
+    try {
+      const res = await fetch(`/${page}?_check=${Date.now()}`, { cache: 'no-store' });
+      const html = await res.text();
+      const hasBanner = /cookie-consent\.js/.test(html);
+      row.innerHTML = `<span>${page}</span><span style="color:${hasBanner ? '#2f6b3a' : '#a5321f'};font-weight:600;">${hasBanner ? 'Présent ✓' : 'Absent - à ajouter ✗'}</span>`;
+    } catch (error) {
+      row.innerHTML = `<span>${page}</span><span style="color:#a5321f;">Erreur de vérification</span>`;
+    }
+  }));
+}
+
+document.getElementById('cookie-pages-refresh').addEventListener('click', checkCookiePagesDeployment);
 
 // Contenu marketing - edits the site-wide announcement banner and the
 // Nouveautés category thumbnails, stored as simple key/value rows so the
@@ -676,11 +976,10 @@ const MARKETING_FIELD_KEYS = {
   'mk-col-thumb-vestes': 'collection_thumb_vestes',
   'mk-col-thumb-accessoires': 'collection_thumb_accessoires',
   'mk-cb-thumb-all': 'collaborations_thumb_all',
-  'mk-cb-thumb-nike': 'collaborations_thumb_nike',
-  'mk-cb-thumb-chloe': 'collaborations_thumb_chloe',
-  'mk-cb-thumb-jacquemus': 'collaborations_thumb_jacquemus',
-  'mk-cb-thumb-dior': 'collaborations_thumb_dior',
-  'mk-cb-thumb-saint-laurent': 'collaborations_thumb_saint-laurent',
+  'mk-cb-thumb-maureen-di-carlo': 'collaborations_thumb_maureen-di-carlo',
+  'mk-cb-thumb-from-future': 'collaborations_thumb_from-future',
+  'mk-cb-thumb-hoka': 'collaborations_thumb_hoka',
+  'mk-cb-thumb-mamy-grand': 'collaborations_thumb_mamy-grand',
   'mk-acc-thumb-all': 'accessoires_thumb_all',
   'mk-acc-thumb-sacs': 'accessoires_thumb_sacs',
   'mk-acc-thumb-bijoux': 'accessoires_thumb_bijoux',
@@ -694,12 +993,258 @@ async function loadMarketingContent() {
     const content = await res.json();
     Object.entries(MARKETING_FIELD_KEYS).forEach(([fieldId, key]) => {
       const input = document.getElementById(fieldId);
-      if (input && content[key]) input.value = content[key];
+      if (!input) return;
+      if (content[key]) input.value = content[key];
+      if (content[key + '_position']) input.dataset.position = content[key + '_position'];
+      if (content[key + '_zoom']) input.dataset.zoom = content[key + '_zoom'];
     });
   } catch (error) {
     // Leave fields blank (placeholder text still shows the live fallback) -
     // not a blocking error, the site itself already has hardcoded defaults.
   }
+  enhanceVignetteDropzones();
+}
+
+// Turns every plain "https://..." URL field in the Vignettes panel into a
+// drag-and-drop uploader: drop (or click to browse) uploads straight to
+// Cloudinary with an auto-generated unique filename, fills the field, and
+// saves that one field immediately - no need to paste a URL by hand or hit
+// the global "Enregistrer" button. The delete button clears the field and
+// saves too, which lets the page's own hardcoded default image show again.
+function buildVignetteDropzone(input) {
+  const wrapper = document.createElement('div');
+  wrapper.className = 'vignette-drop';
+
+  // The circle is exactly what the live site renders (.cat-nav-circle: a
+  // 100px round, object-fit:cover crop) - dragging inside it adjusts
+  // object-position so the crop shown here matches what customers see.
+  const circle = document.createElement('div');
+  circle.className = 'vignette-drop-circle';
+
+  const preview = document.createElement('img');
+  preview.className = 'vignette-drop-preview';
+  circle.appendChild(preview);
+
+  const hint = document.createElement('span');
+  hint.className = 'vignette-drop-hint';
+  hint.textContent = 'Glisser une image ici, ou cliquer pour choisir un fichier';
+
+  const repositionHint = document.createElement('span');
+  repositionHint.className = 'vignette-drop-reposition-hint';
+  repositionHint.textContent = 'Glisser pour cadrer, molette pour zoomer';
+
+  const status = document.createElement('span');
+  status.className = 'vignette-drop-status';
+
+  const deleteBtn = document.createElement('button');
+  deleteBtn.type = 'button';
+  deleteBtn.className = 'vignette-drop-delete';
+  deleteBtn.textContent = '✕';
+  deleteBtn.setAttribute('aria-label', "Supprimer l'image");
+
+  const fileInput = document.createElement('input');
+  fileInput.type = 'file';
+  fileInput.accept = 'image/*';
+  fileInput.hidden = true;
+
+  wrapper.append(circle, hint, repositionHint, status, deleteBtn, fileInput);
+
+  function applyPosition(pos) {
+    preview.style.objectPosition = pos || '50% 50%';
+  }
+
+  // Zoom stacks a transform: scale() on top of the object-fit:cover crop -
+  // 100 is "no zoom" (the default cover fit), up to 300 lets the photo be
+  // pushed in tight around whatever object-position is currently anchored.
+  function applyZoom(zoom) {
+    const value = Math.min(300, Math.max(100, Number(zoom) || 100));
+    preview.style.transform = value === 100 ? '' : `scale(${(value / 100).toFixed(2)})`;
+    return value;
+  }
+
+  function setValue(url) {
+    input.value = url || '';
+    circle.hidden = !url;
+    if (url) preview.src = url;
+    hint.hidden = !!url;
+    repositionHint.hidden = !url;
+    deleteBtn.hidden = !url;
+    if (!url) {
+      input.dataset.position = '';
+      input.dataset.zoom = '';
+    }
+  }
+  setValue(input.value);
+  applyPosition(input.dataset.position);
+  applyZoom(input.dataset.zoom);
+
+  let statusTimer = null;
+  function setStatus(text, variant) {
+    if (statusTimer) clearTimeout(statusTimer);
+    status.textContent = text;
+    status.className = 'vignette-drop-status' + (variant ? ' ' + variant : '');
+    if (text) statusTimer = setTimeout(() => { status.textContent = ''; }, 2500);
+  }
+
+  async function saveField(extra) {
+    setStatus('Enregistrement...');
+    try {
+      const key = MARKETING_FIELD_KEYS[input.id];
+      const payload = { [key]: input.value };
+      if (extra) Object.assign(payload, extra);
+      const res = await fetch('/api/site-content', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-Admin-Password': getPassword() },
+        body: JSON.stringify(payload)
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data.error || 'Erreur serveur');
+      setStatus('Enregistré ✓', 'ok');
+    } catch (error) {
+      setStatus('Erreur : ' + error.message, 'error');
+    }
+  }
+
+  // Drag-to-reposition: track the pointer's movement across the circle as a
+  // fraction of its size and translate that directly into an object-position
+  // percentage, so the photo visually follows the cursor while dragging.
+  let dragState = null;
+  function positionFromEvent(event) {
+    const rect = circle.getBoundingClientRect();
+    const x = Math.min(100, Math.max(0, ((event.clientX - rect.left) / rect.width) * 100));
+    const y = Math.min(100, Math.max(0, ((event.clientY - rect.top) / rect.height) * 100));
+    return { x, y };
+  }
+  circle.addEventListener('pointerdown', (event) => {
+    if (!input.value) return;
+    event.preventDefault();
+    circle.setPointerCapture(event.pointerId);
+    dragState = { moved: false };
+  });
+  circle.addEventListener('pointermove', (event) => {
+    if (!dragState) return;
+    dragState.moved = true;
+    const { x, y } = positionFromEvent(event);
+    applyPosition(`${x.toFixed(0)}% ${y.toFixed(0)}%`);
+  });
+  circle.addEventListener('pointerup', async (event) => {
+    if (!dragState) return;
+    const wasDrag = dragState.moved;
+    dragState = null;
+    if (!wasDrag) {
+      // A plain click (no drag) on an already-set photo replaces it,
+      // same as clicking the empty dashed zone does.
+      fileInput.click();
+      return;
+    }
+    const { x, y } = positionFromEvent(event);
+    const position = `${x.toFixed(0)}% ${y.toFixed(0)}%`;
+    input.dataset.position = position;
+    const key = MARKETING_FIELD_KEYS[input.id];
+    await saveField({ [key + '_position']: position });
+  });
+
+  // Mouse wheel (or trackpad pinch, which browsers report as a wheel event
+  // with ctrlKey set) zooms in/out - saved a moment after scrolling stops
+  // so a long scroll gesture doesn't fire a request per tick.
+  let zoomSaveTimer = null;
+  circle.addEventListener('wheel', (event) => {
+    if (!input.value) return;
+    event.preventDefault();
+    const current = Number(input.dataset.zoom) || 100;
+    const next = applyZoom(current - event.deltaY * 0.4);
+    input.dataset.zoom = String(next);
+    setStatus('Zoom ' + Math.round(next) + '%');
+    if (zoomSaveTimer) clearTimeout(zoomSaveTimer);
+    zoomSaveTimer = setTimeout(async () => {
+      const key = MARKETING_FIELD_KEYS[input.id];
+      await saveField({ [key + '_zoom']: String(next) });
+    }, 500);
+  }, { passive: false });
+
+  async function uploadFile(file) {
+    if (!file || !file.type.startsWith('image/')) return;
+    setStatus('Envoi en cours...');
+    wrapper.classList.add('is-uploading');
+    try {
+      const sigRes = await fetch('/api/admin-email-subscribers?adminCloudinarySignature=1', {
+        headers: { 'X-Admin-Password': getPassword() }
+      });
+      const sig = await sigRes.json();
+      if (!sigRes.ok) throw new Error(sig.error || 'Signature échouée');
+
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('api_key', sig.apiKey);
+      formData.append('timestamp', sig.timestamp);
+      formData.append('signature', sig.signature);
+      formData.append('folder', sig.folder);
+
+      const uploadRes = await fetch(`https://api.cloudinary.com/v1_1/${sig.cloudName}/image/upload`, {
+        method: 'POST',
+        body: formData
+      });
+      const uploadData = await uploadRes.json();
+      if (!uploadRes.ok) throw new Error((uploadData.error && uploadData.error.message) || 'Upload échoué');
+
+      setValue(uploadData.secure_url);
+      // A new photo starts centered and unzoomed - any crop/zoom saved for
+      // the previous image at this slot wouldn't make sense here.
+      input.dataset.position = '';
+      input.dataset.zoom = '';
+      applyPosition('');
+      applyZoom('');
+      const key = MARKETING_FIELD_KEYS[input.id];
+      await saveField({ [key + '_position']: '', [key + '_zoom']: '' });
+    } catch (error) {
+      setStatus('Erreur : ' + error.message, 'error');
+    } finally {
+      wrapper.classList.remove('is-uploading');
+    }
+  }
+
+  wrapper.addEventListener('click', (event) => {
+    // The circle handles its own click (replace) vs drag (reposition) via
+    // pointer events above - only the surrounding dashed zone/hint opens
+    // the file picker from this generic handler.
+    if (event.target === deleteBtn || circle.contains(event.target)) return;
+    fileInput.click();
+  });
+  fileInput.addEventListener('change', () => {
+    if (fileInput.files[0]) uploadFile(fileInput.files[0]);
+    fileInput.value = '';
+  });
+  wrapper.addEventListener('dragover', (event) => {
+    event.preventDefault();
+    wrapper.classList.add('is-dragover');
+  });
+  wrapper.addEventListener('dragleave', () => wrapper.classList.remove('is-dragover'));
+  wrapper.addEventListener('drop', (event) => {
+    event.preventDefault();
+    wrapper.classList.remove('is-dragover');
+    const file = event.dataTransfer.files && event.dataTransfer.files[0];
+    if (file) uploadFile(file);
+  });
+  deleteBtn.addEventListener('click', async (event) => {
+    event.stopPropagation();
+    setValue('');
+    await saveField();
+  });
+
+  return wrapper;
+}
+
+function enhanceVignetteDropzones() {
+  Object.keys(MARKETING_FIELD_KEYS).forEach((fieldId) => {
+    const input = document.getElementById(fieldId);
+    // "Bandeau" and "Nom du site" are plain text, not images - only the
+    // url-typed fields (hero, logo, favicon, every category thumbnail) get
+    // the drag-and-drop treatment.
+    if (!input || input.type !== 'url' || input.dataset.dropzoneEnhanced) return;
+    input.dataset.dropzoneEnhanced = 'true';
+    input.style.display = 'none';
+    input.insertAdjacentElement('afterend', buildVignetteDropzone(input));
+  });
 }
 
 document.getElementById('marketing-form').addEventListener('submit', async (e) => {
@@ -728,6 +1273,557 @@ document.getElementById('marketing-form').addEventListener('submit', async (e) =
   }
 });
 
+// --- Marketing: email module (restock template + broadcast to subscribers) ---
+const RESTOCK_TEMPLATE_KEYS = { subject: 'restock_email_subject', html: 'restock_email_html' };
+let marketingLoaded = false;
+let subscribersCache = [];
+
+// Mirrors the fallback wording in lib/brevo.js so the admin sees exactly
+// what's actually sent today, instead of an empty box, before editing it.
+const DEFAULT_RESTOCK_SUBJECT = 'La taille {{size}} est de nouveau disponible !';
+const DEFAULT_RESTOCK_HTML = [
+  '<!DOCTYPE html>',
+  '<html lang="fr">',
+  '<head>',
+  '<meta charset="UTF-8">',
+  '<meta name="viewport" content="width=device-width, initial-scale=1.0">',
+  '<meta name="color-scheme" content="light">',
+  '<meta name="supported-color-schemes" content="light">',
+  '<style>',
+  '[data-ogsc].jc-muted { color:#a98d7c !important; }',
+  '</style>',
+  '</head>',
+  '<body style="margin:0;padding:0;">',
+  '<div class="jc-outer" style="background-image:url(https://res.cloudinary.com/dnplvtg6h/image/upload/v1784934446/jaces/bg-outer.png);background-repeat:repeat;padding:48px 20px;font-family:Arial, sans-serif;">',
+  '<div class="jc-card" style="max-width:520px;margin:0 auto;background-image:url(https://res.cloudinary.com/dnplvtg6h/image/upload/v1784934447/jaces/bg-card.png);background-repeat:repeat;border:1px solid #684347;border-radius:22px;overflow:hidden;box-shadow:0 8px 30px rgba(0,0,0,0.25);">',
+  '<div class="jc-band" style="background-image:url(https://res.cloudinary.com/dnplvtg6h/image/upload/v1784934448/jaces/bg-band.png);background-repeat:repeat;padding:36px 20px;text-align:center;"><img src="https://res.cloudinary.com/dnplvtg6h/image/upload/v1784929316/jaces/jaces-wordmark-light.png" alt="JACES" width="150" style="display:inline-block;border:0;"></div>',
+  '<div class="jc-card" style="background-image:url(https://res.cloudinary.com/dnplvtg6h/image/upload/v1784934447/jaces/bg-card.png);background-repeat:repeat;padding:48px;text-align:center;">',
+  '<p style="margin:0 0 24px;"><a href="{{productUrl}}"><img src="{{productImageUrl}}" alt="{{productName}}" width="180" style="display:inline-block;width:180px;max-width:45%;height:auto;border:0;border-radius:10px;"></a></p>',
+  '<p style="margin:0 0 8px;color:#e8d8c4;font-size:1rem;">Bonjour {{firstName}},</p>',
+  '<p style="margin:0 0 18px;color:#e8d8c4;font-size:1.6rem;font-weight:bold;">Bonne nouvelle !</p>',
+  '<p style="margin:0 0 24px;color:#e8d8c4;font-size:1rem;">La taille {{size}} ({{color}}) de &laquo;&nbsp;{{productName}}&nbsp;&raquo; est de nouveau en stock chez JACES.</p>',
+  '<p style="margin:0 0 18px;"><a href="{{productUrl}}" style="display:inline-block;background-color:#e8d8c4;color:#2b1012;font-weight:bold;font-size:16px;padding:16px 32px;border-radius:4px;text-decoration:none;">Voir le produit</a></p>',
+  '<p style="margin:0 0 18px;"><a href="https://www.instagram.com/jaces.creation/"><img src="https://res.cloudinary.com/dnplvtg6h/image/upload/v1784929298/jaces/instagram-icon-light.png" width="22" height="22" alt="Instagram" style="display:inline-block;border:0;"></a></p>',
+  '<p class="jc-muted" style="margin:0 0 4px;font-size:0.75rem;color:#a98d7c;">Cet email a &eacute;t&eacute; envoy&eacute; &agrave; {{email}}.</p>',
+  '<p class="jc-muted" style="margin:0 0 10px;font-size:0.75rem;color:#a98d7c;">Vous recevez cet email car vous &ecirc;tes inscrit(e) aux alertes de stock JACES.</p>',
+  '<p class="jc-muted" style="margin:0;font-size:0.75rem;color:#a98d7c;"><a href="https://jaces-node.vercel.app/contact.html" class="jc-muted" style="color:#a98d7c;">Contact</a> &middot; <a href="https://jaces-node.vercel.app/politique-confidentialite.html" class="jc-muted" style="color:#a98d7c;">Politique de confidentialit&eacute;</a></p>',
+  '</div>',
+  '</div>',
+  '</div>',
+  '</body>',
+  '</html>'
+].join('\n');
+
+function fillPreviewTemplate(str) {
+  return String(str || '')
+    .replace(/\{\{size\}\}/g, 'M')
+    .replace(/\{\{color\}\}/g, 'Noir')
+    .replace(/\{\{productName\}\}/g, 'Produit test')
+    .replace(/\{\{productUrl\}\}/g, 'https://jaces-node.vercel.app')
+    .replace(/\{\{productImageUrl\}\}/g, 'https://res.cloudinary.com/dnplvtg6h/image/upload/v1784927191/jaces/jaces-wordmark.png')
+    .replace(/\{\{firstName\}\}/g, 'Camille')
+    .replace(/\{\{email\}\}/g, 'vous@exemple.com');
+}
+
+function updateTplPreview() {
+  const html = document.getElementById('tpl-html').value.trim() || DEFAULT_RESTOCK_HTML;
+  // Full document (doctype/head/style) - an iframe renders it properly,
+  // unlike innerHTML which would strip the <head> and its dark-mode <style>.
+  document.getElementById('tpl-preview').srcdoc = fillPreviewTemplate(html);
+}
+
+document.getElementById('tpl-subject').addEventListener('input', updateTplPreview);
+document.getElementById('tpl-html').addEventListener('input', updateTplPreview);
+
+document.getElementById('tpl-toggle-code').addEventListener('click', () => {
+  const wrapper = document.getElementById('tpl-html-wrapper');
+  const btn = document.getElementById('tpl-toggle-code');
+  wrapper.hidden = !wrapper.hidden;
+  btn.textContent = wrapper.hidden ? 'Voir le code HTML' : 'Masquer le code HTML';
+});
+
+document.getElementById('tpl-code-theme').addEventListener('click', () => {
+  const textarea = document.getElementById('tpl-html');
+  const btn = document.getElementById('tpl-code-theme');
+  const isDark = textarea.classList.toggle('code-dark');
+  textarea.classList.toggle('code-light', !isDark);
+  btn.textContent = isDark ? 'Thème clair' : 'Thème sombre';
+});
+
+async function loadRestockTemplate() {
+  try {
+    const res = await fetch('/api/site-content');
+    const content = await res.json();
+    document.getElementById('tpl-subject').value = content[RESTOCK_TEMPLATE_KEYS.subject] || DEFAULT_RESTOCK_SUBJECT;
+    document.getElementById('tpl-html').value = content[RESTOCK_TEMPLATE_KEYS.html] || DEFAULT_RESTOCK_HTML;
+  } catch (error) {
+    document.getElementById('tpl-subject').value = DEFAULT_RESTOCK_SUBJECT;
+    document.getElementById('tpl-html').value = DEFAULT_RESTOCK_HTML;
+  }
+  updateTplPreview();
+}
+
+document.getElementById('restock-template-form').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const statusEl = document.getElementById('tpl-status');
+  statusEl.className = 'status-msg';
+  statusEl.textContent = 'Enregistrement...';
+  const payload = {
+    [RESTOCK_TEMPLATE_KEYS.subject]: document.getElementById('tpl-subject').value.trim(),
+    [RESTOCK_TEMPLATE_KEYS.html]: document.getElementById('tpl-html').value.trim()
+  };
+  try {
+    const res = await fetch('/api/site-content', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'X-Admin-Password': getPassword() },
+      body: JSON.stringify(payload)
+    });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) throw new Error(data.error || 'Erreur serveur');
+    statusEl.textContent = 'Enregistré ✓';
+    statusEl.className = 'status-msg ok';
+  } catch (error) {
+    statusEl.textContent = 'Erreur: ' + error.message;
+    statusEl.className = 'status-msg error';
+  }
+});
+
+document.getElementById('tpl-test-send').addEventListener('click', async () => {
+  const statusEl = document.getElementById('tpl-status');
+  const toEmail = document.getElementById('tpl-test-email').value.trim();
+  if (!toEmail) {
+    statusEl.textContent = 'Entre un email de test.';
+    statusEl.className = 'status-msg error';
+    return;
+  }
+  const subject = fillPreviewTemplate(document.getElementById('tpl-subject').value.trim() || 'La taille {{size}} est de nouveau disponible !');
+  const html = fillPreviewTemplate(document.getElementById('tpl-html').value.trim() || '<p>La taille {{size}} de {{productName}} est de nouveau en stock.</p>');
+  statusEl.className = 'status-msg';
+  statusEl.textContent = 'Envoi...';
+  try {
+    const res = await fetch('/api/admin-send-email', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'X-Admin-Password': getPassword() },
+      body: JSON.stringify({ subject, html, emails: [toEmail] })
+    });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) throw new Error(data.error || 'Erreur serveur');
+    if (data.sent) {
+      statusEl.textContent = 'Test envoyé ✓';
+      statusEl.className = 'status-msg ok';
+    } else {
+      statusEl.textContent = data.skipped ? 'BREVO_API_KEY non configurée sur le serveur.' : 'Échec de l\'envoi.';
+      statusEl.className = 'status-msg error';
+    }
+  } catch (error) {
+    statusEl.textContent = 'Erreur: ' + error.message;
+    statusEl.className = 'status-msg error';
+  }
+});
+
+async function loadSubscribers() {
+  const listEl = document.getElementById('bc-subscribers-list');
+  const newsletterListEl = document.getElementById('newsletter-subs-list');
+  const newsletterStatusEl = document.getElementById('newsletter-subs-status');
+  listEl.textContent = 'Chargement...';
+  newsletterStatusEl.textContent = 'Chargement...';
+  newsletterStatusEl.className = 'status-msg';
+  try {
+    const res = await fetch('/api/admin-email-subscribers', {
+      headers: { 'X-Admin-Password': getPassword() }
+    });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) throw new Error(data.error || 'Erreur serveur');
+    subscribersCache = data.subscribers || [];
+    if (!subscribersCache.length) {
+      listEl.textContent = 'Aucun inscrit pour le moment.';
+    } else {
+      listEl.innerHTML = subscribersCache.map((s) => `
+        <label style="display:flex;align-items:center;gap:8px;padding:5px 0;font-weight:400;">
+          <input type="checkbox" class="bc-sub-check" value="${s.email.replace(/"/g, '&quot;')}" style="width:auto;">
+          <span style="flex:1;">${s.email}</span>
+          <span style="color:#8a8175;font-size:0.82rem;">${[s.productName, s.size, s.notified ? 'déjà notifié' : 'en attente'].filter(Boolean).join(' · ')}</span>
+        </label>
+      `).join('');
+    }
+
+    newsletterStatusEl.textContent = '';
+    renderNewsletterSubscribers(data.newsletterSubscribers || []);
+
+    document.getElementById('influencer-status').textContent = '';
+    renderInfluencerRequests(data.influencerRequests || []);
+    updateMarketingBadge(data.influencerRequests || []);
+  } catch (error) {
+    listEl.textContent = 'Erreur: ' + error.message;
+    newsletterStatusEl.textContent = 'Erreur: ' + error.message;
+    newsletterStatusEl.className = 'status-msg error';
+  }
+}
+
+const INFLUENCER_SEEN_KEY = 'jaces_admin_influencer_seen_at';
+
+function updateMarketingBadge(rows) {
+  const badge = document.getElementById('marketing-badge');
+  if (!badge) return;
+  const lastSeen = Number(localStorage.getItem(INFLUENCER_SEEN_KEY) || 0);
+  const newCount = rows.filter((r) => new Date(r.createdAt).getTime() > lastSeen).length;
+  badge.textContent = newCount > 99 ? '99+' : String(newCount);
+  badge.hidden = newCount === 0;
+}
+
+const NETWORK_LABELS = { linkedin: 'LinkedIn', youtube: 'YouTube', facebook: 'Facebook', instagram: 'Instagram' };
+
+function isLikelyUrl(value) {
+  return /^(https?:\/\/)?([\w-]+\.)+[a-z]{2,}(\/\S*)?$/i.test(String(value || '').trim());
+}
+
+function formatPhoneDisplay(value) {
+  const digits = String(value || '').replace(/\D/g, '');
+  return digits.replace(/(\d{2})(?=\d)/g, '$1 ').trim();
+}
+
+function renderInfluencerRequests(rows) {
+  const listEl = document.getElementById('influencer-list');
+  if (!rows.length) {
+    listEl.innerHTML = '<p style="padding:12px;margin:0;color:#8a8175;">Aucune demande pour le moment.</p>';
+    return;
+  }
+
+  listEl.innerHTML = rows.map((r) => {
+    const createdDate = new Date(r.createdAt);
+    const date = createdDate.toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric' }) + ' à ' + createdDate.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+    const networksHtml = (r.networks || []).map((n) => {
+      const clickable = isLikelyUrl(n.url);
+      const href = /^https?:\/\//i.test(n.url) ? n.url : `https://${n.url}`;
+      const tag = clickable ? 'a' : 'span';
+      const attrs = clickable ? `href="${href.replace(/"/g, '&quot;')}" target="_blank" rel="noopener"` : '';
+      return `
+        <${tag} ${attrs} class="influencer-network-badge">
+          <span class="net-line1"><strong>${NETWORK_LABELS[n.network] || n.network}</strong>${n.followers ? ` · ${n.followers.replace(/</g, '&lt;')} abonnés` : ''}</span>
+          <span class="net-line2${clickable ? '' : ' not-link'}">${n.url.replace(/</g, '&lt;')}${clickable ? '' : ' (pas un lien)'}</span>
+        </${tag}>
+      `;
+    }).join('');
+    const audienceText = (r.audienceAges && r.audienceAges.length) ? r.audienceAges.join(', ') + ' ans' : '';
+    return `
+      <div data-influencer-row="${r.id}" class="influencer-card">
+        <div class="influencer-card-head">
+          <div>
+            <strong class="influencer-name">${r.name.replace(/</g, '&lt;')}</strong>
+            <div class="influencer-meta">
+              <span>✉ <a href="https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(r.email)}" target="_blank" rel="noopener" style="color:inherit;text-decoration:underline;">${r.email}</a></span>
+              ${r.phone ? `<span>☎ ${formatPhoneDisplay(r.phone)}</span>` : ''}
+              ${audienceText ? `<span>👥 ${audienceText}</span>` : ''}
+              <span>🕓 ${date}</span>
+            </div>
+          </div>
+          <div style="display:flex;gap:8px;flex:0 0 auto;">
+            <button type="button" data-influencer-send-quote class="influencer-send-btn">Envoyer le devis</button>
+            <button type="button" data-influencer-delete class="influencer-delete-btn">Supprimer</button>
+          </div>
+        </div>
+
+        <p class="influencer-section-label">Code promo</p>
+        <div class="influencer-promo">
+          ${r.promoCode ? `
+            <input type="text" class="influencer-promo-code${r.promoCode.active ? '' : ' inactive'}" value="${r.promoCode.code}" data-promo-code-input="${r.promoCode.id}">
+            <button type="button" class="influencer-promo-copy" data-copy-code-input title="Copier le code">Copier</button>
+            <span class="influencer-promo-percent-edit">-<input type="number" min="1" max="90" value="${r.promoCode.discountPercent}" data-promo-percent="${r.promoCode.id}" class="influencer-promo-percent-input">%</span>
+            <span class="influencer-promo-percent-edit">Limite <input type="number" min="1" placeholder="∞" value="${r.promoCode.maxUses != null ? r.promoCode.maxUses : ''}" data-promo-max-uses="${r.promoCode.id}" class="influencer-promo-percent-input" title="Nombre d'utilisations maximum, vide = illimité"></span>
+            <button type="button" class="influencer-promo-save" data-save-code="${r.promoCode.id}">Sauvegarder</button>
+            <span class="influencer-promo-meta">${r.promoCode.usageCount || 0}${r.promoCode.maxUses != null ? ' / ' + r.promoCode.maxUses : ''} utilisation(s)</span>
+            <label class="influencer-promo-toggle"><input type="checkbox" data-promo-toggle="${r.promoCode.id}" ${r.promoCode.active ? 'checked' : ''}> Actif</label>
+            <button type="button" class="influencer-promo-delete" data-delete-code="${r.promoCode.id}" title="Supprimer le code">×</button>
+          ` : `<button type="button" data-generate-code class="influencer-code-btn">Générer un code promo</button>`}
+        </div>
+
+        <p class="influencer-section-label">Réseaux</p>
+        <div class="influencer-networks">${networksHtml}</div>
+
+        ${r.details ? `<p class="influencer-section-label">Détails</p><p class="influencer-details-box">${r.details.replace(/</g, '&lt;')}</p>` : ''}
+
+        ${(r.screenshots && r.screenshots.length) ? `<p class="influencer-section-label">Captures d'écran</p><div class="influencer-screenshots">${r.screenshots.map((url) => `<a href="${url}" target="_blank" rel="noopener"><img src="${url}" alt="Screenshot"></a>`).join('')}</div>` : ''}
+      </div>
+    `;
+  }).join('');
+}
+
+document.getElementById('influencer-list').addEventListener('click', async (event) => {
+  const deleteBtn = event.target.closest('[data-influencer-delete]');
+  const sendBtn = event.target.closest('[data-influencer-send-quote]');
+  const generateBtn = event.target.closest('[data-generate-code]');
+  const copyBtn = event.target.closest('[data-copy-code-input]');
+  const deleteCodeBtn = event.target.closest('[data-delete-code]');
+  const saveBtn = event.target.closest('[data-save-code]');
+  if (!deleteBtn && !sendBtn && !generateBtn && !copyBtn && !deleteCodeBtn && !saveBtn) return;
+
+  const statusEl = document.getElementById('influencer-status');
+
+  if (copyBtn) {
+    const codeInput = copyBtn.closest('.influencer-promo').querySelector('[data-promo-code-input]');
+    try {
+      await navigator.clipboard.writeText(codeInput.value);
+      const original = copyBtn.textContent;
+      copyBtn.textContent = 'Copié ✓';
+      setTimeout(() => { copyBtn.textContent = original; }, 1500);
+    } catch (error) {
+      statusEl.textContent = 'Impossible de copier automatiquement.';
+      statusEl.className = 'status-msg error';
+    }
+    return;
+  }
+
+  if (saveBtn) {
+    const promoBlock = saveBtn.closest('.influencer-promo');
+    const codeInput = promoBlock.querySelector('[data-promo-code-input]');
+    const percentInput = promoBlock.querySelector('[data-promo-percent]');
+    const maxUsesInput = promoBlock.querySelector('[data-promo-max-uses]');
+    const promoId = saveBtn.dataset.saveCode;
+    saveBtn.disabled = true;
+    const originalLabel = saveBtn.textContent;
+    saveBtn.textContent = 'Sauvegarde...';
+    try {
+      const res = await fetch('/api/admin-email-subscribers', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json', 'X-Admin-Password': getPassword() },
+        body: JSON.stringify({ id: promoId, type: 'promoCode', code: codeInput.value, discountPercent: percentInput.value, maxUses: maxUsesInput.value })
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data.error || 'Erreur serveur');
+      loadSubscribers();
+    } catch (error) {
+      saveBtn.textContent = originalLabel;
+      saveBtn.disabled = false;
+      statusEl.textContent = 'Erreur: ' + error.message;
+      statusEl.className = 'status-msg error';
+    }
+    return;
+  }
+
+  if (deleteCodeBtn) {
+    if (!window.confirm('Supprimer ce code promo ?')) return;
+    const id = deleteCodeBtn.dataset.deleteCode;
+    try {
+      const res = await fetch(`/api/admin-email-subscribers?id=${encodeURIComponent(id)}&type=promoCode`, {
+        method: 'DELETE',
+        headers: { 'X-Admin-Password': getPassword() }
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data.error || 'Erreur serveur');
+      loadSubscribers();
+    } catch (error) {
+      statusEl.textContent = 'Erreur: ' + error.message;
+      statusEl.className = 'status-msg error';
+    }
+    return;
+  }
+
+  if (generateBtn) {
+    const row = generateBtn.closest('[data-influencer-row]');
+    const id = row.dataset.influencerRow;
+    generateBtn.disabled = true;
+    generateBtn.textContent = 'Génération...';
+    try {
+      const res = await fetch('/api/admin-email-subscribers', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-Admin-Password': getPassword() },
+        body: JSON.stringify({ action: 'generateInfluencerCode', id })
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data.error || 'Erreur serveur');
+      loadSubscribers();
+    } catch (error) {
+      generateBtn.disabled = false;
+      generateBtn.textContent = 'Générer un code promo';
+      statusEl.textContent = 'Erreur: ' + error.message;
+      statusEl.className = 'status-msg error';
+    }
+    return;
+  }
+
+  if (deleteBtn) {
+    const row = deleteBtn.closest('[data-influencer-row]');
+    const id = row.dataset.influencerRow;
+    if (!window.confirm('Supprimer cette demande ?')) return;
+    try {
+      const res = await fetch(`/api/admin-email-subscribers?id=${encodeURIComponent(id)}&type=influencer`, {
+        method: 'DELETE',
+        headers: { 'X-Admin-Password': getPassword() }
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data.error || 'Erreur serveur');
+      row.remove();
+    } catch (error) {
+      statusEl.textContent = 'Erreur: ' + error.message;
+      statusEl.className = 'status-msg error';
+    }
+    return;
+  }
+
+  if (sendBtn) {
+    const row = sendBtn.closest('[data-influencer-row]');
+    const id = row.dataset.influencerRow;
+    sendBtn.disabled = true;
+    const originalLabel = sendBtn.textContent;
+    sendBtn.textContent = 'Envoi...';
+    try {
+      const res = await fetch('/api/admin-email-subscribers', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-Admin-Password': getPassword() },
+        body: JSON.stringify({ action: 'sendInfluencerQuote', id })
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data.error || 'Erreur serveur');
+      sendBtn.textContent = 'Envoyé ✓';
+      statusEl.textContent = `Devis envoyé (palier : ${data.tier}).`;
+      statusEl.className = 'status-msg';
+    } catch (error) {
+      sendBtn.textContent = originalLabel;
+      sendBtn.disabled = false;
+      statusEl.textContent = 'Erreur: ' + error.message;
+      statusEl.className = 'status-msg error';
+    }
+  }
+});
+
+document.getElementById('influencer-list').addEventListener('change', async (event) => {
+  const toggle = event.target.closest('[data-promo-toggle]');
+  if (!toggle) return;
+
+  const statusEl = document.getElementById('influencer-status');
+  const promoId = toggle.dataset.promoToggle;
+  try {
+    const res = await fetch('/api/admin-email-subscribers', {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json', 'X-Admin-Password': getPassword() },
+      body: JSON.stringify({ id: promoId, type: 'promoCode', active: toggle.checked })
+    });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) throw new Error(data.error || 'Erreur serveur');
+    const codeEl = toggle.closest('.influencer-promo').querySelector('.influencer-promo-code');
+    if (codeEl) codeEl.classList.toggle('inactive', !toggle.checked);
+  } catch (error) {
+    toggle.checked = !toggle.checked;
+    statusEl.textContent = 'Erreur: ' + error.message;
+    statusEl.className = 'status-msg error';
+  }
+});
+
+function renderNewsletterSubscribers(rows) {
+  const listEl = document.getElementById('newsletter-subs-list');
+  if (!rows.length) {
+    listEl.innerHTML = '<p style="padding:12px;margin:0;color:#8a8175;">Aucun inscrit pour le moment.</p>';
+    return;
+  }
+
+  listEl.innerHTML = rows.map((s) => {
+    const name = [s.firstName, s.lastName].filter(Boolean).join(' ');
+    return `
+      <div data-newsletter-row="${s.id}" style="display:flex;align-items:center;gap:12px;padding:10px 12px;border-bottom:1px solid #f1ece2;flex-wrap:wrap;">
+        <div style="flex:1;min-width:180px;">
+          <strong style="display:block;font-size:0.86rem;">${name || '(sans nom)'}</strong>
+          <span style="font-size:0.8rem;color:#8a8175;">${s.email}</span>
+        </div>
+        <span style="font-size:0.72rem;padding:2px 8px;border-radius:10px;background:${s.confirmed ? '#e6f2e8' : '#fbf0de'};color:${s.confirmed ? '#2f6b3a' : '#a5601f'};">${s.confirmed ? 'Confirmé' : 'En attente'}</span>
+        <label style="display:flex;align-items:center;gap:5px;font-size:0.78rem;font-weight:400;"><input type="checkbox" data-newsletter-toggle="wantsProducts" ${s.wantsProducts ? 'checked' : ''} style="width:auto;"> Produits</label>
+        <label style="display:flex;align-items:center;gap:5px;font-size:0.78rem;font-weight:400;"><input type="checkbox" data-newsletter-toggle="wantsNews" ${s.wantsNews ? 'checked' : ''} style="width:auto;"> Actualités</label>
+        <button type="button" data-newsletter-delete title="Supprimer completement" style="background:none;border:1px solid #a5321f;color:#a5321f;border-radius:6px;cursor:pointer;font-size:0.76rem;padding:5px 10px;">Supprimer</button>
+      </div>
+    `;
+  }).join('');
+}
+
+document.getElementById('newsletter-subs-list').addEventListener('change', async (event) => {
+  const toggle = event.target.closest('[data-newsletter-toggle]');
+  if (!toggle) return;
+
+  const row = toggle.closest('[data-newsletter-row]');
+  const id = row.dataset.newsletterRow;
+  const key = toggle.dataset.newsletterToggle;
+  const statusEl = document.getElementById('newsletter-subs-status');
+
+  try {
+    const res = await fetch('/api/admin-email-subscribers', {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json', 'X-Admin-Password': getPassword() },
+      body: JSON.stringify({ id, [key]: toggle.checked })
+    });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) throw new Error(data.error || 'Erreur serveur');
+  } catch (error) {
+    toggle.checked = !toggle.checked;
+    statusEl.textContent = 'Erreur: ' + error.message;
+    statusEl.className = 'status-msg error';
+  }
+});
+
+document.getElementById('newsletter-subs-list').addEventListener('click', async (event) => {
+  const deleteBtn = event.target.closest('[data-newsletter-delete]');
+  if (!deleteBtn) return;
+
+  const row = deleteBtn.closest('[data-newsletter-row]');
+  const id = row.dataset.newsletterRow;
+  if (!window.confirm('Supprimer completement cet abonne ? Il/elle pourra revoir le pop-up newsletter.')) return;
+
+  const statusEl = document.getElementById('newsletter-subs-status');
+  try {
+    const res = await fetch(`/api/admin-email-subscribers?id=${encodeURIComponent(id)}`, {
+      method: 'DELETE',
+      headers: { 'X-Admin-Password': getPassword() }
+    });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) throw new Error(data.error || 'Erreur serveur');
+    row.remove();
+  } catch (error) {
+    statusEl.textContent = 'Erreur: ' + error.message;
+    statusEl.className = 'status-msg error';
+  }
+});
+
+document.getElementById('bc-select-all').addEventListener('change', (e) => {
+  document.querySelectorAll('.bc-sub-check').forEach((cb) => { cb.checked = e.target.checked; });
+});
+
+document.getElementById('broadcast-form').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const statusEl = document.getElementById('bc-status');
+  const subject = document.getElementById('bc-subject').value.trim();
+  const html = document.getElementById('bc-html').value.trim();
+  const emails = [...document.querySelectorAll('.bc-sub-check:checked')].map((cb) => cb.value);
+  if (!subject || !html) {
+    statusEl.textContent = 'Sujet et contenu requis.';
+    statusEl.className = 'status-msg error';
+    return;
+  }
+  if (!emails.length) {
+    statusEl.textContent = 'Sélectionne au moins un destinataire.';
+    statusEl.className = 'status-msg error';
+    return;
+  }
+  statusEl.className = 'status-msg';
+  statusEl.textContent = `Envoi à ${emails.length} destinataire(s)...`;
+  try {
+    const res = await fetch('/api/admin-send-email', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'X-Admin-Password': getPassword() },
+      body: JSON.stringify({ subject, html, emails })
+    });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) throw new Error(data.error || 'Erreur serveur');
+    statusEl.textContent = `Envoyé: ${data.sent} · Échecs: ${data.failed}`;
+    statusEl.className = 'status-msg ok';
+  } catch (error) {
+    statusEl.textContent = 'Erreur: ' + error.message;
+    statusEl.className = 'status-msg error';
+  }
+});
+
+async function loadMarketingSection() {
+  if (marketingLoaded) return;
+  marketingLoaded = true;
+  await Promise.all([loadRestockTemplate(), loadSubscribers()]);
+}
+
 let filtersByMenu = {};
 let editingId = null;
 
@@ -740,6 +1836,102 @@ const MENU_LABELS = {
   collections: 'Saison (visible sur Collection)'
 };
 
+// Every product photo dropped in gets its background auto-removed and
+// replaced with light grey, on the fly via Cloudinary (no re-upload needed -
+// this is a transformation baked into the delivery URL itself).
+function withCleanBackground(url) {
+  const transformation = 'e_background_removal/b_rgb:eeeeee,c_pad,w_1.0/f_auto/q_auto';
+  return url.replace('/upload/', `/upload/${transformation}/`);
+}
+
+// Same hex values as the customer-facing swatch colors (getSwatchColor in
+// detail-produit.js) so a detected color maps to the same visual family.
+const ADMIN_COLOR_HEX = {
+  'Noir': '#111111', 'Blanc': '#f8f8f8', 'Gris': '#808080', 'Argent': '#b0b0b0',
+  'Rouge': '#c41b18', 'Bleu': '#2d52a0', 'Vert': '#2d5a30', 'Jaune': '#e8c43d',
+  'Orange': '#e06020', 'Rose': '#e8a0b0', 'Violet': '#5c3d8f', 'Marron': '#6b3a2a',
+  'Beige': '#d4b89a', 'Doré': '#c9a227', 'Bronze': '#8c5a2b'
+};
+
+function hexToRgb(hex) {
+  const clean = String(hex || '').replace('#', '');
+  return [parseInt(clean.slice(0, 2), 16), parseInt(clean.slice(2, 4), 16), parseInt(clean.slice(4, 6), 16)];
+}
+
+function colorDistance(a, b) {
+  return Math.sqrt(a.reduce((sum, v, i) => sum + (v - b[i]) ** 2, 0));
+}
+
+function nearestColorName(hex) {
+  const rgb = hexToRgb(hex);
+  let best = '';
+  let bestDist = Infinity;
+  Object.entries(ADMIN_COLOR_HEX).forEach(([name, value]) => {
+    const dist = colorDistance(rgb, hexToRgb(value));
+    if (dist < bestDist) {
+      bestDist = dist;
+      best = name;
+    }
+  });
+  return best;
+}
+
+// Cloudinary's colors:true returns [[hex, percentage], ...] sorted by
+// prominence, analyzed on the original uploaded photo (studio backdrop
+// included, not the grey we add on delivery) - near-white entries are
+// skipped since they're almost always that backdrop, not the garment.
+function detectColorFromCloudinary(colors) {
+  if (!Array.isArray(colors) || !colors.length) return '';
+  // On-model photos mix skin tone, hair and denim into the histogram, so a
+  // single raw hex's percentage is misleading (e.g. skin tone often edges
+  // out a real but visually-split garment color). Grouping by nearest named
+  // color first, then summing, gives each actual color family a fair share
+  // and makes a genuinely multicolor garment show up as several groups
+  // instead of one deceptively small slice.
+  const grouped = {};
+  colors.forEach(([hex, pct]) => {
+    const [r, g, b] = hexToRgb(hex);
+    if (r > 225 && g > 225 && b > 225) return; // studio backdrop / grey pad
+    const name = nearestColorName(hex);
+    grouped[name] = (grouped[name] || 0) + (Number(pct) || 0);
+  });
+  const entries = Object.entries(grouped).sort((a, b) => b[1] - a[1]);
+  if (!entries.length) return 'Blanc';
+  const significant = entries.filter(([, pct]) => pct >= 3);
+  if (significant.length >= 3) return 'Multicolore';
+  return entries[0][0];
+}
+
+// Only fills in the first variant's couleur if it's still unset - never
+// overrides a color the admin already picked.
+function applyDetectedColorToVariant(colors) {
+  const detected = detectColorFromCloudinary(colors);
+  if (!detected) return;
+  const select = document.querySelector('#variants-list .variant-color-group select.variant-color');
+  if (!select || select.value) return;
+  select.value = detected;
+  select.dispatchEvent(new Event('change', { bubbles: true }));
+}
+
+const JACES_NAME_POOL = [
+  "L'Audacieuse", 'La Vibrante', "L'Intemporelle", 'La Signature', "L'Éclatante",
+  'La Sculptée', "L'Épurée", 'La Structurée', "L'Envoûtante", 'La Radieuse',
+  "L'Essentielle", 'La Précieuse', "L'Iconique", 'La Fluide', "L'Élégante",
+  'La Captivante', 'Le Manifeste', "L'Aura", 'La Muse', "L'Éclat",
+  'La Silhouette', "L'Instant", 'La Promesse', "L'Éphémère"
+];
+
+// Fills Nom the same "autofill until touched" way as Description - picked
+// once (on the first photo drop while the field is still empty), not
+// re-rolled on every upload.
+function autoFillName() {
+  const field = document.getElementById('f-name');
+  if (field.dataset.autofilled !== '1' && field.value.trim()) return;
+  field.value = JACES_NAME_POOL[Math.floor(Math.random() * JACES_NAME_POOL.length)];
+  field.dataset.autofilled = '1';
+  autoFillDescription();
+}
+
 function imageRow(value = '') {
   const row = document.createElement('div');
   row.className = 'list-row';
@@ -749,13 +1941,126 @@ function imageRow(value = '') {
   // to drag a row to a new position instead of only add/remove.
   row.innerHTML = `
     <span class="drag-handle" title="Glisser pour réordonner">⠿</span>
-    <input type="url" placeholder="https://res.cloudinary.com/..." value="${value.replace(/"/g, '&quot;')}">
+    <input type="url" placeholder="https://res.cloudinary.com/..." value="${value.replace(/"/g, '&quot;')}" hidden>
+    <div class="image-row-preview" title="Glisser une photo ici, ou cliquer pour en choisir une">
+      <img class="image-row-preview-img" hidden>
+      <span class="image-row-preview-icon">＋</span>
+      <input type="file" accept="image/*" hidden>
+    </div>
+    <span class="image-row-status"></span>
     <button type="button">✕</button>`;
-  row.querySelector('button').addEventListener('click', () => row.remove());
+  row.querySelector(':scope > button').addEventListener('click', () => {
+    row.remove();
+    updateAddImageBtnState();
+  });
+
+  const urlInput = row.querySelector('input[type="url"]');
+  const preview = row.querySelector('.image-row-preview');
+  const previewImg = row.querySelector('.image-row-preview-img');
+  const previewIcon = row.querySelector('.image-row-preview-icon');
+  const fileInput = row.querySelector('input[type="file"]');
+  const statusEl = row.querySelector('.image-row-status');
+
+  function refreshPreview() {
+    const url = urlInput.value.trim();
+    previewImg.hidden = !url;
+    previewIcon.hidden = !!url;
+    preview.classList.toggle('has-image', !!url);
+    if (url) previewImg.src = url;
+  }
+  refreshPreview();
+  urlInput.addEventListener('input', refreshPreview);
+
+  let statusTimer = null;
+  function setRowStatus(text, variant) {
+    if (statusTimer) clearTimeout(statusTimer);
+    statusEl.textContent = text;
+    statusEl.className = 'image-row-status' + (variant ? ' ' + variant : '');
+    if (text) statusTimer = setTimeout(() => { statusEl.textContent = ''; }, 2500);
+  }
+
+  async function uploadImage(file) {
+    if (!file || !file.type.startsWith('image/')) return;
+    // Cloudinary's plan caps uploaded images at 10 Mo - a clear message here
+    // beats a cryptic "Upload échoué" from the API for the most common case
+    // (a straight-out-of-phone photo that's too heavy).
+    if (file.size > 10 * 1024 * 1024) {
+      setRowStatus('Erreur : photo trop lourde (max 10 Mo), compresse-la avant', 'error');
+      return;
+    }
+    setRowStatus('Envoi...');
+    preview.classList.add('is-uploading');
+    try {
+      const sigRes = await fetch('/api/admin-email-subscribers?adminCloudinarySignature=1', {
+        headers: { 'X-Admin-Password': getPassword() }
+      });
+      const sig = await sigRes.json();
+      if (!sigRes.ok) throw new Error(sig.error || 'Signature échouée');
+
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('api_key', sig.apiKey);
+      formData.append('timestamp', sig.timestamp);
+      formData.append('signature', sig.signature);
+      formData.append('folder', sig.folder);
+      formData.append('colors', 'true');
+
+      const uploadRes = await fetch(`https://api.cloudinary.com/v1_1/${sig.cloudName}/image/upload`, {
+        method: 'POST',
+        body: formData
+      });
+      const uploadData = await uploadRes.json();
+      if (!uploadRes.ok) throw new Error((uploadData.error && uploadData.error.message) || 'Upload échoué');
+
+      urlInput.value = withCleanBackground(uploadData.secure_url);
+      refreshPreview();
+      setRowStatus('Envoyé ✓', 'ok');
+      // Best-effort extras - a bug here must never turn a successful
+      // upload into a shown "Erreur".
+      try {
+        applyDetectedColorToVariant(uploadData.colors);
+        autoFillName();
+      } catch (extraError) {
+        console.error('Auto-fill couleur/nom:', extraError);
+      }
+    } catch (error) {
+      setRowStatus('Erreur : ' + error.message, 'error');
+    } finally {
+      preview.classList.remove('is-uploading');
+    }
+  }
+
+  preview.addEventListener('click', () => fileInput.click());
+  fileInput.addEventListener('change', () => {
+    if (fileInput.files[0]) uploadImage(fileInput.files[0]);
+    fileInput.value = '';
+  });
+  // Only intercept genuine file drags (dataTransfer.types includes
+  // "Files") - an internal row-reorder drag carries no files, so it falls
+  // through untouched to enableDragReorder()'s container-level listeners.
+  preview.addEventListener('dragover', (event) => {
+    if (!event.dataTransfer.types.includes('Files')) return;
+    event.preventDefault();
+    event.stopPropagation();
+    preview.classList.add('is-dragover');
+  });
+  preview.addEventListener('dragleave', () => preview.classList.remove('is-dragover'));
+  preview.addEventListener('drop', (event) => {
+    if (!event.dataTransfer.types.includes('Files')) return;
+    event.preventDefault();
+    event.stopPropagation();
+    preview.classList.remove('is-dragover');
+    const file = event.dataTransfer.files[0];
+    if (file) uploadImage(file);
+  });
+
   return row;
 }
 
 const SIZE_OPTIONS = ['34', '36', '38', '40', '42', '44'];
+// New product default: every size pre-checked with 10 in stock, so the
+// admin doesn't have to click each size chip by hand every time.
+const DEFAULT_SIZE_STOCKS = Object.fromEntries(SIZE_OPTIONS.map((size) => [size, 10]));
 const COLOR_OPTIONS = ['Noir', 'Blanc', 'Gris', 'Argent', 'Rouge', 'Bleu', 'Vert', 'Jaune', 'Orange', 'Rose', 'Violet', 'Marron', 'Beige', 'Doré', 'Bronze', 'Transparent', 'Multicolore'];
 
 function buildOptionsHtml(options, current) {
@@ -823,28 +2128,6 @@ function variantColorGroup(color = '', sizeStocks = {}) {
   return row;
 }
 
-function reviewPhotoRow(value = '') {
-  const row = document.createElement('div');
-  row.className = 'list-row';
-  row.innerHTML = `<input type="url" placeholder="https://res.cloudinary.com/..." value="${value.replace(/"/g, '&quot;')}"><button type="button">✕</button>`;
-  row.querySelector('button').addEventListener('click', () => row.remove());
-  return row;
-}
-
-function reviewRow(author = '', rating = 5, text = '') {
-  const row = document.createElement('div');
-  row.className = 'list-row review-row';
-  row.innerHTML = `
-    <input type="text" class="review-author" placeholder="Nom cliente" value="${String(author).replace(/"/g, '&quot;')}">
-    <select class="review-rating">
-      ${[5, 4, 3, 2, 1].map((n) => `<option value="${n}"${Number(rating) === n ? ' selected' : ''}>${n}★</option>`).join('')}
-    </select>
-    <textarea class="review-text" placeholder="Texte de l'avis">${String(text)}</textarea>
-    <button type="button">✕</button>`;
-  row.querySelector('button').addEventListener('click', () => row.remove());
-  return row;
-}
-
 // Press-and-hold the "⠿" handle (or anywhere on the row outside a form
 // control) to drag a row/color-group to a new position - order matters
 // for both (first image = main photo; variant order is just display order).
@@ -878,23 +2161,24 @@ function enableDragReorder(containerId, itemSelector) {
 
 enableDragReorder('images-list', '.list-row');
 
+function updateAddImageBtnState() {
+  const count = document.querySelectorAll('#images-list .list-row').length;
+  const btn = document.getElementById('add-image-btn');
+  btn.disabled = count >= 4;
+  btn.textContent = count >= 4 ? 'Maximum 4 images' : '+ Ajouter une image';
+}
+document.getElementById('add-image-btn').addEventListener('click', () => {
+  document.getElementById('images-list').appendChild(imageRow());
+  updateAddImageBtnState();
+});
+
 document.querySelector('.field-collapsible').addEventListener('toggle', (e) => {
   if (e.target.open) e.target.scrollIntoView({ behavior: 'smooth', block: 'start' });
 });
 
-document.getElementById('add-review-photo-btn').addEventListener('click', () => {
-  // Newest first, matching how reviews are ordered everywhere else.
-  const row = reviewPhotoRow();
-  document.getElementById('review-photos-list').prepend(row);
-  row.scrollIntoView({ block: 'nearest' });
-});
-document.getElementById('add-review-btn').addEventListener('click', () => {
-  // Newest first, matching how reviews are ordered everywhere else.
-  document.getElementById('reviews-list').prepend(reviewRow());
-});
 document.getElementById('add-variant-btn').addEventListener('click', () => {
-  // Newest first, same as Avis clients.
-  document.getElementById('variants-list').prepend(variantColorGroup());
+  // Newest first, same as the color variants list.
+  document.getElementById('variants-list').prepend(variantColorGroup('', { ...DEFAULT_SIZE_STOCKS }));
   updateVariantSizeAvailability();
 });
 
@@ -954,7 +2238,7 @@ async function loadFilters() {
   // A product belongs to exactly one Collection category (Robes/Tops/...),
   // one accessory type (Sacs/Bijoux/...) if it's an accessory, one
   // Collaboration if it's a collaboration, one Saison, and one Nouveautés
-  // tag (Drop été/Édition limitée/Pièces signature) - all mutually
+  // tag (Drop/Pièces signature) - all mutually
   // exclusive radio groups within their menu (Catégories/Accessoires/
   // Collaborations are additionally exclusive with each other, enforced
   // below).
@@ -1018,7 +2302,7 @@ async function loadFilters() {
     // product now needs a real classification, so this catch-all doesn't
     // belong among those choices (its filter rows stay untouched). In
     // Nouveautés, "Tout voir" is kept but stays a standalone checkbox, not
-    // part of the Drop été/Édition limitée/Pièces signature radio group.
+    // part of the Drop/Pièces signature radio group.
     const menuOptions = (menu === 'categories' || menu === 'collaborations')
       ? filtersByMenu[menu].filter((filter) => (filter.label || filter.name) !== 'Tout voir')
       : filtersByMenu[menu];
@@ -1079,23 +2363,83 @@ function populateProductFilterSelect() {
   select.value = currentValue;
 }
 
+// Category label -> natural singular noun, used as the subject of the
+// auto-generated description sentence ("Veste en laine mélangée...").
+const CATEGORY_SINGULAR = {
+  'Robes': 'Robe', 'Tops': 'Top', 'Jupes': 'Jupe', 'Pantalons': 'Pantalon', 'Vestes': 'Veste',
+  'Accessoires': 'Accessoire', 'Sacs': 'Sac', 'Bijoux': 'Bijou', 'Ceintures': 'Ceinture', 'Foulards': 'Foulard'
+};
+
+// Ending phrase varies by category so the description isn't the exact
+// same boilerplate on every product - same tone as the customer-facing
+// subtitle fallback (getProductDetailSubtitle in detail-produit.js).
+const CATEGORY_PHRASING = {
+  'Veste': 'coupe ajustée et doublure signée JACES',
+  'Pantalon': 'coupe ajustée et doublure signée JACES',
+  'Robe': 'tombé fluide et finition signature JACES',
+  'Jupe': 'tombé fluide et finition signature JACES',
+  'Top': 'coupe structurée signée JACES',
+  'Accessoire': 'finition polie signée JACES',
+  'Sac': 'finition polie signée JACES',
+  'Bijou': 'finition polie signée JACES',
+  'Ceinture': 'finition polie signée JACES',
+  'Foulard': 'finition soignée signée JACES'
+};
+
+function joinFr(items) {
+  if (!items.length) return '';
+  if (items.length === 1) return items[0];
+  return items.slice(0, -1).join(', ') + ' et ' + items[items.length - 1];
+}
+
+function generateAutoDescription() {
+  const categoryInput = document.querySelector('#filters-container input[data-menu="categories"]:checked, #filters-container input[data-menu="accessoires"]:checked');
+  const categoryLabel = categoryInput ? categoryInput.closest('label').textContent.trim() : '';
+  const category = CATEGORY_SINGULAR[categoryLabel] || categoryLabel;
+  const materials = Array.from(document.querySelectorAll('#material-checkboxes input:checked'))
+    .map((cb) => cb.closest('label').textContent.trim().toLowerCase());
+  const colorSelect = document.querySelector('#variants-list .variant-color-group select.variant-color');
+  const color = colorSelect && colorSelect.value ? colorSelect.value.toLowerCase() : '';
+  const name = document.getElementById('f-name').value.trim();
+  const subject = category || name;
+  if (!subject) return '';
+  const details = [];
+  if (color) details.push(`coloris ${color}`);
+  if (materials.length) details.push(`en ${joinFr(materials)}`);
+  const detailPhrase = details.length ? ` ${details.join(' ')}` : '';
+  const ending = CATEGORY_PHRASING[category] || 'finition signature JACES';
+  return `${subject}${detailPhrase}, ${ending}.`;
+}
+
+// Auto-fills Description from Nom/Catégorie/Matière as long as the admin
+// hasn't typed into the field directly - same "autofill until touched"
+// pattern as the account page's address label field.
+function autoFillDescription() {
+  const field = document.getElementById('f-description');
+  if (field.dataset.autofilled !== '1' && field.value.trim()) return;
+  const generated = generateAutoDescription();
+  if (!generated) return;
+  field.value = generated;
+  field.dataset.autofilled = '1';
+}
+
 function resetForm() {
   editingId = null;
   document.getElementById('product-id').value = '';
   document.getElementById('form-title').textContent = 'Nouveau produit';
   document.getElementById('f-name').value = '';
+  document.getElementById('f-name').dataset.autofilled = '';
   document.getElementById('f-price').value = '';
   document.getElementById('f-description').value = '';
+  document.getElementById('f-description').dataset.autofilled = '';
   document.getElementById('f-style-notes').value = '';
   document.getElementById('f-care-instructions').value = '';
   document.getElementById('f-show-in-related').checked = false;
   document.getElementById('images-list').innerHTML = '';
   for (let i = 0; i < 4; i++) document.getElementById('images-list').appendChild(imageRow());
+  updateAddImageBtnState();
   document.getElementById('variants-list').innerHTML = '';
-  document.getElementById('variants-list').appendChild(variantColorGroup());
-  document.getElementById('review-photos-list').innerHTML = '';
-  for (let i = 0; i < 4; i++) document.getElementById('review-photos-list').appendChild(reviewPhotoRow());
-  document.getElementById('reviews-list').innerHTML = '';
+  document.getElementById('variants-list').appendChild(variantColorGroup('', { ...DEFAULT_SIZE_STOCKS }));
   document.getElementById('f-fit-rating').value = 'normal';
   document.getElementById('f-quality-rating').value = 'premium';
   document.querySelectorAll('#material-checkboxes input[type="checkbox"]').forEach((cb) => { cb.checked = false; });
@@ -1111,13 +2455,28 @@ function resetForm() {
 
 document.getElementById('cancel-edit-btn').addEventListener('click', resetForm);
 
+document.getElementById('f-name').addEventListener('input', () => {
+  document.getElementById('f-name').dataset.autofilled = '';
+  autoFillDescription();
+});
+document.getElementById('filters-container').addEventListener('change', autoFillDescription);
+document.getElementById('material-checkboxes').addEventListener('change', autoFillDescription);
+document.getElementById('variants-list').addEventListener('change', (event) => {
+  if (event.target.classList.contains('variant-color')) autoFillDescription();
+});
+document.getElementById('f-description').addEventListener('input', () => {
+  document.getElementById('f-description').dataset.autofilled = '';
+});
+
 function fillFormWithProduct(product) {
   editingId = product.id;
   document.getElementById('product-id').value = product.id;
   document.getElementById('form-title').textContent = 'Modifier: ' + (product.name || '');
   document.getElementById('f-name').value = product.name || '';
+  document.getElementById('f-name').dataset.autofilled = product.name ? '' : '1';
   document.getElementById('f-price').value = product.price || '';
   document.getElementById('f-description').value = product.description || '';
+  document.getElementById('f-description').dataset.autofilled = product.description ? '' : '1';
   document.getElementById('f-style-notes').value = product.style_notes || '';
   document.getElementById('f-care-instructions').value = product.care_instructions || '';
   document.getElementById('f-show-in-related').checked = !!product.show_in_related;
@@ -1129,20 +2488,11 @@ function fillFormWithProduct(product) {
     cb.checked = productMaterials.has(cb.value);
   });
 
-  const reviewPhotosList = document.getElementById('review-photos-list');
-  reviewPhotosList.innerHTML = '';
-  (Array.isArray(product.review_photos) ? product.review_photos : []).forEach((url) => reviewPhotosList.appendChild(reviewPhotoRow(url)));
-
-  const reviewsList = document.getElementById('reviews-list');
-  reviewsList.innerHTML = '';
-  (Array.isArray(product.reviews) ? product.reviews : []).forEach((review) => {
-    reviewsList.appendChild(reviewRow(review.author || '', review.rating || 5, review.text || ''));
-  });
-
   const imagesList = document.getElementById('images-list');
   imagesList.innerHTML = '';
   const urls = Array.isArray(product.all_images) && product.all_images.length ? product.all_images : [''];
   urls.forEach((url) => imagesList.appendChild(imageRow(url)));
+  updateAddImageBtnState();
 
   const variantsList = document.getElementById('variants-list');
   variantsList.innerHTML = '';
@@ -1194,6 +2544,9 @@ function formatDateAdded(value) {
 async function loadProductList() {
   const res = await apiFetch('/api/products');
   allProducts = await res.json();
+  // Most recently added products first, so new products don't get buried
+  // at the bottom of a growing list.
+  allProducts.sort((a, b) => new Date(b.created_at || 0) - new Date(a.created_at || 0));
   renderProductList();
 }
 
@@ -1261,7 +2614,7 @@ document.getElementById('product-form').addEventListener('submit', async (e) => 
   statusEl.textContent = 'Enregistrement...';
 
   const images = [...new Set(
-    Array.from(document.querySelectorAll('#images-list input'))
+    Array.from(document.querySelectorAll('#images-list input[type="url"]'))
       .map((input) => input.value.trim())
       .filter(Boolean)
   )];
@@ -1283,18 +2636,6 @@ document.getElementById('product-form').addEventListener('submit', async (e) => 
     }));
   });
 
-  const reviewPhotos = [...new Set(
-    Array.from(document.querySelectorAll('#review-photos-list input'))
-      .map((input) => input.value.trim())
-      .filter(Boolean)
-  )];
-
-  const reviews = Array.from(document.querySelectorAll('#reviews-list .review-row')).map((row) => ({
-    author: row.querySelector('.review-author').value.trim(),
-    rating: Number(row.querySelector('.review-rating').value) || 5,
-    text: row.querySelector('.review-text').value.trim()
-  })).filter((r) => r.text);
-
   const filterIds = Array.from(document.querySelectorAll('#filters-container input:not([name="material"]):checked'))
     .map((cb) => Number(cb.value));
 
@@ -1303,8 +2644,8 @@ document.getElementById('product-form').addEventListener('submit', async (e) => 
     .filter(Boolean);
   const category = checkedFilters.find((f) => f.menu === 'categories')?.label || '';
   const pageType = checkedFilters.find((f) => f.menu !== 'categories')?.menu || (category ? 'collection' : '');
-  // "Tout voir" gets auto-checked alongside a real tag (Drop été/Édition
-  // limitée/Pièces signature) - prefer the real tag when both are checked,
+  // "Tout voir" gets auto-checked alongside a real tag (Drop/Pièces
+  // signature) - prefer the real tag when both are checked,
   // "Tout voir" is only the tag when it's the only one checked.
   const nouveauteFilters = checkedFilters.filter((f) => f.menu === 'nouveautes');
   const nouveauteTag = (nouveauteFilters.find((f) => f.slug !== 'tout-voir') || nouveauteFilters[0])?.slug || '';
@@ -1379,8 +2720,6 @@ document.getElementById('product-form').addEventListener('submit', async (e) => 
     fitRating: document.getElementById('f-fit-rating').value,
     qualityRating: document.getElementById('f-quality-rating').value,
     material: Array.from(document.querySelectorAll('#material-checkboxes input[type="checkbox"]:checked')).map((cb) => cb.value),
-    reviewPhotos,
-    reviews,
     images,
     variants,
     filterIds,
@@ -1506,7 +2845,7 @@ function enforceCollaborationExclusivity(event) {
   }
 }
 
-// Picking a specific Nouveautés badge (Drop été/Édition limitée/Pièces
+// Picking a specific Nouveautés badge (Drop/Pièces
 // signature) also checks "Tout voir" automatically, since a product with
 // any of the three already shows up under "Toutes les nouveautés" on the
 // site - this just makes that visible in the admin form too.
@@ -1630,6 +2969,17 @@ async function init() {
   resetForm();
   await loadProductList();
   loadMarketingContent();
+  loadSubscribers();
+  // Keeps the Marketing badge current even while the admin stays parked on
+  // another section - a new Influence request should surface without a
+  // manual refresh.
+  setInterval(loadSubscribers, 15000);
+  // Also refresh the moment this tab regains focus, so switching back after
+  // checking something (e.g. a customer toggling a newsletter pref in
+  // another tab) doesn't require waiting out the poll interval.
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'visible') loadSubscribers();
+  });
 }
 
 if (getPassword()) {

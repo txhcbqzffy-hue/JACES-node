@@ -77,14 +77,89 @@ function withRlsHint(source, errorMessage) {
   return payload;
 }
 
+const FREE_SHIPPING_THRESHOLD = 79;
+const STANDARD_SHIPPING_FEE = 8;
+const EXPRESS_SHIPPING_FEE = 15;
+
+// Same rule as cart.js's getPromoDiscount, recomputed server-side so a
+// tampered client-sent discount can't be trusted for the real charge.
+async function resolvePromoDiscountPercent(rawCode) {
+  const code = String(rawCode || '').trim().toUpperCase();
+  if (!code) return 0;
+  if (code === 'JACES10') return 10;
+  const { data } = await supabase.from('promo_codes').select('discount_percent').eq('code', code).eq('active', true).maybeSingle();
+  return data ? Number(data.discount_percent) || 0 : 0;
+}
+
+// Card payments only - the amount is recomputed here from real Supabase
+// prices rather than trusted from the client, so a tampered cart total
+// can never charge less than what's actually owed.
+async function handleCreatePaymentIntent(req, res) {
+  if (req.method !== 'POST') {
+    return res.status(405).json({ error: 'Methode non autorisee' });
+  }
+
+  const secretKey = process.env.STRIPE_SECRET_KEY;
+  if (!secretKey) {
+    return res.status(500).json({ error: 'Paiement non configure' });
+  }
+
+  const items = Array.isArray(req.body?.items) ? req.body.items : [];
+  if (!items.length) {
+    return res.status(400).json({ error: 'Panier vide' });
+  }
+
+  const ids = [...new Set(items.map((item) => String(item?.id || '')).filter(Boolean))];
+  const { data: products, error } = await supabase.from('products').select('id, price').in('id', ids);
+  if (error) {
+    return res.status(500).json(withRlsHint('products', error.message));
+  }
+
+  const priceById = new Map((products || []).map((product) => [String(product.id), Number(product.price) || 0]));
+  const subtotal = items.reduce((sum, item) => {
+    const price = priceById.get(String(item?.id || '')) || 0;
+    const quantity = Math.max(1, Number(item?.quantity) || 1);
+    return sum + (price * quantity);
+  }, 0);
+
+  if (subtotal <= 0) {
+    return res.status(400).json({ error: 'Montant invalide' });
+  }
+
+  const discountPercent = await resolvePromoDiscountPercent(req.body?.promoCode);
+  const discountedSubtotal = Math.max(0, subtotal - (subtotal * discountPercent / 100));
+  const shippingMode = req.body?.shippingMode === 'express' ? 'express' : 'standard';
+  const shippingFee = discountedSubtotal >= FREE_SHIPPING_THRESHOLD
+    ? 0
+    : (shippingMode === 'express' ? EXPRESS_SHIPPING_FEE : STANDARD_SHIPPING_FEE);
+  const amount = Math.round((discountedSubtotal + shippingFee) * 100);
+
+  try {
+    const Stripe = require('stripe');
+    const stripe = Stripe(secretKey);
+    const paymentIntent = await stripe.paymentIntents.create({
+      amount,
+      currency: 'eur',
+      automatic_payment_methods: { enabled: true }
+    });
+    return res.status(200).json({ clientSecret: paymentIntent.client_secret, amount });
+  } catch (stripeError) {
+    return res.status(500).json({ error: stripeError.message });
+  }
+}
+
 module.exports = async function handler(req, res) {
   // CORS - necessaire pour les appels depuis le frontend Vercel.
   res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
   if (req.method === 'OPTIONS') {
     return res.status(200).end();
+  }
+
+  if (req.query?.createPaymentIntent) {
+    return handleCreatePaymentIntent(req, res);
   }
 
   try {
@@ -268,14 +343,24 @@ module.exports = async function handler(req, res) {
 
       const availableVariants = normalizedVariants.filter((variant) => variant.stock > 0);
 
+      // Nouveautés products are pre-order: they're shipped once the
+      // pre-order window closes, so entered stock numbers are cosmetic for
+      // them - every size/color a variant was created with stays sellable
+      // regardless of stock, instead of falling back to the availableVariants
+      // filter every other product (Collection/Accessoires/Collaborations) uses.
+      const isNouveauteProduct = productFilters.some((filter) => normalizeToken(filter.menu) === 'nouveautes');
+      const sizeColorSourceVariants = isNouveauteProduct
+        ? normalizedVariants
+        : (availableVariants.length ? availableVariants : normalizedVariants);
+
       const sizes = [...new Set(
-        (availableVariants.length ? availableVariants : normalizedVariants)
+        sizeColorSourceVariants
           .map((variant) => String(variant.size || '').trim())
           .filter(Boolean)
       )];
 
       const colors = [...new Set(
-        (availableVariants.length ? availableVariants : normalizedVariants)
+        sizeColorSourceVariants
           .map((variant) => String(variant.color || '').trim())
           .filter(Boolean)
       )];

@@ -4,5 +4,8 @@
     { "source": "/api/filters", "destination": "/api/filters.js" },
     { "source": "/api/health", "destination": "/api/health.js" },
     { "source": "/api/admin-products", "destination": "/api/admin-products.js" }
+  ],
+  "crons": [
+    { "path": "/api/cron/instagram-token-refresh", "schedule": "0 6 * * *" }
   ]
 }

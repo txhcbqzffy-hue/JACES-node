@@ -36,14 +36,13 @@ function getPageType() {
   return '';
 }
 
-// Supabase collaboration filter slugs (e.g. "jaces-x-chloe") don't match the
-// short brand tokens the collaborations page filters by ("chloe").
+// Supabase collaboration filter slugs (e.g. "jaces-x-from-future") don't
+// match the short brand tokens the collaborations page filters by ("from-future").
 const COLLAB_SLUG_TO_TOKEN = {
-  'jaces-x-nike': 'nike',
-  'jaces-x-chloe': 'chloe',
-  'jaces-x-jacquemus': 'jacquemus',
-  'jaces-x-dior': 'dior',
-  'jaces-x-saint-laurent': 'saint-laurent'
+  'jaces-x-maureen-di-carlo': 'maureen-di-carlo',
+  'jaces-x-from-future': 'from-future',
+  'jaces-x-hoka': 'hoka',
+  'jaces-x-mamy-grand': 'mamy-grand'
 };
 
 // Slugified admin filter labels (menu "collections") don't match the short
@@ -125,6 +124,31 @@ function formatPrice(price) {
   return new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR', minimumFractionDigits: 0, maximumFractionDigits: 2 }).format(numeric);
 }
 
+// "Drop"/"Pièces signature" are the two real Nouveautés tags (besides the
+// "Tout voir" wildcard) - a small badge on the card tells them apart since
+// these products no longer show any stock-based unavailability.
+function getNouveauteBadgeLabel(product) {
+  const tags = Array.isArray(product.nouveauteTags) ? product.nouveauteTags : [];
+  if (tags.includes('drop')) return 'Drop';
+  if (tags.includes('pieces-signature')) return 'Pièces signature';
+  return '';
+}
+
+const SEASON_BADGE_LABELS = {
+  ss26: 'Printemps–Été 2026',
+  aw26: 'Automne–Hiver 2026'
+};
+
+function getSeasonBadgeLabel(product) {
+  return SEASON_BADGE_LABELS[getProductCollectionSeason(product)] || '';
+}
+
+// A product only ever gets one badge - Nouveautés tag takes priority since
+// a Nouveautés item is rarely also tagged with a Collection season.
+function getCardBadgeLabel(product) {
+  return getNouveauteBadgeLabel(product) || getSeasonBadgeLabel(product);
+}
+
 function buildProductCard(product, pageType) {
   const card = document.createElement('article');
   const images = Array.isArray(product.images) ? product.images : [];
@@ -148,6 +172,7 @@ function buildProductCard(product, pageType) {
       return `<button type="button" class="${isAvailable ? '' : 'is-disabled'}">${size}</button>`;
     }).join('')}</div>`
     : '';
+  const badgeLabel = getCardBadgeLabel(product);
 
   card.className = 'product-card collection-card product-card-linkable';
   card.dataset.productId = String(product.id || '');
@@ -163,6 +188,7 @@ function buildProductCard(product, pageType) {
 
   card.innerHTML = `
     <div class="product-media">
+      ${badgeLabel ? `<span class="product-card-badge">${badgeLabel}</span>` : ''}
       <button class="product-favorite" type="button" aria-label="Ajouter aux favoris">
         <svg class="heart-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
           <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
@@ -209,7 +235,7 @@ async function loadPageProducts() {
     productGrid.innerHTML = '';
 
     if (!visibleProducts.length) {
-      productGrid.innerHTML = buildEmptyState('Aucun produit disponible pour cette sélection');
+      productGrid.innerHTML = '';
       window.dispatchEvent(new CustomEvent('jaces:products-loaded', { detail: { products: [], pageType } }));
       return;
     }

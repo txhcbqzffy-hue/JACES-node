@@ -30,6 +30,8 @@ module.exports = async function handler(req, res) {
   const productId = String(body.productId || '').trim();
   const size = String(body.size || '').trim();
   const email = String(body.email || '').trim().toLowerCase();
+  const color = String(body.color || '').trim();
+  const firstName = String(body.firstName || '').trim();
 
   if (!productId || !size || !isValidEmail(email)) {
     return res.status(400).json({ error: 'Parametres invalides' });
@@ -40,8 +42,8 @@ module.exports = async function handler(req, res) {
     const { error } = await supabase
       .from('stock_notifications')
       .upsert(
-        { product_id: productId, size, email },
-        { onConflict: 'product_id,size,email', ignoreDuplicates: true }
+        { product_id: productId, size, color, email, first_name: firstName || null },
+        { onConflict: 'product_id,size,color,email', ignoreDuplicates: true }
       );
 
     if (error) {

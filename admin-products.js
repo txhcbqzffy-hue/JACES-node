@@ -13,12 +13,11 @@
     var NOUVEAUTES_CATEGORIES = ['robes', 'tops', 'jupes', 'pantalons', 'vestes', 'accessoires'];
     var COLLECTION_CATEGORIES = ['robes', 'tops', 'jupes', 'pantalons', 'vestes', 'accessoires'];
     var NOUVEAUTES_LABEL_OPTIONS = [
-      { value: 'drop-ete', label: 'Drop été' },
-      { value: 'edition-limitee', label: 'Édition limitée' },
+      { value: 'drop', label: 'Drop' },
       { value: 'pieces-signature', label: 'Pièces signature' }
     ];
     var ACCESSOIRES_CATEGORIES = ['sacs', 'bijoux', 'ceintures', 'foulards'];
-    var COLLABORATION_CATEGORIES = ['nike', 'chloe', 'jacquemus', 'dior', 'saint-laurent'];
+    var COLLABORATION_CATEGORIES = ['maureen-di-carlo', 'from-future', 'hoka', 'mamy-grand'];
     var COLOR_OPTIONS = [
       { value: 'noir', label: 'Noir' },
       { value: 'bleu', label: 'Bleu' },

@@ -2,11 +2,12 @@
   const ACCOUNT_SESSION_KEY = 'jaces-account-session';
   const ACCOUNT_PROFILES_KEY = 'jaces-account-profiles';
   const ACCOUNT_SECTIONS = new Set(['compte', 'commandes', 'adresses']);
+  const MAX_ADDRESSES = 3;
 
   const state = {
     section: 'compte',
-    profileEdit: false,
     passwordEdit: false,
+    deleteConfirm: false,
     selectedOrderId: '',
     addressEditor: null,
     feedback: ''
@@ -36,6 +37,120 @@
     return readJsonStorage(ACCOUNT_SESSION_KEY, null);
   }
 
+  // [iso2, name, dial code] - covers France plus the countries JACES
+  // customers most plausibly ship/call from; sorted with France first so
+  // it's the default selection.
+  const PHONE_COUNTRIES = [
+    ['fr', 'France', '+33'],
+    ['be', 'Belgique', '+32'],
+    ['ch', 'Suisse', '+41'],
+    ['lu', 'Luxembourg', '+352'],
+    ['de', 'Allemagne', '+49'],
+    ['es', 'Espagne', '+34'],
+    ['it', 'Italie', '+39'],
+    ['gb', 'Royaume-Uni', '+44'],
+    ['ie', 'Irlande', '+353'],
+    ['pt', 'Portugal', '+351'],
+    ['nl', 'Pays-Bas', '+31'],
+    ['at', 'Autriche', '+43'],
+    ['us', 'États-Unis', '+1'],
+    ['ca', 'Canada', '+1'],
+    ['ma', 'Maroc', '+212'],
+    ['dz', 'Algérie', '+213'],
+    ['tn', 'Tunisie', '+216'],
+    ['sn', 'Sénégal', '+221'],
+    ['ci', 'Côte d’Ivoire', '+225'],
+    ['cm', 'Cameroun', '+237'],
+    ['mu', 'Maurice', '+230'],
+    ['re', 'La Réunion', '+262'],
+    ['gp', 'Guadeloupe', '+590'],
+    ['mq', 'Martinique', '+596'],
+    ['gf', 'Guyane', '+594'],
+    ['ru', 'Russie', '+7'],
+    ['cn', 'Chine', '+86'],
+    ['jp', 'Japon', '+81'],
+    ['au', 'Australie', '+61'],
+    ['br', 'Brésil', '+55'],
+    ['in', 'Inde', '+91']
+  ];
+
+  function parsePhoneValue(rawPhone) {
+    const raw = String(rawPhone || '').trim();
+    // Longest dial code first so "+1" doesn't swallow a "+352" number, etc.
+    const sortedByCodeLength = PHONE_COUNTRIES.slice().sort((a, b) => b[2].length - a[2].length);
+    const match = sortedByCodeLength.find(([, , dialCode]) => raw.startsWith(dialCode));
+    if (match) {
+      return { iso: match[0], dialCode: match[2], localNumber: raw.slice(match[2].length).trim() };
+    }
+    return { iso: 'fr', dialCode: '+33', localNumber: raw };
+  }
+
+  // North America uses 3-3-4 grouping ((XXX) XXX-XXXX); most of the rest of
+  // this list follows the common European 2-by-2 convention - not every
+  // country's real convention, but a reasonable default that's still far
+  // more readable than one solid block of digits.
+  const PHONE_GROUPING_3_3_4 = new Set(['us', 'ca']);
+  // In proper international format the trunk "0" that's dialed locally is
+  // dropped once the country code is prefixed (06 66 07 55 33 -> +33 6 66
+  // 07 55 33) - true for most of Europe. Italy is a well-known exception:
+  // Italian numbers keep their leading 0 even with +39.
+  const PHONE_KEEPS_LEADING_ZERO = new Set(['it']);
+  // Max digit count typed locally, leading 0 included where applicable
+  // (France: "0666075533" = 10, or "666075533" without it = 9 - both fit
+  // under this cap). Any country not listed falls back to a generic 12.
+  const PHONE_MAX_DIGITS = {
+    fr: 10, be: 9, ch: 9, lu: 9, de: 11, es: 9, it: 10, gb: 10, ie: 9, pt: 9, nl: 9, at: 11,
+    us: 10, ca: 10,
+    ma: 9, dz: 9, tn: 8, sn: 9, ci: 10, cm: 9, mu: 8, re: 9, gp: 9, mq: 9, gf: 9,
+    ru: 10, cn: 11, jp: 10, au: 9, br: 11, in: 10
+  };
+
+  function formatPhoneForDisplay(rawPhone) {
+    const { iso, localNumber } = parsePhoneValue(rawPhone);
+    const digits = localNumber.replace(/\D/g, '');
+    if (!digits) return '';
+
+    const countryEntry = PHONE_COUNTRIES.find(([code]) => code === iso);
+    const countryName = countryEntry ? countryEntry[1] : '';
+
+    let formattedLocal;
+    if (PHONE_GROUPING_3_3_4.has(iso) && digits.length === 10) {
+      formattedLocal = `(${digits.slice(0, 3)}) ${digits.slice(3, 6)}-${digits.slice(6)}`;
+    } else {
+      formattedLocal = digits.replace(/(\d{2})(?=\d)/g, '$1 ').trim();
+    }
+
+    return countryName ? `${countryName} ${formattedLocal}` : formattedLocal;
+  }
+
+  // Accepts either the full local length (with a leading 0, e.g. France's
+  // 10-digit "0666075533") or one digit short (without it, "666075533") -
+  // both are legitimate depending on how the person types it.
+  function isValidPhoneNumber(iso, localNumber) {
+    const digits = String(localNumber || '').replace(/\D/g, '');
+    if (!digits) return true;
+    const max = PHONE_MAX_DIGITS[iso] || 12;
+    return digits.length >= max - 1 && digits.length <= max;
+  }
+
+  function renderPhoneField(rawPhone) {
+    const { iso, dialCode, localNumber } = parsePhoneValue(rawPhone);
+    const flagUrl = (code) => `https://flagcdn.com/w40/${code}.png`;
+    return [
+      '<div class="account-phone-field">',
+      '  <div class="jc-select account-phone-country" data-select-name="phoneCountry">',
+      `    <button type="button" class="jc-select-trigger account-phone-trigger" data-select-trigger aria-haspopup="listbox" aria-expanded="false"><img src="${flagUrl(iso)}" alt="" class="account-phone-flag"><span>${escapeHtml(dialCode)}</span><svg class="jc-select-caret" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M5 7.5l5 5 5-5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>`,
+      '    <ul class="jc-select-panel account-phone-panel" role="listbox" data-select-panel hidden>',
+      PHONE_COUNTRIES.map(([code, name, dial]) => `<li class="jc-select-option account-phone-option${code === iso ? ' is-selected' : ''}" role="option" data-value="${escapeHtml(dial)}" data-iso="${escapeHtml(code)}"><img src="${flagUrl(code)}" alt="" class="account-phone-flag">${escapeHtml(name)} (${escapeHtml(dial)})</li>`).join(''),
+      '    </ul>',
+      `    <input type="hidden" name="phoneDialCode" data-select-value value="${escapeHtml(dialCode)}">`,
+      `    <input type="hidden" name="phoneIso" data-select-iso value="${escapeHtml(iso)}">`,
+      '  </div>',
+      `  <input type="tel" name="phone" value="${escapeHtml(localNumber)}" placeholder="Votre numéro" class="account-phone-number" autocomplete="tel-national">`,
+      '</div>'
+    ].join('');
+  }
+
   function escapeHtml(value) {
     return String(value || '')
       .replace(/&/g, '&amp;')
@@ -43,6 +158,22 @@
       .replace(/>/g, '&gt;')
       .replace(/"/g, '&quot;')
       .replace(/'/g, '&#39;');
+  }
+
+  function truncateText(value, maxLength) {
+    const raw = String(value || '');
+    return raw.length > maxLength ? `${raw.slice(0, maxLength).trim()}…` : raw;
+  }
+
+  function normalizePersonName(value) {
+    // Letters (incl. accents: é, è, ç, ü...), spaces, hyphens and apostrophes
+    // only - covers real French names ("Jean-Paul", "O'Brien") while still
+    // blocking digits, symbols and emoji. Kept in sync with auth.js.
+    const cleaned = String(value || '').replace(/[^\p{L}\s'-]/gu, '');
+    if (!/\p{L}/u.test(cleaned)) return '';
+    return cleaned
+      .toLowerCase()
+      .replace(/(^|[\s'-])(\p{L})/gu, (match, boundary, letter) => boundary + letter.toUpperCase());
   }
 
   function formatPrice(value) {
@@ -105,7 +236,7 @@
   function normalizeAddress(address, index) {
     return {
       id: toAddressId(address?.id || `address-${index + 1}`),
-      label: String(address?.label || (index === 0 ? 'Adresse principale' : `Adresse ${index + 1}`)).trim(),
+      label: String(address?.label || (index === 0 ? 'Adresse principale' : `Adresse ${index + 1}`)).trim().slice(0, 25),
       firstName: String(address?.firstName || '').trim(),
       lastName: String(address?.lastName || '').trim(),
       address: String(address?.address || '').trim(),
@@ -237,15 +368,36 @@
     return true;
   }
 
-  function renderMenu(section) {
+  function renderMenu(section, profile) {
+    const firstName = profile?.firstName || '';
+    const initial = escapeHtml((firstName || 'C').charAt(0).toUpperCase());
+    const userSummary = profile ? [
+      '  <div class="account-user-summary account-page-user-summary">',
+      `    <div class="account-user-avatar">${initial}</div>`,
+      '    <div class="account-user-copy">',
+      `      <strong>Bonjour ${escapeHtml(firstName || 'vous')}</strong>`,
+      '    </div>',
+      '  </div>'
+    ].join('') : '';
+
+    const icons = {
+      compte: '<path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>',
+      commandes: '<path d="M9 2L6.12 9H1l2.5 7.5v5h15v-5l2.5-7.5H17.88L15 2"/>',
+      adresses: '<path d="M12 21s-7-6.5-7-11a7 7 0 0 1 14 0c0 4.5-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/>',
+      logout: '<path d="M12 3v9"/><path d="M18.36 6.64a9 9 0 1 1-12.73 0"/>'
+    };
+    const menuIcon = (key) => `<svg class="account-page-menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">${icons[key]}</svg>`;
+    const chevron = '<svg class="account-page-menu-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>';
+
     return [
       '<aside class="account-page-sidebar">',
+      userSummary,
       '  <nav class="account-page-menu" aria-label="Menu du compte">',
-      `    <a class="account-page-menu-item${section === 'compte' ? ' is-active' : ''}" href="#compte">Mon compte</a>`,
-      `    <a class="account-page-menu-item${section === 'commandes' ? ' is-active' : ''}" href="#commandes">Mes commandes</a>`,
-      `    <a class="account-page-menu-item${section === 'adresses' ? ' is-active' : ''}" href="#adresses">Mes adresses</a>`,
+      `    <a class="account-page-menu-item${section === 'compte' ? ' is-active' : ''}" href="#compte">${menuIcon('compte')}<span>Mon compte</span>${chevron}</a>`,
+      `    <a class="account-page-menu-item${section === 'commandes' ? ' is-active' : ''}" href="#commandes">${menuIcon('commandes')}<span>Mes commandes</span>${chevron}</a>`,
+      `    <a class="account-page-menu-item${section === 'adresses' ? ' is-active' : ''}" href="#adresses">${menuIcon('adresses')}<span>Mes adresses</span>${chevron}</a>`,
       '  </nav>',
-      '  <button class="account-page-logout" type="button" data-account-page-logout>Déconnexion</button>',
+      `  <button class="account-page-logout" type="button" data-account-page-logout>${menuIcon('logout')}<span>Déconnexion</span></button>`,
       '</aside>'
     ].join('');
   }
@@ -275,29 +427,34 @@
   }
 
   function renderAccountSection(profile) {
-    const newsletterEnabled = Boolean(profile.newsletterProducts || profile.newsletterCollections);
     return [
       '<section class="account-content-card">',
       '  <div class="account-content-card-head">',
       '    <div>',
-      '      <p class="account-content-kicker">Mon compte</p>',
-      '      <h2>Informations personnelles</h2>',
+      '      <h2>Mon compte</h2>',
       '    </div>',
       '    <div class="account-page-actions account-page-actions-inline">',
-      `      <button class="account-secondary-button" type="button" data-account-profile-toggle>${state.profileEdit ? 'Annuler' : 'Modifier les informations'}</button>`,
       `      <button class="account-secondary-button" type="button" data-account-password-toggle>${state.passwordEdit ? 'Fermer' : 'Changer le mot de passe'}</button>`,
-      `      <button class="account-secondary-button" type="button" data-account-newsletter-toggle>${newsletterEnabled ? 'Désactiver la newsletter' : 'Activer la newsletter'}</button>`,
       '    </div>',
       '  </div>',
       '  <form class="account-form-grid" id="account-profile-form">',
-      `    <label class="account-form-field"><span>Nom</span><input type="text" name="lastName" value="${escapeHtml(profile.lastName || '')}" ${state.profileEdit ? '' : 'disabled'} required></label>`,
-      `    <label class="account-form-field"><span>Prénom</span><input type="text" name="firstName" value="${escapeHtml(profile.firstName || '')}" ${state.profileEdit ? '' : 'disabled'} required></label>`,
-      `    <label class="account-form-field account-form-field-full"><span>Email</span><input type="email" name="email" value="${escapeHtml(profile.email || '')}" ${state.profileEdit ? '' : 'disabled'} required></label>`,
-      `    <label class="account-form-field account-form-field-full"><span>Téléphone</span><input type="tel" name="phone" value="${escapeHtml(profile.phone || '')}" ${state.profileEdit ? '' : 'disabled'} placeholder="Votre numéro"></label>`,
-      state.profileEdit ? '    <div class="account-page-actions"><button class="account-primary-button" type="submit">Enregistrer</button></div>' : '',
+      `    <label class="account-form-field"><span>Nom</span><input type="text" name="lastName" value="${escapeHtml(profile.lastName || '')}" required></label>`,
+      `    <label class="account-form-field"><span>Prénom</span><input type="text" name="firstName" value="${escapeHtml(profile.firstName || '')}" required></label>`,
+      `    <label class="account-form-field account-form-field-full"><span>Téléphone</span>${renderPhoneField(profile.phone)}</label>`,
+      `    <label class="account-form-field account-form-field-full"><span>Email</span><input type="email" name="email" value="${escapeHtml(profile.email || '')}" required></label>`,
+      '    <div class="account-page-actions"><button class="account-primary-button" type="submit">Enregistrer</button></div>',
       '  </form>',
       '  <div class="account-info-strips">',
-      `    <div class="account-info-strip"><span>Newsletter</span><strong>${newsletterEnabled ? 'Active' : 'Inactive'}</strong></div>`,
+      `    <div class="account-info-strip${profile.newsletterProducts ? ' is-active' : ''}">`,
+      '      <span>Nouveaux produits</span>',
+      `      <strong>${profile.newsletterProducts ? 'Active' : 'Inactive'}</strong>`,
+      `      <button class="account-info-strip-toggle" type="button" data-newsletter-toggle="newsletterProducts">${profile.newsletterProducts ? 'Désactiver' : 'Activer'}</button>`,
+      '    </div>',
+      `    <div class="account-info-strip${profile.newsletterCollections ? ' is-active' : ''}">`,
+      '      <span>Actualités JACES</span>',
+      `      <strong>${profile.newsletterCollections ? 'Active' : 'Inactive'}</strong>`,
+      `      <button class="account-info-strip-toggle" type="button" data-newsletter-toggle="newsletterCollections">${profile.newsletterCollections ? 'Désactiver' : 'Activer'}</button>`,
+      '    </div>',
       '  </div>',
       state.passwordEdit ? [
         '  <form class="account-password-panel" id="account-password-form">',
@@ -311,6 +468,18 @@
         '  </form>'
       ].join('') : '',
       renderFeedback(),
+      '  <div class="account-danger-zone">',
+      '    <p class="account-content-kicker">Zone sensible</p>',
+      state.deleteConfirm
+        ? [
+            '    <p>Cette action est irr&eacute;versible : votre compte et vos donn&eacute;es JACES seront supprim&eacute;s d&eacute;finitivement.</p>',
+            '    <div class="account-page-actions">',
+            '      <button class="account-danger-button" type="button" data-account-delete-confirm>Confirmer la suppression</button>',
+            '      <button class="account-secondary-button" type="button" data-account-delete-cancel>Annuler</button>',
+            '    </div>'
+          ].join('')
+        : '    <button class="account-danger-button" type="button" data-account-delete-start>Supprimer mon compte</button>',
+      '  </div>',
       '</section>'
     ].join('');
   }
@@ -435,7 +604,14 @@
   }
 
   function renderAddressForm(profile, address) {
-    const currentAddress = address || {
+    // Browser autofill can (rarely) inject a stray "Please select" string
+    // into the city field - never a real commune, so it's cleared here and
+    // re-looked-up automatically below rather than shown as-is.
+    const isPlaceholderCity = (value) => /^please\s*select$/i.test(String(value || '').trim());
+
+    const currentAddress = address ? Object.assign({}, address, {
+      city: isPlaceholderCity(address.city) ? '' : address.city
+    }) : {
       id: '',
       label: '',
       firstName: profile.firstName || '',
@@ -459,15 +635,15 @@
       '    </div>',
       '  </div>',
       '  <div class="account-form-grid">',
-      `    <label class="account-form-field account-form-field-full"><span>Libellé</span><input type="text" name="label" value="${escapeHtml(currentAddress.label || '')}" placeholder="Adresse principale" required></label>`,
-      `    <label class="account-form-field"><span>Prénom</span><input type="text" name="firstName" value="${escapeHtml(currentAddress.firstName || '')}" required></label>`,
-      `    <label class="account-form-field"><span>Nom</span><input type="text" name="lastName" value="${escapeHtml(currentAddress.lastName || '')}" required></label>`,
-      `    <label class="account-form-field account-form-field-full"><span>Adresse</span><input type="text" name="address" value="${escapeHtml(currentAddress.address || '')}" required></label>`,
-      `    <label class="account-form-field account-form-field-full"><span>Complément d’adresse</span><input type="text" name="address2" value="${escapeHtml(currentAddress.address2 || '')}" placeholder="Appartement, suite, etc."></label>`,
-      `    <label class="account-form-field"><span>Code postal</span><input type="text" name="postalCode" value="${escapeHtml(currentAddress.postalCode || '')}" required></label>`,
-      `    <label class="account-form-field"><span>Ville</span><input type="text" name="city" value="${escapeHtml(currentAddress.city || '')}" required></label>`,
-      `    <label class="account-form-field"><span>Pays / Région</span><input type="text" name="country" value="${escapeHtml(currentAddress.country || 'France')}" required></label>`,
-      `    <label class="account-form-field"><span>Téléphone</span><input type="tel" name="phone" value="${escapeHtml(currentAddress.phone || '')}"></label>`,
+      `    <label class="account-form-field account-form-field-full"><span>Libellé</span><input type="text" name="label" value="${escapeHtml(currentAddress.label || '')}" placeholder="Adresse principale" autocomplete="off" maxlength="25" required></label>`,
+      `    <label class="account-form-field"><span>Prénom</span><input type="text" name="firstName" value="${escapeHtml(currentAddress.firstName || '')}" autocomplete="given-name" required></label>`,
+      `    <label class="account-form-field"><span>Nom</span><input type="text" name="lastName" value="${escapeHtml(currentAddress.lastName || '')}" autocomplete="family-name" required></label>`,
+      `    <label class="account-form-field account-form-field-full"><span>Adresse</span><input type="text" name="address" value="${escapeHtml(currentAddress.address || '')}" autocomplete="address-line1" required></label>`,
+      `    <label class="account-form-field account-form-field-full"><span>Complément d’adresse</span><input type="text" name="address2" value="${escapeHtml(currentAddress.address2 || '')}" placeholder="Appartement, suite, etc." autocomplete="address-line2"></label>`,
+      `    <label class="account-form-field"><span>Code postal</span><input type="text" name="postalCode" value="${escapeHtml(currentAddress.postalCode || '')}" autocomplete="postal-code" required></label>`,
+      `    <label class="account-form-field"><span>Ville</span><input type="text" name="city" value="${escapeHtml(currentAddress.city || '')}" autocomplete="address-level2" required><div class="account-city-suggestions" id="account-city-suggestions" hidden></div></label>`,
+      `    <label class="account-form-field"><span>Pays</span><input type="text" name="country" value="${escapeHtml(currentAddress.country || 'France')}" autocomplete="country-name" required></label>`,
+      `    <label class="account-form-field account-form-field-full"><span>Téléphone</span>${renderPhoneField(currentAddress.phone)}</label>`,
       `    <label class="account-check"><input type="checkbox" name="isDefault" ${currentAddress.isDefault ? 'checked' : ''}><span>Définir comme adresse par défaut</span></label>`,
       '  </div>',
       '  <div class="account-page-actions">',
@@ -479,7 +655,8 @@
   }
 
   function renderAddressesSection(profile) {
-    const addresses = Array.isArray(profile.addresses) ? profile.addresses : [];
+    const addresses = (Array.isArray(profile.addresses) ? profile.addresses.slice() : [])
+      .sort((a, b) => Number(b.isDefault) - Number(a.isDefault));
     const editingAddress = state.addressEditor
       ? addresses.find((address) => address.id === state.addressEditor.id) || null
       : null;
@@ -491,12 +668,15 @@
       '      <p class="account-content-kicker">Mes adresses</p>',
       '      <h2>Gérez vos adresses</h2>',
       '    </div>',
-      '    <button class="account-primary-button" type="button" data-address-add>Ajouter une adresse</button>',
+      addresses.length >= MAX_ADDRESSES
+        ? '    <button class="account-primary-button" type="button" disabled title="Maximum 3 adresses : modifiez ou supprimez-en une pour en ajouter une nouvelle">Ajouter une adresse</button>'
+        : '    <button class="account-primary-button" type="button" data-address-add>Ajouter une adresse</button>',
       '  </div>',
       addresses.length ? '  <div class="account-address-list">' + addresses.map((address) => `
         <article class="account-address-card">
           <div class="account-address-head">
-            <strong>${escapeHtml(address.label)}</strong>
+            <svg class="account-address-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M12 21s-7-6.5-7-11a7 7 0 0 1 14 0c0 4.5-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>
+            <strong>${escapeHtml(truncateText(address.label, 25))}</strong>
             ${address.isDefault ? '<span class="account-address-badge">Par défaut</span>' : ''}
           </div>
           <div class="account-address-copy">
@@ -505,11 +685,11 @@
             ${address.address2 ? `<p>${escapeHtml(address.address2)}</p>` : ''}
             <p>${escapeHtml(address.postalCode)} ${escapeHtml(address.city)}</p>
             <p>${escapeHtml(address.country)}</p>
-            ${address.phone ? `<p>${escapeHtml(address.phone)}</p>` : ''}
+            ${address.phone ? `<p class="account-address-phone">${escapeHtml(formatPhoneForDisplay(address.phone))}</p>` : ''}
           </div>
-          <div class="account-page-actions">
-            <button class="account-secondary-button" type="button" data-address-edit="${escapeHtml(address.id)}">Modifier</button>
-            <button class="account-secondary-button" type="button" data-address-delete="${escapeHtml(address.id)}">Supprimer</button>
+          <div class="account-address-actions">
+            <button class="account-address-action" type="button" data-address-edit="${escapeHtml(address.id)}">Modifier</button>
+            <button class="account-address-action is-danger" type="button" data-address-delete="${escapeHtml(address.id)}">Supprimer</button>
           </div>
         </article>
       `).join('') + '  </div>' : [
@@ -546,7 +726,7 @@
 
     shell.innerHTML = [
       '<div class="account-page-layout">',
-      renderMenu(state.section),
+      renderMenu(state.section, profile),
       '  <div class="account-page-content">',
       renderContent(profile),
       '  </div>',
@@ -567,13 +747,163 @@
     }));
   }
 
+  function lookupCityForPostalCode(form, rawPostalCode) {
+    const raw = String(rawPostalCode || '').trim();
+    if (!/^\d{5}$/.test(raw)) return;
+    const cityInput = form?.querySelector('input[name="city"]');
+    const citySuggestions = form?.querySelector('#account-city-suggestions');
+    if (!cityInput) return;
+    fetch(`https://geo.api.gouv.fr/communes?codePostal=${raw}&fields=nom&format=json`)
+      .then((res) => (res.ok ? res.json() : []))
+      .then((results) => {
+        if (!Array.isArray(results) || !results.length) return;
+        cityInput.value = results[0].nom;
+        // Several communes can share one postal code - rather than showing
+        // a second box under the field, the dropdown *replaces* the text
+        // input in place so there's only ever one visible "Ville" control.
+        // Built with the same .jc-select component used for the signup
+        // birth-date pickers, so it's styled in JACES colors rather than
+        // the browser's native (unstyleable) <select> popup.
+        if (citySuggestions) {
+          if (results.length > 1) {
+            cityInput.hidden = true;
+            citySuggestions.hidden = false;
+            citySuggestions.innerHTML = [
+              '<div class="jc-select" data-select-name="city">',
+              `  <button type="button" class="jc-select-trigger" data-select-trigger aria-haspopup="listbox" aria-expanded="false"><span>${escapeHtml(results[0].nom)}</span><svg class="jc-select-caret" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M5 7.5l5 5 5-5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>`,
+              '  <ul class="jc-select-panel" role="listbox" data-select-panel hidden>',
+              results.map((commune) => `<li class="jc-select-option${commune.nom === results[0].nom ? ' is-selected' : ''}" role="option" data-value="${escapeHtml(commune.nom)}">${escapeHtml(commune.nom)}</li>`).join(''),
+              '  </ul>',
+              '</div>'
+            ].join('');
+          } else {
+            cityInput.hidden = false;
+            citySuggestions.hidden = true;
+            citySuggestions.innerHTML = '';
+          }
+        }
+      })
+      .catch(() => {
+        // Best-effort lookup - the field just stays editable by hand if the
+        // geo.api.gouv.fr call fails or the code isn't recognized.
+      });
+  }
+
   function bindShellEvents() {
     const shell = document.getElementById('account-page-shell');
     if (!shell) return;
     if (shell.dataset.bound === 'true') return;
     shell.dataset.bound = 'true';
 
+    shell.addEventListener('input', (event) => {
+      const target = event.target;
+      if (!(target instanceof HTMLInputElement)) return;
+
+      if (target.name === 'postalCode') {
+        lookupCityForPostalCode(target.closest('form'), target.value);
+        return;
+      }
+
+      if (target.classList.contains('account-phone-number')) {
+        const iso = target.closest('.account-phone-field')?.querySelector('[data-select-iso]')?.value || 'fr';
+        const maxDigits = PHONE_MAX_DIGITS[iso] || 12;
+        const digits = target.value.replace(/\D/g, '').slice(0, maxDigits);
+        let formatted;
+        if (PHONE_GROUPING_3_3_4.has(iso)) {
+          const p1 = digits.slice(0, 3);
+          const p2 = digits.slice(3, 6);
+          const p3 = digits.slice(6, 10);
+          formatted = p1 ? (p2 ? `(${p1}) ${p2}${p3 ? `-${p3}` : ''}` : `(${p1}`) : '';
+        } else {
+          formatted = digits.replace(/(\d{2})(?=\d)/g, '$1 ').trim();
+        }
+        target.value = formatted;
+        return;
+      }
+
+      if (target.name === 'label' && target.closest('form')?.id === 'account-address-form') {
+        // Once the person edits the label by hand, stop overwriting it from
+        // firstName/lastName - only the still-untouched default gets synced.
+        delete target.dataset.autofilled;
+        return;
+      }
+
+      if (target.name !== 'firstName' && target.name !== 'lastName') return;
+      const normalizedValue = normalizePersonName(target.value);
+      if (normalizedValue !== target.value) {
+        target.value = normalizedValue;
+      }
+
+      const addressForm = target.closest('#account-address-form');
+      if (addressForm) {
+        const labelInput = addressForm.querySelector('input[name="label"]');
+        if (labelInput && (labelInput.value.trim() === '' || labelInput.dataset.autofilled === 'true')) {
+          const firstName = addressForm.querySelector('input[name="firstName"]')?.value.trim() || '';
+          const lastName = addressForm.querySelector('input[name="lastName"]')?.value.trim() || '';
+          const composed = [firstName, lastName].filter(Boolean).join(' ');
+          labelInput.value = composed ? `Adresse de ${composed}` : '';
+          labelInput.dataset.autofilled = 'true';
+        }
+      }
+    });
+
     shell.addEventListener('click', (event) => {
+      const jcSelect = event.target.closest('.jc-select');
+
+      const trigger = event.target.closest('[data-select-trigger]');
+      if (trigger && jcSelect) {
+        event.preventDefault();
+        const panel = jcSelect.querySelector('[data-select-panel]');
+        const isOpen = panel && !panel.hidden;
+        shell.querySelectorAll('.jc-select [data-select-panel]').forEach((otherPanel) => { otherPanel.hidden = true; });
+        if (panel) {
+          panel.hidden = isOpen;
+          trigger.setAttribute('aria-expanded', String(!isOpen));
+        }
+        return;
+      }
+
+      const option = event.target.closest('.jc-select-option');
+      if (option && jcSelect) {
+        event.preventDefault();
+        const value = option.getAttribute('data-value') || '';
+        const selectName = jcSelect.getAttribute('data-select-name');
+        const form = jcSelect.closest('form');
+
+        if (selectName === 'phoneCountry') {
+          const hiddenInput = jcSelect.querySelector('[data-select-value]');
+          if (hiddenInput) hiddenInput.value = value;
+          const iso = option.getAttribute('data-iso') || '';
+          const isoInput = jcSelect.querySelector('[data-select-iso]');
+          if (isoInput) isoInput.value = iso;
+          const flagImg = jcSelect.querySelector('[data-select-trigger] .account-phone-flag');
+          if (flagImg && iso) flagImg.src = `https://flagcdn.com/w40/${iso}.png`;
+          // Re-apply the new country's grouping/length cap to whatever
+          // digits are already typed, same as if the person had just typed
+          // them with this country selected from the start.
+          const numberInput = form?.querySelector('.account-phone-number');
+          if (numberInput) numberInput.dispatchEvent(new Event('input', { bubbles: true }));
+        } else {
+          const cityInput = form?.querySelector('input[name="city"]');
+          if (cityInput) cityInput.value = value;
+        }
+
+        const triggerLabel = jcSelect.querySelector('[data-select-trigger] span');
+        if (triggerLabel) triggerLabel.textContent = value;
+        jcSelect.querySelectorAll('.jc-select-option').forEach((entry) => {
+          entry.classList.toggle('is-selected', entry === option);
+        });
+        const panel = jcSelect.querySelector('[data-select-panel]');
+        if (panel) panel.hidden = true;
+        return;
+      }
+
+      if (!jcSelect) {
+        shell.querySelectorAll('.jc-select [data-select-panel]').forEach((panel) => { panel.hidden = true; });
+      }
+    });
+
+    shell.addEventListener('click', async (event) => {
       const loginButton = event.target.closest('[data-account-page-login]');
       if (loginButton) {
         event.preventDefault();
@@ -586,27 +916,13 @@
       const logoutButton = event.target.closest('[data-account-page-logout]');
       if (logoutButton) {
         event.preventDefault();
-        try {
-          window.localStorage.removeItem(ACCOUNT_SESSION_KEY);
-        } catch (error) {
-          // Ignore storage failures and keep the UI usable.
-        }
-        window.dispatchEvent(new CustomEvent('jaces:account-sync', { detail: { session: null } }));
-        state.feedback = '';
-        state.profileEdit = false;
-        state.passwordEdit = false;
-        state.selectedOrderId = '';
-        state.addressEditor = null;
-        render();
-        return;
-      }
-
-      const profileToggle = event.target.closest('[data-account-profile-toggle]');
-      if (profileToggle) {
-        event.preventDefault();
-        state.profileEdit = !state.profileEdit;
-        state.feedback = '';
-        render();
+        const supabaseClient = window.JacesAuth && window.JacesAuth.supabase;
+        if (supabaseClient) await supabaseClient.auth.signOut();
+        // Straight back to the homepage instead of re-rendering this page's
+        // own "connexion requise" gate - that gate is for someone landing
+        // here while already logged out, not for the moment right after
+        // they chose to log out themselves.
+        window.location.href = 'index.html';
         return;
       }
 
@@ -619,18 +935,89 @@
         return;
       }
 
-      const newsletterToggle = event.target.closest('[data-account-newsletter-toggle]');
+      const deleteStart = event.target.closest('[data-account-delete-start]');
+      if (deleteStart) {
+        event.preventDefault();
+        state.deleteConfirm = true;
+        state.feedback = '';
+        render();
+        return;
+      }
+
+      const deleteCancel = event.target.closest('[data-account-delete-cancel]');
+      if (deleteCancel) {
+        event.preventDefault();
+        state.deleteConfirm = false;
+        render();
+        return;
+      }
+
+      const deleteConfirmButton = event.target.closest('[data-account-delete-confirm]');
+      if (deleteConfirmButton) {
+        event.preventDefault();
+        const supabaseClient = window.JacesAuth && window.JacesAuth.supabase;
+        if (!supabaseClient) {
+          state.feedback = 'Impossible de supprimer le compte pour le moment.';
+          render();
+          return;
+        }
+
+        deleteConfirmButton.disabled = true;
+        const { data: { session } } = await supabaseClient.auth.getSession();
+        if (!session) {
+          state.feedback = 'Votre session a expiré, reconnectez-vous.';
+          render();
+          return;
+        }
+
+        try {
+          const response = await fetch('/api/delete-account', {
+            method: 'POST',
+            headers: { Authorization: `Bearer ${session.access_token}` }
+          });
+          if (!response.ok) throw new Error('delete failed');
+
+          await supabaseClient.auth.signOut();
+          window.location.href = 'index.html';
+        } catch (error) {
+          state.deleteConfirm = false;
+          state.feedback = 'La suppression du compte a échoué, réessayez plus tard.';
+          render();
+        }
+        return;
+      }
+
+      const newsletterToggle = event.target.closest('[data-newsletter-toggle]');
       if (newsletterToggle) {
         event.preventDefault();
         const profile = buildProfile();
         if (!profile) return;
-        const newsletterEnabled = !(profile.newsletterProducts || profile.newsletterCollections);
-        saveProfile(Object.assign({}, profile, {
-          newsletterProducts: newsletterEnabled,
-          newsletterCollections: newsletterEnabled
-        }));
-        state.feedback = newsletterEnabled ? 'La newsletter JACES est activée.' : 'La newsletter JACES est désactivée.';
+        const field = newsletterToggle.getAttribute('data-newsletter-toggle');
+        const nextValue = !profile[field];
+        const nextProfile = Object.assign({}, profile, { [field]: nextValue });
+        saveProfile(nextProfile);
+        const label = field === 'newsletterProducts' ? 'Nouveaux produits' : 'Actualités JACES';
+        state.feedback = nextValue ? `Newsletter "${label}" activée.` : `Newsletter "${label}" désactivée.`;
         render();
+
+        // Keeps the admin's "Newsletter" list (a separate table from this
+        // local profile) in sync, so a preference changed here shows up
+        // there without needing a re-signup.
+        fetch('/api/admin-email-subscribers', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            email: nextProfile.email,
+            firstName: nextProfile.firstName,
+            lastName: nextProfile.lastName,
+            wantsProducts: Boolean(nextProfile.newsletterProducts),
+            wantsNews: Boolean(nextProfile.newsletterCollections),
+            source: 'account-page'
+          })
+        }).catch(() => {
+          // Best-effort sync - the local preference already saved above,
+          // so a network hiccup here shouldn't block the user's action.
+        });
         return;
       }
 
@@ -653,6 +1040,12 @@
       const addressAddButton = event.target.closest('[data-address-add]');
       if (addressAddButton) {
         event.preventDefault();
+        const profileForAdd = buildProfile();
+        if (profileForAdd && (profileForAdd.addresses || []).length >= MAX_ADDRESSES) {
+          state.feedback = 'Vous avez atteint le maximum de 3 adresses. Modifiez ou supprimez-en une pour en ajouter une nouvelle.';
+          render();
+          return;
+        }
         state.addressEditor = { mode: 'add', id: '' };
         state.feedback = '';
         render();
@@ -665,6 +1058,15 @@
         state.addressEditor = { mode: 'edit', id: addressEditButton.getAttribute('data-address-edit') || '' };
         state.feedback = '';
         render();
+        // If the stored city was blanked out (e.g. a stray "Please select"
+        // autofill value), re-derive it immediately from the postal code
+        // already on file instead of leaving the field empty.
+        const addressForm = document.getElementById('account-address-form');
+        const cityInput = addressForm?.querySelector('input[name="city"]');
+        const postalCodeInput = addressForm?.querySelector('input[name="postalCode"]');
+        if (addressForm && cityInput && !cityInput.value.trim() && postalCodeInput?.value.trim()) {
+          lookupCityForPostalCode(addressForm, postalCodeInput.value);
+        }
         return;
       }
 
@@ -735,21 +1137,51 @@
       }
     });
 
-    shell.addEventListener('submit', (event) => {
+    shell.addEventListener('submit', async (event) => {
       const profileForm = event.target.closest('#account-profile-form');
       if (profileForm) {
         event.preventDefault();
         const profile = buildProfile();
         if (!profile) return;
         const formData = new FormData(profileForm);
-        saveProfile(Object.assign({}, profile, {
-          firstName: String(formData.get('firstName') || '').trim(),
-          lastName: String(formData.get('lastName') || '').trim(),
-          email: String(formData.get('email') || '').trim(),
-          phone: String(formData.get('phone') || '').trim()
-        }));
-        state.profileEdit = false;
-        state.feedback = 'Vos informations ont été mises à jour.';
+        const firstName = String(formData.get('firstName') || '').trim();
+        const lastName = String(formData.get('lastName') || '').trim();
+        const phoneDialCode = String(formData.get('phoneDialCode') || '').trim();
+        const phoneIso = String(formData.get('phoneIso') || 'fr').trim();
+        const phoneLocalNumber = String(formData.get('phone') || '').trim();
+        if (!isValidPhoneNumber(phoneIso, phoneLocalNumber)) {
+          state.feedback = 'Le numéro de téléphone ne correspond pas au format attendu pour le pays sélectionné.';
+          render();
+          return;
+        }
+        const phone = phoneLocalNumber ? `${phoneDialCode} ${phoneLocalNumber}`.trim() : '';
+        const nextEmail = String(formData.get('email') || '').trim();
+        let feedback = 'Vos informations ont été mises à jour.';
+
+        const supabaseClient = window.JacesAuth && window.JacesAuth.supabase;
+        if (supabaseClient) {
+          const { data: { user } } = await supabaseClient.auth.getUser();
+          if (user) {
+            await supabaseClient.from('profiles').upsert({ id: user.id, first_name: firstName, last_name: lastName });
+
+            if (nextEmail && nextEmail.toLowerCase() !== String(user.email || '').toLowerCase()) {
+              const { error: emailError } = await supabaseClient.auth.updateUser({ email: nextEmail });
+              feedback = emailError
+                ? 'Vos informations ont été mises à jour, mais le changement d’e-mail a échoué.'
+                : `Vos informations ont été mises à jour. Confirmez le changement en cliquant sur le lien envoyé à ${nextEmail}.`;
+            }
+          }
+        }
+
+        // Phone isn't stored server-side yet - kept local-only for now like the
+        // rest of this page (addresses/orders), pending a dedicated migration.
+        saveProfile(Object.assign({}, profile, { firstName, lastName, phone }));
+
+        if (window.JacesAuth && typeof window.JacesAuth.refreshSession === 'function') {
+          await window.JacesAuth.refreshSession();
+        }
+
+        state.feedback = feedback;
         render();
         return;
       }
@@ -768,12 +1200,31 @@
           render();
           return;
         }
-        if (profile.password && profile.password !== currentPassword) {
+
+        const supabaseClient = window.JacesAuth && window.JacesAuth.supabase;
+        if (!supabaseClient) {
+          state.feedback = "Impossible de modifier le mot de passe pour le moment.";
+          render();
+          return;
+        }
+
+        const { error: verifyError } = await supabaseClient.auth.signInWithPassword({
+          email: profile.email,
+          password: currentPassword
+        });
+        if (verifyError) {
           state.feedback = 'Le mot de passe actuel ne correspond pas à votre compte.';
           render();
           return;
         }
-        saveProfile(Object.assign({}, profile, { password: nextPassword }));
+
+        const { error: updateError } = await supabaseClient.auth.updateUser({ password: nextPassword });
+        if (updateError) {
+          state.feedback = 'Impossible de mettre à jour le mot de passe pour le moment.';
+          render();
+          return;
+        }
+
         state.passwordEdit = false;
         state.feedback = 'Votre mot de passe a été mis à jour.';
         render();
@@ -787,9 +1238,17 @@
         if (!profile) return;
         const formData = new FormData(addressForm);
         const addressId = String(formData.get('id') || '').trim();
+        const addressPhoneDialCode = String(formData.get('phoneDialCode') || '').trim();
+        const addressPhoneIso = String(formData.get('phoneIso') || 'fr').trim();
+        const addressPhoneLocalNumber = String(formData.get('phone') || '').trim();
+        if (!isValidPhoneNumber(addressPhoneIso, addressPhoneLocalNumber)) {
+          state.feedback = 'Le numéro de téléphone ne correspond pas au format attendu pour le pays sélectionné.';
+          render();
+          return;
+        }
         const addressEntry = normalizeAddress({
           id: addressId || `address-${Date.now()}`,
-          label: String(formData.get('label') || '').trim(),
+          label: String(formData.get('label') || '').trim().slice(0, 25),
           firstName: String(formData.get('firstName') || '').trim(),
           lastName: String(formData.get('lastName') || '').trim(),
           address: String(formData.get('address') || '').trim(),
@@ -797,11 +1256,17 @@
           postalCode: String(formData.get('postalCode') || '').trim(),
           city: String(formData.get('city') || '').trim(),
           country: String(formData.get('country') || 'France').trim(),
-          phone: String(formData.get('phone') || '').trim(),
+          phone: addressPhoneLocalNumber ? `${addressPhoneDialCode} ${addressPhoneLocalNumber}`.trim() : '',
           isDefault: formData.get('isDefault') === 'on'
         }, 0);
 
         const existingAddresses = Array.isArray(profile.addresses) ? profile.addresses.slice() : [];
+        const isNewAddress = !existingAddresses.some((address) => address.id === addressEntry.id);
+        if (isNewAddress && existingAddresses.length >= MAX_ADDRESSES) {
+          state.feedback = 'Vous avez atteint le maximum de 3 adresses. Modifiez ou supprimez-en une pour en ajouter une nouvelle.';
+          render();
+          return;
+        }
         const nextAddresses = existingAddresses.filter((address) => address.id !== addressEntry.id);
         if (addressEntry.isDefault) {
           nextAddresses.forEach((address) => {
@@ -831,8 +1296,8 @@
 
   window.addEventListener('hashchange', () => {
     state.feedback = '';
-    state.profileEdit = false;
     state.passwordEdit = false;
+    state.deleteConfirm = false;
     state.addressEditor = null;
     render();
   });

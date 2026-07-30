@@ -4,17 +4,15 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>JACES | Prêt-à-porter et accessoires contemporains</title>
-  <link rel="icon" id="site-favicon">
+  <link rel="icon" id="site-favicon" href="https://res.cloudinary.com/dnplvtg6h/image/upload/v1784927715/jaces/jaces-j-favicon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,400;500;600&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,600&family=Manrope:wght@300;400;500;600;700;800&display=swap" media="print" onload="this.media='all'">
-  <link rel="stylesheet" href="style.css?v=20260714b">
+  <link rel="stylesheet" href="style.css?v=202607292z">
 </head>
 <body class="home-page">
 
-  <div class="topbar">
-    Livraison offerte dès 79 € | Retours offerts
-  </div>
+  <div class="topbar"><span id="topbar-banner-text">Livraison offerte dès 79 € | Retours offerts</span><span class="topbar-promo"><a href="collection.html" class="topbar-promo-cta">J’en profite &rsaquo;</a><button type="button" class="topbar-promo-info" data-promo-info aria-label="Voir les conditions">i</button><span class="topbar-promo-tooltip" id="promo-banner-tooltip" hidden>Offre valable sur une sélection d’articles de la collection, dans la limite des stocks disponibles, non cumulable avec d’autres promotions ou codes de réduction.</span></span></div>
 
 <header class="header">
   <div class="header-top">
@@ -27,7 +25,7 @@
       </form>
     </div>
 
-    <a href="index.html" class="logo">JACES</a>
+    <a href="index.html" class="logo"><img class="logo-image" src="https://res.cloudinary.com/dnplvtg6h/image/upload/v1784927191/jaces/jaces-wordmark.png" alt="JACES"></a>
 
     <div class="header-right">
       <div class="language-picker" id="language-picker">
@@ -71,8 +69,7 @@
         <div>
           <p class="submenu-title">NOUVEAUTÉS</p>
           <p class="submenu-copy">Nouvelles créations,<br>pièces exclusives<br>et collections signature.</p>
-          <a href="nouveautes.html?nouveauteTag=drop-ete">Drop été</a>
-          <a href="nouveautes.html?nouveauteTag=edition-limitee">Édition limitée</a>
+          <a href="nouveautes.html?nouveauteTag=drop">Drop</a>
           <a href="nouveautes.html?nouveauteTag=pieces-signature">Pièces signature</a>
           <a href="nouveautes.html?category=all" class="underline-link">Toutes les nouveautés</a>
         </div>
@@ -115,11 +112,10 @@
           <a href="collaborations.html?collabView=all&category=all" class="underline-link">Toutes les collaborations</a>
         </div>
         <div class="submenu-categories">
-            <a href="collaborations.html?category=nike">JACES × Nike</a>
-            <a href="collaborations.html?category=chloe">JACES × Chloé</a>
-            <a href="collaborations.html?category=jacquemus">JACES × Jacquemus</a>
-            <a href="collaborations.html?category=dior">JACES × Dior</a>
-            <a href="collaborations.html?category=saint-laurent">JACES × Saint Laurent</a>
+            <a href="collaborations.html?category=maureen-di-carlo">JACES × Maureen Di Carlo</a>
+            <a href="collaborations.html?category=from-future">JACES × From Future</a>
+            <a href="collaborations.html?category=hoka">JACES × Hoka</a>
+            <a href="collaborations.html?category=mamy-grand">JACES × Mamy Grand</a>
           </div>
       </div>
     </div>
@@ -172,23 +168,60 @@
   </nav>
 </header>
 
+<script>
+  (function () {
+    try {
+      var session = JSON.parse(localStorage.getItem('jaces-account-session') || 'null');
+      var email = String((session && session.email) || '').trim().toLowerCase();
+      if (!email) return;
+      var favs = JSON.parse(localStorage.getItem('jaces-favorites:' + email) || '[]');
+      var favBadge = document.getElementById('fav-count');
+      if (favBadge && Array.isArray(favs) && favs.length > 0) {
+        favBadge.textContent = favs.length;
+        favBadge.style.display = 'flex';
+      }
+      var cart = JSON.parse(localStorage.getItem('jaces-cart:' + email) || '[]');
+      var cartCount = Array.isArray(cart) ? cart.reduce(function (total, item) { return total + (Number(item.quantity) || 0); }, 0) : 0;
+      var cartBadge = document.querySelector('.cart-count');
+      if (cartBadge && cartCount > 0) {
+        cartBadge.textContent = cartCount;
+      }
+      var accountButtons = document.querySelectorAll('.icon-button[aria-label="Compte"]');
+      accountButtons.forEach(function (button) { button.classList.add('account-is-connected'); });
+    } catch (error) {}
+  })();
+</script>
+
+
   <main>
     <section class="hero">
       <div class="hero-content">
         <p class="hero-kicker">Printemps / Été 2026</p>
-        <h1>Cet été, ose aussi.</h1>
+        <h1>La couleur, sous toutes ses formes.</h1>
         <div class="hero-actions">
           <a href="nouveautes.html" class="btn btn-home-nouveautes">Voir les nouveautés</a>
         </div>
       </div>
     </section>
+    <script>
+      (function () {
+        try {
+          var cached = JSON.parse(localStorage.getItem('jaces-site-content-cache') || 'null');
+          if (!cached || !cached.home_hero_image) return;
+          var hero = document.querySelector('body.home-page .hero');
+          if (hero) {
+            hero.style.backgroundImage = 'linear-gradient(rgba(8, 7, 5, 0.44), rgba(8, 7, 5, 0.44)), url("' + cached.home_hero_image + '")';
+          }
+        } catch (error) {}
+      })();
+    </script>
 
     <section class="home-slider-section" aria-label="Produits en vedette" hidden>
       <div class="home-slider-header">
         <h2>EN CE MOMENT</h2>
         <div class="home-slider-controls">
-          <button class="slider-btn is-hidden" type="button" data-slider-prev aria-label="Produits précédents">←</button>
-          <button class="slider-btn" type="button" data-slider-next aria-label="Produits suivants">→</button>
+          <button class="slider-btn is-hidden" type="button" data-slider-prev aria-label="Produits précédents"><svg width="20" height="14" viewBox="0 0 20 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="7" x2="1" y2="7"/><polyline points="8 1 1 7 8 13"/></svg></button>
+          <button class="slider-btn" type="button" data-slider-next aria-label="Produits suivants"><svg width="20" height="14" viewBox="0 0 20 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="1" y1="7" x2="19" y2="7"/><polyline points="12 1 19 7 12 13"/></svg></button>
         </div>
       </div>
 
@@ -236,10 +269,10 @@
       <div class="instagram-header">
         <span>Derniers posts Instagram</span>
         <div class="instagram-header-right">
-          <a href="#" aria-label="Voir Instagram">@jaces</a>
+          <a href="https://www.instagram.com/jaces.creation/" aria-label="Voir Instagram">@jaces.creation</a>
           <div class="instagram-controls">
-            <button type="button" class="instagram-btn is-hidden" data-ig-prev aria-label="Posts précédents">←</button>
-            <button type="button" class="instagram-btn" data-ig-next aria-label="Posts suivants">→</button>
+            <button type="button" class="instagram-btn is-hidden" data-ig-prev aria-label="Posts précédents"><svg width="20" height="14" viewBox="0 0 20 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="7" x2="1" y2="7"/><polyline points="8 1 1 7 8 13"/></svg></button>
+            <button type="button" class="instagram-btn" data-ig-next aria-label="Posts suivants"><svg width="20" height="14" viewBox="0 0 20 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="1" y1="7" x2="19" y2="7"/><polyline points="12 1 19 7 12 13"/></svg></button>
           </div>
         </div>
       </div>
@@ -267,17 +300,8 @@
 
     <section class="section home-social-section" aria-label="Réseaux sociaux JACES">
       <div class="home-social-strip">
-        <a href="#" aria-label="Instagram">
+        <a href="https://www.instagram.com/jaces.creation/" aria-label="Instagram" target="_blank" rel="noopener">
           <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><circle cx="12" cy="12" r="4.5"/><circle cx="17.5" cy="6.5" r="0.6" fill="currentColor" stroke="none"/></svg>
-        </a>
-        <a href="#" aria-label="Facebook">
-          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
-        </a>
-        <a href="#" aria-label="X (Twitter)">
-          <svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-        </a>
-        <a href="#" aria-label="YouTube">
-          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46a2.78 2.78 0 0 0-1.95 1.96A29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58 2.78 2.78 0 0 0 1.95 1.96C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 0 0 1.95-1.96A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z"/><polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02" fill="currentColor" stroke="none"/></svg>
         </a>
       </div>
     </section>
@@ -293,9 +317,9 @@
   <footer class="footer">
     <div class="footer-main">
       <div class="footer-cols">
-        <div class="footer-col"><p class="footer-col-title">Service client</p><a href="#">Suivre ma commande</a><a href="#">Faire un retour</a><a href="#">Livraison et Retour</a><a href="#">FAQ</a><a href="#">Contact</a></div>
-        <div class="footer-col"><p class="footer-col-title">JACES</p><a href="#">Notre concept</a><a href="#">Parrainez</a><a href="#">Nos boutiques</a><a href="#">Nous rejoindre</a></div>
-        <div class="footer-col"><p class="footer-col-title">Mentions légales</p><a href="#">CGV</a><a href="#">Politique de confidentialité</a><a href="#">Plan de site</a><a href="#">Retours Gratuits</a><a href="#">Conditions de l'offre en cours</a></div>
+        <div class="footer-col"><p class="footer-col-title">Service client</p><a href="#">Suivre ma commande</a><a href="retours-gratuits.html">Faire un retour</a><a href="retours-gratuits.html">Livraison et Retour</a><a href="#">FAQ</a><a href="contact.html">Contact</a></div>
+        <div class="footer-col"><p class="footer-col-title">JACES</p><a href="#">Notre concept</a><a href="partenariat.html">Partenariat</a><a href="#">Nos boutiques</a></div>
+        <div class="footer-col"><p class="footer-col-title">Mentions légales</p><a href="cgv.html">CGV</a><a href="cgu.html">CGU</a><a href="politique-confidentialite.html">Politique de confidentialité</a><a href="#" data-open-cookie-preferences>Gérer les cookies</a><a href="conditions-offre.html">Conditions de l'offre en cours</a></div>
       </div>
       <div class="footer-newsletter">
         <h3>Restez connecté avec JACES</h3>
@@ -310,7 +334,7 @@
     <p class="footer-note">Copyright © 2026 JACES. Tous droits réservés.</p>
   </footer>
 
-  <script src="admin-products.js?v=20260715r"></script>
+  <script src="admin-products.js?v=202607292c"></script>
   <script>
     function updateHeaderState() {
       document.body.classList.toggle('header-scrolled', window.scrollY > 8);
@@ -388,18 +412,19 @@
   </script>
 
   <div class="fav-overlay" id="fav-overlay"></div>
-  <div class="fav-panel" id="fav-panel" role="dialog" aria-label="Mes favoris">
+  <div class="fav-panel" id="fav-panel" role="dialog" aria-label="Ma wishlist">
     <div class="fav-panel-header">
-      <h2 id="fav-panel-title">Mes Favoris (0)</h2>
+      <h2 id="fav-panel-title">Ma Wishlist (0)</h2>
       <button class="fav-panel-close-btn" id="fav-panel-close" aria-label="Fermer" type="button">×</button>
     </div>
     <div class="fav-panel-list" id="fav-panel-list"></div>
   </div>
   <script src="catalog.js?v=20260715r"></script>
-  <script src="cart.js?v=20260715r"></script>
-  <script src="favorites.js?v=20260719b"></script>
+  <script src="cart.js?v=202607292o"></script>
+  <script src="favorites.js?v=202607292h"></script>
   <script src="stock-notify.js?v=20260716d"></script>
-  <script src="auth.js?v=20260715r"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+  <script src="auth.js?v=202607292a"></script>
 
   <script type="module">
     import { getProducts } from './js/productsApi.js';
@@ -426,10 +451,18 @@
       });
     }
 
+    function getNouveauteBadgeLabel(product) {
+      const tags = Array.isArray(product.nouveauteTags) ? product.nouveauteTags : [];
+      if (tags.includes('drop')) return 'Drop';
+      if (tags.includes('pieces-signature')) return 'Pièces signature';
+      return '';
+    }
+
     function buildHomeSliderCard(product) {
       const images = Array.isArray(product.images) ? product.images : [];
       const primarySrc = images[0]?.url || product.image_url || product.img || '';
       const secondarySrc = images[1]?.url || product.hover_image_url || primarySrc;
+      const badgeLabel = getNouveauteBadgeLabel(product);
       const sizes = sortSizes(Array.isArray(product.sizes) ? product.sizes.map((s) => String(s || '').trim()).filter(Boolean) : []);
       // Same rule as the collection/product pages: if the real sizes are all
       // part of the standard 34-44 range, show that whole range with the
@@ -449,6 +482,7 @@
       card.dataset.size = sizes.join(' ');
       card.innerHTML = `
         <a class="home-slider-media" href="detail-produit.html?id=${encodeURIComponent(product.id || '')}" aria-label="Voir ${product.name || 'ce produit'}">
+          ${badgeLabel ? `<span class="product-card-badge">${badgeLabel}</span>` : ''}
           ${primarySrc ? `<img class="home-slider-image-primary" src="${primarySrc}" alt="${product.name || 'Produit JACES'}" loading="lazy">` : ''}
           ${secondarySrc ? `<img class="home-slider-image-secondary" src="${secondarySrc}" alt="${product.name || 'Produit JACES'} vue 2" loading="lazy">` : ''}
           ${quickBuyMarkup ? `<div class="hover-sizes" aria-hidden="true">${quickBuyMarkup}</div>` : ''}
@@ -529,8 +563,26 @@
       igTrack.addEventListener('scroll', updateInstagramButtons, { passive: true });
       window.addEventListener('resize', updateInstagramButtons);
       updateInstagramButtons();
+
+      // Swap the static placeholder posts for the real @jaces.creation feed.
+      // Left as-is on any failure (no token, API error, rate limit) so the
+      // section still looks complete instead of breaking.
+      fetch('/api/instagram-feed?limit=6')
+        .then((r) => r.json())
+        .then((data) => {
+          if (!data.ok || !Array.isArray(data.posts) || !data.posts.length) return;
+          igTrack.innerHTML = data.posts.map((post) => {
+            const caption = String(post.caption || '').replace(/"/g, '&quot;').slice(0, 200);
+            return `<article class="instagram-post"><a href="${post.permalink}" target="_blank" rel="noopener"><img src="${post.imageUrl}" alt="${caption || 'Post Instagram JACES'}" loading="lazy"></a></article>`;
+          }).join('');
+          updateInstagramButtons();
+        })
+        .catch(() => {});
     }
   </script>
-  <script src="site-content.js?v=20260719c"></script>
+  <script src="site-content.js?v=20260729b"></script>
+  <script src="cookie-consent.js?v=20260727a"></script>
+  <script src="newsletter-popup.js?v=20260727k"></script>
+  <script src="promo-banner.js?v=20260728a"></script>
 </body>
 </html>

@@ -174,17 +174,16 @@
     nouveautes: 'nouveautes_categories'
   };
 
-  // Admin stores the full brand filter slug ("jaces-x-chloe") but
+  // Admin stores the full brand filter slug ("jaces-x-from-future") but
   // collaborations.html's own ?category= filtering only recognizes the
-  // short brand token ("chloe") - same mapping as products-page.js's
+  // short brand token ("from-future") - same mapping as products-page.js's
   // COLLAB_SLUG_TO_TOKEN, duplicated here for the same reason as
   // SEASON_SLUG_TO_TOKEN above.
   const COLLAB_SLUG_TO_TOKEN = {
-    'jaces-x-nike': 'nike',
-    'jaces-x-chloe': 'chloe',
-    'jaces-x-jacquemus': 'jacquemus',
-    'jaces-x-dior': 'dior',
-    'jaces-x-saint-laurent': 'saint-laurent'
+    'jaces-x-maureen-di-carlo': 'maureen-di-carlo',
+    'jaces-x-from-future': 'from-future',
+    'jaces-x-hoka': 'hoka',
+    'jaces-x-mamy-grand': 'mamy-grand'
   };
 
   // A product tagged with a specific brand also ends up with a
@@ -230,9 +229,9 @@
   }
 
   // A second, higher-level breadcrumb segment: the Nouveautés tag (Drop
-  // été/Édition limitée/Pièces signature) or the Collection season
+  // Drop/Pièces signature) or the Collection season
   // (Printemps-Été/Automne-Hiver) the product is tagged with, if any -
-  // e.g. "Nouveautés / Drop été / Pantalons / <product>". Independent from
+  // e.g. "Nouveautés / Drop / Pantalons / <product>". Independent from
   // the category segment above (different filter menu).
   const MODIFIER_CONFIG_BY_ORIGIN_KEY = {
     nouveautes: { menu: 'nouveautes', param: 'nouveauteTag', explicitKey: 'explicitNouveauteTag', mapSlug: (slug) => slug },
@@ -240,7 +239,7 @@
     collaboration: { menu: 'collaborations', param: 'collabView', explicitKey: 'explicitCollabView', mapSlug: (slug) => COLLAB_VIEW_SLUG_TO_TOKEN[slug] || slug }
   };
 
-  // Picking a Nouveautés tag (Drop été/Édition limitée/Pièces signature)
+  // Picking a Nouveautés tag (Drop/Pièces signature)
   // in admin also auto-checks the standalone "Tout voir" filter, so a
   // product can carry both - always prefer the real, more specific tag
   // over "Tout voir" when both are present (matches the same fix applied
@@ -248,7 +247,7 @@
   function pickRealNouveauteEntry(entries) {
     if (!Array.isArray(entries)) return null;
     // If the only entry is the auto-checked "Tout voir" placeholder (no
-    // real Drop été/Édition limitée/Pièces signature tag), there's no
+    // real Drop/Pièces signature tag), there's no
     // modifier to show at all - unlike before, do NOT fall back to it.
     return entries.find((entry) => entry?.slug !== 'tout-voir') || null;
   }
@@ -262,7 +261,7 @@
     if (origin.isExplicit) {
       // Trust the page you actually clicked from: only show a tag/season
       // segment if that specific filter was active there - a product
-      // tagged "Drop été" shouldn't show that just because you happened
+      // tagged "Drop" shouldn't show that just because you happened
       // to browse in from the general "Toutes les nouveautés" view.
       const explicitSlug = origin[config.explicitKey];
       if (!explicitSlug || explicitSlug === 'all') return origin;
@@ -451,8 +450,7 @@
         '<div>',
         '  <p class="submenu-title">NOUVEAUTÉS</p>',
         '  <p class="submenu-copy">Nouvelles pièces,<br>exclusivité<br>et robe signature.</p>',
-        '  <a href="nouveautes.html?nouveauteTag=drop-ete">Drop été</a>',
-        '  <a href="nouveautes.html?nouveauteTag=edition-limitee">Édition limitée</a>',
+        '  <a href="nouveautes.html?nouveauteTag=drop">Drop</a>',
         '  <a href="nouveautes.html?nouveauteTag=pieces-signature">Pièces signature</a>',
         '  <a href="nouveautes.html?category=all" class="underline-link">Toutes les nouveautés</a>',
         '</div>',
@@ -489,11 +487,10 @@
         '  <a href="collaborations.html?collabView=all&category=all" class="underline-link">Toutes les collaborations</a>',
         '</div>',
         '<div class="submenu-categories">',
-        '  <a href="collaborations.html?category=nike">JACES × Nike</a>',
-        '  <a href="collaborations.html?category=chloe">JACES × Chloé</a>',
-        '  <a href="collaborations.html?category=jacquemus">JACES × Jacquemus</a>',
-        '  <a href="collaborations.html?category=dior">JACES × Dior</a>',
-        '  <a href="collaborations.html?category=saint-laurent">JACES × Saint Laurent</a>',
+        '  <a href="collaborations.html?category=maureen-di-carlo">JACES × Maureen Di Carlo</a>',
+        '  <a href="collaborations.html?category=from-future">JACES × From Future</a>',
+        '  <a href="collaborations.html?category=hoka">JACES × Hoka</a>',
+        '  <a href="collaborations.html?category=mamy-grand">JACES × Mamy Grand</a>',
         '</div>'
       ].join(''),
       'accessoires.html': [
@@ -636,374 +633,6 @@
     const limit = Number(maxLength) || 70;
     if (!normalized || normalized.length <= limit) return normalized;
     return normalized.slice(0, limit).trim();
-  }
-
-  function formatRatingFr(rating) {
-    const value = Number(rating || 0);
-    if (!Number.isFinite(value)) return '0';
-    if (Math.abs(value - Math.round(value)) < 0.001) {
-      return String(Math.round(value));
-    }
-    return value.toFixed(1).replace('.', ',');
-  }
-
-  function buildReviewPreview(text, maxLength) {
-    const value = String(text || '').trim();
-    const limit = Number(maxLength) || 64;
-    if (!value || value.length <= limit) return value;
-    const clipped = value.slice(0, limit).trim().replace(/[\s,;:.!?-]+$/g, '');
-    return clipped + '..';
-  }
-
-  function buildStarMarkup(rating) {
-    const safeRating = Math.max(0, Math.min(5, Number(rating || 0)));
-    const fullStars = Math.floor(safeRating);
-    const hasHalf = safeRating - fullStars >= 0.5;
-    const emptyStars = 5 - fullStars - (hasHalf ? 1 : 0);
-    return [
-      '<p class="product-detail-reassurance-stars" aria-label="Note moyenne ' + formatRatingFr(safeRating) + ' sur 5">',
-      '<span class="star">&#9733;</span>'.repeat(fullStars),
-      hasHalf ? '<span class="star star-half">&#9733;</span>' : '',
-      '<span class="star star-empty">&#9733;</span>'.repeat(emptyStars),
-      '</p>'
-    ].join('');
-  }
-
-  function getProductReviewData(product) {
-    const ratingRaw = String(product?.ratingValue ?? '').trim();
-    const countRaw = String(product?.ratingCount ?? '').trim();
-    const customRating = ratingRaw === '' ? NaN : Number(ratingRaw);
-    const customCount = countRaw === '' ? NaN : Number(countRaw);
-    const customQuote = String(product?.reviewQuote || '').trim();
-    const customReviews = Array.isArray(product?.reviews)
-      ? product.reviews.map((review, index) => ({
-        author: String(review?.author || `Cliente ${index + 1}`),
-        rating: Math.max(1, Math.min(5, Number(review?.rating || 5))),
-        text: String(review?.text || '').trim()
-      })).filter((review) => !!review.text)
-      : [];
-
-    if (customReviews.length) {
-      const starsTotal = customReviews.reduce((sum, review) => sum + review.rating, 0);
-      const average = starsTotal / customReviews.length;
-      const resolvedRating = Number.isFinite(customRating) ? customRating : average;
-      const resolvedCount = Number.isFinite(customCount) ? customCount : customReviews.length;
-      return {
-        rating: Math.max(0, Math.min(5, Math.round(resolvedRating * 10) / 10)),
-        verifiedCount: Math.max(1, Math.round(resolvedCount)),
-        quote: customQuote || customReviews[0].text,
-        reviews: customReviews
-      };
-    }
-
-    // No admin-entered reviews: show a real empty state instead of
-    // fabricated ratings/text.
-    return { rating: 0, verifiedCount: 0, quote: '', reviews: [] };
-  }
-
-  function getReviewBreakdown(reviewData) {
-    const realTotal = Math.round(Number(reviewData?.verifiedCount || 0));
-    if (realTotal <= 0) {
-      return [5, 4, 3, 2, 1].map((stars) => ({ stars, count: 0 }));
-    }
-
-    const total = Math.max(1, realTotal);
-    const targetRating = Math.max(0, Math.min(5, Number(reviewData?.rating || 4.7)));
-    const seed = Math.round((targetRating % 1) * 100);
-
-    // Keep low-star counts compact, then solve 5★/4★ to match the target average.
-    const one = Math.max(0, Math.round(total * (0.005 + ((seed + 1) % 3) * 0.003)));
-    const two = Math.max(0, Math.round(total * (0.008 + ((seed + 2) % 3) * 0.003)));
-    const three = Math.max(0, Math.round(total * (0.02 + ((seed + 3) % 4) * 0.004)));
-
-    const remaining = Math.max(0, total - one - two - three);
-    const lowStarsWeighted = (one * 1) + (two * 2) + (three * 3);
-    const targetWeighted = Math.round(targetRating * total);
-    let five = Math.round(targetWeighted - lowStarsWeighted - (4 * remaining));
-    five = clamp(five, 0, remaining);
-    let four = Math.max(0, remaining - five);
-
-    // Nudge distribution so weighted average is as close as possible to target.
-    let currentWeighted = (five * 5) + (four * 4) + lowStarsWeighted;
-    let diff = targetWeighted - currentWeighted;
-    while (diff > 0 && four > 0) {
-      five += 1;
-      four -= 1;
-      diff -= 1;
-    }
-    while (diff < 0 && five > 0) {
-      five -= 1;
-      four += 1;
-      diff += 1;
-    }
-
-    return [
-      { stars: 5, count: five },
-      { stars: 4, count: four },
-      { stars: 3, count: three },
-      { stars: 2, count: two },
-      { stars: 1, count: one }
-    ];
-  }
-
-  function getReviewStatsFromBreakdown(reviewData, breakdown) {
-    const rows = Array.isArray(breakdown) ? breakdown : [];
-    const total = rows.reduce((sum, row) => sum + Math.max(0, Number(row?.count || 0)), 0);
-    if (!total) {
-      return {
-        rating: Number(reviewData?.rating || 0),
-        verifiedCount: Number(reviewData?.verifiedCount || 0)
-      };
-    }
-
-    const weighted = rows.reduce((sum, row) => {
-      const stars = Math.max(1, Math.min(5, Number(row?.stars || 0)));
-      const count = Math.max(0, Number(row?.count || 0));
-      return sum + (stars * count);
-    }, 0);
-
-    return {
-      rating: Math.round((weighted / total) * 10) / 10,
-      verifiedCount: total
-    };
-  }
-
-  function openDirectPhotoLightbox(photos, startIndex) {
-    const safePhotos = Array.isArray(photos) ? photos.filter(Boolean) : [];
-    if (!safePhotos.length) return;
-
-    document.querySelectorAll('.product-reviews-overlay').forEach((node) => node.remove());
-
-    const overlay = document.createElement('div');
-    overlay.className = 'product-reviews-overlay product-reviews-overlay--lightbox-only';
-    overlay.innerHTML = [
-      '<div class="product-reviews-lightbox">',
-      '  <button class="product-reviews-lightbox-close" type="button" aria-label="Fermer">×</button>',
-      '  <button class="product-reviews-lightbox-nav product-reviews-lightbox-nav-prev" type="button" aria-label="Photo pr&eacute;c&eacute;dente">←</button>',
-      '  <img class="product-reviews-lightbox-image" alt="Photo cliente agrandie">',
-      '  <button class="product-reviews-lightbox-nav product-reviews-lightbox-nav-next" type="button" aria-label="Photo suivante">→</button>',
-      '</div>'
-    ].join('');
-
-    let activeIndex = Math.max(0, Math.min(safePhotos.length - 1, Number(startIndex) || 0));
-    const image = overlay.querySelector('.product-reviews-lightbox-image');
-
-    const updateImage = () => {
-      image.setAttribute('src', safePhotos[activeIndex]);
-      image.setAttribute('alt', `Photo cliente ${activeIndex + 1}`);
-    };
-
-    const go = (step) => {
-      activeIndex = (activeIndex + step + safePhotos.length) % safePhotos.length;
-      updateImage();
-    };
-
-    const close = () => {
-      overlay.remove();
-      document.body.classList.remove('product-reviews-open');
-      window.removeEventListener('keydown', onEsc);
-    };
-
-    const onEsc = (event) => {
-      if (event.key === 'Escape') {
-        close();
-        return;
-      }
-      if (event.key === 'ArrowLeft') go(-1);
-      if (event.key === 'ArrowRight') go(1);
-    };
-
-    overlay.addEventListener('click', (event) => {
-      if (event.target === overlay || event.target.closest('.product-reviews-lightbox-close')) {
-        close();
-        return;
-      }
-      if (event.target.closest('.product-reviews-lightbox-nav-prev')) {
-        go(-1);
-        return;
-      }
-      if (event.target.closest('.product-reviews-lightbox-nav-next')) {
-        go(1);
-      }
-    });
-
-    updateImage();
-    document.body.appendChild(overlay);
-    document.body.classList.add('product-reviews-open');
-    window.addEventListener('keydown', onEsc);
-  }
-
-  function openReviewsPanel(product, reviewData, photos, focusSection, initialPhotoIndex) {
-    document.querySelectorAll('.product-reviews-overlay').forEach((node) => node.remove());
-
-    const overlay = document.createElement('div');
-    overlay.className = 'product-reviews-overlay';
-    const initialTab = focusSection === 'photos' ? 'photos' : 'reviews';
-
-    const reviewsHtml = reviewData.reviews.map((entry) => {
-      const stars = '&#9733;'.repeat(entry.rating) + '<span class="star-empty">&#9733;</span>'.repeat(5 - entry.rating);
-      return [
-        '<article class="product-reviews-item">',
-        `  <p class="product-reviews-item-stars" aria-label="${entry.rating} sur 5">${stars}</p>`,
-        `  <p class="product-reviews-item-text">${entry.text}</p>`,
-        `  <p class="product-reviews-item-author">${entry.author}</p>`,
-        '</article>'
-      ].join('');
-    }).join('') || '<p class="product-reviews-photos-empty">Aucun avis client pour le moment.</p>';
-
-    const safePhotos = Array.isArray(photos) ? photos.filter(Boolean) : [];
-
-    const photosHtml = safePhotos.map((src, index) => {
-      return `<img src="${src}" alt="Photo cliente ${index + 1}" loading="lazy">`;
-    }).join('');
-
-    const photosContent = photosHtml || '<p class="product-reviews-photos-empty">Aucune photo cliente disponible pour le moment.</p>';
-
-    overlay.innerHTML = [
-      '<div class="product-reviews-modal" role="dialog" aria-modal="true" aria-label="Avis clients">',
-      '  <div class="product-reviews-head">',
-      `    <h3>Avis sur ${product.name}</h3>`,
-      '    <button class="product-reviews-close" type="button" aria-label="Fermer">×</button>',
-      '  </div>',
-      '  <div class="product-reviews-summary">',
-      `    ${buildStarMarkup(reviewData.rating)}`,
-      `    <p class="product-reviews-score">${formatRatingFr(reviewData.rating)}/5</p>`,
-      `    <p class="product-reviews-count">${reviewData.verifiedCount} avis v&eacute;rifi&eacute;s</p>`,
-      '  </div>',
-      '  <div class="product-reviews-tabs" role="tablist" aria-label="Contenu avis">',
-      `    <button class="product-reviews-tab${initialTab === 'reviews' ? ' is-active' : ''}" type="button" role="tab" aria-selected="${initialTab === 'reviews' ? 'true' : 'false'}" data-tab="reviews">Avis</button>`,
-      `    <button class="product-reviews-tab${initialTab === 'photos' ? ' is-active' : ''}" type="button" role="tab" aria-selected="${initialTab === 'photos' ? 'true' : 'false'}" data-tab="photos">Photos</button>`,
-      '  </div>',
-      '  <div class="product-reviews-content">',
-      `    <section class="product-reviews-section" data-tab-content="reviews"${initialTab === 'reviews' ? '' : ' hidden'}><h4>Avis des clientes</h4><div class="product-reviews-list">${reviewsHtml}</div></section>`,
-      `    <section class="product-reviews-section" data-tab-content="photos"${initialTab === 'photos' ? '' : ' hidden'}><h4>Photos clientes</h4><div class="product-reviews-photos-grid">${photosContent}</div></section>`,
-      '  </div>',
-      '</div>'
-    ].join('');
-
-    const closeLightbox = () => {
-      overlay.querySelector('.product-reviews-lightbox')?.remove();
-    };
-
-    const openPhotoLightbox = (startIndex) => {
-      if (!safePhotos.length) return;
-      closeLightbox();
-
-      const lightbox = document.createElement('div');
-      lightbox.className = 'product-reviews-lightbox';
-      lightbox.innerHTML = [
-        '<button class="product-reviews-lightbox-close" type="button" aria-label="Fermer">×</button>',
-        '<button class="product-reviews-lightbox-nav product-reviews-lightbox-nav-prev" type="button" aria-label="Photo pr&eacute;c&eacute;dente">←</button>',
-        '<img class="product-reviews-lightbox-image" alt="Photo cliente agrandie">',
-        '<button class="product-reviews-lightbox-nav product-reviews-lightbox-nav-next" type="button" aria-label="Photo suivante">→</button>'
-      ].join('');
-
-      let activeIndex = Math.max(0, Math.min(safePhotos.length - 1, Number(startIndex) || 0));
-      const image = lightbox.querySelector('.product-reviews-lightbox-image');
-
-      const updateImage = () => {
-        image.setAttribute('src', safePhotos[activeIndex]);
-        image.setAttribute('alt', `Photo cliente ${activeIndex + 1}`);
-      };
-
-      const go = (step) => {
-        activeIndex = (activeIndex + step + safePhotos.length) % safePhotos.length;
-        updateImage();
-      };
-
-      lightbox.addEventListener('click', (event) => {
-        if (event.target === lightbox || event.target.closest('.product-reviews-lightbox-close')) {
-          closeLightbox();
-          return;
-        }
-        if (event.target.closest('.product-reviews-lightbox-nav-prev')) {
-          go(-1);
-          return;
-        }
-        if (event.target.closest('.product-reviews-lightbox-nav-next')) {
-          go(1);
-        }
-      });
-
-      updateImage();
-      overlay.appendChild(lightbox);
-    };
-
-    const close = () => {
-      closeLightbox();
-      overlay.remove();
-      document.body.classList.remove('product-reviews-open');
-      window.removeEventListener('keydown', onEsc);
-    };
-
-    const onEsc = (event) => {
-      if (event.key === 'Escape') {
-        if (overlay.querySelector('.product-reviews-lightbox')) {
-          closeLightbox();
-          return;
-        }
-        close();
-        return;
-      }
-
-      if (!overlay.querySelector('.product-reviews-lightbox')) return;
-      if (event.key === 'ArrowLeft') {
-        overlay.querySelector('.product-reviews-lightbox-nav-prev')?.click();
-      }
-      if (event.key === 'ArrowRight') {
-        overlay.querySelector('.product-reviews-lightbox-nav-next')?.click();
-      }
-    };
-
-    const switchTab = (tabName) => {
-      overlay.querySelectorAll('.product-reviews-tab').forEach((button) => {
-        const isActive = button.dataset.tab === tabName;
-        button.classList.toggle('is-active', isActive);
-        button.setAttribute('aria-selected', isActive ? 'true' : 'false');
-      });
-
-      overlay.querySelectorAll('[data-tab-content]').forEach((section) => {
-        const isHidden = section.getAttribute('data-tab-content') !== tabName;
-        section.hidden = isHidden;
-        section.classList.toggle('is-hidden', isHidden);
-      });
-    };
-
-    overlay.addEventListener('click', (event) => {
-      if (event.target === overlay || event.target.closest('.product-reviews-close')) {
-        close();
-        return;
-      }
-
-      const tabButton = event.target.closest('.product-reviews-tab');
-      if (tabButton) {
-        switchTab(tabButton.dataset.tab);
-        return;
-      }
-
-      const photo = event.target.closest('.product-reviews-photos-grid img');
-      if (photo) {
-        const allPhotos = Array.from(overlay.querySelectorAll('.product-reviews-photos-grid img'));
-        const index = Math.max(0, allPhotos.indexOf(photo));
-        openPhotoLightbox(index);
-      }
-    });
-
-    document.body.appendChild(overlay);
-    document.body.classList.add('product-reviews-open');
-    window.addEventListener('keydown', onEsc);
-
-    overlay.querySelectorAll('.product-reviews-photos-grid img').forEach((imageNode, index) => {
-      imageNode.addEventListener('click', (event) => {
-        event.preventDefault();
-        event.stopPropagation();
-        openPhotoLightbox(index);
-      });
-    });
-
-    if (initialTab === 'photos' && Number.isInteger(initialPhotoIndex) && initialPhotoIndex >= 0) {
-      openPhotoLightbox(initialPhotoIndex);
-    }
   }
 
   function getProductFamily(product) {
@@ -1161,7 +790,10 @@
       'or': '#c9a227', 'gold': '#c9a227', 'dore': '#c9a227',
       'argent': '#b0b0b0', 'silver': '#b0b0b0',
       'lavande': '#9b8ec0', 'lavender': '#9b8ec0',
-      'turquoise': '#2abfbf', 'corail': '#e8796b', 'coral': '#e8796b'
+      'turquoise': '#2abfbf', 'corail': '#e8796b', 'coral': '#e8796b',
+      'bronze': '#8c5a2b', 'transparent': 'repeating-conic-gradient(#e2e2e2 0% 25%, #ffffff 0% 50%) 0 0 / 8px 8px',
+      'multicolore': 'conic-gradient(from 90deg, #e53935, #fdd835, #43a047, #1e88e5, #8e24aa, #e53935)',
+      'multicolor': 'conic-gradient(from 90deg, #e53935, #fdd835, #43a047, #1e88e5, #8e24aa, #e53935)'
     };
     const normalized = (colorName || '').toLowerCase()
       .replace(/[\u00e9\u00e8\u00ea\u00eb]/g, 'e').replace(/[\u00e0\u00e2\u00e4]/g, 'a')
@@ -1186,13 +818,6 @@
     // load. The submenu-level highlights (season/tag/category) still need
     // real product data and stay deferred to applyOriginContext below.
     if (origin.isExplicit) applyTopNavActiveState(origin);
-    shell.innerHTML = [
-      '<div class="product-detail-empty">',
-      '  <p class="favorites-empty-kicker">Chargement du produit</p>',
-      '  <h1>Merci de patienter…</h1>',
-      '  <p>Le produit est en cours de chargement depuis Supabase.</p>',
-      '</div>'
-    ].join('');
 
     let allProducts = [];
     let product = null;
@@ -1338,19 +963,14 @@
       }).join('')
       : '';
     const relatedProducts = getRelatedProducts(product, resolvedOrigin, allProducts);
-    const rawReviewData = getProductReviewData(product);
-    const reviewBreakdown = getReviewBreakdown(rawReviewData);
-    const hasCustomRating = String(product?.ratingValue ?? '').trim() !== '';
-    const hasCustomCount = String(product?.ratingCount ?? '').trim() !== '';
-    const reviewData = Object.assign({}, rawReviewData, getReviewStatsFromBreakdown(rawReviewData, reviewBreakdown));
-    if (hasCustomRating) reviewData.rating = rawReviewData.rating;
-    if (hasCustomCount) reviewData.verifiedCount = rawReviewData.verifiedCount;
-    const reviewStarsMarkup = buildStarMarkup(reviewData.rating);
-    const reviewQuotePreview = buildReviewPreview(reviewData.quote, 40);
     const isAdminTechnicalReference = /^admin-/i.test(String(product.id || '').trim());
-    // Only real admin-uploaded photos - no fallback to the product's own
-    // gallery images, which aren't actual customer photos.
-    const customerPhotos = (Array.isArray(product.review_photos) ? product.review_photos.filter(Boolean) : []).slice(0, 8);
+    const nouveauteTagsForBadge = Array.isArray(product.nouveauteTags) ? product.nouveauteTags : [];
+    const SEASON_BADGE_LABELS = { ss26: 'Printemps–Été 2026', aw26: 'Automne–Hiver 2026' };
+    const filterTokensForBadge = Array.isArray(product.filter_tokens) ? product.filter_tokens : [];
+    const seasonTokenForBadge = filterTokensForBadge.map((token) => SEASON_SLUG_TO_TOKEN[token]).find(Boolean);
+    const nouveauteBadgeLabel = nouveauteTagsForBadge.includes('drop') ? 'Drop'
+      : nouveauteTagsForBadge.includes('pieces-signature') ? 'Pièces signature'
+      : SEASON_BADGE_LABELS[seasonTokenForBadge] || '';
     const FIT_METER_STEPS = { petit: { label: 'Petit', percent: 10 }, normal: { label: 'Normal', percent: 50 }, grand: { label: 'Grand', percent: 90 } };
     const QUALITY_METER_STEPS = { moyenne: { label: 'Moyenne', percent: 10 }, bonne: { label: 'Bonne', percent: 50 }, premium: { label: 'Premium', percent: 90 } };
     const fitMeter = FIT_METER_STEPS[product.fit_rating] || FIT_METER_STEPS.normal;
@@ -1379,6 +999,7 @@
       <div class="product-detail-top">
         <div class="product-detail-gallery">
         <figure class="product-detail-media-block product-detail-media-primary">
+          ${nouveauteBadgeLabel ? `<span class="product-card-badge">${nouveauteBadgeLabel}</span>` : ''}
           ${gallery.primaryImage ? `<img class="product-detail-image" src="${gallery.primaryImage}" alt="${product.name}">` : '<div class="favorites-card-placeholder product-detail-placeholder"></div>'}
           ${gallery.caption ? `<figcaption class="product-detail-caption">${gallery.caption}</figcaption>` : ''}
         </figure>
@@ -1425,27 +1046,14 @@
               </button>
             </div>
             <p class="favorites-card-message" id="detail-product-message" aria-live="polite"></p>
-            <section class="product-detail-reassurance" aria-label="R&eacute;assurance produit">
-              <div class="product-detail-reassurance-card">
-                <div class="product-detail-reassurance-col product-detail-reassurance-col--score">
-                  ${reviewStarsMarkup}
-                  <p class="product-detail-reassurance-score">${formatRatingFr(reviewData.rating)}/5</p>
-                  <p class="product-detail-reassurance-count">${reviewData.verifiedCount} avis v&eacute;rifi&eacute;s</p>
-                </div>
-                <div class="product-detail-reassurance-col product-detail-reassurance-col--quote">
-                  ${reviewQuotePreview ? `<p class="product-detail-reassurance-quote">&ldquo;${reviewQuotePreview}&rdquo;</p>` : ''}
-                  <button type="button" class="product-detail-reassurance-link" data-open-reviews="reviews">Voir les avis</button>
-                </div>
-              </div>
-            </section>
             <div class="product-detail-info">
               <div class="product-detail-info-row">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M6 9h5"/><path d="M6 13h9"/><path d="M16 16l3-3"/></svg>
-                <span>Livraison estim&eacute;e entre le mer. 15/04 et le jeu. 16/04</span>
+                <span>D&eacute;lai de livraison estim&eacute; &agrave; 4 semaines</span>
               </div>
               <div class="product-detail-info-row">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M6 9h5"/><path d="M6 13h9"/><path d="M16 16l3-3"/></svg>
-                <span>Ou payez 3 fois 46&euro; sans frais</span>
+                <span>Payez 3 fois ${formatPrice(Number(product.price) / 3)} sans frais</span>
               </div>
               <div class="product-detail-info-row">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15 15 0 010 20"/><path d="M12 2a15 15 0 000 20"/></svg>
@@ -1484,28 +1092,7 @@
         </div>
       </div>
       </div>
-      <section class="product-detail-insights-band" aria-label="Avis clients et indicateurs">
-        <div class="product-detail-insights-col product-detail-insights-col--reviews">
-          <h3>Avis clients</h3>
-          <p class="product-detail-insights-score">${formatRatingFr(reviewData.rating)}/5</p>
-          ${reviewStarsMarkup}
-          <p class="product-detail-insights-count">${reviewData.verifiedCount} avis v&eacute;rifi&eacute;s</p>
-          <div class="product-detail-insights-breakdown" aria-label="R&eacute;partition des notes">
-            ${reviewBreakdown.map((row) => {
-              const percent = row.count > 0 ? Math.max(1, Math.round((row.count / Math.max(1, reviewData.verifiedCount)) * 100)) : 0;
-              return `<div class="product-detail-insights-breakdown-row"><span class="stars-label">${row.stars} &#9733;</span><span class="bar"><span style="width:${percent}%;"></span></span><span class="count">${row.count}</span></div>`;
-            }).join('')}
-          </div>
-        </div>
-        <div class="product-detail-insights-col product-detail-insights-col--photos">
-          <h3>Photos clientes</h3>
-          <div class="product-detail-insights-photos">
-            ${customerPhotos.length
-              ? customerPhotos.map((src, index) => `<img src="${src}" alt="Photo cliente ${index + 1}" loading="lazy">`).join('')
-              : '<p class="product-detail-insights-photos-empty">Aucune photo cliente pour le moment.</p>'}
-          </div>
-          ${customerPhotos.length ? '<button class="product-detail-insights-photos-btn" type="button" data-open-reviews="photos">Voir toutes les photos</button>' : ''}
-        </div>
+      <section class="product-detail-insights-band" aria-label="Indicateurs produit">
         <div class="product-detail-insights-col product-detail-insights-col--fit">
           <div class="product-detail-fit-meters" aria-label="Indicateurs ${isAccessory ? 'port&eacute; et qualit&eacute;' : 'taille et qualit&eacute;'}"><div class="product-detail-fit-meter"><p class="product-detail-fit-meter-title">${isAccessory ? 'Port&eacute;' : 'Taille'}</p><div class="product-detail-fit-meter-track" role="img" aria-label="${isAccessory ? 'Port&eacute;' : 'Taille'}: ${fitMeter.label}"><span class="product-detail-fit-meter-dot" style="left: ${fitMeter.percent}%;"></span></div><div class="product-detail-fit-meter-labels"><span>Petit</span><span>Normal</span><span>Grand</span></div></div><div class="product-detail-fit-meter"><p class="product-detail-fit-meter-title">Qualit&eacute;</p><div class="product-detail-fit-meter-track" role="img" aria-label="Qualit&eacute;: ${qualityMeter.label}"><span class="product-detail-fit-meter-dot" style="left: ${qualityMeter.percent}%;"></span></div><div class="product-detail-fit-meter-labels"><span>Moyenne</span><span>Bonne</span><span>Premium</span></div></div></div>
         </div>
@@ -1726,7 +1313,7 @@
       btn.addEventListener('click', () => {
         if (btn.classList.contains('is-disabled')) {
           if (window.JacesStockNotify && typeof window.JacesStockNotify.open === 'function') {
-            window.JacesStockNotify.open(product.id, btn.dataset.size, product.name);
+            window.JacesStockNotify.open(product.id, btn.dataset.size, product.name, colorInput?.value || '');
           }
           return;
         }
@@ -1807,20 +1394,6 @@
         if (sizeLabel) sizeLabel.textContent = recommendedSize;
         saveSelection('size', recommendedSize);
         renderCartStatus();
-      });
-    });
-
-    shell.querySelectorAll('[data-open-reviews]').forEach((button) => {
-      button.addEventListener('click', () => {
-        const mode = button.getAttribute('data-open-reviews') || 'reviews';
-        openReviewsPanel(product, reviewData, customerPhotos, mode);
-      });
-    });
-
-    shell.querySelectorAll('.product-detail-insights-photos img').forEach((imageNode, index) => {
-      imageNode.addEventListener('click', (event) => {
-        event.preventDefault();
-        openDirectPhotoLightbox(customerPhotos, index);
       });
     });
 

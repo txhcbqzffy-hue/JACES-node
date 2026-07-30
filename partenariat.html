@@ -1,0 +1,841 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Partenariat | JACES</title>
+  <link rel="icon" id="site-favicon" href="https://res.cloudinary.com/dnplvtg6h/image/upload/v1784927715/jaces/jaces-j-favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,400;500;600&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,600&family=Manrope:wght@300;400;500;600;700;800&display=swap" media="print" onload="this.media='all'">
+  <link rel="stylesheet" href="style.css?v=202607292z">
+  <style>
+    .partner-hero { background: #2d1216; color: #ecd7c2; padding: 90px 24px 80px; text-align: center; margin-top: -42px; }
+    .partner-hero p.kicker { margin: 0 0 18px; display: flex; align-items: center; justify-content: center; gap: 10px; text-transform: uppercase; letter-spacing: 0.22em; font-size: 0.74rem; color: #d8baab; }
+    .partner-hero-logo { height: 18px; width: auto; filter: brightness(0) invert(1); opacity: 0.92; }
+    .partner-hero h1 { margin: 0 auto 20px; max-width: 640px; font-family: 'Cormorant Garamond', serif; font-weight: 500; font-size: clamp(2.1rem, 4vw, 3rem); line-height: 1.15; }
+    .partner-hero p.lead { margin: 0 auto; max-width: 480px; font-size: 0.98rem; line-height: 1.7; color: rgba(236,215,194,0.82); }
+    .partner-hero-cta {
+      display: inline-block; margin-top: 32px; padding: 13px 30px; background: #ecd7c2; color: #2d1216; text-decoration: none; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.14em;
+    }
+    .partner-hero-cta:hover { background: #d8baab; }
+    html { scroll-behavior: smooth; }
+    @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+
+    .partner-section { max-width: 960px; margin: 0 auto; padding: 70px 24px; }
+    .partner-benefits { display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; }
+    .partner-benefit h3 { font-size: 0.98rem; margin: 0 0 8px; color: #2d1216; }
+    .partner-benefit p { margin: 0; font-size: 0.88rem; line-height: 1.65; color: #6a6156; }
+    .partner-benefit .num { display: inline-block; font-family: 'Cormorant Garamond', serif; font-size: 1.6rem; color: #7b3d3e; margin-bottom: 10px; }
+
+    .partner-steps { background: #f6efe6; padding: 70px 24px; }
+    .partner-steps-inner { max-width: 960px; margin: 0 auto; }
+    .partner-steps h2, .partner-form-wrap h2 { text-align: center; font-family: 'Cormorant Garamond', serif; font-weight: 500; font-size: 1.8rem; margin: 0 0 44px; color: #2d1216; }
+    .partner-steps-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; }
+    .partner-step { text-align: center; }
+    .partner-step .num { display: flex; align-items: center; justify-content: center; width: 36px; height: 36px; border-radius: 50%; border: 1px solid #7b3d3e; color: #7b3d3e; font-size: 0.85rem; margin: 0 auto 14px; }
+    .partner-step h4 { margin: 0 0 6px; font-size: 0.92rem; color: #2d1216; }
+    .partner-step p { margin: 0; font-size: 0.85rem; line-height: 1.6; color: #6a6156; }
+
+    .partner-form-wrap { max-width: 620px; margin: 0 auto; padding: 80px 24px 100px; }
+    .partner-form { display: flex; flex-direction: column; gap: 18px; }
+    .partner-field label { display: block; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.08em; color: #6a6156; margin-bottom: 6px; }
+    .partner-field input[type="text"], .partner-field input[type="email"], .partner-field input[type="tel"], .partner-field select {
+      width: 100%; padding: 12px 14px; border: 1px solid #e3d5c4; background: #fff; font-size: 0.92rem; color: #2d1216; box-sizing: border-box; font-family: inherit;
+    }
+    .partner-field select { appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%232d1216' stroke-width='1.5' fill='none' fill-rule='evenodd'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 14px center; }
+    .partner-field textarea {
+      width: 100%; padding: 12px 14px; border: 1px solid #e3d5c4; background: #fff; font-size: 0.92rem; color: #2d1216; box-sizing: border-box; font-family: inherit; resize: vertical;
+    }
+    .partner-field input:focus, .partner-field select:focus, .partner-field textarea:focus { outline: none; border-color: #7b3d3e; }
+
+    .partner-upload-label { margin-top: 16px; }
+    .partner-field input[type="file"] {
+      width: 100%; padding: 10px 0; font-size: 0.84rem; color: #6a6156; box-sizing: border-box;
+    }
+    .partner-upload-previews { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 10px; }
+    .partner-upload-thumb { position: relative; width: 72px; height: 72px; border-radius: 6px; overflow: hidden; border: 1px solid #e3d5c4; background: #f6efe6; }
+    .partner-upload-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .partner-upload-thumb.uploading img { opacity: 0.4; }
+    .partner-upload-thumb .partner-upload-spinner {
+      position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 0.68rem; color: #7b3d3e;
+    }
+    .partner-upload-thumb .partner-upload-remove {
+      position: absolute; top: 2px; right: 2px; width: 18px; height: 18px; border-radius: 50%; background: rgba(45,18,22,0.75); color: #fff; border: none; font-size: 0.7rem; line-height: 1; cursor: pointer; display: flex; align-items: center; justify-content: center;
+    }
+    .partner-upload-status { font-size: 0.78rem; color: #8a8175; margin: 6px 0 0; }
+    .partner-upload-status.error { color: #a5321f; }
+    .partner-field-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+    @media (max-width: 480px) { .partner-field-grid { grid-template-columns: 1fr; } }
+    .partner-age-options { display: flex; flex-wrap: wrap; gap: 10px; }
+    .partner-age-option { display: flex; align-items: center; gap: 6px; padding: 8px 14px; border: 1px solid #e3d5c4; font-size: 0.85rem; color: #2d1216; cursor: pointer; text-transform: none; letter-spacing: normal; }
+    .partner-age-option input { width: auto; }
+    .partner-age-option:has(input:checked) { border-color: #7b3d3e; background: #f6efe6; }
+
+    .partner-networks { display: flex; flex-direction: column; gap: 10px; }
+    .partner-network { border: 1px solid #e3d5c4; padding: 14px 16px; }
+    .partner-network-toggle { display: flex; align-items: center; gap: 10px; cursor: pointer; font-size: 0.92rem; color: #2d1216; }
+    .partner-network-toggle input { width: auto; }
+    .partner-network-fields { display: none; grid-template-columns: 1fr 140px; gap: 10px; margin-top: 12px; }
+    .partner-network.open .partner-network-fields { display: grid; }
+    .partner-network-fields input {
+      padding: 10px 12px; border: 1px solid #e3d5c4; background: #fff; font-size: 0.86rem; color: #2d1216; box-sizing: border-box;
+    }
+    .partner-network-fields input:focus { outline: none; border-color: #7b3d3e; }
+
+    .partner-submit {
+      margin-top: 8px; padding: 14px 24px; background: #2d1216; color: #ecd7c2; border: none; font-size: 0.82rem; text-transform: uppercase; letter-spacing: 0.14em; cursor: pointer;
+    }
+    .partner-submit:hover { background: #451d22; }
+    .partner-submit:disabled { opacity: 0.6; cursor: default; }
+
+    .partner-status { font-size: 0.85rem; margin-top: 6px; }
+    .partner-status.error { color: #a5321f; }
+    .partner-status.success { color: #2f6b3a; }
+
+    .partner-success-overlay {
+      position: fixed; inset: 0; background: rgba(45,18,22,0.55); display: flex; align-items: center; justify-content: center; padding: 20px; z-index: 1000;
+    }
+    .partner-success-modal {
+      position: relative; background: #fff; max-width: 420px; width: 100%; padding: 44px 32px; text-align: center; box-shadow: 0 20px 60px rgba(45,18,22,0.25);
+    }
+    .partner-success-modal .partner-success-close {
+      position: absolute; top: 14px; right: 16px; background: none; border: none; font-size: 1.3rem; line-height: 1; color: #8a8175; cursor: pointer; padding: 4px;
+    }
+    .partner-success-modal h3 { font-family: 'Cormorant Garamond', serif; font-size: 1.7rem; margin: 0 0 12px; color: #2d1216; }
+    .partner-success-modal p { margin: 0; color: #6a6156; font-size: 0.94rem; line-height: 1.6; }
+    .partner-success-modal .partner-success-ok {
+      margin-top: 24px; padding: 12px 28px; background: #2d1216; color: #ecd7c2; border: none; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.14em; cursor: pointer;
+    }
+    .partner-success-modal .partner-success-ok:hover { background: #451d22; }
+
+    @media (max-width: 720px) {
+      .partner-benefits, .partner-steps-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body class="collection-page-body univers-page">
+
+  <div class="topbar"><span id="topbar-banner-text">Livraison offerte dès 79 € | Retours offerts</span><span class="topbar-promo"><a href="collection.html" class="topbar-promo-cta">J’en profite &rsaquo;</a><button type="button" class="topbar-promo-info" data-promo-info aria-label="Voir les conditions">i</button><span class="topbar-promo-tooltip" id="promo-banner-tooltip" hidden>Offre valable sur une sélection d’articles de la collection, dans la limite des stocks disponibles, non cumulable avec d’autres promotions ou codes de réduction.</span></span></div>
+
+  <header class="header">
+    <div class="header-top">
+      <div class="header-left">
+        <button class="search-trigger" id="search-trigger" type="button" aria-expanded="false" aria-controls="header-search-panel">Recherche</button>
+        <form class="search-panel" id="header-search-panel" role="search" action="#" method="get">
+          <input type="search" name="q" placeholder="Rechercher un produit..." aria-label="Rechercher">
+          <button class="search-submit" type="submit">↗</button>
+          <button class="search-panel-close" type="button" id="search-panel-close" aria-label="Fermer">×</button>
+        </form>
+      </div>
+
+      <a href="index.html" class="logo"><img class="logo-image" src="https://res.cloudinary.com/dnplvtg6h/image/upload/v1784927191/jaces/jaces-wordmark.png" alt="JACES"></a>
+
+      <div class="header-right">
+        <div class="language-picker" id="language-picker">
+          <button class="language-button" id="language-button" type="button" aria-label="Choisir la langue" aria-expanded="false">
+            <img src="https://flagcdn.com/w40/fr.png" class="icon-flag" id="current-flag" alt="Français">
+            <span class="language-caret" aria-hidden="true"></span>
+          </button>
+          <div class="language-menu" id="language-menu" role="menu" aria-label="Langues">
+            <button type="button" class="language-option" data-lang="fr" data-flag="https://flagcdn.com/w40/fr.png" role="menuitem"><img src="https://flagcdn.com/w40/fr.png" alt="Français"><span>Français</span></button>
+            <button type="button" class="language-option" data-lang="en" data-flag="https://flagcdn.com/w40/gb.png" role="menuitem"><img src="https://flagcdn.com/w40/gb.png" alt="English"><span>English</span></button>
+            <button type="button" class="language-option" data-lang="es" data-flag="https://flagcdn.com/w40/es.png" role="menuitem"><img src="https://flagcdn.com/w40/es.png" alt="Español"><span>Español</span></button>
+            <button type="button" class="language-option" data-lang="it" data-flag="https://flagcdn.com/w40/it.png" role="menuitem"><img src="https://flagcdn.com/w40/it.png" alt="Italiano"><span>Italiano</span></button>
+          </div>
+        </div>
+        <button class="icon-button" id="fav-trigger" aria-label="Favoris" type="button" style="position:relative"><svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg><span class="fav-count" id="fav-count" style="display:none">0</span></button>
+        <button class="icon-button" aria-label="Compte" type="button"><svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></button>
+        <button class="icon-button cart" aria-label="Panier" type="button"><svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M9 2L6.12 9H1l2.5 7.5v5h15v-5l2.5-7.5H17.88L15 2"/></svg><span class="cart-count">0</span></button>
+      </div>
+    </div>
+
+    <nav class="nav">
+      <div class="nav-item">
+        <a href="nouveautes.html">Nouveautés</a>
+        <div class="submenu">
+          <div>
+            <p class="submenu-title">NOUVEAUTÉS</p>
+            <p class="submenu-copy">Nouvelles créations,<br>pièces exclusives<br>et collections signature.</p>
+            <a href="nouveautes.html?nouveauteTag=drop">Drop</a>
+            <a href="nouveautes.html?nouveauteTag=pieces-signature">Pièces signature</a>
+            <a href="nouveautes.html?category=all" class="underline-link">Toutes les nouveautés</a>
+          </div>
+          <div class="submenu-categories">
+            <p class="submenu-title">FEMME</p>
+            <a href="nouveautes.html?category=robes">Robes</a>
+            <a href="nouveautes.html?category=tops">Tops</a>
+            <a href="nouveautes.html?category=jupes">Jupes</a>
+            <a href="nouveautes.html?category=pantalons">Pantalons</a>
+            <a href="nouveautes.html?category=vestes">Vestes</a>
+            <a href="nouveautes.html?category=accessoires">Accessoires</a>
+          </div>
+        </div>
+      </div>
+      <div class="nav-item">
+        <a href="collection.html">Collections</a>
+        <div class="submenu">
+          <div>
+            <a href="collection.html?collection=ss26">Printemps–Été 2026</a>
+            <a href="collection.html?collection=aw26">Automne–Hiver 2026</a>
+            <a href="collection.html?category=all" class="underline-link">Toutes les collections</a>
+          </div>
+          <div class="submenu-categories">
+            <a href="collection.html?category=robes">Robes</a>
+            <a href="collection.html?category=tops">Tops</a>
+            <a href="collection.html?category=jupes">Jupes</a>
+            <a href="collection.html?category=pantalons">Pantalons</a>
+            <a href="collection.html?category=vestes">Vestes</a>
+            <a href="collection.html?category=accessoires">Accessoires</a>
+          </div>
+        </div>
+      </div>
+      <div class="nav-item">
+        <a href="collaborations.html">Collaborations</a>
+        <div class="submenu">
+            <div>
+              <a href="collaborations.html?collabView=exclusives&category=all">Créations exclusives</a>
+              <a href="collaborations.html?collabView=popup&category=all">Pop-up stores</a>
+              <a href="collaborations.html?collabView=events&category=all">Événements</a>
+              <a href="collaborations.html?collabView=all&category=all" class="underline-link">Toutes les collaborations</a>
+            </div>
+            <div class="submenu-categories">
+            <a href="collaborations.html?category=maureen-di-carlo">JACES × Maureen Di Carlo</a>
+            <a href="collaborations.html?category=from-future">JACES × From Future</a>
+            <a href="collaborations.html?category=hoka">JACES × Hoka</a>
+            <a href="collaborations.html?category=mamy-grand">JACES × Mamy Grand</a>
+          </div>
+        </div>
+      </div>
+      <div class="nav-item">
+        <a href="accessoires.html">Accessoires</a>
+        <div class="submenu">
+          <div>
+            <a href="accessoires.html?category=all" class="underline-link">Tous les accessoires</a>
+          </div>
+          <div class="submenu-categories">
+            <a href="accessoires.html?category=sacs">Sacs</a>
+            <a href="accessoires.html?category=bijoux">Bijoux</a>
+            <a href="accessoires.html?category=ceintures">Ceintures</a>
+            <a href="accessoires.html?category=foulards">Foulards</a>
+          </div>
+        </div>
+      </div>
+      <div class="nav-item">
+        <a href="defile.html"><em>Défilé</em></a>
+        <div class="submenu">
+          <div>
+            <p class="submenu-title">DÉFILÉ</p>
+            <a href="#">Dernier show</a>
+            <a href="#">Collection prêt-à-porter</a>
+            <a href="#" class="underline-link">Voir le défilé</a>
+          </div>
+          <div>
+            <p class="submenu-title">Coulisses</p>
+            <a href="#">Design studio</a>
+            <a href="#">Inspiration</a>
+          </div>
+        </div>
+      </div>
+      <div class="nav-item">
+        <a href="univers.html"><em>Univers</em></a>
+        <div class="submenu">
+          <div>
+            <p class="submenu-title">MAISON</p>
+            <a href="#">Notre histoire</a>
+            <a href="#">Savoir-faire</a>
+            <a href="#" class="underline-link">Services VIP</a>
+          </div>
+          <div>
+            <p class="submenu-title">DÉCOUVERTE</p>
+            <a href="#">Ateliers</a>
+            <a href="#">Boutiques</a>
+          </div>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+<script>
+  (function () {
+    try {
+      var session = JSON.parse(localStorage.getItem('jaces-account-session') || 'null');
+      var email = String((session && session.email) || '').trim().toLowerCase();
+      if (!email) return;
+      var favs = JSON.parse(localStorage.getItem('jaces-favorites:' + email) || '[]');
+      var favBadge = document.getElementById('fav-count');
+      if (favBadge && Array.isArray(favs) && favs.length > 0) {
+        favBadge.textContent = favs.length;
+        favBadge.style.display = 'flex';
+      }
+      var cart = JSON.parse(localStorage.getItem('jaces-cart:' + email) || '[]');
+      var cartCount = Array.isArray(cart) ? cart.reduce(function (total, item) { return total + (Number(item.quantity) || 0); }, 0) : 0;
+      var cartBadge = document.querySelector('.cart-count');
+      if (cartBadge && cartCount > 0) {
+        cartBadge.textContent = cartCount;
+      }
+      var accountButtons = document.querySelectorAll('.icon-button[aria-label="Compte"]');
+      accountButtons.forEach(function (button) { button.classList.add('account-is-connected'); });
+    } catch (error) {}
+  })();
+</script>
+
+
+  <main class="brand-page">
+    <section class="partner-hero">
+      <p class="kicker"><img class="partner-hero-logo" src="https://res.cloudinary.com/dnplvtg6h/image/upload/v1784927191/jaces/jaces-wordmark.png" alt="JACES"> × Vous</p>
+      <h1>Vous parlez à votre communauté. Parlons de faire équipe.</h1>
+      <p class="lead">JACES cherche des voix qui lui ressemblent pour faire découvrir la marque. Si vous avez une audience qui vous fait confiance, on veut vous rencontrer.</p>
+      <a href="#partner-form-section" class="partner-hero-cta">Faire ma demande</a>
+    </section>
+
+    <section class="partner-section">
+      <div class="partner-benefits">
+        <div class="partner-benefit">
+          <span class="num">01</span>
+          <h3>Pièces offertes</h3>
+          <p>Recevez des créations JACES avant tout le monde, à porter et partager avec votre communauté.</p>
+        </div>
+        <div class="partner-benefit">
+          <span class="num">02</span>
+          <h3>Code personnalisé</h3>
+          <p>Un code de réduction à votre nom pour votre audience, et une commission sur les ventes générées.</p>
+        </div>
+        <div class="partner-benefit">
+          <span class="num">03</span>
+          <h3>Une vraie relation</h3>
+          <p>Pas un partenariat ponctuel : on construit ensemble, dans la durée, avec les créateurs qui nous ressemblent.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="partner-steps">
+      <div class="partner-steps-inner">
+        <h2>Comment ça marche</h2>
+        <div class="partner-steps-grid">
+          <div class="partner-step">
+            <span class="num">1</span>
+            <h4>Vous candidatez</h4>
+            <p>Remplissez le formulaire ci-dessous avec vos réseaux et votre audience.</p>
+          </div>
+          <div class="partner-step">
+            <span class="num">2</span>
+            <h4>On vérifie</h4>
+            <p>Notre équipe regarde votre profil et votre univers en quelques jours.</p>
+          </div>
+          <div class="partner-step">
+            <span class="num">3</span>
+            <h4>On vous répond</h4>
+            <p>Réponse par e-mail sous 5 jours ouvrés, avec ou sans suite - dans tous les cas, vous saurez.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="partner-form-wrap" id="partner-form-section">
+      <h2>Faire une demande</h2>
+      <div id="partner-form-container">
+        <form class="partner-form" id="partner-form">
+          <div style="position:absolute;left:-9999px;top:-9999px;" aria-hidden="true">
+            <label for="partner-website">Ne pas remplir ce champ</label>
+            <input type="text" id="partner-website" name="website" tabindex="-1" autocomplete="off">
+          </div>
+          <div class="partner-field-grid">
+            <div class="partner-field">
+              <label for="partner-first-name">Prénom</label>
+              <input type="text" id="partner-first-name" name="firstName" required>
+            </div>
+            <div class="partner-field">
+              <label for="partner-last-name">Nom</label>
+              <input type="text" id="partner-last-name" name="lastName" required>
+            </div>
+          </div>
+          <div class="partner-field-grid">
+            <div class="partner-field">
+              <label for="partner-email">E-mail</label>
+              <input type="email" id="partner-email" name="email" required>
+            </div>
+            <div class="partner-field">
+              <label for="partner-phone">Téléphone <span style="text-transform:none;letter-spacing:0;">(optionnel)</span></label>
+              <input type="tel" id="partner-phone" name="phone">
+            </div>
+          </div>
+          <div class="partner-field">
+            <label>Âge moyen de votre audience</label>
+            <div class="partner-age-options">
+              <label class="partner-age-option"><input type="checkbox" data-audience-age value="13-17"> 13-17 ans</label>
+              <label class="partner-age-option"><input type="checkbox" data-audience-age value="18-24"> 18-24 ans</label>
+              <label class="partner-age-option"><input type="checkbox" data-audience-age value="25-34"> 25-34 ans</label>
+              <label class="partner-age-option"><input type="checkbox" data-audience-age value="35-44"> 35-44 ans</label>
+              <label class="partner-age-option"><input type="checkbox" data-audience-age value="45-54"> 45-54 ans</label>
+              <label class="partner-age-option"><input type="checkbox" data-audience-age value="55+"> 55 ans et plus</label>
+            </div>
+          </div>
+
+          <div class="partner-field">
+            <label>Vérification anti-robot</label>
+            <div class="cf-turnstile" data-sitekey="0x4AAAAAAD9fM227Tcu4I_9i"></div>
+          </div>
+
+          <div class="partner-field">
+            <label>Vos réseaux</label>
+            <div class="partner-networks">
+              <div class="partner-network" data-network="instagram">
+                <label class="partner-network-toggle"><input type="checkbox" data-network-check> Instagram</label>
+                <div class="partner-network-fields">
+                  <input type="text" placeholder="Lien du profil" data-network-url>
+                  <input type="text" placeholder="Abonnés" data-network-followers>
+                </div>
+              </div>
+              <div class="partner-network" data-network="youtube">
+                <label class="partner-network-toggle"><input type="checkbox" data-network-check> YouTube</label>
+                <div class="partner-network-fields">
+                  <input type="text" placeholder="Lien de la chaîne" data-network-url>
+                  <input type="text" placeholder="Abonnés" data-network-followers>
+                </div>
+              </div>
+              <div class="partner-network" data-network="linkedin">
+                <label class="partner-network-toggle"><input type="checkbox" data-network-check> LinkedIn</label>
+                <div class="partner-network-fields">
+                  <input type="text" placeholder="Lien du profil" data-network-url>
+                  <input type="text" placeholder="Abonnés" data-network-followers>
+                </div>
+              </div>
+              <div class="partner-network" data-network="facebook">
+                <label class="partner-network-toggle"><input type="checkbox" data-network-check> Facebook</label>
+                <div class="partner-network-fields">
+                  <input type="text" placeholder="Lien de la page" data-network-url>
+                  <input type="text" placeholder="Abonnés" data-network-followers>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="partner-field">
+            <label for="partner-details">Détail supplémentaire à faire parvenir à notre équipe <span style="text-transform:none;letter-spacing:0;">(optionnel)</span></label>
+            <textarea id="partner-details" name="details" rows="4"></textarea>
+            <label for="partner-screenshots" class="partner-upload-label">Ajouter des captures d'écran (statistiques, exemples de contenus...) <span style="text-transform:none;letter-spacing:0;">- validez la vérification anti-robot ci-dessus pour activer</span></label>
+            <input type="file" id="partner-screenshots" accept="image/*" multiple disabled>
+            <div class="partner-upload-previews" id="partner-upload-previews"></div>
+            <p class="partner-upload-status" id="partner-upload-status"></p>
+          </div>
+
+          <button type="submit" class="partner-submit">Faire une demande</button>
+          <p class="partner-status" id="partner-status"></p>
+          <p style="font-size:0.76rem;color:#8a8175;line-height:1.5;margin-top:10px;">Les informations transmises via ce formulaire sont utilisées uniquement pour étudier votre candidature et échanger avec vous. En savoir plus dans notre <a href="politique-confidentialite.html" class="text-link">politique de confidentialité</a>.</p>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <div class="back-to-top-bar">
+    <a href="#" class="back-to-top-link" aria-label="Retour au haut de la page">
+      <svg width="22" height="14" viewBox="0 0 22 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 13 11 3 21 13"/></svg>
+      <span>RETOUR AU HAUT DE LA PAGE</span>
+    </a>
+  </div>
+
+  <footer class="footer">
+    <div class="footer-main">
+      <div class="footer-cols">
+        <div class="footer-col"><p class="footer-col-title">Service client</p><a href="#">Suivre ma commande</a><a href="retours-gratuits.html">Faire un retour</a><a href="retours-gratuits.html">Livraison et Retour</a><a href="#">FAQ</a><a href="contact.html">Contact</a></div>
+        <div class="footer-col"><p class="footer-col-title">JACES</p><a href="#">Notre concept</a><a href="partenariat.html">Partenariat</a><a href="#">Nos boutiques</a></div>
+        <div class="footer-col"><p class="footer-col-title">Mentions légales</p><a href="cgv.html">CGV</a><a href="cgu.html">CGU</a><a href="politique-confidentialite.html">Politique de confidentialité</a><a href="#" data-open-cookie-preferences>Gérer les cookies</a><a href="conditions-offre.html">Conditions de l'offre en cours</a></div>
+      </div>
+      <div class="footer-newsletter">
+        <h3>Restez connecté avec JACES</h3>
+        <p>Recevez en avant-première nos nouvelles collections et invitations à nos évènements.</p>
+        <form class="footer-newsletter-form" action="#" method="post">
+          <label for="footer-nl-email-partenariat" class="visually-hidden">Votre e-mail</label>
+          <input id="footer-nl-email-partenariat" name="email" type="email" placeholder="Votre e-mail" required>
+          <button type="submit" aria-label="S'inscrire">→</button>
+        </form>
+      </div>
+    </div>
+    <p class="footer-note">Copyright © 2026 JACES. Tous droits réservés.</p>
+  </footer>
+
+  <div class="fav-overlay" id="fav-overlay"></div>
+  <div class="fav-panel" id="fav-panel" role="dialog" aria-label="Ma wishlist">
+    <div class="fav-panel-header">
+      <h2 id="fav-panel-title">Ma Wishlist (0)</h2>
+      <button class="fav-panel-close-btn" id="fav-panel-close" aria-label="Fermer" type="button">×</button>
+    </div>
+    <div class="fav-panel-list" id="fav-panel-list"></div>
+  </div>
+
+  <script>
+    (function () {
+      function updateHeaderState() {
+        document.body.classList.toggle('header-scrolled', window.scrollY > 8);
+      }
+      updateHeaderState();
+      window.addEventListener('scroll', updateHeaderState, { passive: true });
+
+      const searchTrigger = document.getElementById('search-trigger');
+      const searchPanel = document.getElementById('header-search-panel');
+      const searchClose = document.getElementById('search-panel-close');
+      if (searchTrigger && searchPanel) {
+        const searchInput = searchPanel.querySelector('input[type="search"]');
+        const closeSearch = () => {
+          searchPanel.classList.remove('open');
+          searchTrigger.setAttribute('aria-expanded', 'false');
+        };
+        searchTrigger.addEventListener('click', (event) => {
+          event.stopPropagation();
+          const willOpen = !searchPanel.classList.contains('open');
+          searchPanel.classList.toggle('open', willOpen);
+          searchTrigger.setAttribute('aria-expanded', String(willOpen));
+          if (willOpen && searchInput) searchInput.focus();
+        });
+        if (searchClose) searchClose.addEventListener('click', closeSearch);
+        searchPanel.addEventListener('click', (event) => event.stopPropagation());
+        document.addEventListener('keydown', (event) => { if (event.key === 'Escape') closeSearch(); });
+        document.addEventListener('click', (event) => {
+          if (!searchPanel.contains(event.target) && !searchTrigger.contains(event.target)) closeSearch();
+        });
+      }
+
+      const languagePicker = document.getElementById('language-picker');
+      const languageButton = document.getElementById('language-button');
+      const currentFlag = document.getElementById('current-flag');
+      if (languagePicker && languageButton && currentFlag) {
+        const STORAGE_KEY = 'jaces-selected-language';
+        const languageOptions = Array.from(languagePicker.querySelectorAll('.language-option'));
+        function applyLanguageOption(option) {
+          const flag = option.dataset.flag;
+          const lang = option.dataset.lang;
+          const label = option.querySelector('span')?.textContent || 'Langue';
+          if (flag) {
+            currentFlag.src = flag;
+            currentFlag.alt = label;
+          }
+          if (lang) {
+            document.documentElement.lang = lang;
+            try { localStorage.setItem(STORAGE_KEY, lang); } catch (error) {}
+          }
+        }
+        try {
+          const savedLang = localStorage.getItem(STORAGE_KEY);
+          if (savedLang) {
+            const savedOption = languageOptions.find((option) => option.dataset.lang === savedLang);
+            if (savedOption) applyLanguageOption(savedOption);
+          }
+        } catch (error) {}
+        languageButton.addEventListener('click', () => {
+          const isOpen = languagePicker.classList.toggle('open');
+          languageButton.setAttribute('aria-expanded', String(isOpen));
+        });
+        languageOptions.forEach((option) => {
+          option.addEventListener('click', () => {
+            applyLanguageOption(option);
+            languagePicker.classList.remove('open');
+            languageButton.setAttribute('aria-expanded', 'false');
+          });
+        });
+        document.addEventListener('click', (event) => {
+          if (!languagePicker.contains(event.target)) {
+            languagePicker.classList.remove('open');
+            languageButton.setAttribute('aria-expanded', 'false');
+          }
+        });
+      }
+
+      document.querySelectorAll('.partner-network-toggle input[data-network-check]').forEach((checkbox) => {
+        checkbox.addEventListener('change', () => {
+          checkbox.closest('.partner-network').classList.toggle('open', checkbox.checked);
+        });
+      });
+
+      // Pre-fills from the logged-in account when available, so returning
+      // customers don't retype what we already know - the fields stay
+      // editable, this is just a convenience default, not a lock.
+      let partnerPrefilled = false;
+      function prefillPartnerFormFromSession(session) {
+        if (!session || partnerPrefilled) return;
+        const firstNameEl = document.getElementById('partner-first-name');
+        const lastNameEl = document.getElementById('partner-last-name');
+        const emailEl = document.getElementById('partner-email');
+        if (!firstNameEl || !lastNameEl || !emailEl) return;
+        if (!firstNameEl.value && session.firstName) firstNameEl.value = session.firstName;
+        if (!lastNameEl.value && session.lastName) lastNameEl.value = session.lastName;
+        if (!emailEl.value && session.email) emailEl.value = session.email;
+        partnerPrefilled = true;
+      }
+      if (window.JacesAuth && window.JacesAuth.getSession) {
+        prefillPartnerFormFromSession(window.JacesAuth.getSession());
+      }
+      window.addEventListener('jaces:account-sync', (event) => {
+        prefillPartnerFormFromSession(event.detail && event.detail.session);
+      });
+
+      function showPartnerSuccessModal() {
+        const overlay = document.createElement('div');
+        overlay.className = 'partner-success-overlay';
+        overlay.innerHTML = `
+          <div class="partner-success-modal" role="dialog" aria-modal="true" aria-labelledby="partner-success-title">
+            <button type="button" class="partner-success-close" aria-label="Fermer">×</button>
+            <h3 id="partner-success-title">Merci !</h3>
+            <p>Votre demande a bien été reçue, nous reviendrons vers vous !</p>
+            <button type="button" class="partner-success-ok">Fermer</button>
+          </div>
+        `;
+        document.body.appendChild(overlay);
+
+        const closeModal = () => {
+          overlay.remove();
+          document.removeEventListener('keydown', onKeydown);
+        };
+        const onKeydown = (event) => { if (event.key === 'Escape') closeModal(); };
+
+        overlay.addEventListener('click', (event) => { if (event.target === overlay) closeModal(); });
+        overlay.querySelector('.partner-success-close').addEventListener('click', closeModal);
+        overlay.querySelector('.partner-success-ok').addEventListener('click', closeModal);
+        document.addEventListener('keydown', onKeydown);
+      }
+
+      const MAX_SCREENSHOTS = 6;
+      const MAX_SCREENSHOT_SIZE = 8 * 1024 * 1024;
+      const uploadedScreenshots = []; // [{ localId, url, status: 'uploading'|'done'|'error' }]
+      let partnerSessionToken = '';
+
+      const screenshotsInput = document.getElementById('partner-screenshots');
+      const previewsEl = document.getElementById('partner-upload-previews');
+      const uploadStatusEl = document.getElementById('partner-upload-status');
+
+      function renderPreviews() {
+        previewsEl.innerHTML = uploadedScreenshots.map((item) => `
+          <div class="partner-upload-thumb${item.status === 'uploading' ? ' uploading' : ''}" data-local-id="${item.localId}">
+            <img src="${item.previewSrc}" alt="">
+            ${item.status === 'uploading' ? '<span class="partner-upload-spinner">...</span>' : ''}
+            <button type="button" class="partner-upload-remove" data-remove-screenshot aria-label="Retirer">×</button>
+          </div>
+        `).join('');
+      }
+
+      async function uploadScreenshotToCloudinary(file) {
+        const sigRes = await fetch(`/api/admin-email-subscribers?cloudinarySignature=1&sessionToken=${encodeURIComponent(partnerSessionToken)}`);
+        const sigData = await sigRes.json().catch(() => ({}));
+        if (!sigRes.ok) throw new Error(sigData.error || 'Signature indisponible');
+
+        const formData = new FormData();
+        formData.append('file', file);
+        formData.append('api_key', sigData.apiKey);
+        formData.append('timestamp', sigData.timestamp);
+        formData.append('signature', sigData.signature);
+        formData.append('folder', sigData.folder);
+
+        const uploadRes = await fetch(`https://api.cloudinary.com/v1_1/${sigData.cloudName}/auto/upload`, {
+          method: 'POST',
+          body: formData
+        });
+        const uploadData = await uploadRes.json().catch(() => ({}));
+        if (!uploadRes.ok || !uploadData.secure_url) throw new Error('Échec de l\'envoi');
+        return uploadData.secure_url;
+      }
+
+      if (screenshotsInput) {
+        screenshotsInput.addEventListener('change', async () => {
+          const files = Array.from(screenshotsInput.files || []);
+          screenshotsInput.value = '';
+          uploadStatusEl.textContent = '';
+          uploadStatusEl.className = 'partner-upload-status';
+
+          for (const file of files) {
+            if (uploadedScreenshots.length >= MAX_SCREENSHOTS) {
+              uploadStatusEl.textContent = `Maximum ${MAX_SCREENSHOTS} images.`;
+              uploadStatusEl.className = 'partner-upload-status error';
+              break;
+            }
+            if (file.size > MAX_SCREENSHOT_SIZE) {
+              uploadStatusEl.textContent = `${file.name} dépasse 8 Mo et a été ignorée.`;
+              uploadStatusEl.className = 'partner-upload-status error';
+              continue;
+            }
+
+            const localId = `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+            const item = { localId, url: '', status: 'uploading', previewSrc: URL.createObjectURL(file) };
+            uploadedScreenshots.push(item);
+            renderPreviews();
+
+            try {
+              const url = await uploadScreenshotToCloudinary(file);
+              item.url = url;
+              item.status = 'done';
+            } catch (error) {
+              const index = uploadedScreenshots.indexOf(item);
+              if (index !== -1) uploadedScreenshots.splice(index, 1);
+              uploadStatusEl.textContent = 'Une image n\'a pas pu être envoyée, réessaie.';
+              uploadStatusEl.className = 'partner-upload-status error';
+            }
+            renderPreviews();
+          }
+        });
+      }
+
+      if (previewsEl) {
+        previewsEl.addEventListener('click', (event) => {
+          const removeBtn = event.target.closest('[data-remove-screenshot]');
+          if (!removeBtn) return;
+          const localId = removeBtn.closest('[data-local-id]').dataset.localId;
+          const index = uploadedScreenshots.findIndex((item) => item.localId === localId);
+          if (index !== -1) uploadedScreenshots.splice(index, 1);
+          renderPreviews();
+        });
+      }
+
+      // A raw Turnstile token is single-use, so it can't gate every
+      // screenshot upload plus the final submit. Solving the widget once
+      // exchanges the token for a short-lived session token (server-issued,
+      // HMAC-signed) that covers uploads and the final submit for this visit.
+      async function onPartnerTurnstileSuccess(token) {
+        uploadStatusEl.textContent = 'Vérification en cours...';
+        uploadStatusEl.className = 'partner-upload-status';
+        try {
+          const res = await fetch('/api/admin-email-subscribers', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ action: 'verifyCaptcha', captchaToken: token })
+          });
+          const data = await res.json().catch(() => ({}));
+          if (!res.ok) throw new Error(data.error || 'Vérification échouée');
+          partnerSessionToken = data.sessionToken;
+          screenshotsInput.disabled = false;
+          uploadStatusEl.textContent = '';
+          uploadStatusEl.className = 'partner-upload-status';
+        } catch (error) {
+          partnerSessionToken = '';
+          screenshotsInput.disabled = true;
+          uploadStatusEl.textContent = 'Vérification anti-robot échouée, réessayez.';
+          uploadStatusEl.className = 'partner-upload-status error';
+        }
+      }
+
+      // Loads Cloudflare's Turnstile script if some other script on the page
+      // (auth.js's own account modal) hasn't already added it, then renders
+      // this page's widget explicitly - avoids double-registering the global
+      // if both scripts end up requesting the same URL.
+      function ensureTurnstileRendered() {
+        const container = document.querySelector('.cf-turnstile');
+        if (!container) return;
+
+        function renderWhenReady() {
+          if (window.turnstile) {
+            if (!container.dataset.rendered) {
+              window.turnstile.render(container, {
+                sitekey: container.dataset.sitekey,
+                callback: onPartnerTurnstileSuccess,
+                'expired-callback': () => { partnerSessionToken = ''; screenshotsInput.disabled = true; },
+                'error-callback': () => { partnerSessionToken = ''; screenshotsInput.disabled = true; }
+              });
+              container.dataset.rendered = '1';
+            }
+            return;
+          }
+          setTimeout(renderWhenReady, 200);
+        }
+
+        if (!document.querySelector('script[src*="turnstile/v0/api.js"]')) {
+          const script = document.createElement('script');
+          script.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit';
+          script.async = true;
+          script.defer = true;
+          document.head.appendChild(script);
+        }
+        renderWhenReady();
+      }
+      ensureTurnstileRendered();
+
+      const partnerForm = document.getElementById('partner-form');
+      if (partnerForm) {
+        partnerForm.addEventListener('submit', async (event) => {
+          event.preventDefault();
+          const statusEl = document.getElementById('partner-status');
+          const website = document.getElementById('partner-website').value.trim();
+          const firstName = document.getElementById('partner-first-name').value.trim();
+          const lastName = document.getElementById('partner-last-name').value.trim();
+          const email = document.getElementById('partner-email').value.trim();
+          const phone = document.getElementById('partner-phone').value.trim();
+          const audienceAges = Array.from(document.querySelectorAll('[data-audience-age]:checked')).map((el) => el.value);
+          const details = document.getElementById('partner-details').value.trim();
+
+          const networks = [];
+          document.querySelectorAll('.partner-network').forEach((block) => {
+            const checked = block.querySelector('[data-network-check]').checked;
+            if (!checked) return;
+            const url = block.querySelector('[data-network-url]').value.trim();
+            const followers = block.querySelector('[data-network-followers]').value.trim();
+            if (url) networks.push({ network: block.dataset.network, url, followers });
+          });
+
+          if (!networks.length) {
+            statusEl.textContent = 'Ajoute au moins un réseau avec le lien de ton profil.';
+            statusEl.className = 'partner-status error';
+            return;
+          }
+
+          if (!audienceAges.length) {
+            statusEl.textContent = 'Sélectionne au moins une tranche d\'âge pour ton audience.';
+            statusEl.className = 'partner-status error';
+            return;
+          }
+
+          if (uploadedScreenshots.some((item) => item.status === 'uploading')) {
+            statusEl.textContent = 'Attends la fin de l\'envoi des images avant de valider.';
+            statusEl.className = 'partner-status error';
+            return;
+          }
+
+          if (!partnerSessionToken) {
+            statusEl.textContent = 'Merci de valider la vérification anti-robot avant d\'envoyer.';
+            statusEl.className = 'partner-status error';
+            return;
+          }
+
+          const screenshots = uploadedScreenshots.filter((item) => item.status === 'done').map((item) => item.url);
+
+          const submitBtn = partnerForm.querySelector('.partner-submit');
+          submitBtn.disabled = true;
+          statusEl.textContent = '';
+          statusEl.className = 'partner-status';
+
+          try {
+            const res = await fetch('/api/admin-email-subscribers', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ formType: 'influencer', website, sessionToken: partnerSessionToken, firstName, lastName, email, phone, audienceAges, details, screenshots, networks })
+            });
+            const data = await res.json().catch(() => ({}));
+            if (!res.ok) throw new Error(data.error || 'Une erreur est survenue.');
+
+            showPartnerSuccessModal();
+            partnerForm.reset();
+            document.querySelectorAll('.partner-network').forEach((block) => block.classList.remove('open'));
+            uploadedScreenshots.length = 0;
+            renderPreviews();
+            submitBtn.disabled = false;
+          } catch (error) {
+            statusEl.textContent = error.message;
+            statusEl.className = 'partner-status error';
+            submitBtn.disabled = false;
+            partnerSessionToken = '';
+            screenshotsInput.disabled = true;
+            if (window.turnstile) {
+              const container = document.querySelector('.cf-turnstile');
+              if (container) window.turnstile.reset(container);
+            }
+          }
+        });
+      }
+    })();
+  </script>
+  <script src="cart.js?v=202607292o"></script>
+  <script src="favorites.js?v=202607292h"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+  <script src="auth.js?v=202607292a"></script>
+  <script src="site-content.js?v=20260729b"></script>
+  <script src="cookie-consent.js?v=20260727a"></script>
+  <script src="newsletter-popup.js?v=20260727k"></script>
+  <script src="promo-banner.js?v=20260728a"></script>
+</body>
+</html>

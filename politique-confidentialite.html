@@ -3,14 +3,23 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Mon compte | JACES</title>
+  <title>Politique de confidentialité | JACES</title>
   <link rel="icon" id="site-favicon" href="https://res.cloudinary.com/dnplvtg6h/image/upload/v1784927715/jaces/jaces-j-favicon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,400;500;600&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,600&family=Manrope:wght@300;400;500;600;700;800&display=swap" media="print" onload="this.media='all'">
   <link rel="stylesheet" href="style.css?v=202607292z">
+  <style>
+    .policy-body { max-width: 760px; margin: 0 auto; padding: 0 24px 100px; }
+    .policy-body h2 { margin: 0 0 8px; }
+    .policy-body .policy-updated { color: #8a8175; font-size: 0.85rem; margin: 0 0 40px; }
+    .policy-body h3 { margin: 36px 0 10px; font-size: 1.05rem; }
+    .policy-body p, .policy-body li { line-height: 1.7; color: #3a352e; }
+    .policy-body ul { padding-left: 20px; margin: 0 0 16px; }
+  </style>
 </head>
-<body class="account-page-body">
+<body class="collection-page-body univers-page">
+
   <div class="topbar"><span id="topbar-banner-text">Livraison offerte dès 79 € | Retours offerts</span><span class="topbar-promo"><a href="collection.html" class="topbar-promo-cta">J’en profite &rsaquo;</a><button type="button" class="topbar-promo-info" data-promo-info aria-label="Voir les conditions">i</button><span class="topbar-promo-tooltip" id="promo-banner-tooltip" hidden>Offre valable sur une sélection d’articles de la collection, dans la limite des stocks disponibles, non cumulable avec d’autres promotions ou codes de réduction.</span></span></div>
 
   <header class="header">
@@ -39,17 +48,9 @@
             <button type="button" class="language-option" data-lang="it" data-flag="https://flagcdn.com/w40/it.png" role="menuitem"><img src="https://flagcdn.com/w40/it.png" alt="Italiano"><span>Italiano</span></button>
           </div>
         </div>
-        <button class="icon-button" id="fav-trigger" aria-label="Favoris" type="button" style="position:relative">
-          <svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-          <span class="fav-count" id="fav-count" style="display:none">0</span>
-        </button>
-        <button class="icon-button" aria-label="Compte" type="button">
-          <svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-        </button>
-        <button class="icon-button cart" aria-label="Panier" type="button">
-          <svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M9 2L6.12 9H1l2.5 7.5v5h15v-5l2.5-7.5H17.88L15 2"/></svg>
-          <span class="cart-count">0</span>
-        </button>
+        <button class="icon-button" id="fav-trigger" aria-label="Favoris" type="button" style="position:relative"><svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg><span class="fav-count" id="fav-count" style="display:none">0</span></button>
+        <button class="icon-button" aria-label="Compte" type="button"><svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></button>
+        <button class="icon-button cart" aria-label="Panier" type="button"><svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M9 2L6.12 9H1l2.5 7.5v5h15v-5l2.5-7.5H17.88L15 2"/></svg><span class="cart-count">0</span></button>
       </div>
     </div>
 
@@ -184,23 +185,66 @@
 </script>
 
 
-  <div class="fav-overlay" id="fav-overlay"></div>
-  <div class="fav-panel" id="fav-panel" role="dialog" aria-label="Ma wishlist">
-    <div class="fav-panel-header">
-      <h2 id="fav-panel-title">Ma Wishlist (0)</h2>
-      <button class="fav-panel-close-btn" id="fav-panel-close" aria-label="Fermer" type="button">×</button>
-    </div>
-    <div class="fav-panel-list" id="fav-panel-list"></div>
-  </div>
+  <main class="brand-page">
+    <div class="policy-body">
+      <h2>Politique de confidentialité</h2>
+      <p class="policy-updated">Dernière mise à jour : juillet 2026</p>
 
-  <main>
-    <section class="section account-page-section">
-      <div class="account-page-intro">
-        <h1>Mon compte</h1>
-      </div>
-      <div id="account-page-shell"></div>
-    </section>
+      <p>JACES accorde une grande importance à la protection de vos données personnelles. Cette page explique quelles données nous collectons sur ce site, pourquoi, et comment vous pouvez exercer vos droits.</p>
+
+      <h3>Qui est responsable de vos données ?</h3>
+      <p>JACES, 60 rue Ramery, 75018 Paris, est responsable du traitement des données collectées sur ce site.</p>
+
+      <h3>Quelles données nous collectons</h3>
+      <ul>
+        <li><strong>Compte client</strong> : prénom, nom et e-mail, si vous créez un compte.</li>
+        <li><strong>Alertes de retour en stock</strong> : e-mail, prénom (optionnel), taille et couleur sélectionnées, lorsque vous demandez à être averti(e) de la disponibilité d'un produit.</li>
+        <li><strong>Panier et favoris</strong> : conservés localement dans votre navigateur, non transmis à nos serveurs tant que vous ne validez pas de commande.</li>
+        <li><strong>Newsletter</strong> : e-mail et vos préférences (nouveaux produits et/ou actualités JACES), si vous vous inscrivez depuis le formulaire du site ou la fenêtre proposée en cours de visite.</li>
+      </ul>
+
+      <h3>Pourquoi nous les utilisons</h3>
+      <ul>
+        <li>Vous envoyer un e-mail lorsque le produit et la taille que vous attendez redeviennent disponibles.</li>
+        <li>Gérer votre compte client et votre historique de commandes.</li>
+        <li>Vous envoyer notre newsletter, si vous y êtes inscrit(e).</li>
+      </ul>
+
+      <h3>Combien de temps nous les conservons</h3>
+      <p>Vos données sont conservées le temps nécessaire à ces finalités, et supprimées ou anonymisées lorsque vous supprimez votre compte ou nous en faites la demande.</p>
+
+      <h3>Qui y a accès</h3>
+      <p>Vos données ne sont jamais vendues à des tiers et ne sont utilisées à des fins commerciales que par JACES. Elles transitent toutefois par les prestataires techniques suivants, qui nous permettent de faire fonctionner le site :</p>
+      <ul>
+        <li><strong>Supabase</strong> (hébergé dans l'Union européenne) : base de données, comptes clients et authentification.</li>
+        <li><strong>Brevo</strong> : envoi des e-mails transactionnels (confirmation de compte, alertes de stock, réinitialisation de mot de passe).</li>
+        <li><strong>Cloudinary</strong> : hébergement des images du site (produits, logo, visuels).</li>
+        <li><strong>Vercel</strong> : hébergement technique du site.</li>
+        <li><strong>Cloudflare</strong> : vérification anti-robot sur les formulaires de connexion et d'inscription.</li>
+        <li><strong>Google Analytics</strong> : mesure d'audience, uniquement si vous y consentez via le bandeau cookies.</li>
+      </ul>
+
+      <h3>Vos droits</h3>
+      <p>Conformément au RGPD, vous disposez d'un droit d'accès, de rectification, de suppression et d'opposition sur vos données personnelles. Pour l'exercer, contactez-nous à <a href="mailto:benjamin.peral18@gmail.com" class="text-link">benjamin.peral18@gmail.com</a> ou via notre <a href="contact.html" class="text-link">page contact</a>.</p>
+
+      <h3>Cookies et technologies similaires</h3>
+      <p>Lors de votre première visite, un bandeau vous permet d'accepter, de refuser ou de personnaliser les cookies non essentiels. Vous pouvez modifier votre choix à tout moment via le lien "Gérer les cookies" en bas de page.</p>
+      <ul>
+        <li><strong>Nécessaires (toujours actifs)</strong> : stockage local de votre navigateur pour mémoriser votre panier, vos favoris et votre session de connexion, ainsi que la vérification anti-robot Cloudflare sur les formulaires.</li>
+        <li><strong>Analyse d'audience (soumis à votre consentement)</strong> : Google Analytics, qui nous aide à comprendre comment le site est utilisé, pour l'améliorer. Non chargé tant que vous n'avez pas donné votre consentement.</li>
+        <li><strong>Marketing (soumis à votre consentement)</strong> : le flux "Derniers posts Instagram" charge du contenu directement depuis les serveurs de Meta/Instagram, qui peut alors recevoir des informations techniques sur votre visite (adresse IP, navigateur).</li>
+      </ul>
+      <p>Votre choix (accepté ou refusé, par catégorie) est enregistré de façon anonyme, sans adresse IP ni identifiant, uniquement pour prouver que le consentement a bien été demandé.</p>
+      <p>Par ailleurs, les polices du site (Google Fonts) et certaines images d'illustration (Unsplash) sont chargées depuis des serveurs tiers, nécessaires à l'affichage des pages, et peuvent recevoir votre adresse IP à cette occasion.</p>
+    </div>
   </main>
+
+  <div class="back-to-top-bar">
+    <a href="#" class="back-to-top-link" aria-label="Retour au haut de la page">
+      <svg width="22" height="14" viewBox="0 0 22 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 13 11 3 21 13"/></svg>
+      <span>RETOUR AU HAUT DE LA PAGE</span>
+    </a>
+  </div>
 
   <footer class="footer">
     <div class="footer-main">
@@ -213,8 +257,8 @@
         <h3>Restez connecté avec JACES</h3>
         <p>Recevez en avant-première nos nouvelles collections et invitations à nos évènements.</p>
         <form class="footer-newsletter-form" action="#" method="post">
-          <label for="footer-nl-email-compte" class="visually-hidden">Votre e-mail</label>
-          <input id="footer-nl-email-compte" name="email" type="email" placeholder="Votre e-mail" required>
+          <label for="footer-nl-email-policy" class="visually-hidden">Votre e-mail</label>
+          <input id="footer-nl-email-policy" name="email" type="email" placeholder="Votre e-mail" required>
           <button type="submit" aria-label="S'inscrire">→</button>
         </form>
       </div>
@@ -222,45 +266,80 @@
     <p class="footer-note">Copyright © 2026 JACES. Tous droits réservés.</p>
   </footer>
 
+  <div class="fav-overlay" id="fav-overlay"></div>
+  <div class="fav-panel" id="fav-panel" role="dialog" aria-label="Ma wishlist">
+    <div class="fav-panel-header">
+      <h2 id="fav-panel-title">Ma Wishlist (0)</h2>
+      <button class="fav-panel-close-btn" id="fav-panel-close" aria-label="Fermer" type="button">×</button>
+    </div>
+    <div class="fav-panel-list" id="fav-panel-list"></div>
+  </div>
+
   <script>
     (function () {
+      function updateHeaderState() {
+        document.body.classList.toggle('header-scrolled', window.scrollY > 8);
+      }
+      updateHeaderState();
+      window.addEventListener('scroll', updateHeaderState, { passive: true });
+
       const searchTrigger = document.getElementById('search-trigger');
       const searchPanel = document.getElementById('header-search-panel');
       const searchClose = document.getElementById('search-panel-close');
-      const languagePicker = document.getElementById('language-picker');
-      const languageButton = document.getElementById('language-button');
-      const languageMenu = document.getElementById('language-menu');
-      const currentFlag = document.getElementById('current-flag');
-
       if (searchTrigger && searchPanel) {
+        const searchInput = searchPanel.querySelector('input[type="search"]');
         const closeSearch = () => {
           searchPanel.classList.remove('open');
           searchTrigger.setAttribute('aria-expanded', 'false');
         };
-
-        searchTrigger.addEventListener('click', () => {
+        searchTrigger.addEventListener('click', (event) => {
+          event.stopPropagation();
           const willOpen = !searchPanel.classList.contains('open');
           searchPanel.classList.toggle('open', willOpen);
           searchTrigger.setAttribute('aria-expanded', String(willOpen));
+          if (willOpen && searchInput) searchInput.focus();
         });
-
-        searchClose?.addEventListener('click', closeSearch);
+        if (searchClose) searchClose.addEventListener('click', closeSearch);
+        searchPanel.addEventListener('click', (event) => event.stopPropagation());
+        document.addEventListener('keydown', (event) => { if (event.key === 'Escape') closeSearch(); });
         document.addEventListener('click', (event) => {
           if (!searchPanel.contains(event.target) && !searchTrigger.contains(event.target)) closeSearch();
         });
       }
 
-      if (languagePicker && languageButton && languageMenu && currentFlag) {
-        const options = Array.from(languageMenu.querySelectorAll('.language-option'));
+      const languagePicker = document.getElementById('language-picker');
+      const languageButton = document.getElementById('language-button');
+      const currentFlag = document.getElementById('current-flag');
+      if (languagePicker && languageButton && currentFlag) {
+        const STORAGE_KEY = 'jaces-selected-language';
+        const languageOptions = Array.from(languagePicker.querySelectorAll('.language-option'));
+        function applyLanguageOption(option) {
+          const flag = option.dataset.flag;
+          const lang = option.dataset.lang;
+          const label = option.querySelector('span')?.textContent || 'Langue';
+          if (flag) {
+            currentFlag.src = flag;
+            currentFlag.alt = label;
+          }
+          if (lang) {
+            document.documentElement.lang = lang;
+            try { localStorage.setItem(STORAGE_KEY, lang); } catch (error) {}
+          }
+        }
+        try {
+          const savedLang = localStorage.getItem(STORAGE_KEY);
+          if (savedLang) {
+            const savedOption = languageOptions.find((option) => option.dataset.lang === savedLang);
+            if (savedOption) applyLanguageOption(savedOption);
+          }
+        } catch (error) {}
         languageButton.addEventListener('click', () => {
           const isOpen = languagePicker.classList.toggle('open');
           languageButton.setAttribute('aria-expanded', String(isOpen));
         });
-        options.forEach((option) => {
+        languageOptions.forEach((option) => {
           option.addEventListener('click', () => {
-            currentFlag.src = option.dataset.flag;
-            currentFlag.alt = option.querySelector('span')?.textContent || 'Langue';
-            document.documentElement.lang = option.dataset.lang || 'fr';
+            applyLanguageOption(option);
             languagePicker.classList.remove('open');
             languageButton.setAttribute('aria-expanded', 'false');
           });
@@ -274,13 +353,10 @@
       }
     })();
   </script>
-  <script src="catalog.js?v=20260715r"></script>
   <script src="cart.js?v=202607292o"></script>
   <script src="favorites.js?v=202607292h"></script>
-  <script src="stock-notify.js?v=20260716d"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
   <script src="auth.js?v=202607292a"></script>
-  <script src="account-page.js?v=20260729f"></script>
   <script src="site-content.js?v=20260729b"></script>
   <script src="cookie-consent.js?v=20260727a"></script>
   <script src="newsletter-popup.js?v=20260727k"></script>
