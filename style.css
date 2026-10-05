@@ -6192,16 +6192,19 @@ body.account-modal-open {
   visibility: hidden;
   pointer-events: none;
   background: #f5f2ec;
-  padding: 24px 72px 24px 760px;
+  padding: 24px 72px 24px clamp(24px, 35vw, 760px);
   box-shadow: none;
   border-radius: 0;
   display: grid;
-  grid-template-columns: repeat(2, 200px) max-content;
+  grid-template-columns: repeat(2, clamp(140px, 14vw, 200px)) max-content;
   justify-content: start;
   align-content: start;
-  column-gap: 56px;
+  column-gap: clamp(24px, 3vw, 56px);
   row-gap: 18px;
   z-index: 260;
+  max-width: 100vw;
+  overflow-x: auto;
+  overflow-y: hidden;
 }
 
 .nav-item:hover .submenu,
@@ -6239,17 +6242,19 @@ body.account-modal-open {
 
 .submenu-image {
   display: flex;
-  gap: 12px;
+  gap: clamp(8px, 1vw, 12px);
   align-self: start;
+  flex: none;
 }
 
 .submenu-image img {
   display: block;
-  width: 160px;
-  height: 280px;
+  width: clamp(100px, 9vw, 160px);
+  height: clamp(175px, 15.8vw, 280px);
   overflow: hidden;
   background: #ece8e0;
   object-fit: cover;
+  flex: none;
 }
 
 .submenu-categories a {
