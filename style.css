@@ -354,7 +354,7 @@ a {
 }
 
 main {
-  padding-top: 180px;
+  padding-top: 170px;
 }
 
 .home-page main {
@@ -609,6 +609,15 @@ body.header-scrolled .language-caret,
   height: 20px;
   stroke: #111111;
   filter: none;
+}
+
+/* Favoris + Compte: 10% smaller than the shared 20px icon size
+   (left in place after removing the language/flag picker next to
+   them); the cart icon keeps the default size. */
+#fav-trigger .icon-svg,
+.icon-button[aria-label="Compte"] .icon-svg {
+  width: 18px;
+  height: 18px;
 }
 
 .icon-button:hover .icon-svg {
@@ -1959,7 +1968,7 @@ body.account-modal-open {
 
 .account-page-sidebar {
   position: sticky;
-  top: 180px;
+  top: 170px;
   display: grid;
   gap: 12px;
 }
@@ -6083,16 +6092,17 @@ body.account-modal-open {
 }
 
 .nav a {
-  font-size: 22px;
-  letter-spacing: -1px;
+  font-size: 12px;
+  font-weight: 400;
+  letter-spacing: normal;
   text-transform: uppercase;
   position: relative;
   z-index: 261;
-  padding: 10px 0 18px;
+  padding: 15px 0 26px;
   display: inline-block;
   color: #111111;
   text-shadow: none;
-  line-height: 26px;
+  line-height: 12px;
   transition: color 0.22s ease;
 }
 
@@ -6149,7 +6159,7 @@ body.account-modal-open {
      breaks the :hover chain and closes the menu before it's reached. The
      visual breathing room below the nav row comes from padding-top instead,
      which doesn't affect the hoverable box. */
-  top: calc(36px + var(--site-header-top-pad-y, 12px) + var(--site-logo-size, 48px) + var(--site-header-top-pad-bottom, 6px) + 78px - 4px);
+  top: calc(36px + var(--site-header-top-pad-y, 12px) + var(--site-logo-size, 48px) + var(--site-header-top-pad-bottom, 6px) + 77px - 4px);
   left: 0;
   right: 0;
   transform: none;
@@ -8918,10 +8928,10 @@ img,
   --font-display: "Cormorant Garamond", Georgia, serif;
   --font-text: "Manrope", "Helvetica Neue", Arial, sans-serif;
   --site-global-scale: 1;
-  --site-header-top-pad-y: 12px;
+  --site-header-top-pad-y: 13px;
   --site-header-top-pad-x: 32px;
   --site-header-top-pad-bottom: 6px;
-  --site-logo-size: 48px;
+  --site-logo-size: 38px;
   --site-nav-font-size: 13px;
 }
 
@@ -8956,7 +8966,6 @@ h3,
   text-shadow: none;
 }
 
-.nav a,
 .submenu-title,
 .hero-kicker,
 .section-label,
@@ -8969,6 +8978,10 @@ h3,
   font-weight: 500;
   letter-spacing: 0.2em;
   text-transform: uppercase;
+}
+
+.nav a {
+  font-family: var(--font-text);
 }
 
 .submenu a,
