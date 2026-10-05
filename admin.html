@@ -804,6 +804,18 @@ const gate = document.getElementById('gate');
 const app = document.getElementById('app');
 const gateError = document.getElementById('gate-error');
 
+// Visitor-submitted text (newsletter name, influencer request fields,
+// stock-notification emails...) is rendered into this admin panel via
+// innerHTML below. It must always go through this before interpolation -
+// otherwise a crafted name/email is a stored-XSS path straight into an
+// authenticated admin session (which holds the admin password in
+// sessionStorage).
+function escapeHtml(value) {
+  return String(value === null || value === undefined ? '' : value).replace(/[&<>"']/g, (ch) => ({
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+  }[ch]));
+}
+
 function getPassword() {
   return sessionStorage.getItem(PASSWORD_KEY) || '';
 }
@@ -1440,8 +1452,8 @@ async function loadSubscribers() {
     } else {
       listEl.innerHTML = subscribersCache.map((s) => `
         <label style="display:flex;align-items:center;gap:8px;padding:5px 0;font-weight:400;">
-          <input type="checkbox" class="bc-sub-check" value="${s.email.replace(/"/g, '&quot;')}" style="width:auto;">
-          <span style="flex:1;">${s.email}</span>
+          <input type="checkbox" class="bc-sub-check" value="${escapeHtml(s.email)}" style="width:auto;">
+          <span style="flex:1;">${escapeHtml(s.email)}</span>
           <span style="color:#8a8175;font-size:0.82rem;">${[s.productName, s.size, s.notified ? 'déjà notifié' : 'en attente'].filter(Boolean).join(' · ')}</span>
         </label>
       `).join('');
@@ -1496,11 +1508,11 @@ function renderInfluencerRequests(rows) {
       const clickable = isLikelyUrl(n.url);
       const href = /^https?:\/\//i.test(n.url) ? n.url : `https://${n.url}`;
       const tag = clickable ? 'a' : 'span';
-      const attrs = clickable ? `href="${href.replace(/"/g, '&quot;')}" target="_blank" rel="noopener"` : '';
+      const attrs = clickable ? `href="${escapeHtml(href)}" target="_blank" rel="noopener"` : '';
       return `
         <${tag} ${attrs} class="influencer-network-badge">
-          <span class="net-line1"><strong>${NETWORK_LABELS[n.network] || n.network}</strong>${n.followers ? ` · ${n.followers.replace(/</g, '&lt;')} abonnés` : ''}</span>
-          <span class="net-line2${clickable ? '' : ' not-link'}">${n.url.replace(/</g, '&lt;')}${clickable ? '' : ' (pas un lien)'}</span>
+          <span class="net-line1"><strong>${NETWORK_LABELS[n.network] || n.network}</strong>${n.followers ? ` · ${escapeHtml(n.followers)} abonnés` : ''}</span>
+          <span class="net-line2${clickable ? '' : ' not-link'}">${escapeHtml(n.url)}${clickable ? '' : ' (pas un lien)'}</span>
         </${tag}>
       `;
     }).join('');
@@ -1509,9 +1521,9 @@ function renderInfluencerRequests(rows) {
       <div data-influencer-row="${r.id}" class="influencer-card">
         <div class="influencer-card-head">
           <div>
-            <strong class="influencer-name">${r.name.replace(/</g, '&lt;')}</strong>
+            <strong class="influencer-name">${escapeHtml(r.name)}</strong>
             <div class="influencer-meta">
-              <span>✉ <a href="https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(r.email)}" target="_blank" rel="noopener" style="color:inherit;text-decoration:underline;">${r.email}</a></span>
+              <span>✉ <a href="https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(r.email)}" target="_blank" rel="noopener" style="color:inherit;text-decoration:underline;">${escapeHtml(r.email)}</a></span>
               ${r.phone ? `<span>☎ ${formatPhoneDisplay(r.phone)}</span>` : ''}
               ${audienceText ? `<span>👥 ${audienceText}</span>` : ''}
               <span>🕓 ${date}</span>
@@ -1540,9 +1552,9 @@ function renderInfluencerRequests(rows) {
         <p class="influencer-section-label">Réseaux</p>
         <div class="influencer-networks">${networksHtml}</div>
 
-        ${r.details ? `<p class="influencer-section-label">Détails</p><p class="influencer-details-box">${r.details.replace(/</g, '&lt;')}</p>` : ''}
+        ${r.details ? `<p class="influencer-section-label">Détails</p><p class="influencer-details-box">${escapeHtml(r.details)}</p>` : ''}
 
-        ${(r.screenshots && r.screenshots.length) ? `<p class="influencer-section-label">Captures d'écran</p><div class="influencer-screenshots">${r.screenshots.map((url) => `<a href="${url}" target="_blank" rel="noopener"><img src="${url}" alt="Screenshot"></a>`).join('')}</div>` : ''}
+        ${(r.screenshots && r.screenshots.length) ? `<p class="influencer-section-label">Captures d'écran</p><div class="influencer-screenshots">${r.screenshots.map((url) => `<a href="${escapeHtml(url)}" target="_blank" rel="noopener"><img src="${escapeHtml(url)}" alt="Screenshot"></a>`).join('')}</div>` : ''}
       </div>
     `;
   }).join('');
@@ -1721,8 +1733,8 @@ function renderNewsletterSubscribers(rows) {
     return `
       <div data-newsletter-row="${s.id}" style="display:flex;align-items:center;gap:12px;padding:10px 12px;border-bottom:1px solid #f1ece2;flex-wrap:wrap;">
         <div style="flex:1;min-width:180px;">
-          <strong style="display:block;font-size:0.86rem;">${name || '(sans nom)'}</strong>
-          <span style="font-size:0.8rem;color:#8a8175;">${s.email}</span>
+          <strong style="display:block;font-size:0.86rem;">${name ? escapeHtml(name) : '(sans nom)'}</strong>
+          <span style="font-size:0.8rem;color:#8a8175;">${escapeHtml(s.email)}</span>
         </div>
         <span style="font-size:0.72rem;padding:2px 8px;border-radius:10px;background:${s.confirmed ? '#e6f2e8' : '#fbf0de'};color:${s.confirmed ? '#2f6b3a' : '#a5601f'};">${s.confirmed ? 'Confirmé' : 'En attente'}</span>
         <label style="display:flex;align-items:center;gap:5px;font-size:0.78rem;font-weight:400;"><input type="checkbox" data-newsletter-toggle="wantsProducts" ${s.wantsProducts ? 'checked' : ''} style="width:auto;"> Produits</label>
