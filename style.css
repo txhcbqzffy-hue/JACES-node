@@ -6242,7 +6242,7 @@ body.account-modal-open {
 
 .submenu-image {
   display: flex;
-  gap: clamp(8px, 1vw, 12px);
+  gap: clamp(20px, 2.2vw, 32px);
   align-self: start;
   flex: none;
 }
@@ -6250,7 +6250,7 @@ body.account-modal-open {
 .submenu-image img {
   display: block;
   width: clamp(100px, 9vw, 160px);
-  height: clamp(175px, 15.8vw, 280px);
+  height: clamp(100px, 9vw, 160px);
   overflow: hidden;
   background: #ece8e0;
   object-fit: cover;

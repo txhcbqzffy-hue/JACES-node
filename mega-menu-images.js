@@ -26,20 +26,43 @@ function getFirstProductImage(product) {
   return normalizeMediaUrl(images[0]?.url || product?.image_url || product?.img || '');
 }
 
+function withImages(products) {
+  return (Array.isArray(products) ? products : [])
+    .map((product) => ({ product, url: getFirstProductImage(product) }))
+    .filter((entry) => entry.url);
+}
+
+// Not every menu's category has tagged products yet (e.g. a brand-new
+// Collaborations/Accessoires filter with nothing assigned in admin) - rather
+// than leave the slot empty, fall back to the full catalog so the menu still
+// shows something. Fetched once and shared across every slot.
+let fullCatalogPromise = null;
+function getFullCatalogWithImages() {
+  if (!fullCatalogPromise) {
+    fullCatalogPromise = getProducts('').then(withImages).catch(() => []);
+  }
+  return fullCatalogPromise;
+}
+
 document.querySelectorAll('.submenu-image[data-menu-image]').forEach((slot) => {
   const pageType = slot.dataset.menuImage;
   const imgs = Array.from(slot.querySelectorAll('img'));
   if (!pageType || !imgs.length) return;
 
   getProducts(pageType)
-    .then((products) => {
-      const list = Array.isArray(products) ? products : [];
-      const withImages = list
-        .map((product) => ({ product, url: getFirstProductImage(product) }))
-        .filter((entry) => entry.url);
+    .then(withImages)
+    .catch(() => [])
+    .then(async (categoryEntries) => {
+      let entries = categoryEntries;
+      if (entries.length < imgs.length) {
+        const fallback = await getFullCatalogWithImages();
+        const usedUrls = new Set(entries.map((entry) => entry.url));
+        const extra = fallback.filter((entry) => !usedUrls.has(entry.url));
+        entries = entries.concat(extra);
+      }
 
       imgs.forEach((img, index) => {
-        const entry = withImages[index];
+        const entry = entries[index];
         if (!entry) {
           img.remove();
           return;
@@ -47,8 +70,5 @@ document.querySelectorAll('.submenu-image[data-menu-image]').forEach((slot) => {
         img.src = entry.url;
         img.alt = entry.product.name || '';
       });
-    })
-    .catch(() => {
-      // Leave the neutral placeholder backgrounds - no broken-image icons.
     });
 });
