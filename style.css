@@ -6195,14 +6195,14 @@ body.account-modal-open {
 }
 
 .submenu-title {
-  display: none;
+  display: inline-block;
   font-size: 10px;
   letter-spacing: 0.32em;
   text-transform: uppercase;
   color: rgba(17, 17, 17, 0.55);
   margin-bottom: 10px;
   padding: 7px 10px;
-  background: #f5f2ec;
+  background: #ece8e0;
   border-radius: 14px;
 }
 
@@ -6211,9 +6211,7 @@ body.account-modal-open {
 }
 
 .submenu-categories {
-  columns: 2;
-  column-gap: 90px;
-  min-width: 420px;
+  min-width: 220px;
 }
 
 .submenu-categories a {
@@ -6250,8 +6248,10 @@ body.header-scrolled .header .submenu a.submenu-link-active {
   font-weight: 600;
 }
 
-.underline-link {
-  text-decoration: none;
+.submenu a.underline-link {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  font-weight: 600;
 }
 
 @media (max-width: 920px) and (hover: none) and (pointer: coarse) {
