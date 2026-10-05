@@ -235,7 +235,7 @@ async function loadPageProducts() {
     productGrid.innerHTML = '';
 
     if (!visibleProducts.length) {
-      productGrid.innerHTML = '';
+      productGrid.innerHTML = buildEmptyState('Aucun produit ne correspond pour le moment');
       window.dispatchEvent(new CustomEvent('jaces:products-loaded', { detail: { products: [], pageType } }));
       return;
     }
