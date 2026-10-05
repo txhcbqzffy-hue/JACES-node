@@ -6196,7 +6196,7 @@ body.account-modal-open {
   border-radius: 0;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(180px, 260px));
-  justify-content: center;
+  justify-content: start;
   align-content: start;
   column-gap: 88px;
   row-gap: 18px;
@@ -6218,7 +6218,7 @@ body.account-modal-open {
 
 .submenu-title {
   display: inline-block;
-  font-size: 7.84px;
+  font-size: 0.745rem;
   letter-spacing: 0.32em;
   text-transform: uppercase;
   color: rgba(17, 17, 17, 0.55);
