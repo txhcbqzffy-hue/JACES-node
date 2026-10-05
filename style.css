@@ -10457,7 +10457,7 @@ h3,
 }
 
 .cookie-banner-text a {
-  color: rgba(17, 17, 17, 0.16);
+  color: #ffffff;
   text-decoration: underline;
 }
 
@@ -10493,11 +10493,11 @@ h3,
 .cookie-btn-outline {
   border: 1px solid rgba(255, 255, 255, 0.55);
   background: transparent;
-  color: rgba(17, 17, 17, 0.16);
+  color: rgba(255, 255, 255, 0.92);
 }
 
 .cookie-btn-outline:hover {
-  border-color: rgba(17, 17, 17, 0.16);
+  border-color: rgba(255, 255, 255, 0.8);
   background: rgba(245, 242, 236, 0.1);
 }
 
