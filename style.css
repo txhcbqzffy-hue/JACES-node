@@ -354,7 +354,7 @@ a {
 }
 
 main {
-  padding-top: 178px;
+  padding-top: 170px;
 }
 
 .home-page main {
@@ -1959,7 +1959,7 @@ body.account-modal-open {
 
 .account-page-sidebar {
   position: sticky;
-  top: 178px;
+  top: 170px;
   display: grid;
   gap: 12px;
 }
@@ -8921,7 +8921,7 @@ img,
   --site-header-top-pad-y: 12px;
   --site-header-top-pad-x: 32px;
   --site-header-top-pad-bottom: 6px;
-  --site-logo-size: 56px;
+  --site-logo-size: 48px;
   --site-nav-font-size: 13px;
 }
 
