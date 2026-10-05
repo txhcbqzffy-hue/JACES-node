@@ -28,19 +28,27 @@ function getFirstProductImage(product) {
 
 document.querySelectorAll('.submenu-image[data-menu-image]').forEach((slot) => {
   const pageType = slot.dataset.menuImage;
-  const img = slot.querySelector('img');
-  if (!pageType || !img) return;
+  const imgs = Array.from(slot.querySelectorAll('img'));
+  if (!pageType || !imgs.length) return;
 
   getProducts(pageType)
     .then((products) => {
       const list = Array.isArray(products) ? products : [];
-      const withImage = list.find((product) => getFirstProductImage(product));
-      if (!withImage) return;
+      const withImages = list
+        .map((product) => ({ product, url: getFirstProductImage(product) }))
+        .filter((entry) => entry.url);
 
-      img.src = getFirstProductImage(withImage);
-      img.alt = withImage.name || '';
+      imgs.forEach((img, index) => {
+        const entry = withImages[index];
+        if (!entry) {
+          img.remove();
+          return;
+        }
+        img.src = entry.url;
+        img.alt = entry.product.name || '';
+      });
     })
     .catch(() => {
-      // Leave the neutral placeholder background - no broken-image icon.
+      // Leave the neutral placeholder backgrounds - no broken-image icons.
     });
 });
