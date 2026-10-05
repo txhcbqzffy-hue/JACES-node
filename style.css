@@ -354,7 +354,7 @@ a {
 }
 
 main {
-  padding-top: 170px;
+  padding-top: 180px;
 }
 
 .home-page main {
@@ -1959,7 +1959,7 @@ body.account-modal-open {
 
 .account-page-sidebar {
   position: sticky;
-  top: 170px;
+  top: 180px;
   display: grid;
   gap: 12px;
 }
@@ -6083,16 +6083,16 @@ body.account-modal-open {
 }
 
 .nav a {
-  font-size: var(--site-nav-font-size, 11px);
-  letter-spacing: 0.18em;
+  font-size: 22px;
+  letter-spacing: -1px;
   text-transform: uppercase;
   position: relative;
   z-index: 261;
-  padding: 10px 0;
+  padding: 10px 0 18px;
   display: inline-block;
   color: #111111;
   text-shadow: none;
-  line-height: 1;
+  line-height: 26px;
   transition: color 0.22s ease;
 }
 
@@ -6149,7 +6149,7 @@ body.account-modal-open {
      breaks the :hover chain and closes the menu before it's reached. The
      visual breathing room below the nav row comes from padding-top instead,
      which doesn't affect the hoverable box. */
-  top: calc(36px + var(--site-header-top-pad-y, 12px) + var(--site-logo-size, 48px) + var(--site-header-top-pad-bottom, 6px) + 38px - 4px);
+  top: calc(36px + var(--site-header-top-pad-y, 12px) + var(--site-logo-size, 48px) + var(--site-header-top-pad-bottom, 6px) + 78px - 4px);
   left: 0;
   right: 0;
   transform: none;
@@ -8969,11 +8969,6 @@ h3,
   font-weight: 500;
   letter-spacing: 0.2em;
   text-transform: uppercase;
-}
-
-.nav a {
-  font-size: var(--site-nav-font-size, 11px);
-  letter-spacing: 0.18em;
 }
 
 .submenu a,
