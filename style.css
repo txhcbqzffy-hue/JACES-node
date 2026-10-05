@@ -6192,12 +6192,12 @@ body.account-modal-open {
   visibility: hidden;
   pointer-events: none;
   background: #f5f2ec;
-  padding: 24px 72px 24px 1200px;
+  padding: 24px 72px;
   box-shadow: none;
   border-radius: 0;
   display: grid;
   grid-template-columns: repeat(4, max-content);
-  justify-content: start;
+  justify-content: end;
   align-content: start;
   column-gap: 56px;
   row-gap: 18px;
