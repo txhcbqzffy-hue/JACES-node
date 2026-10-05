@@ -6302,8 +6302,7 @@ body.header-scrolled .header .submenu a.submenu-link-active {
   content: "";
   display: block;
   position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
+  left: 6px;
   bottom: 6px;
   width: 28px;
   height: 1px;
