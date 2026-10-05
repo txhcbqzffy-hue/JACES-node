@@ -5116,7 +5116,8 @@ body.account-modal-open {
 }
 
 .favorites-empty-state,
-.product-detail-empty {
+.product-detail-empty,
+.product-grid-empty {
   max-width: 760px;
   margin: 0 auto;
   padding: 48px 32px;
@@ -5128,14 +5129,16 @@ body.account-modal-open {
 }
 
 .favorites-empty-state h2,
-.product-detail-empty h1 {
+.product-detail-empty h1,
+.product-grid-empty h1 {
   margin: 0;
   font-size: clamp(2rem, 4vw, 3.4rem);
   line-height: 0.98;
 }
 
 .favorites-empty-state p,
-.product-detail-empty p {
+.product-detail-empty p,
+.product-grid-empty p {
   margin: 0;
   color: rgba(17, 17, 17, 0.6);
   line-height: 1.65;
@@ -5991,17 +5994,28 @@ body.account-modal-open {
     grid-template-columns: 1fr;
   }
 
+  /* These 198px/304px figures (and the plain `main` rule added below)
+     assume a desktop-height header. On touch devices at this width the
+     nav wraps across multiple rows (see the mobile mega-menu media query
+     further down), making the fixed header up to ~305px tall here - taller
+     than the old padding reserved, which hid the page's own title/content
+     behind it. Bumped to clear that; see the narrower override below for
+     phone widths where the header wraps even further. */
   .cart-page-body main {
-    padding-top: 198px;
+    padding-top: 330px;
   }
 
   .products-page main,
   .product-detail-page main.section.product-detail-main {
-    padding-top: 198px;
+    padding-top: 330px;
   }
 
   .product-detail-page main {
-    padding-top: 304px;
+    padding-top: 340px;
+  }
+
+  main {
+    padding-top: 330px;
   }
 
   .cart-page-recap {
@@ -6071,6 +6085,31 @@ body.account-modal-open {
 
   .size-advisor-shell {
     padding: 24px 20px 28px;
+  }
+}
+
+/* Phone widths (<=420px: iPhone SE/mini/standard) wrap the nav across three
+   rows instead of two (see the touch-only mega-menu media query further
+   down), making the fixed header taller still than the 900px tier above
+   accounts for - bump the same reserved-space rules further so page
+   content/titles clear it instead of rendering hidden underneath. */
+@media (max-width: 420px) {
+  main,
+  .cart-page-body main,
+  .products-page main,
+  .product-detail-page main.section.product-detail-main {
+    padding-top: 400px;
+  }
+
+  .product-detail-page main {
+    padding-top: 410px;
+  }
+
+  /* .home-page .hero centers its content vertically in 100vh; the extra
+     top padding here shifts that centered content down so it clears the
+     taller header instead of starting underneath it. */
+  .home-page .hero {
+    padding-top: 228px;
   }
 }
 
@@ -6316,6 +6355,13 @@ body.header-scrolled .header .submenu a.submenu-link-active {
   }
   .nav-item {
     padding: 0 9px;
+    /* The open submenu panel below is centered with left:50% +
+       translateX(-50%); anchoring that to .nav (which spans the full
+       header width and is already position:relative) instead of to this
+       specific nav-item centers the panel on the screen regardless of
+       which item was tapped. Without this, a nav-item sitting right of
+       the header's center pushed the panel's right edge off-screen. */
+    position: static;
   }
   .submenu {
     display: none !important;
@@ -6342,6 +6388,7 @@ body.header-scrolled .header .submenu a.submenu-link-active {
     right: auto;
     transform: translateX(-50%);
     width: min(92vw, 560px);
+    max-width: calc(100vw - 16px);
     padding: 16px 14px 18px;
     grid-template-columns: 1fr;
     column-gap: 14px;
@@ -9113,17 +9160,36 @@ h3,
 
 /* Mobile header stacks (search/logo/icons wrap, then nav wraps too),
    growing well past the 170px reserved on desktop - without this the
-   page title renders hidden behind the fixed header on small screens. */
+   page title renders hidden behind the fixed header on small screens.
+   300px covered the header's wrapped height at the time this was written,
+   but the touch-only nav wrap (see the mega-menu media query further
+   down) can make it taller than that at this width - bumped to 330px to
+   actually clear it (and bumped further for phone widths just below). */
 @media (max-width: 768px) {
   .collaboration-page .brand-page,
   .defile-page .brand-page,
   .univers-page .brand-page,
   .accessoires-page .brand-page {
-    padding-top: 300px;
+    padding-top: 330px;
   }
 
   .univers-page #maison.brand-section {
     padding-top: 0;
+  }
+}
+
+/* Phone widths wrap the nav a third time (see the touch-only mega-menu
+   media query), making the header taller still than the 768px tier right
+   above accounts for - same reasoning as the matching 420px block earlier
+   in the file for the other page templates. Kept here (after the 768px
+   block above) so it wins the cascade against it at these narrower
+   widths. */
+@media (max-width: 420px) {
+  .collaboration-page .brand-page,
+  .defile-page .brand-page,
+  .univers-page .brand-page,
+  .accessoires-page .brand-page {
+    padding-top: 400px;
   }
 }
 
@@ -10223,6 +10289,14 @@ h3,
     padding-right: 20px;
   }
 
+  /* .brand-band-products p has white-space: nowrap for the desktop layout
+     (two-column grid, plenty of width per card); on narrow screens the
+     stacked single-column cards aren't wide enough for these sentences,
+     which was forcing the whole page to overflow horizontally. */
+  .brand-band-products p {
+    white-space: normal;
+  }
+
   .brand-section {
     margin: 0;
     padding: 44px 20px 14px;
@@ -10592,6 +10666,14 @@ h3,
     padding: 18px 20px;
     flex-direction: column;
     align-items: stretch;
+  }
+
+  /* .cookie-banner-text has flex: 1 1 420px for the desktop row layout
+     (420px = a width). .cookie-banner-inner switches to a column above,
+     which turns that same flex-basis into a 420px-tall text block,
+     pushing the banner over most of the screen. Reset the basis here. */
+  .cookie-banner-text {
+    flex-basis: auto;
   }
 
   .cookie-banner-actions {
