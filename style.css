@@ -6192,7 +6192,7 @@ body.account-modal-open {
   pointer-events: none;
   background: #f5f2ec;
   padding: 24px 72px 24px;
-  box-shadow: 0 32px 90px rgba(17, 17, 17, 0.12);
+  box-shadow: none;
   border-radius: 0;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(180px, 260px));
