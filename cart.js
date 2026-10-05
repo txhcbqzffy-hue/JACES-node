@@ -1317,6 +1317,17 @@
         return;
       }
 
+      // Alma/Klarna only ever showed a placeholder redirect message - there is
+      // no actual integration wired up anywhere, so selecting either and
+      // submitting skipped straight past the entire payment block below to a
+      // confirmed order with nothing charged. Block submission here instead
+      // of removing the options outright, so they're ready to re-enable the
+      // moment a real integration exists.
+      if (selectedPaymentMethod !== 'card') {
+        if (message) message.textContent = 'Ce mode de paiement n\'est pas encore disponible. Merci de choisir le paiement par carte pour finaliser votre commande.';
+        return;
+      }
+
       if (selectedPaymentMethod === 'card') {
         const stripe = getStripe();
         if (!stripe || !stripeCardElement) {
