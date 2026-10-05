@@ -6092,6 +6092,28 @@ body.account-modal-open {
   position: relative;
 }
 
+/* Bridges the gap between the nav link's own box and .submenu's fixed
+   top offset (a few px, from the header-height calc not matching every
+   viewport exactly) so the cursor never crosses a dead zone that isn't
+   covered by either element's :hover - which would otherwise drop the
+   hover chain and close the menu while moving toward it. Only
+   hit-testable once the item is already hovered/focused, so it never
+   intercepts clicks on page content underneath the rest of the time. */
+.nav-item::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: -40px;
+  right: -40px;
+  height: 36px;
+  pointer-events: none;
+}
+
+.nav-item:hover::after,
+.nav-item:focus-within::after {
+  pointer-events: auto;
+}
+
 .nav a {
   font-size: 12px;
   font-weight: 400;
@@ -6222,9 +6244,9 @@ body.account-modal-open {
 .submenu a {
   display: block;
   color: #111111;
-  font-size: 1.57rem;
-  line-height: 1.55;
-  letter-spacing: 0.02em;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  letter-spacing: 0.04em;
   padding: 5px 6px;
   border-radius: 0;
   position: relative;
