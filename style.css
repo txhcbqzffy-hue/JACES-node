@@ -6150,22 +6150,22 @@ body.account-modal-open {
   height: 0.8px;
   background: #111111;
   left: 0;
-  bottom: -4px;
+  bottom: -14px;
   transition: 0.3s;
 }
 
 
 .nav a:hover::after {
-  width: 100%;
+  width: 24px;
 }
 
 .nav a.active::after {
-  width: 100%;
+  width: 24px;
 }
 
 .nav a.active::after,
 .nav a[aria-current="page"]::after {
-  width: 100%;
+  width: 24px;
   background: #111111;
   transition: none;
 }
