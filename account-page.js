@@ -250,7 +250,13 @@
   }
 
   function deriveAddresses(profile) {
-    const storedAddresses = Array.isArray(profile?.addresses)
+    // Distinguish "no addresses array ever saved" (synthesize a preview from
+    // the latest order below) from "explicitly saved as an empty array" (the
+    // user deleted their last address - respect that instead of resurrecting
+    // the order-derived preview on every render, which made Supprimer look
+    // like a no-op for that entry).
+    const hasExplicitAddresses = Array.isArray(profile?.addresses);
+    const storedAddresses = hasExplicitAddresses
       ? profile.addresses.map(normalizeAddress)
       : [];
 
@@ -261,12 +267,18 @@
       return storedAddresses;
     }
 
+    if (hasExplicitAddresses) return [];
+
     const latestOrder = Array.isArray(profile?.orders) ? profile.orders[0] : null;
     const shippingAddress = latestOrder?.shippingAddress || null;
     const baseAddress = shippingAddress?.address || profile?.deliveryAddress;
     if (!baseAddress) return [];
 
-    return [normalizeAddress({
+    // Marked isSynthetic so it's never mistaken for a genuinely saved address
+    // when adding a *different* new address (see the account-address-form
+    // submit handler) - only explicitly editing/saving this exact card
+    // should turn it into a real stored entry.
+    return [Object.assign(normalizeAddress({
       id: 'default-address',
       label: 'Adresse principale',
       firstName: shippingAddress?.firstName || profile?.firstName || '',
@@ -278,7 +290,7 @@
       country: shippingAddress?.country || profile?.country || 'France',
       phone: shippingAddress?.phone || profile?.phone || '',
       isDefault: true
-    }, 0)];
+    }, 0), { isSynthetic: true })];
   }
 
   function buildProfile() {
@@ -1260,7 +1272,12 @@
           isDefault: formData.get('isDefault') === 'on'
         }, 0);
 
-        const existingAddresses = Array.isArray(profile.addresses) ? profile.addresses.slice() : [];
+        // Drop the order-derived preview address from the baseline unless
+        // it's the very card being saved (isSynthetic, see deriveAddresses) -
+        // otherwise saving a brand new address would silently persist that
+        // preview as a second, never-explicitly-added real address too.
+        const existingAddresses = (Array.isArray(profile.addresses) ? profile.addresses.slice() : [])
+          .filter((address) => !address.isSynthetic || address.id === addressEntry.id);
         const isNewAddress = !existingAddresses.some((address) => address.id === addressEntry.id);
         if (isNewAddress && existingAddresses.length >= MAX_ADDRESSES) {
           state.feedback = 'Vous avez atteint le maximum de 3 adresses. Modifiez ou supprimez-en une pour en ajouter une nouvelle.';

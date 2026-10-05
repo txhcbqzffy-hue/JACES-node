@@ -1077,6 +1077,12 @@ if (path === 'collection.html' || path === 'nouveautes.html' || path === 'access
       restoreHeartStates();
       updateHeaderCount();
       renderPanel();
+      // mes-favoris.js's full wishlist page listens for this to re-render
+      // from the (now merged) account-scoped storage. Its own
+      // jaces:account-sync listener is registered earlier in page load order
+      // than this one, so without this it would redraw first, against the
+      // not-yet-merged guest data, and never pick up the just-merged items.
+      emitSyncEvent(FAVORITES_SYNC_EVENT, {});
     });
   }
 

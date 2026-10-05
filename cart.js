@@ -24,6 +24,22 @@
     return String(getAccountSession()?.email || '').trim().toLowerCase();
   }
 
+  // getAccountEmail() only ever returns something for a real, logged-in
+  // account - by design, saveCart()/getCart() must stay scoped that way (see
+  // getScopedStorageKey) so a guest's cart never silently migrates to an
+  // email-scoped key just because they typed an address. But the checkout
+  // address book (save/show/delete a saved address) is keyed by whatever
+  // email the shopper is checking out with, guest or not, and
+  // persistCheckoutProfile() already writes that email to ACCOUNT_SESSION_KEY
+  // regardless of login state - so address-book lookups should fall back to
+  // it instead of silently finding nothing for guests.
+  function getCheckoutProfileEmail() {
+    const accountEmail = getAccountEmail();
+    if (accountEmail) return accountEmail;
+    const localSession = readJsonStorage(ACCOUNT_SESSION_KEY, null);
+    return String(localSession?.email || '').trim().toLowerCase();
+  }
+
   function readJsonStorage(key, fallback) {
     try {
       const value = window.localStorage.getItem(key);
@@ -73,7 +89,7 @@
   }
 
   function getCheckoutAddresses(session) {
-    const email = getAccountEmail();
+    const email = getCheckoutProfileEmail();
     const profiles = readJsonStorage(ACCOUNT_PROFILES_KEY, {});
     const storedProfile = email ? profiles[email] || {} : {};
     const mergedProfile = Object.assign({}, storedProfile, session || {});
@@ -781,7 +797,10 @@
     const promoDiscount = getPromoDiscount(subtotal, promoCode);
     const shippingFee = getShippingFee(Math.max(0, subtotal - promoDiscount));
     const total = Math.max(0, subtotal - promoDiscount) + shippingFee;
-    const taxAmount = total * 0.2;
+    // French VAT (20%) is already included in `total`, so the tax portion of a
+    // VAT-inclusive amount is total * (0.2 / 1.2), not total * 0.2 - the previous
+    // formula overstated the "Taxes incluses" figure shown here and saved on orders.
+    const taxAmount = Math.round(total * (0.2 / 1.2) * 100) / 100;
 
     if (totalEl) {
       const count = items.reduce((sum, item) => sum + (Number(item.quantity) || 0), 0);
@@ -1157,7 +1176,7 @@
     shell.querySelectorAll('[data-delete-address]').forEach((button) => {
       button.addEventListener('click', () => {
         const addressId = button.getAttribute('data-delete-address') || '';
-        const email = getAccountEmail();
+        const email = getCheckoutProfileEmail();
         if (!email) return;
         const nextAddresses = savedAddresses.filter((address) => address.id !== addressId);
         if (nextAddresses.length && !nextAddresses.some((address) => address.isDefault)) {
@@ -1318,7 +1337,7 @@
               shippingMode
             })
           });
-          const intentData = await intentRes.json();
+          const intentData = await intentRes.json().catch(() => ({}));
           if (!intentRes.ok) throw new Error(intentData.error || 'Échec de la préparation du paiement');
 
           const confirmResult = await stripe.confirmCardPayment(intentData.clientSecret, {
@@ -1475,8 +1494,16 @@
     init();
   }
 
-  window.addEventListener('jaces:account-sync', (event) => {
-    const email = String(event?.detail?.session?.email || '').trim().toLowerCase();
+  window.addEventListener('jaces:account-sync', () => {
+    // Don't trust event.detail.session.email here: this same event is also
+    // dispatched by persistCheckoutProfile()/persistOrder() above whenever a
+    // *guest* types an email into the checkout form, which isn't a login.
+    // Re-deriving from the real auth session (getAccountEmail) ensures the
+    // guest cart only gets merged/moved on an actual account login - trusting
+    // the event payload instead moved the guest's cart to an email-scoped key
+    // nothing reads back from guest-side, making the cart appear to empty out
+    // the moment a guest saved a checkout address.
+    const email = getAccountEmail();
     if (email) mergeGuestCartIntoAccount(email);
     updateHeaderCount();
     renderCartPage();
