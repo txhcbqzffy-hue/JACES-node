@@ -863,10 +863,6 @@ if (path === 'collection.html' || path === 'nouveautes.html' || path === 'access
     return !!document.body?.classList.contains('accessoires-page');
   }
 
-  function buildQuickBuyTitleMarkup(suggestedSize) {
-    return '<strong>Achat rapide</strong> (Selectionnez votre taille)';
-  }
-
   function normalizeQuickBuyPanels(scope) {
     const root = scope && typeof scope.querySelectorAll === 'function' ? scope : document;
     root.querySelectorAll('.product-card .hover-sizes').forEach((panel) => {
@@ -926,7 +922,7 @@ if (path === 'collection.html' || path === 'nouveautes.html' || path === 'access
         })
         .join('');
       panel.dataset.quickSizes = quickBuySizes.join(',');
-      panel.innerHTML = '<p class="quick-buy-title">' + buildQuickBuyTitleMarkup(suggestedSize) + '</p><div class="quick-buy-grid">' + buttonsHtml + '</div>';
+      panel.innerHTML = '<div class="quick-buy-grid">' + buttonsHtml + '</div>';
       panel.dataset.qbDone = '1';
     });
   }

@@ -992,7 +992,7 @@
       const buttonsHtml = quickBuySizes
         .map((size) => `<button class="${suggestedSize === size ? 'is-recommended' : ''}" type="button">${size}</button>`)
         .join('');
-      return `<p class="quick-buy-title"><strong>Achat rapide</strong> (Selectionnez votre taille)</p><div class="quick-buy-grid">${buttonsHtml}</div>`;
+      return `<div class="quick-buy-grid">${buttonsHtml}</div>`;
     };
 
     shell.innerHTML = `
