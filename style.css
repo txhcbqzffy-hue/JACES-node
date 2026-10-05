@@ -6237,6 +6237,27 @@ body.account-modal-open {
   min-width: 0;
 }
 
+.submenu-image {
+  width: 220px;
+  height: 280px;
+  overflow: hidden;
+  background: #ece8e0;
+  align-self: start;
+}
+
+.submenu-image img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+
+.submenu-image img[src] {
+  opacity: 1;
+}
+
 .submenu-categories a {
   break-inside: avoid;
 }
