@@ -6218,7 +6218,7 @@ body.account-modal-open {
 
 .submenu-title {
   display: inline-block;
-  font-size: 10px;
+  font-size: 7px;
   letter-spacing: 0.32em;
   text-transform: uppercase;
   color: rgba(17, 17, 17, 0.55);
@@ -6244,7 +6244,7 @@ body.account-modal-open {
 .submenu a {
   display: block;
   color: #111111;
-  font-size: 0.95rem;
+  font-size: 0.665rem;
   line-height: 1.5;
   letter-spacing: 0.04em;
   padding: 5px 6px;
