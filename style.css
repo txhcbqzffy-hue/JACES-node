@@ -354,7 +354,7 @@ a {
 }
 
 main {
-  padding-top: 171px;
+  padding-top: 177px;
 }
 
 .home-page main {
@@ -1968,7 +1968,7 @@ body.account-modal-open {
 
 .account-page-sidebar {
   position: sticky;
-  top: 171px;
+  top: 177px;
   display: grid;
   gap: 12px;
 }
@@ -8928,7 +8928,7 @@ img,
   --font-display: "Cormorant Garamond", Georgia, serif;
   --font-text: "Manrope", "Helvetica Neue", Arial, sans-serif;
   --site-global-scale: 1;
-  --site-header-top-pad-y: 14px;
+  --site-header-top-pad-y: 20px;
   --site-header-top-pad-x: 32px;
   --site-header-top-pad-bottom: 6px;
   --site-logo-size: 38px;
