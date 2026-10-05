@@ -6192,11 +6192,11 @@ body.account-modal-open {
   visibility: hidden;
   pointer-events: none;
   background: #f5f2ec;
-  padding: 24px 72px 24px 590px;
+  padding: 24px 72px 24px 760px;
   box-shadow: none;
   border-radius: 0;
   display: grid;
-  grid-template-columns: repeat(4, max-content);
+  grid-template-columns: repeat(4, 200px);
   justify-content: start;
   align-content: start;
   column-gap: 56px;
@@ -6238,7 +6238,7 @@ body.account-modal-open {
 }
 
 .submenu-image {
-  width: 220px;
+  width: 200px;
   height: 280px;
   overflow: hidden;
   background: #ece8e0;
