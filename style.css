@@ -6231,12 +6231,12 @@ body.account-modal-open {
   visibility: hidden;
   pointer-events: none;
   background: #f5f2ec;
-  padding: 24px 72px 24px clamp(24px, 8vw, 300px);
+  padding: 24px 72px;
   box-shadow: none;
   border-radius: 0;
   display: grid;
   grid-template-columns: repeat(2, clamp(140px, 14vw, 200px)) max-content;
-  justify-content: start;
+  justify-content: center;
   align-content: start;
   column-gap: clamp(24px, 3vw, 56px);
   row-gap: 18px;
