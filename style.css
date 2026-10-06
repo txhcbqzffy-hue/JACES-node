@@ -354,7 +354,7 @@ a {
 }
 
 main {
-  padding-top: 177px;
+  padding-top: 152px;
 }
 
 .home-page main {
@@ -1969,7 +1969,7 @@ body.account-modal-open {
 
 .account-page-sidebar {
   position: sticky;
-  top: 177px;
+  top: 152px;
   display: grid;
   gap: 12px;
 }
@@ -6160,7 +6160,7 @@ body.account-modal-open {
   text-transform: uppercase;
   position: relative;
   z-index: 261;
-  padding: 15px 0 26px;
+  padding: 10px 0 16px;
   display: inline-block;
   color: #111111;
   text-shadow: none;
@@ -9053,7 +9053,7 @@ img,
   --font-display: "Cormorant Garamond", Georgia, serif;
   --font-text: "Manrope", "Helvetica Neue", Arial, sans-serif;
   --site-global-scale: 1;
-  --site-header-top-pad-y: 20px;
+  --site-header-top-pad-y: 10px;
   --site-header-top-pad-x: 32px;
   --site-header-top-pad-bottom: 6px;
   --site-logo-size: 38px;
