@@ -6202,7 +6202,9 @@ body.account-modal-open {
 }
 
 
-.nav a:hover::after {
+.nav a:hover::after,
+.nav-item:hover > a::after,
+.nav-item:focus-within > a::after {
   width: 24px;
 }
 
