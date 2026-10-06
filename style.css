@@ -6168,13 +6168,6 @@ body.account-modal-open {
   transition: color 0.22s ease;
 }
 
-/* Défilé/Univers are wrapped in <em> in the markup, which made them
-   italic while every other top-level nav label is upright - normalize
-   so all six read the same. */
-.nav-item > a em {
-  font-style: normal;
-}
-
 .nav a:hover {
   color: #111111;
 }
@@ -6352,14 +6345,7 @@ body.header-scrolled .header .submenu a.submenu-link-active {
 }
 
 .submenu a.underline-link::after {
-  content: "";
-  display: block;
-  position: absolute;
-  left: 6px;
-  bottom: 6px;
-  width: 28px;
-  height: 1px;
-  background: #111111;
+  display: none;
 }
 
 @media (max-width: 920px) and (hover: none) and (pointer: coarse) {
