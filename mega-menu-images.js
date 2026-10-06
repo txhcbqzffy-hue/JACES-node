@@ -69,31 +69,6 @@ document.querySelectorAll('.submenu-image[data-menu-image]').forEach((slot) => {
         }
         img.src = entry.url;
         img.alt = entry.product.name || '';
-
-        // Wrap the bare <img> in a clickable preview card with the
-        // product's name/price underneath, instead of a plain decorative
-        // thumbnail - a shoppable mega-menu reads as a lot more "real
-        // site" than a static image grid.
-        const link = document.createElement('a');
-        link.className = 'submenu-image-item';
-        if (entry.product.id) link.href = `detail-produit.html?id=${entry.product.id}`;
-        img.replaceWith(link);
-        link.appendChild(img);
-
-        const caption = document.createElement('span');
-        caption.className = 'submenu-image-caption';
-        const name = document.createElement('span');
-        name.className = 'submenu-image-name';
-        name.textContent = entry.product.name || '';
-        caption.appendChild(name);
-        const price = Number(entry.product.price);
-        if (Number.isFinite(price)) {
-          const priceEl = document.createElement('span');
-          priceEl.className = 'submenu-image-price';
-          priceEl.textContent = new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR', minimumFractionDigits: 0, maximumFractionDigits: 2 }).format(price);
-          caption.appendChild(priceEl);
-        }
-        link.appendChild(caption);
       });
     });
 });
