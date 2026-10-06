@@ -6298,10 +6298,16 @@ body.account-modal-open {
   gap: clamp(20px, 2.2vw, 32px);
   flex: none;
   align-self: start;
-  /* Always track 4, regardless of how many text columns actually precede
-     it in a given menu's markup - keeps it landing in the same spot as a
-     normal grid column (standard column-gap before it), rather than off
-     on its own with a big empty gap. */
+  /* Default: natural grid flow, which lands it right after whatever text
+     columns actually exist (track 3 for a 2-text-column menu - Collections,
+     Collaborations, Accessoires, Défilé, Univers - with the normal
+     column-gap before it, no empty reserved track in between). */
+}
+
+/* Nouveautés is the one menu with a real 3rd text column ("À découvrir"),
+   so its image needs to be forced into track 4 specifically - letting it
+   fall into natural flow would land it in (already-occupied) track 3. */
+[data-menu-image="nouveautes"] {
   grid-column: 4;
 }
 
