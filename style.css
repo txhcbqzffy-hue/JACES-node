@@ -6294,14 +6294,18 @@ body.account-modal-open {
    instead of out at the far edge of the (wide, image-gallery-sized)
    3rd grid column with a big empty gap in between. */
 .submenu-image {
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
   gap: clamp(20px, 2.2vw, 32px);
-  flex: none;
   align-self: start;
-  /* Default: natural grid flow, which lands it right after whatever text
-     columns actually exist (track 3 for a 2-text-column menu - Collections,
-     Collaborations, Accessoires, Défilé, Univers - with the normal
-     column-gap before it, no empty reserved track in between). */
+  /* Default: spans tracks 3+4 together (natural flow starts it at track 3
+     for a 2-text-column menu - Collections, Collaborations, Accessoires,
+     Défilé, Univers). Its own 2 images fill that spanned width exactly
+     (1fr 1fr), so its right edge always lands on track 4's right edge -
+     same right edge Nouveautés' single image (grid-column: 4 alone,
+     below) sits flush against - instead of merely starting at the right
+     spot and then overflowing past track 4 by some unrelated amount. */
+  grid-column: span 2;
 }
 
 /* Nouveautés is the one menu with a real 3rd text column ("À découvrir"),
@@ -6309,16 +6313,16 @@ body.account-modal-open {
    fall into natural flow would land it in (already-occupied) track 3. */
 [data-menu-image="nouveautes"] {
   grid-column: 4;
+  grid-template-columns: 1fr;
 }
 
 .submenu-image img {
   display: block;
-  width: clamp(140px, 12.6vw, 224px);
+  width: 100%;
   height: clamp(140px, 12.6vw, 224px);
   overflow: hidden;
   background: #ece8e0;
   object-fit: cover;
-  flex: none;
 }
 
 .submenu-categories a {
