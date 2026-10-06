@@ -343,7 +343,7 @@ a {
 
 /* HEADER */
 .header {
-  background: #f5f2ec;
+  background: #ffffff;
   border-bottom: none;
   backdrop-filter: none;
   position: fixed;
@@ -354,7 +354,7 @@ a {
 }
 
 main {
-  padding-top: 165px;
+  padding-top: 163px;
 }
 
 .home-page main {
@@ -1969,7 +1969,7 @@ body.account-modal-open {
 
 .account-page-sidebar {
   position: sticky;
-  top: 165px;
+  top: 163px;
   display: grid;
   gap: 12px;
 }
@@ -6121,7 +6121,7 @@ body.account-modal-open {
   align-items: center;
   gap: 0;
   min-height: 38px;
-  padding: 0 24px 12px;
+  padding: 0 24px 10px;
   position: relative;
 }
 
@@ -6224,7 +6224,7 @@ body.account-modal-open {
      breaks the :hover chain and closes the menu before it's reached. The
      visual breathing room below the nav row comes from padding-top instead,
      which doesn't affect the hoverable box. */
-  top: calc(36px + var(--site-header-top-pad-y, 12px) + var(--site-logo-size, 48px) + var(--site-header-top-pad-bottom, 6px) + 65px - 4px);
+  top: calc(36px + var(--site-header-top-pad-y, 12px) + var(--site-logo-size, 48px) + var(--site-header-top-pad-bottom, 6px) + 63px - 4px);
   left: 0;
   right: 0;
   transform: none;
@@ -7086,11 +7086,11 @@ body.header-scrolled .header .submenu a.submenu-link-active {
 }
 
 .collection-page-body .header {
-  background: #f5f2ec;
+  background: #ffffff;
 }
 
 .home-page .header {
-  background: #f5f2ec;
+  background: #ffffff;
 }
 
 .collection-page-body {
