@@ -354,7 +354,7 @@ a {
 }
 
 main {
-  padding-top: 177px;
+  padding-top: 165px;
 }
 
 .home-page main {
@@ -1969,7 +1969,7 @@ body.account-modal-open {
 
 .account-page-sidebar {
   position: sticky;
-  top: 177px;
+  top: 165px;
   display: grid;
   gap: 12px;
 }
@@ -6121,7 +6121,7 @@ body.account-modal-open {
   align-items: center;
   gap: 0;
   min-height: 38px;
-  padding: 0 24px 24px;
+  padding: 0 24px 12px;
   position: relative;
 }
 
@@ -6224,7 +6224,7 @@ body.account-modal-open {
      breaks the :hover chain and closes the menu before it's reached. The
      visual breathing room below the nav row comes from padding-top instead,
      which doesn't affect the hoverable box. */
-  top: calc(36px + var(--site-header-top-pad-y, 12px) + var(--site-logo-size, 48px) + var(--site-header-top-pad-bottom, 6px) + 77px - 4px);
+  top: calc(36px + var(--site-header-top-pad-y, 12px) + var(--site-logo-size, 48px) + var(--site-header-top-pad-bottom, 6px) + 65px - 4px);
   left: 0;
   right: 0;
   transform: none;
