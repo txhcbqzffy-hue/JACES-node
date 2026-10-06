@@ -6237,12 +6237,13 @@ body.account-modal-open {
   box-shadow: none;
   border-radius: 0;
   display: grid;
-  /* The 3rd column is sized to the image gallery's own width (3 images +
-     2 gaps) rather than max-content, so it reserves the same space whether
-     or not that menu actually has a .submenu-image - otherwise a 2-column
-     menu (Défilé, Univers) centers on its own narrower content and visibly
-     lands at a different spot than the image-having menus next to it. */
-  grid-template-columns: repeat(2, clamp(140px, 14vw, 200px)) calc(2 * clamp(140px, 12.6vw, 224px) + clamp(20px, 2.2vw, 32px));
+  /* 3 equal text-column tracks, used by every menu regardless of how many
+     it actually has (2 or 3) - keeps the text always starting at the same
+     spot across menus. Preview images are taken out of grid flow entirely
+     (position: absolute, see .submenu-image) and pinned to a fixed spot
+     within this box instead, so they land in the exact same place no
+     matter how much text precedes them in a given menu. */
+  grid-template-columns: repeat(3, clamp(140px, 14vw, 200px));
   justify-content: center;
   align-content: start;
   column-gap: clamp(24px, 3vw, 56px);
@@ -6290,17 +6291,17 @@ body.account-modal-open {
    Nouveautés' "À découvrir"), so the image sits right after the text
    instead of out at the far edge of the (wide, image-gallery-sized)
    3rd grid column with a big empty gap in between. */
-.submenu-discover {
-  display: flex;
-  align-items: flex-start;
-  gap: clamp(24px, 3vw, 56px);
-}
-
 .submenu-image {
   display: flex;
   gap: clamp(20px, 2.2vw, 32px);
-  align-self: start;
   flex: none;
+  /* Pinned to a fixed spot within .submenu (which is the containing
+     block) instead of living in the text grid - guarantees the images
+     land in the exact same place in every menu, regardless of how many
+     text columns/how much text precedes them. */
+  position: absolute;
+  top: 24px;
+  right: 72px;
 }
 
 .submenu-image img {
