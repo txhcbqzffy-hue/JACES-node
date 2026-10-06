@@ -6242,7 +6242,12 @@ body.account-modal-open {
   box-shadow: none;
   border-radius: 0;
   display: grid;
-  grid-template-columns: repeat(2, clamp(140px, 14vw, 200px)) max-content;
+  /* The 3rd column is sized to the image gallery's own width (3 images +
+     2 gaps) rather than max-content, so it reserves the same space whether
+     or not that menu actually has a .submenu-image - otherwise a 2-column
+     menu (Défilé, Univers) centers on its own narrower content and visibly
+     lands at a different spot than the image-having menus next to it. */
+  grid-template-columns: repeat(2, clamp(140px, 14vw, 200px)) calc(3 * clamp(140px, 12.6vw, 224px) + 2 * clamp(20px, 2.2vw, 32px));
   justify-content: center;
   align-content: start;
   column-gap: clamp(24px, 3vw, 56px);
