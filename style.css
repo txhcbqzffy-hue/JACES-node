@@ -6242,7 +6242,7 @@ body.account-modal-open {
      or not that menu actually has a .submenu-image - otherwise a 2-column
      menu (Défilé, Univers) centers on its own narrower content and visibly
      lands at a different spot than the image-having menus next to it. */
-  grid-template-columns: repeat(2, clamp(140px, 14vw, 200px)) calc(3 * clamp(140px, 12.6vw, 224px) + 2 * clamp(20px, 2.2vw, 32px)) clamp(140px, 12.6vw, 224px);
+  grid-template-columns: repeat(2, clamp(140px, 14vw, 200px)) calc(3 * clamp(140px, 12.6vw, 224px) + 2 * clamp(20px, 2.2vw, 32px));
   justify-content: center;
   align-content: start;
   column-gap: clamp(24px, 3vw, 56px);
@@ -6284,6 +6284,16 @@ body.account-modal-open {
 
 .submenu-categories {
   min-width: 0;
+}
+
+/* Wraps a text column + a single preview image as one grid cell (e.g.
+   Nouveautés' "À découvrir"), so the image sits right after the text
+   instead of out at the far edge of the (wide, image-gallery-sized)
+   3rd grid column with a big empty gap in between. */
+.submenu-discover {
+  display: flex;
+  align-items: flex-start;
+  gap: clamp(24px, 3vw, 56px);
 }
 
 .submenu-image {
