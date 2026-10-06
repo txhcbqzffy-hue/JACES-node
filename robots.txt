@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+Disallow: /admin.html
+Disallow: /api/
+Disallow: /mon-compte.html
+Disallow: /mes-favoris.html
+Disallow: /panier.html
+
+Sitemap: https://jaces-node.vercel.app/sitemap.xml
