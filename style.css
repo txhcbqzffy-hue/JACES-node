@@ -6237,13 +6237,15 @@ body.account-modal-open {
   box-shadow: none;
   border-radius: 0;
   display: grid;
-  /* 3 equal text-column tracks, used by every menu regardless of how many
-     it actually has (2 or 3) - keeps the text always starting at the same
-     spot across menus. Preview images are taken out of grid flow entirely
-     (position: absolute, see .submenu-image) and pinned to a fixed spot
-     within this box instead, so they land in the exact same place no
-     matter how much text precedes them in a given menu. */
-  grid-template-columns: repeat(3, clamp(140px, 14vw, 200px));
+  /* Always 4 tracks - 3 text columns + 1 image column - regardless of how
+     many a given menu actually fills (2 text menus leave track 3 empty,
+     Nouveautés' "À découvrir" is short but still only occupies track 3's
+     own width). Since every .submenu shares this identical template, the
+     centered total width is identical everywhere, so .submenu-image
+     (explicitly placed in track 4, see below) always lands in the exact
+     same spot - but as a real grid column with the normal column-gap
+     before it, not floating off on its own with a big empty gap. */
+  grid-template-columns: repeat(3, clamp(140px, 14vw, 200px)) clamp(140px, 12.6vw, 224px);
   justify-content: center;
   align-content: start;
   column-gap: clamp(24px, 3vw, 56px);
@@ -6276,7 +6278,7 @@ body.account-modal-open {
   margin-bottom: 10px;
   padding: 7px 10px;
   background: #ece8e0;
-  border-radius: 14px;
+  border-radius: 6px;
 }
 
 .submenu-copy {
@@ -6295,13 +6297,12 @@ body.account-modal-open {
   display: flex;
   gap: clamp(20px, 2.2vw, 32px);
   flex: none;
-  /* Pinned to a fixed spot within .submenu (which is the containing
-     block) instead of living in the text grid - guarantees the images
-     land in the exact same place in every menu, regardless of how many
-     text columns/how much text precedes them. */
-  position: absolute;
-  top: 24px;
-  right: 72px;
+  align-self: start;
+  /* Always track 4, regardless of how many text columns actually precede
+     it in a given menu's markup - keeps it landing in the same spot as a
+     normal grid column (standard column-gap before it), rather than off
+     on its own with a big empty gap. */
+  grid-column: 4;
 }
 
 .submenu-image img {
