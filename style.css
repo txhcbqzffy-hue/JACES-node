@@ -6231,7 +6231,7 @@ body.account-modal-open {
   visibility: hidden;
   pointer-events: none;
   background: #f5f2ec;
-  padding: 24px 72px 24px clamp(24px, 35vw, 760px);
+  padding: 24px 72px 24px clamp(24px, 8vw, 300px);
   box-shadow: none;
   border-radius: 0;
   display: grid;
