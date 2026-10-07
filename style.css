@@ -11284,3 +11284,16 @@ h3,
     padding-top: var(--jaces-header-offset, 100px);
   }
 }
+
+/* Homepage highlight photos line up exactly with the "EN CE MOMENT"
+   products above them (same 26px side gutters as .home-slider-section, at
+   every width), and the default zoom stays inside each card instead of
+   spilling a few px past those edges. */
+.section.section-highlight {
+  padding-left: 26px;
+  padding-right: 26px;
+}
+
+.section-highlight .card {
+  overflow: hidden;
+}
