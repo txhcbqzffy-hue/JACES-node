@@ -610,7 +610,7 @@
       const hero = document.querySelector('.home-page .hero');
       const nextSection = document.querySelector('.home-slider-section');
       if (!hero || !nextSection) return;
-      const JUMP_THRESHOLD = 120;
+      const JUMP_THRESHOLD = 90;
       let accumulated = 0;
       let hasJumped = false;
       let resetTimer = null;
@@ -625,9 +625,11 @@
 
         accumulated += event.deltaY;
         clearTimeout(resetTimer);
-        // A pause between ticks means separate light nudges, not one
-        // continuous scroll gesture - don't let them add up across pauses.
-        resetTimer = setTimeout(() => { accumulated = 0; }, 400);
+        // Trackpad swipes often fire as several short bursts (brief lift
+        // between finger strokes) rather than one unbroken motion like a
+        // mouse wheel's ticks - a short pause here is still the same
+        // scroll attempt, so only a longer gap resets it.
+        resetTimer = setTimeout(() => { accumulated = 0; }, 700);
 
         if (accumulated < JUMP_THRESHOLD) return;
 
