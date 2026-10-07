@@ -600,6 +600,27 @@
 
     loadFeaturedProducts();
 
+    // The hero is a full 100vh, so a normal scroll nudge only creeps a
+    // little way down it. The first downward scroll from the very top
+    // instead jumps straight to "EN CE MOMENT" - after that, scrolling is
+    // left alone as usual.
+    (function () {
+      const hero = document.querySelector('.home-page .hero');
+      const nextSection = document.querySelector('.home-slider-section');
+      if (!hero || !nextSection) return;
+      let hasJumped = false;
+
+      const onWheel = (event) => {
+        if (hasJumped || event.deltaY <= 0 || window.scrollY > 10 || nextSection.hidden) return;
+        hasJumped = true;
+        event.preventDefault();
+        nextSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        window.removeEventListener('wheel', onWheel);
+      };
+
+      window.addEventListener('wheel', onWheel, { passive: false });
+    })();
+
     const igTrack = document.querySelector('[data-ig-track]');
     const igNextBtn = document.querySelector('[data-ig-next]');
     const igPrevBtn = document.querySelector('[data-ig-prev]');
