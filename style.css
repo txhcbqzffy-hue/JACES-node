@@ -8353,13 +8353,13 @@ img,
   gap: 20px;
 }
 
-/* Tall 1:2 portrait cards (the same shape at every desktop width, rather
+/* Tall portrait cards (the same shape at every desktop width, rather
    than a fixed 730px height that got squatter as the window widened). */
 .section-highlight .card {
   border-radius: 0;
   border: none;
   box-shadow: none;
-  aspect-ratio: 1 / 2;
+  aspect-ratio: 4 / 7;
 }
 
 .section-highlight .card img {
@@ -11304,4 +11304,55 @@ h3,
 .home-slider-header,
 .home-slider-track {
   max-width: none;
+}
+
+/* Highlight photo captions: big title + underlined "Découvrir" at the
+   bottom left; the link's ::before stretches over the whole card so the
+   entire photo is clickable. */
+.section-highlight .card {
+  position: relative;
+}
+
+.section-highlight .card::after {
+  background: linear-gradient(180deg, rgba(17, 17, 17, 0) 55%, rgba(17, 17, 17, 0.45) 100%);
+}
+
+.section-highlight .card-body {
+  text-align: left;
+  padding: 0 32px 34px;
+}
+
+.section-highlight .card-highlight-title {
+  display: block;
+  margin: 0 0 14px;
+  font-family: "Manrope", sans-serif;
+  font-size: clamp(1.8rem, 2.6vw, 2.8rem);
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: 0;
+  text-transform: uppercase;
+  color: #ffffff;
+}
+
+.card-highlight-link {
+  display: inline-block;
+  padding-bottom: 4px;
+  border-bottom: 2px solid #ffffff;
+  font-family: "Manrope", sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #ffffff;
+  text-decoration: none;
+}
+
+.card-highlight-link::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+}
+
+@media (max-width: 720px) {
+  .section-highlight .card-body {
+    padding: 0 20px 24px;
+  }
 }

@@ -21,7 +21,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,400;500;600&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,600&family=Manrope:wght@300;400;500;600;700;800&display=swap" media="print" onload="this.media='all'">
-  <link rel="stylesheet" href="style.css?v=20261007e">
+  <link rel="stylesheet" href="style.css?v=20261007h">
 </head>
 <body class="home-page">
 
@@ -290,27 +290,38 @@
     <section class="section section-highlight">
       <div class="cards-grid">
         <article class="card card-highlight">
-          <img src="https://images.unsplash.com/photo-1543163521-1bf539c55dd2?q=80&w=1400" alt="Chaussures" loading="lazy">
+          <img src="https://images.unsplash.com/photo-1543163521-1bf539c55dd2?q=80&w=1400" alt="" loading="lazy">
           <div class="card-body">
-            <p class="card-tag">Dites Oui En Boss</p>
+            <h3 class="card-highlight-title">Pantalons</h3>
+            <a class="card-highlight-link" href="#" data-link-pending>Découvrir</a>
           </div>
         </article>
 
         <article class="card card-highlight">
-          <img src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?q=80&w=1400" alt="Bijoux" loading="lazy">
+          <img src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?q=80&w=1400" alt="" loading="lazy">
           <div class="card-body">
-            <p class="card-tag">L'eclat Du Quotidien</p>
+            <h3 class="card-highlight-title">Tops</h3>
+            <a class="card-highlight-link" href="#" data-link-pending>Découvrir</a>
           </div>
         </article>
 
         <article class="card card-highlight">
-          <img src="https://images.unsplash.com/photo-1584917865442-de89df76afd3?q=80&w=1400" alt="Sacs" loading="lazy">
+          <img src="https://images.unsplash.com/photo-1584917865442-de89df76afd3?q=80&w=1400" alt="" loading="lazy">
           <div class="card-body">
-            <p class="card-tag">L'accessoire Signature</p>
+            <h3 class="card-highlight-title">Jupes</h3>
+            <a class="card-highlight-link" href="#" data-link-pending>Découvrir</a>
           </div>
         </article>
       </div>
     </section>
+    <script>
+      // Highlight photos are clickable but have no destination yet - keep
+      // the "#" href from jumping the page to the top. Swap in real hrefs
+      // (and drop data-link-pending) once the target pages exist.
+      document.querySelectorAll('[data-link-pending]').forEach(function (link) {
+        link.addEventListener('click', function (event) { event.preventDefault(); });
+      });
+    </script>
 
     <section class="editorial-hero">
       <div class="editorial-content editorial-content-vestes">
