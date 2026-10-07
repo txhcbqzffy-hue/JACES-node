@@ -624,6 +624,31 @@
       window.addEventListener('resize', updateInstagramButtons);
       updateInstagramButtons();
 
+      const IG_CACHE_KEY = 'jaces-instagram-feed-cache';
+      let renderedPostIds = '';
+
+      const renderInstagramPosts = (posts) => {
+        const ids = posts.map((post) => post.id).join(',');
+        if (ids === renderedPostIds) return; // already showing these exact posts, skip the reflow/flash
+        renderedPostIds = ids;
+        igTrack.innerHTML = posts.map((post) => {
+          const caption = String(post.caption || '').replace(/"/g, '&quot;').slice(0, 200);
+          return `<article class="instagram-post"><a href="${post.permalink}" target="_blank" rel="noopener"><img src="${post.imageUrl}" alt="${caption || 'Post Instagram JACES'}" loading="lazy"></a></article>`;
+        }).join('');
+        updateInstagramButtons();
+      };
+
+      // Paint last visit's feed immediately instead of showing the generic
+      // hardcoded placeholder posts first - without this, every load showed
+      // unrelated stock photos for a few seconds (the real feed is a live
+      // Instagram API call, not an instant one) before abruptly swapping to
+      // the real @jaces.creation posts, which read as the section
+      // "disappearing and reappearing".
+      try {
+        const cachedPosts = JSON.parse(localStorage.getItem(IG_CACHE_KEY) || 'null');
+        if (Array.isArray(cachedPosts) && cachedPosts.length) renderInstagramPosts(cachedPosts);
+      } catch (error) {}
+
       // Swap the static placeholder posts for the real @jaces.creation feed.
       // Left as-is on any failure (no token, API error, rate limit) so the
       // section still looks complete instead of breaking.
@@ -631,11 +656,8 @@
         .then((r) => r.json())
         .then((data) => {
           if (!data.ok || !Array.isArray(data.posts) || !data.posts.length) return;
-          igTrack.innerHTML = data.posts.map((post) => {
-            const caption = String(post.caption || '').replace(/"/g, '&quot;').slice(0, 200);
-            return `<article class="instagram-post"><a href="${post.permalink}" target="_blank" rel="noopener"><img src="${post.imageUrl}" alt="${caption || 'Post Instagram JACES'}" loading="lazy"></a></article>`;
-          }).join('');
-          updateInstagramButtons();
+          renderInstagramPosts(data.posts);
+          try { localStorage.setItem(IG_CACHE_KEY, JSON.stringify(data.posts)); } catch (error) {}
         })
         .catch(() => {});
     }

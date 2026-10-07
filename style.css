@@ -8867,20 +8867,20 @@ img,
   text-transform: uppercase;
   letter-spacing: 0.12em;
   margin-bottom: 18px;
-  color: rgba(17, 17, 17, 0.16);
+  color: rgba(255, 255, 255, 0.55);
 }
 
 .footer-col a {
   display: block;
   margin-bottom: 14px;
-  color: rgba(17, 17, 17, 0.16);
+  color: rgba(255, 255, 255, 0.85);
   font-size: 0.88rem;
   text-decoration: none;
   transition: color 0.15s;
 }
 
 .footer-col a:hover {
-  color: rgba(17, 17, 17, 0.24);
+  color: #ffffff;
 }
 
 .footer-newsletter {
@@ -8939,7 +8939,7 @@ img,
 .footer-newsletter-status {
   margin-top: 10px;
   font-size: 0.78rem;
-  color: rgba(17, 17, 17, 0.16);
+  color: rgba(255, 255, 255, 0.55);
 }
 
 .footer-note {

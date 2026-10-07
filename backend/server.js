@@ -9,6 +9,7 @@ const filtersHandler = require('../api/filters');
 const healthHandler = require('../api/health');
 const adminProductsHandler = require('../api/admin-products');
 const siteContentHandler = require('../api/site-content');
+const instagramFeedHandler = require('../api/instagram-feed');
 
 const app = express();
 
@@ -55,6 +56,10 @@ app.get('/api/site-content', async (req, res) => {
 
 app.post('/api/site-content', async (req, res) => {
   return siteContentHandler(req, res);
+});
+
+app.get('/api/instagram-feed', async (req, res) => {
+  return instagramFeedHandler(req, res);
 });
 
 app.get('/api/products/:id', async (req, res) => {
