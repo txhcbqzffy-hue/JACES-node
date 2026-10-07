@@ -621,7 +621,11 @@
       // Still above "EN CE MOMENT" (i.e. somewhere in the hero), measured
       // from the section itself rather than scrollY so the small native
       // scroll a sub-threshold nudge causes doesn't disable the jump.
-      const isAboveSection = () => nextSection.getBoundingClientRect().top > 20;
+      const isAboveSection = () => {
+        const header = document.querySelector('.header');
+        const headerBottom = header ? header.getBoundingClientRect().bottom : 0;
+        return nextSection.getBoundingClientRect().top > headerBottom + 20;
+      };
 
       const endJump = () => {
         isJumping = false;
@@ -658,7 +662,12 @@
 
         isJumping = true;
         event.preventDefault();
-        nextSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        // Stop just under the fixed topbar + header rather than at the very
+        // top of the window, where they'd cover the "EN CE MOMENT" title.
+        const header = document.querySelector('.header');
+        const headerBottom = header ? header.getBoundingClientRect().bottom : 0;
+        const target = nextSection.getBoundingClientRect().top + window.scrollY - headerBottom;
+        window.scrollTo({ top: Math.max(0, target), behavior: 'smooth' });
         // scrollend isn't supported everywhere (older Safari) - fall back
         // to a timeout a bit longer than the smooth scroll.
         jumpTimer = setTimeout(endJump, 1000);
