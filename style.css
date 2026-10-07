@@ -11297,3 +11297,11 @@ h3,
 .section-highlight .card {
   overflow: hidden;
 }
+
+/* "EN CE MOMENT" spans the full width (inside the same 26px gutters) like
+   the highlight photos below, instead of stopping at 1800px and centering
+   on wide screens. */
+.home-slider-header,
+.home-slider-track {
+  max-width: none;
+}
