@@ -8353,11 +8353,13 @@ img,
   gap: 20px;
 }
 
+/* Tall 1:2 portrait cards (the same shape at every desktop width, rather
+   than a fixed 730px height that got squatter as the window widened). */
 .section-highlight .card {
   border-radius: 0;
   border: none;
   box-shadow: none;
-  min-height: 730px;
+  aspect-ratio: 1 / 2;
 }
 
 .section-highlight .card img {
@@ -9059,7 +9061,9 @@ img,
     grid-template-columns: 1fr;
   }
 
+  /* Single column: a 1:2 card would be far taller than the screen. */
   .section-highlight .card {
+    aspect-ratio: auto;
     min-height: 520px;
   }
 }
