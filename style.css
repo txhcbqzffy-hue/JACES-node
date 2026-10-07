@@ -5177,7 +5177,7 @@ body.account-modal-open {
   color: rgba(17, 17, 17, 0.7);
   background: #ece8e0;
   border: none;
-  border-radius: 999px;
+  border-radius: 8px;
   text-decoration: none;
   transition: background 0.2s ease, color 0.2s ease;
 }
