@@ -6560,7 +6560,7 @@ body.header-scrolled .header .submenu a.submenu-link-active {
   /* Dark fallback so there's never a flash of plain white while either
      this background image or a custom one from admin is still loading. */
   background-color: #111111;
-  background-image: linear-gradient(rgba(17, 17, 17, 0.44), rgba(17, 17, 17, 0.44)),
+  background-image: linear-gradient(rgba(17, 17, 17, 0.28), rgba(17, 17, 17, 0.28)),
     url("https://images.unsplash.com/photo-1496747611176-843222e1e57c?q=80&w=2200");
   background-size: cover;
   background-repeat: no-repeat;
@@ -6568,13 +6568,18 @@ body.header-scrolled .header .submenu a.submenu-link-active {
   display: flex;
   align-items: flex-end;
   padding: 80px 60px;
-  overflow: hidden;
 }
 
 /* Hero slideshow (admin-configurable, up to 4 slides) - stacked full-bleed
    layers that crossfade; sits behind .hero's own background-image (which
-   stays as the no-JS/loading fallback) and behind .hero-content (which
-   gets position:relative below so it keeps stacking above both). */
+   stays as the no-JS/loading fallback). .hero-content and .hero-actions
+   are both position:relative siblings of this (not nested inside one
+   another - .hero-actions used to live inside .hero-content, but then its
+   own absolute positioning resolved against that small box instead of the
+   full-height .hero, and giving .hero-slideshow a negative z-index to
+   dodge that caused an unrelated, worse bug: later sections' elements
+   intercepting clicks meant for the hero) so they both paint above it via
+   a higher z-index, each positioned independently relative to .hero. */
 .hero-slideshow {
   position: absolute;
   inset: 0;
@@ -6585,7 +6590,7 @@ body.header-scrolled .header .submenu a.submenu-link-active {
   position: absolute;
   inset: 0;
   background-size: cover;
-  background-position: center;
+  background-position: center 22%;
   background-repeat: no-repeat;
   opacity: 0;
   transition: opacity 1.2s ease;
@@ -6593,11 +6598,6 @@ body.header-scrolled .header .submenu a.submenu-link-active {
 
 .hero-slide.is-active {
   opacity: 1;
-}
-
-.hero-content {
-  position: relative;
-  z-index: 1;
 }
 
 .hero-slide-dots {
@@ -6653,16 +6653,27 @@ body.header-scrolled .header .submenu a.submenu-link-active {
 }
 
 .hero-content {
+  position: relative;
+  z-index: 1;
   color: white;
   max-width: 620px;
 }
 
 .hero-kicker {
+  display: inline-block;
   font-size: 12px;
   letter-spacing: 0.23em;
   text-transform: uppercase;
   margin-bottom: 16px;
   color: rgba(255, 255, 255, 0.9);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+a.hero-kicker:hover,
+a.hero-kicker:focus-visible {
+  color: #ffffff;
+  text-decoration: underline;
 }
 
 .hero h1 {
@@ -6736,8 +6747,16 @@ body.header-scrolled .header .submenu a.submenu-link-active {
 
 .home-slider-header h2 {
   font-size: 1.1rem;
+  font-weight: 800;
   letter-spacing: 0.08em;
   text-transform: uppercase;
+}
+
+.home-page .section-intro h2 {
+  font-family: "Manrope", sans-serif;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
 }
 
 .home-slider-controls {
@@ -6993,7 +7012,7 @@ body.header-scrolled .header .submenu a.submenu-link-active {
   font-weight: 700;
   letter-spacing: 0.08em;
   color: rgba(17, 17, 17, 0.7);
-  background: #ece8e0;
+  background: #ffffff;
   border: none;
   border-radius: 8px;
   box-shadow: none;

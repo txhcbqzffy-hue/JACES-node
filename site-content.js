@@ -3,7 +3,7 @@
   // slide gets its own timer (slides can have different durations), so this
   // schedules one setTimeout per step rather than a single fixed interval.
   function initHeroSlideshow(hero, slides) {
-    const overlay = 'linear-gradient(rgba(8, 7, 5, 0.44), rgba(8, 7, 5, 0.44)), ';
+    const overlay = 'linear-gradient(rgba(8, 7, 5, 0.28), rgba(8, 7, 5, 0.28)), ';
     const track = document.createElement('div');
     track.className = 'hero-slideshow';
 
@@ -117,7 +117,7 @@
         initHeroSlideshow(hero, heroSlides);
       } else if (hero && content.home_hero_image) {
         hero.style.backgroundImage =
-          `linear-gradient(rgba(8, 7, 5, 0.44), rgba(8, 7, 5, 0.44)), url("${content.home_hero_image}")`;
+          `linear-gradient(rgba(8, 7, 5, 0.28), rgba(8, 7, 5, 0.28)), url("${content.home_hero_image}")`;
       }
 
       // Header logo: an image replaces the plain "JACES" text once set,

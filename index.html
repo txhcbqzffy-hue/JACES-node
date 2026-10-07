@@ -212,11 +212,11 @@
   <main>
     <section class="hero">
       <div class="hero-content">
-        <p class="hero-kicker">Printemps / Été 2026</p>
+        <a class="hero-kicker" href="collection.html?collection=ss26">Printemps / Été 2026</a>
         <h1>La couleur, sous toutes ses formes.</h1>
-        <div class="hero-actions">
-          <a href="nouveautes.html" class="btn btn-home-nouveautes">Voir les nouveautés</a>
-        </div>
+      </div>
+      <div class="hero-actions">
+        <a href="nouveautes.html" class="btn btn-home-nouveautes">Voir les nouveautés</a>
       </div>
     </section>
     <script>
@@ -231,7 +231,7 @@
             // Just the first frame, instantly, from last visit's cache - the
             // full slideshow (and its dots) gets built once site-content.js's
             // fresh fetch resolves, same as any other admin-edited content.
-            hero.style.backgroundImage = 'linear-gradient(rgba(8, 7, 5, 0.44), rgba(8, 7, 5, 0.44)), url("' + firstSlideUrl + '")';
+            hero.style.backgroundImage = 'linear-gradient(rgba(8, 7, 5, 0.28), rgba(8, 7, 5, 0.28)), url("' + firstSlideUrl + '")';
           }
         } catch (error) {}
       })();
