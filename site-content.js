@@ -10,9 +10,19 @@
     const dots = document.createElement('div');
     dots.className = 'hero-slide-dots';
 
+    // Resume on the slide the visitor was already looking at instead of
+    // always restarting at 1 - sessionStorage so it only persists within
+    // the same tab/visit, not forever across unrelated future sessions.
+    const STORAGE_KEY = 'jaces-hero-slide-index';
+    let startIndex = 0;
+    try {
+      const stored = parseInt(sessionStorage.getItem(STORAGE_KEY), 10);
+      if (Number.isInteger(stored)) startIndex = ((stored % slides.length) + slides.length) % slides.length;
+    } catch (error) {}
+
     const slideEls = slides.map((slide, index) => {
       const el = document.createElement('div');
-      el.className = 'hero-slide' + (index === 0 ? ' is-active' : '');
+      el.className = 'hero-slide' + (index === startIndex ? ' is-active' : '');
       el.style.backgroundImage = overlay + `url("${slide.url}")`;
       track.appendChild(el);
       return el;
@@ -21,7 +31,7 @@
     const dotEls = slides.map((slide, index) => {
       const dot = document.createElement('button');
       dot.type = 'button';
-      dot.className = 'hero-slide-dot' + (index === 0 ? ' is-active' : '');
+      dot.className = 'hero-slide-dot' + (index === startIndex ? ' is-active' : '');
       dot.setAttribute('aria-label', `Image ${index + 1}`);
       dot.addEventListener('click', () => goTo(index, true));
       dots.appendChild(dot);
@@ -43,7 +53,7 @@
     hero.prepend(dots);
     hero.prepend(track);
 
-    let current = 0;
+    let current = startIndex;
     let timer = null;
     let isPaused = false;
 
@@ -57,6 +67,7 @@
       current = index;
       slideEls[current].classList.add('is-active');
       dotEls[current].classList.add('is-active');
+      try { sessionStorage.setItem(STORAGE_KEY, String(current)); } catch (error) {}
       if (!isPaused) scheduleNext();
     }
 
