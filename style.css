@@ -6594,7 +6594,13 @@ body.header-scrolled .header .submenu a.submenu-link-active {
   inset: 0;
   /* contain, not cover - cover crops/zooms into whichever axis is
      tightest against the full-height hero box; contain always shows the
-     whole photo, letterboxed against .hero's own dark background-color. */
+     whole photo, letterboxed against a solid fill. This needs its own
+     background-color (not just .hero-slideshow's) because during the
+     crossfade both the outgoing and incoming slide are stacked and
+     partially opaque at once - without an opaque fill on each slide
+     itself, the later one's letterbox gap reveals the other slide's
+     actual photo through it instead of solid black. */
+  background-color: #111111;
   background-size: contain;
   background-position: center;
   background-repeat: no-repeat;
