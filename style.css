@@ -6584,13 +6584,19 @@ body.header-scrolled .header .submenu a.submenu-link-active {
   position: absolute;
   inset: 0;
   z-index: 0;
+  /* Opaque so contain-fit letterbox gaps show solid black instead of
+     .hero's own fallback background-image bleeding through underneath. */
+  background-color: #111111;
 }
 
 .hero-slide {
   position: absolute;
   inset: 0;
-  background-size: cover;
-  background-position: center 22%;
+  /* contain, not cover - cover crops/zooms into whichever axis is
+     tightest against the full-height hero box; contain always shows the
+     whole photo, letterboxed against .hero's own dark background-color. */
+  background-size: contain;
+  background-position: center;
   background-repeat: no-repeat;
   opacity: 0;
   transition: opacity 1.2s ease;
@@ -6750,10 +6756,6 @@ a.hero-kicker:focus-visible {
   position: relative;
   justify-content: center;
   align-items: center;
-  /* Shorter than the default 100vh so cover-fit crops less off the sides
-     of full-body slideshow photos - a near-square box against a wide
-     landscape photo forces a tight, zoomed-in crop. */
-  min-height: 85vh;
 }
 
 .home-page .hero-content {
