@@ -11343,10 +11343,15 @@ h3,
   color: #ffffff;
 }
 
+/* Underline drawn as a background (not ::after - ::before is the stretched
+   click area and the link itself must stay unpositioned for that) that
+   grows in on hover of the card, same 0.3s animation as the header nav's
+   underline under "Nouveautés". */
 .card-highlight-link {
   display: inline-block;
   padding-bottom: 4px;
-  border-bottom: 2px solid #ffffff;
+  background: linear-gradient(#ffffff, #ffffff) left bottom / 0 2px no-repeat;
+  transition: background-size 0.3s;
   font-family: "Manrope", sans-serif;
   font-size: 1rem;
   font-weight: 700;
@@ -11358,6 +11363,11 @@ h3,
   content: "";
   position: absolute;
   inset: 0;
+}
+
+.section-highlight .card:hover .card-highlight-link,
+.card-highlight-link:focus-visible {
+  background-size: 100% 2px;
 }
 
 @media (max-width: 720px) {
