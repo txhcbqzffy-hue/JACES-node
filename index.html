@@ -644,10 +644,15 @@
       // unrelated stock photos for a few seconds (the real feed is a live
       // Instagram API call, not an instant one) before abruptly swapping to
       // the real @jaces.creation posts, which read as the section
-      // "disappearing and reappearing".
+      // "disappearing and reappearing". Only trusted for an hour, matching
+      // the API's own s-maxage=3600: Instagram's media_url is a signed,
+      // time-limited CDN link, so an older cached one can have expired and
+      // would otherwise render as a broken/missing image until the fresh
+      // fetch below replaces it.
       try {
-        const cachedPosts = JSON.parse(localStorage.getItem(IG_CACHE_KEY) || 'null');
-        if (Array.isArray(cachedPosts) && cachedPosts.length) renderInstagramPosts(cachedPosts);
+        const cached = JSON.parse(localStorage.getItem(IG_CACHE_KEY) || 'null');
+        const isFresh = cached && Date.now() - cached.cachedAt < 60 * 60 * 1000;
+        if (isFresh && Array.isArray(cached.posts) && cached.posts.length) renderInstagramPosts(cached.posts);
       } catch (error) {}
 
       // Swap the static placeholder posts for the real @jaces.creation feed.
@@ -658,7 +663,7 @@
         .then((data) => {
           if (!data.ok || !Array.isArray(data.posts) || !data.posts.length) return;
           renderInstagramPosts(data.posts);
-          try { localStorage.setItem(IG_CACHE_KEY, JSON.stringify(data.posts)); } catch (error) {}
+          try { localStorage.setItem(IG_CACHE_KEY, JSON.stringify({ posts: data.posts, cachedAt: Date.now() })); } catch (error) {}
         })
         .catch(() => {});
     }
