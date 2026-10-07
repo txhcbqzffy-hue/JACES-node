@@ -210,9 +210,8 @@ function buildProductCard(product, pageType) {
 function buildEmptyState(message) {
   return `
     <div class="product-grid-empty">
-      <p class="favorites-empty-kicker">${message}</p>
-      <h1>Aucun produit à afficher</h1>
-      <p>Essayez une autre sélection ou revenez plus tard.</p>
+      <h1>${message}</h1>
+      <a href="index.html" class="product-grid-empty-cta">Retour à l'accueil</a>
     </div>
   `;
 }
@@ -235,7 +234,7 @@ async function loadPageProducts() {
     productGrid.innerHTML = '';
 
     if (!visibleProducts.length) {
-      productGrid.innerHTML = buildEmptyState('Aucun produit ne correspond pour le moment');
+      productGrid.innerHTML = buildEmptyState('Aucun produit pour le moment');
       window.dispatchEvent(new CustomEvent('jaces:products-loaded', { detail: { products: [], pageType } }));
       return;
     }

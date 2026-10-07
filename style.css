@@ -5128,6 +5128,16 @@ body.account-modal-open {
   gap: 16px;
 }
 
+/* Spans the full product grid (it's a lone child inside a multi-column
+   grid), and centers both horizontally and vertically on the page
+   instead of only within whatever the grid's first track happens to be. */
+.product-grid-empty {
+  grid-column: 1 / -1;
+  min-height: 50vh;
+  align-content: center;
+  justify-items: center;
+}
+
 .favorites-empty-state h2,
 .product-detail-empty h1,
 .product-grid-empty h1 {
@@ -5142,6 +5152,27 @@ body.account-modal-open {
   margin: 0;
   color: rgba(17, 17, 17, 0.6);
   line-height: 1.65;
+}
+
+.product-grid-empty-cta {
+  margin-top: 8px;
+  padding: 14px 32px;
+  font-family: "Manrope", sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #111111;
+  background: transparent;
+  border: 1px solid #111111;
+  text-decoration: none;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.product-grid-empty-cta:hover,
+.product-grid-empty-cta:focus-visible {
+  background: #111111;
+  color: #ffffff;
 }
 
 .favorites-empty-kicker {
