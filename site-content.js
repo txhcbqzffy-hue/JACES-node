@@ -14,10 +14,18 @@
     // always restarting at 1 - sessionStorage so it only persists within
     // the same tab/visit, not forever across unrelated future sessions.
     const STORAGE_KEY = 'jaces-hero-slide-index';
+    const PAUSE_STORAGE_KEY = 'jaces-hero-slide-paused';
     let startIndex = 0;
     try {
       const stored = parseInt(sessionStorage.getItem(STORAGE_KEY), 10);
       if (Number.isInteger(stored)) startIndex = ((stored % slides.length) + slides.length) % slides.length;
+    } catch (error) {}
+
+    // Same logic as the slide index: resume paused if she left it paused,
+    // instead of silently restarting the auto-advance on every page visit.
+    let startPaused = false;
+    try {
+      startPaused = sessionStorage.getItem(PAUSE_STORAGE_KEY) === '1';
     } catch (error) {}
 
     const slideEls = slides.map((slide, index) => {
@@ -43,8 +51,8 @@
     // stays put until explicitly resumed or a dot is clicked.
     const pauseBtn = document.createElement('button');
     pauseBtn.type = 'button';
-    pauseBtn.className = 'hero-slide-pause';
-    pauseBtn.setAttribute('aria-label', 'Mettre en pause le défilement');
+    pauseBtn.className = 'hero-slide-pause' + (startPaused ? ' is-paused' : '');
+    pauseBtn.setAttribute('aria-label', startPaused ? 'Reprendre le défilement' : 'Mettre en pause le défilement');
     pauseBtn.innerHTML =
       '<svg class="hero-slide-pause-icon hero-slide-pause-icon-pause" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><rect x="3" y="2" width="3.4" height="12"/><rect x="9.6" y="2" width="3.4" height="12"/></svg>' +
       '<svg class="hero-slide-pause-icon hero-slide-pause-icon-play" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M4 2.5v11l10-5.5z"/></svg>';
@@ -55,7 +63,7 @@
 
     let current = startIndex;
     let timer = null;
-    let isPaused = false;
+    let isPaused = startPaused;
 
     function goTo(index, isManual) {
       if (index === current) {
@@ -83,6 +91,7 @@
       isPaused = !isPaused;
       pauseBtn.classList.toggle('is-paused', isPaused);
       pauseBtn.setAttribute('aria-label', isPaused ? 'Reprendre le défilement' : 'Mettre en pause le défilement');
+      try { sessionStorage.setItem(PAUSE_STORAGE_KEY, isPaused ? '1' : '0'); } catch (error) {}
       if (isPaused) {
         if (timer) clearTimeout(timer);
       } else {
@@ -90,7 +99,7 @@
       }
     });
 
-    scheduleNext();
+    if (!isPaused) scheduleNext();
   }
 
   fetch('/api/site-content')
