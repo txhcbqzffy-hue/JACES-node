@@ -11317,7 +11317,16 @@ h3,
   background: linear-gradient(180deg, rgba(17, 17, 17, 0) 55%, rgba(17, 17, 17, 0.45) 100%);
 }
 
+/* card-body covers the whole card (text pinned to the bottom left) so the
+   link's stretched ::before below - which sizes itself against this
+   absolutely-positioned box - makes the entire photo clickable, not just
+   the caption corner. */
 .section-highlight .card-body {
+  top: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: flex-start;
   text-align: left;
   padding: 0 32px 34px;
 }
