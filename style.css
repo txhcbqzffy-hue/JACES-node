@@ -6606,7 +6606,45 @@ body.header-scrolled .header .submenu a.submenu-link-active {
   bottom: 32px;
   z-index: 1;
   display: flex;
+  align-items: center;
   gap: 10px;
+}
+
+.hero-slide-pause {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  margin-left: 4px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.8);
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.hero-slide-pause:hover,
+.hero-slide-pause:focus-visible {
+  color: #ffffff;
+}
+
+.hero-slide-pause-icon {
+  width: 13px;
+  height: 13px;
+}
+
+.hero-slide-pause-icon-play {
+  display: none;
+}
+
+.hero-slide-pause.is-paused .hero-slide-pause-icon-pause {
+  display: none;
+}
+
+.hero-slide-pause.is-paused .hero-slide-pause-icon-play {
+  display: block;
 }
 
 .hero-slide-dot {

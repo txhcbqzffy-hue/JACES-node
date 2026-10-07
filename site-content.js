@@ -28,15 +28,28 @@
       return dot;
     });
 
+    // Pause/play toggle, same row as the dots - stops the auto-advance
+    // timer outright rather than just lengthening it, so a paused slide
+    // stays put until explicitly resumed or a dot is clicked.
+    const pauseBtn = document.createElement('button');
+    pauseBtn.type = 'button';
+    pauseBtn.className = 'hero-slide-pause';
+    pauseBtn.setAttribute('aria-label', 'Mettre en pause le défilement');
+    pauseBtn.innerHTML =
+      '<svg class="hero-slide-pause-icon hero-slide-pause-icon-pause" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><rect x="3" y="2" width="3.4" height="12"/><rect x="9.6" y="2" width="3.4" height="12"/></svg>' +
+      '<svg class="hero-slide-pause-icon hero-slide-pause-icon-play" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M4 2.5v11l10-5.5z"/></svg>';
+    dots.appendChild(pauseBtn);
+
     hero.prepend(dots);
     hero.prepend(track);
 
     let current = 0;
     let timer = null;
+    let isPaused = false;
 
     function goTo(index, isManual) {
       if (index === current) {
-        if (isManual) scheduleNext();
+        if (isManual && !isPaused) scheduleNext();
         return;
       }
       slideEls[current].classList.remove('is-active');
@@ -44,7 +57,7 @@
       current = index;
       slideEls[current].classList.add('is-active');
       dotEls[current].classList.add('is-active');
-      scheduleNext();
+      if (!isPaused) scheduleNext();
     }
 
     function scheduleNext() {
@@ -54,6 +67,17 @@
         goTo((current + 1) % slides.length, false);
       }, slides[current].duration * 1000);
     }
+
+    pauseBtn.addEventListener('click', () => {
+      isPaused = !isPaused;
+      pauseBtn.classList.toggle('is-paused', isPaused);
+      pauseBtn.setAttribute('aria-label', isPaused ? 'Reprendre le défilement' : 'Mettre en pause le défilement');
+      if (isPaused) {
+        if (timer) clearTimeout(timer);
+      } else {
+        scheduleNext();
+      }
+    });
 
     scheduleNext();
   }
