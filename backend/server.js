@@ -8,6 +8,7 @@ const productsHandler = require('../api/products');
 const filtersHandler = require('../api/filters');
 const healthHandler = require('../api/health');
 const adminProductsHandler = require('../api/admin-products');
+const siteContentHandler = require('../api/site-content');
 
 const app = express();
 
@@ -43,6 +44,17 @@ app.get('/api/health', async (req, res) => {
 
 app.post('/api/admin-products', async (req, res) => {
   return adminProductsHandler(req, res);
+});
+
+// Handles its own method branching (GET to read, POST to save) - same
+// module the production serverless function uses, just wired into Express
+// here since local dev has no automatic /api/*.js -> route mapping.
+app.get('/api/site-content', async (req, res) => {
+  return siteContentHandler(req, res);
+});
+
+app.post('/api/site-content', async (req, res) => {
+  return siteContentHandler(req, res);
 });
 
 app.get('/api/products/:id', async (req, res) => {
