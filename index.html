@@ -601,17 +601,36 @@
     loadFeaturedProducts();
 
     // The hero is a full 100vh, so a normal scroll nudge only creeps a
-    // little way down it. The first downward scroll from the very top
+    // little way down it. A deliberate downward scroll from the very top
     // instead jumps straight to "EN CE MOMENT" - after that, scrolling is
-    // left alone as usual.
+    // left alone as usual. Requires a bit of accumulated scroll distance
+    // (not just the first wheel tick) so a light/accidental nudge still
+    // scrolls normally instead of being yanked into the big jump.
     (function () {
       const hero = document.querySelector('.home-page .hero');
       const nextSection = document.querySelector('.home-slider-section');
       if (!hero || !nextSection) return;
+      const JUMP_THRESHOLD = 120;
+      let accumulated = 0;
       let hasJumped = false;
+      let resetTimer = null;
 
       const onWheel = (event) => {
-        if (hasJumped || event.deltaY <= 0 || window.scrollY > 10 || nextSection.hidden) return;
+        if (hasJumped || window.scrollY > 10 || nextSection.hidden) return;
+
+        if (event.deltaY <= 0) {
+          accumulated = 0;
+          return;
+        }
+
+        accumulated += event.deltaY;
+        clearTimeout(resetTimer);
+        // A pause between ticks means separate light nudges, not one
+        // continuous scroll gesture - don't let them add up across pauses.
+        resetTimer = setTimeout(() => { accumulated = 0; }, 400);
+
+        if (accumulated < JUMP_THRESHOLD) return;
+
         hasJumped = true;
         event.preventDefault();
         nextSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
