@@ -247,6 +247,30 @@
             hero.style.backgroundImage = 'linear-gradient(rgba(8, 7, 5, 0.28), rgba(8, 7, 5, 0.28)), url("' + firstSlideUrl + '")';
             hero.style.backgroundSize = '100% auto';
             hero.style.backgroundPosition = 'center';
+
+            // Also paint the dot nav + pause button instantly instead of
+            // leaving them to pop in once site-content.js's fetch resolves -
+            // that round trip (and the gap before it) made the controls
+            // visibly vanish on every refresh and reappear a moment later.
+            // site-content.js replaces this placeholder with the real,
+            // behavior-wired one once it loads (same classes/markup, so the
+            // swap is invisible).
+            var slideCount = [1, 2, 3, 4].filter(function (n) { return cached['home_hero_slide_' + n]; }).length;
+            if (slideCount > 1) {
+              var isPaused = sessionStorage.getItem('jaces-hero-slide-paused') === '1';
+              var dotsHtml = '';
+              for (var i = 0; i < slideCount; i++) {
+                dotsHtml += '<button type="button" class="hero-slide-dot' + (i === slideIndex ? ' is-active' : '') + '" aria-label="Image ' + (i + 1) + '"></button>';
+              }
+              var dots = document.createElement('div');
+              dots.className = 'hero-slide-dots';
+              dots.innerHTML = dotsHtml +
+                '<button type="button" class="hero-slide-pause' + (isPaused ? ' is-paused' : '') + '" aria-label="' + (isPaused ? 'Reprendre le défilement' : 'Mettre en pause le défilement') + '">' +
+                '<svg class="hero-slide-pause-icon hero-slide-pause-icon-pause" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><rect x="3" y="2" width="3.4" height="12"/><rect x="9.6" y="2" width="3.4" height="12"/></svg>' +
+                '<svg class="hero-slide-pause-icon hero-slide-pause-icon-play" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M4 2.5v11l10-5.5z"/></svg>' +
+                '</button>';
+              hero.prepend(dots);
+            }
           }
         } catch (error) {}
       })();

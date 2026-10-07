@@ -3,6 +3,13 @@
   // slide gets its own timer (slides can have different durations), so this
   // schedules one setTimeout per step rather than a single fixed interval.
   function initHeroSlideshow(hero, slides) {
+    // index.html's inline instant-paint script prepends its own static dot
+    // nav (same markup/classes) so the controls don't flash away-and-back
+    // on reload while this fetch is in flight - drop it now so it isn't
+    // duplicated alongside the real, behavior-wired one built below.
+    const staleDots = hero.querySelector(':scope > .hero-slide-dots');
+    if (staleDots) staleDots.remove();
+
     const overlay = 'linear-gradient(rgba(8, 7, 5, 0.28), rgba(8, 7, 5, 0.28)), ';
     const track = document.createElement('div');
     track.className = 'hero-slideshow';
