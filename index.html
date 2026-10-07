@@ -224,12 +224,19 @@
         try {
           var cached = JSON.parse(localStorage.getItem('jaces-site-content-cache') || 'null');
           if (!cached) return;
-          var firstSlideUrl = cached.home_hero_slide_1 || cached.home_hero_image;
+          // Paint whichever slide the visitor was already on (persisted by
+          // site-content.js's initHeroSlideshow), not always slide 1 - else
+          // coming back to the homepage flashes slide 1 before snapping to
+          // the real resumed slide once the slideshow re-initializes.
+          var slideIndex = 0;
+          var storedIndex = parseInt(sessionStorage.getItem('jaces-hero-slide-index'), 10);
+          if (Number.isInteger(storedIndex)) slideIndex = storedIndex;
+          var firstSlideUrl = cached['home_hero_slide_' + (slideIndex + 1)] || cached.home_hero_slide_1 || cached.home_hero_image;
           if (!firstSlideUrl) return;
           var hero = document.querySelector('body.home-page .hero');
           if (hero) {
-            // Just the first frame, instantly, from last visit's cache - the
-            // full slideshow (and its dots) gets built once site-content.js's
+            // Just this frame, instantly, from last visit's cache - the full
+            // slideshow (and its dots) gets built once site-content.js's
             // fresh fetch resolves, same as any other admin-edited content.
             hero.style.backgroundImage = 'linear-gradient(rgba(8, 7, 5, 0.28), rgba(8, 7, 5, 0.28)), url("' + firstSlideUrl + '")';
           }

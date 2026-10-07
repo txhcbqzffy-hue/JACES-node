@@ -6715,6 +6715,8 @@ a.hero-kicker:focus-visible {
 }
 
 .hero h1 {
+  font-family: "Manrope", sans-serif;
+  font-weight: 800;
   font-size: clamp(3rem, 6vw, 5.4rem);
   line-height: 0.95;
   margin-bottom: 24px;
@@ -6748,6 +6750,10 @@ a.hero-kicker:focus-visible {
   position: relative;
   justify-content: center;
   align-items: center;
+  /* Shorter than the default 100vh so cover-fit crops less off the sides
+     of full-body slideshow photos - a near-square box against a wide
+     landscape photo forces a tight, zoomed-in crop. */
+  min-height: 85vh;
 }
 
 .home-page .hero-content {
@@ -7061,6 +7067,7 @@ a.hero-kicker:focus-visible {
 .home-page .hero-actions .btn-home-nouveautes:focus-visible {
   background: #111111;
   color: #ffffff;
+  transform: none;
 }
 
 .section {
@@ -9214,7 +9221,6 @@ body {
 h1,
 h2,
 h3,
-.hero h1,
 .section h2,
 .story-content h2,
 .newsletter-card h2,
@@ -9264,7 +9270,6 @@ h3,
   font-family: var(--font-text);
 }
 
-.hero h1,
 .section h2,
 .story-content h2,
 .newsletter-card h2 {
