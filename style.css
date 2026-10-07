@@ -6592,17 +6592,15 @@ body.header-scrolled .header .submenu a.submenu-link-active {
 .hero-slide {
   position: absolute;
   inset: 0;
-  /* Width always 100% (height auto) so the photo spans the full width of
-     the window with no side letterbox bars - any extra height beyond the
-     hero box just gets clipped top/bottom, same as cover would on most
-     widescreen viewports, but guarantees full width even on taller/
-     narrower ones where cover would instead crop the sides. Keeps its
+  /* cover so the photo always fills the whole hero: on narrow/tall
+     windows it crops the sides instead of leaving black bars above and
+     below (what the old `100% auto` sizing did). Keeps its
      own background-color (not just .hero-slideshow's) so that on the
      rare viewport where this does leave a gap, the crossfade's outgoing
      and incoming slides (stacked and both partially opaque at once)
      don't let each other's photo show through that gap. */
   background-color: #111111;
-  background-size: 100% auto;
+  background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
   opacity: 0;
@@ -11056,5 +11054,232 @@ h3,
 @media (max-width: 480px) {
   .newsletter-popup {
     padding: 32px 22px;
+  }
+}
+
+/* MOBILE HEADER: burger + drawer (<=900px)
+   The inline .nav / mega menu is hidden and replaced by a burger at the
+   top left that opens a slide-in drawer (built by mobile-menu.js from the
+   .nav markup). Kept at the end of the file so it wins over the older
+   stacked-header and padding-top overrides above. */
+.mobile-menu-toggle,
+.mobile-drawer,
+.mobile-drawer-backdrop {
+  display: none;
+}
+
+@media (max-width: 900px) {
+  .header-top,
+  .cart-page-body .header-top {
+    grid-template-columns: 1fr auto 1fr;
+    gap: 0;
+    text-align: left;
+    padding: 10px 12px;
+  }
+
+  .header-left {
+    gap: 2px;
+  }
+
+  .header-right {
+    justify-content: flex-end;
+    gap: 2px;
+  }
+
+  .logo-image {
+    height: 30px;
+  }
+
+  .nav {
+    display: none;
+  }
+
+  /* "Recherche" becomes a magnifier icon next to the burger. */
+  .search-trigger {
+    width: 40px;
+    height: 40px;
+    font-size: 0;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23111' stroke-width='1.5' stroke-linecap='round'%3E%3Ccircle cx='11' cy='11' r='7'/%3E%3Cline x1='16.5' y1='16.5' x2='21' y2='21'/%3E%3C/svg%3E") center / 21px no-repeat;
+  }
+
+  .search-panel {
+    position: fixed;
+    top: var(--jaces-header-offset, 100px);
+    left: 12px;
+    right: 12px;
+    width: auto;
+  }
+
+  .mobile-menu-toggle {
+    display: inline-flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+  }
+
+  .mobile-menu-toggle span {
+    display: block;
+    width: 22px;
+    height: 1.5px;
+    background: #111111;
+  }
+
+  .mobile-drawer-backdrop {
+    display: block;
+    position: fixed;
+    inset: 0;
+    background: rgba(17, 17, 17, 0.4);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s ease;
+    z-index: 400;
+  }
+
+  .mobile-drawer {
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: min(86vw, 380px);
+    background: #ffffff;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+    z-index: 410;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+
+  body.mobile-drawer-open {
+    overflow: hidden;
+  }
+
+  body.mobile-drawer-open .mobile-drawer {
+    transform: none;
+  }
+
+  body.mobile-drawer-open .mobile-drawer-backdrop {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .mobile-drawer-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 12px 14px 20px;
+    border-bottom: 1px solid rgba(17, 17, 17, 0.08);
+  }
+
+  .mobile-drawer-close {
+    width: 40px;
+    height: 40px;
+    border: none;
+    background: transparent;
+    font-size: 28px;
+    line-height: 1;
+    color: #111111;
+    cursor: pointer;
+  }
+
+  .mobile-drawer-nav {
+    padding: 8px 0 32px;
+  }
+
+  .mobile-drawer-item {
+    border-bottom: 1px solid rgba(17, 17, 17, 0.08);
+  }
+
+  .mobile-drawer-row {
+    display: flex;
+    align-items: center;
+  }
+
+  .mobile-drawer-link {
+    flex: 1;
+    padding: 16px 20px;
+    font-family: var(--font-text);
+    font-size: 14px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #111111;
+    text-decoration: none;
+  }
+
+  .mobile-drawer-expand {
+    width: 52px;
+    align-self: stretch;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    position: relative;
+  }
+
+  .mobile-drawer-expand::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 8px;
+    height: 8px;
+    border-right: 1.5px solid #111111;
+    border-bottom: 1.5px solid #111111;
+    transform: translate(-50%, -70%) rotate(45deg);
+    transition: transform 0.2s ease;
+  }
+
+  .mobile-drawer-expand[aria-expanded="true"]::after {
+    transform: translate(-50%, -30%) rotate(-135deg);
+  }
+
+  .mobile-drawer-sub {
+    padding: 0 20px 16px;
+  }
+
+  .mobile-drawer-group + .mobile-drawer-group {
+    margin-top: 14px;
+  }
+
+  .mobile-drawer-group-title {
+    margin: 0 0 6px;
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgba(17, 17, 17, 0.55);
+  }
+
+  .mobile-drawer-group a {
+    display: block;
+    padding: 7px 0;
+    font-size: 14px;
+    color: #111111;
+    text-decoration: none;
+  }
+
+  /* Header is now one compact row: reserve just its real height
+     (measured by mobile-menu.js) instead of the old 330-410px guesses
+     made for the wrapped multi-row nav. */
+  main,
+  .cart-page-body main,
+  .products-page main,
+  .product-detail-page main,
+  .product-detail-page main.section.product-detail-main {
+    padding-top: var(--jaces-header-offset, 100px);
+  }
+
+  .home-page main {
+    padding-top: 0;
+  }
+
+  .home-page .hero {
+    padding-top: var(--jaces-header-offset, 100px);
   }
 }
