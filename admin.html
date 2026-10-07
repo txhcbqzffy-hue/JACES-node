@@ -551,8 +551,34 @@
             </div>
 
             <div class="field">
-              <label for="mk-hero-image">Image de couverture (page d'accueil)</label>
+              <label for="mk-hero-image">Image de couverture (page d'accueil) - utilisée seulement si aucune diapo ci-dessous n'est renseignée</label>
               <input type="url" id="mk-hero-image" placeholder="https://...">
+            </div>
+
+            <p class="field-title">Diaporama de couverture (jusqu'à 4 images, page d'accueil)</p>
+            <div class="field">
+              <label for="mk-hero-slide-1">Diapo 1 - image</label>
+              <input type="url" id="mk-hero-slide-1" placeholder="https://...">
+              <label for="mk-hero-slide-1-duration" style="margin-top:8px;">Diapo 1 - durée (secondes)</label>
+              <input type="number" id="mk-hero-slide-1-duration" min="1" step="1" placeholder="15">
+            </div>
+            <div class="field">
+              <label for="mk-hero-slide-2">Diapo 2 - image</label>
+              <input type="url" id="mk-hero-slide-2" placeholder="https://...">
+              <label for="mk-hero-slide-2-duration" style="margin-top:8px;">Diapo 2 - durée (secondes)</label>
+              <input type="number" id="mk-hero-slide-2-duration" min="1" step="1" placeholder="15">
+            </div>
+            <div class="field">
+              <label for="mk-hero-slide-3">Diapo 3 - image</label>
+              <input type="url" id="mk-hero-slide-3" placeholder="https://...">
+              <label for="mk-hero-slide-3-duration" style="margin-top:8px;">Diapo 3 - durée (secondes)</label>
+              <input type="number" id="mk-hero-slide-3-duration" min="1" step="1" placeholder="15">
+            </div>
+            <div class="field">
+              <label for="mk-hero-slide-4">Diapo 4 - image</label>
+              <input type="url" id="mk-hero-slide-4" placeholder="https://...">
+              <label for="mk-hero-slide-4-duration" style="margin-top:8px;">Diapo 4 - durée (secondes)</label>
+              <input type="number" id="mk-hero-slide-4-duration" min="1" step="1" placeholder="15">
             </div>
 
             <div class="field">
@@ -970,6 +996,14 @@ document.getElementById('cookie-pages-refresh').addEventListener('click', checkC
 const MARKETING_FIELD_KEYS = {
   'mk-banner-text': 'banner_text',
   'mk-hero-image': 'home_hero_image',
+  'mk-hero-slide-1': 'home_hero_slide_1',
+  'mk-hero-slide-1-duration': 'home_hero_slide_1_duration',
+  'mk-hero-slide-2': 'home_hero_slide_2',
+  'mk-hero-slide-2-duration': 'home_hero_slide_2_duration',
+  'mk-hero-slide-3': 'home_hero_slide_3',
+  'mk-hero-slide-3-duration': 'home_hero_slide_3_duration',
+  'mk-hero-slide-4': 'home_hero_slide_4',
+  'mk-hero-slide-4-duration': 'home_hero_slide_4_duration',
   'mk-site-name': 'site_name',
   'mk-site-logo': 'site_logo',
   'mk-favicon': 'favicon_url',

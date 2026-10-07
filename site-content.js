@@ -1,4 +1,63 @@
 (function () {
+  // Builds the crossfading hero slideshow + its bottom-right dot nav. Each
+  // slide gets its own timer (slides can have different durations), so this
+  // schedules one setTimeout per step rather than a single fixed interval.
+  function initHeroSlideshow(hero, slides) {
+    const overlay = 'linear-gradient(rgba(8, 7, 5, 0.44), rgba(8, 7, 5, 0.44)), ';
+    const track = document.createElement('div');
+    track.className = 'hero-slideshow';
+
+    const dots = document.createElement('div');
+    dots.className = 'hero-slide-dots';
+
+    const slideEls = slides.map((slide, index) => {
+      const el = document.createElement('div');
+      el.className = 'hero-slide' + (index === 0 ? ' is-active' : '');
+      el.style.backgroundImage = overlay + `url("${slide.url}")`;
+      track.appendChild(el);
+      return el;
+    });
+
+    const dotEls = slides.map((slide, index) => {
+      const dot = document.createElement('button');
+      dot.type = 'button';
+      dot.className = 'hero-slide-dot' + (index === 0 ? ' is-active' : '');
+      dot.setAttribute('aria-label', `Image ${index + 1}`);
+      dot.addEventListener('click', () => goTo(index, true));
+      dots.appendChild(dot);
+      return dot;
+    });
+
+    hero.prepend(dots);
+    hero.prepend(track);
+
+    let current = 0;
+    let timer = null;
+
+    function goTo(index, isManual) {
+      if (index === current) {
+        if (isManual) scheduleNext();
+        return;
+      }
+      slideEls[current].classList.remove('is-active');
+      dotEls[current].classList.remove('is-active');
+      current = index;
+      slideEls[current].classList.add('is-active');
+      dotEls[current].classList.add('is-active');
+      scheduleNext();
+    }
+
+    function scheduleNext() {
+      if (timer) clearTimeout(timer);
+      if (slides.length < 2) return;
+      timer = setTimeout(() => {
+        goTo((current + 1) % slides.length, false);
+      }, slides[current].duration * 1000);
+    }
+
+    scheduleNext();
+  }
+
   fetch('/api/site-content')
     .then((res) => (res.ok ? res.json() : null))
     .then((content) => {
@@ -42,15 +101,23 @@
         });
       }
 
-      // Homepage cover image (the full-bleed "Cet été, ose aussi." hero) -
-      // only exists on index.html (body.home-page), no-op elsewhere. Keeps
-      // the same dark gradient overlay so the title text stays readable.
-      if (content.home_hero_image) {
-        const hero = document.querySelector('body.home-page .hero');
-        if (hero) {
-          hero.style.backgroundImage =
-            `linear-gradient(rgba(8, 7, 5, 0.44), rgba(8, 7, 5, 0.44)), url("${content.home_hero_image}")`;
-        }
+      // Homepage hero - only exists on index.html (body.home-page), no-op
+      // elsewhere. Admin can configure up to 4 slides (home_hero_slide_1..4
+      // + a _duration in seconds for each, default 15s); with none set, the
+      // single legacy home_hero_image still works as a static background.
+      const heroSlides = [1, 2, 3, 4]
+        .map((n) => ({
+          url: content[`home_hero_slide_${n}`],
+          duration: Number(content[`home_hero_slide_${n}_duration`]) || 15
+        }))
+        .filter((slide) => slide.url);
+
+      const hero = document.querySelector('body.home-page .hero');
+      if (hero && heroSlides.length) {
+        initHeroSlideshow(hero, heroSlides);
+      } else if (hero && content.home_hero_image) {
+        hero.style.backgroundImage =
+          `linear-gradient(rgba(8, 7, 5, 0.44), rgba(8, 7, 5, 0.44)), url("${content.home_hero_image}")`;
       }
 
       // Header logo: an image replaces the plain "JACES" text once set,
