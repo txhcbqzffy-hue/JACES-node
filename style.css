@@ -11365,3 +11365,21 @@ h3,
     padding: 0 20px 24px;
   }
 }
+
+/* Editorial banner title uses the same typeface as the hero's main title
+   ("La couleur, sous toutes ses formes."). */
+/* Wider than the old 7ch so the new, longer title sits on 2-3 lines
+   instead of one word per line. */
+.editorial-hero .editorial-content h2 {
+  font-family: "Manrope", sans-serif;
+  font-weight: 800;
+  line-height: 0.95;
+  letter-spacing: -0.02em;
+  max-width: 16ch;
+}
+
+@media (max-width: 760px) {
+  .editorial-hero .editorial-content h2 {
+    max-width: 11ch;
+  }
+}
