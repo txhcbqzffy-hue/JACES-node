@@ -238,14 +238,13 @@
             // Just this frame, instantly, from last visit's cache - the full
             // slideshow (and its dots) gets built once site-content.js's
             // fresh fetch resolves, same as any other admin-edited content.
-            // Sizing/position must match .hero-slide's own CSS (100% auto,
-            // center) and not inherit .hero's own "cover" rule, otherwise
-            // this cached frame shows a different, tighter crop than the
+            // Sizing/position must match .hero-slide's own CSS (cover,
+            // center) - .hero's own rule uses a different position, so
+            // without this the cached frame shows a different crop than the
             // real slide that replaces it a moment later - visible as the
-            // image suddenly "re-cropping" itself on every return to the
-            // homepage.
+            // image suddenly "re-cropping" itself on every reload.
             hero.style.backgroundImage = 'linear-gradient(rgba(8, 7, 5, 0.28), rgba(8, 7, 5, 0.28)), url("' + firstSlideUrl + '")';
-            hero.style.backgroundSize = '100% auto';
+            hero.style.backgroundSize = 'cover';
             hero.style.backgroundPosition = 'center';
 
             // Also paint the dot nav + pause button instantly instead of
