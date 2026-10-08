@@ -6777,7 +6777,7 @@ a.hero-kicker:focus-visible {
 
 .home-slider-section {
   background: #ffffff;
-  padding: 34px 26px 16px;
+  padding: 34px 26px 6px;
   position: relative;
 }
 
@@ -8343,7 +8343,7 @@ img,
 
 .section-highlight {
   max-width: 100%;
-  padding-top: 12px;
+  padding-top: 4px;
   padding-bottom: 28px;
   padding-left: 34px;
   padding-right: 34px;
