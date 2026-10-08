@@ -11373,7 +11373,7 @@ h3,
 
 .section-highlight .card:hover .card-highlight-link,
 .card-highlight-link:focus-visible {
-  background-size: 100% 2px;
+  background-size: 60% 2px;
 }
 
 @media (max-width: 720px) {
