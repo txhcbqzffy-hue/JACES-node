@@ -6479,7 +6479,7 @@ body.header-scrolled .header .submenu a.submenu-link-active {
     url("https://images.unsplash.com/photo-1469334031218-e382a71b716b?q=80&w=2400") center 30%/cover no-repeat;
   margin: 12px auto 40px;
   max-width: 100%;
-  min-height: 760px;
+  min-height: 900px;
   overflow: hidden;
 }
 
