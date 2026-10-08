@@ -8993,9 +8993,9 @@ img,
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 48px;
-  height: 48px;
-  margin: 28px auto 0;
+  width: 32px;
+  height: 32px;
+  margin: 18px 0 0;
   border-radius: 50%;
   border: 1px solid rgba(255, 255, 255, 0.24);
   background: #f5f2ec;
