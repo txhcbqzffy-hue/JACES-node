@@ -9045,19 +9045,29 @@ img,
   padding-top: 28px;
 }
 
+/* Sticky, not just in-flow: without this, the button's screen position
+   while open depended on where you happened to be scrolled when you
+   clicked it (right at the bottom already -> looked like it unfolded
+   upward; scrolled higher up -> the exact same DOM change just read as
+   ordinary top-to-bottom growth). Sticking it to the bottom of the
+   viewport while the footer is in view makes the panel consistently
+   unfold upward from underneath a button that visibly never moves. */
 .footer-expand-btn {
   display: flex;
   align-items: center;
   justify-content: center;
   width: 32px;
   height: 32px;
-  margin: 18px 0 0;
+  margin: 24px 0;
   border-radius: 50%;
   border: 1px solid rgba(17, 17, 17, 0.24);
   background: #f5f2ec;
   color: #111111;
   cursor: pointer;
   padding: 0;
+  position: sticky;
+  bottom: 24px;
+  z-index: 2;
   transform: rotate(90deg);
   transition: transform 0.25s ease, background 0.18s ease;
 }
@@ -9070,10 +9080,6 @@ img,
 
 .footer-expand-btn[aria-expanded="true"] {
   transform: rotate(-90deg);
-}
-
-.footer-expand-btn-bottom {
-  margin: 28px 0 0;
 }
 
 .products-page .footer-connect {
