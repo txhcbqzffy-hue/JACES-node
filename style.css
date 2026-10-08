@@ -8970,6 +8970,52 @@ img,
   letter-spacing: 0.03em;
 }
 
+/* "Show more" strip: a circular arrow (same style as the carousel nav
+   buttons) toggles an extra row of footer links closed by default, so
+   the footer can carry a fuller sitemap without permanently taking up
+   that much vertical space. */
+.footer-cols-extra {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin-top: 28px;
+  padding-top: 28px;
+  border-top: 1px solid rgba(255, 255, 255, 0.14);
+}
+
+/* .footer-cols sets display:grid unconditionally, which (being an author
+   rule) otherwise overrides the UA stylesheet's default [hidden]{display:
+   none} - without this, the hidden attribute alone didn't actually hide
+   the panel. */
+.footer-cols-extra[hidden] {
+  display: none;
+}
+
+.footer-expand-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  margin: 28px auto 0;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.24);
+  background: #f5f2ec;
+  color: #111111;
+  cursor: pointer;
+  padding: 0;
+  transform: rotate(90deg);
+  transition: transform 0.25s ease, background 0.18s ease;
+}
+
+.footer-expand-btn:hover,
+.footer-expand-btn:focus-visible {
+  background: #ffffff;
+  outline: none;
+}
+
+.footer-expand-btn[aria-expanded="true"] {
+  transform: rotate(-90deg);
+}
+
 .products-page .footer-connect {
   max-width: 920px;
   margin: 0 auto 34px;
