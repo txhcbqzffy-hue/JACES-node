@@ -8860,9 +8860,9 @@ img,
 }
 
 .footer {
-  background: #111111;
-  color: #ffffff;
-  border-top: 1px solid #111111;
+  background: #ffffff;
+  color: #111111;
+  border-top: 1px solid #ffffff;
   padding: 56px 48px 28px;
 }
 
@@ -8886,13 +8886,13 @@ img,
   text-transform: uppercase;
   letter-spacing: 0.12em;
   margin-bottom: 18px;
-  color: rgba(255, 255, 255, 0.55);
+  color: rgba(17, 17, 17, 0.55);
 }
 
 .footer-col a {
   display: block;
   margin-bottom: 14px;
-  color: rgba(255, 255, 255, 0.85);
+  color: rgba(17, 17, 17, 0.85);
   font-size: 0.88rem;
   text-decoration: none;
   transition: color 0.15s;
@@ -8906,7 +8906,7 @@ img,
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  color: rgba(255, 255, 255, 0.4);
+  color: rgba(17, 17, 17, 0.4);
   margin: 20px 0 10px;
 }
 
@@ -8915,7 +8915,7 @@ img,
 }
 
 .footer-col a:hover {
-  color: #ffffff;
+  color: #111111;
 }
 
 .footer-newsletter {
@@ -8933,7 +8933,7 @@ img,
 
 .footer-newsletter p {
   font-size: 0.83rem;
-  color: rgba(255, 255, 255, 0.75);
+  color: rgba(17, 17, 17, 0.75);
   line-height: 1.6;
   margin-bottom: 20px;
 }
@@ -8975,12 +8975,12 @@ img,
 .footer-newsletter-status {
   margin-top: 10px;
   font-size: 0.78rem;
-  color: rgba(255, 255, 255, 0.55);
+  color: rgba(17, 17, 17, 0.55);
 }
 
 .footer-note {
   font-size: 0.64rem;
-  color: rgba(255, 255, 255, 0.55);
+  color: rgba(17, 17, 17, 0.55);
   padding-top: 20px;
   text-align: left;
   letter-spacing: 0.03em;
@@ -9008,7 +9008,7 @@ img,
   grid-template-columns: repeat(4, minmax(0, 1fr));
   margin-top: 28px;
   padding-top: 28px;
-  border-top: 1px solid rgba(255, 255, 255, 0.14);
+  border-top: 1px solid rgba(17, 17, 17, 0.14);
   overflow: hidden;
   min-height: 0;
 }
@@ -9021,7 +9021,7 @@ img,
   height: 32px;
   margin: 18px 0 0;
   border-radius: 50%;
-  border: 1px solid rgba(255, 255, 255, 0.24);
+  border: 1px solid rgba(17, 17, 17, 0.24);
   background: #f5f2ec;
   color: #111111;
   cursor: pointer;
@@ -9032,7 +9032,7 @@ img,
 
 .footer-expand-btn:hover,
 .footer-expand-btn:focus-visible {
-  background: #ffffff;
+  background: #eae6dd;
   outline: none;
 }
 
