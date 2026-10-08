@@ -8887,7 +8887,7 @@ img,
 .footer-col a {
   display: block;
   margin-bottom: 14px;
-  color: rgba(17, 17, 17, 0.85);
+  color: #111111;
   font-size: 0.88rem;
   text-decoration: none;
   transition: color 0.15s;
@@ -8910,7 +8910,7 @@ img,
 }
 
 .footer-col a:hover {
-  color: #111111;
+  color: rgba(17, 17, 17, 0.48);
 }
 
 .footer-newsletter {
@@ -8999,13 +8999,22 @@ img,
   grid-template-rows: 1fr;
 }
 
+/* Single grid item inside .footer-extra-wrap, holding both the column
+   grid and the bottom close button - without this shared wrapper, the
+   wrapper's own display:grid auto-placed the columns and the button as
+   two separate items side by side, and only the columns had
+   overflow:hidden, so the button stayed visible (with its own leftover
+   divider) even while the panel was collapsed. */
+.footer-extra-inner {
+  overflow: hidden;
+  min-height: 0;
+}
+
 .footer-cols-extra {
   grid-template-columns: repeat(4, minmax(0, 1fr));
   margin-top: 28px;
   padding-top: 28px;
   border-top: 1px solid rgba(17, 17, 17, 0.14);
-  overflow: hidden;
-  min-height: 0;
 }
 
 .footer-expand-btn {
@@ -9033,6 +9042,10 @@ img,
 
 .footer-expand-btn[aria-expanded="true"] {
   transform: rotate(-90deg);
+}
+
+.footer-expand-btn-bottom {
+  margin: 28px 0 0;
 }
 
 .products-page .footer-connect {

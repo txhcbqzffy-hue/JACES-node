@@ -431,6 +431,7 @@
     </div>
 
     <div class="footer-extra-wrap" id="footer-extra">
+      <div class="footer-extra-inner">
       <div class="footer-cols footer-cols-extra">
         <div class="footer-col">
           <p class="footer-col-title">Nouveautés</p>
@@ -475,6 +476,11 @@
         </div>
 
       </div>
+
+      <button type="button" class="footer-expand-btn footer-expand-btn-bottom" id="footer-expand-btn-bottom" aria-expanded="false" aria-controls="footer-extra" aria-label="Masquer les liens">
+        <svg width="14" height="10" viewBox="0 0 20 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="1" y1="7" x2="19" y2="7"/><polyline points="12 1 19 7 12 13"/></svg>
+      </button>
+      </div>
     </div>
 
     <p class="footer-note">Copyright © 2026 JACES. Tous droits réservés.</p>
@@ -482,14 +488,27 @@
 
   <script>
     (function () {
-      const btn = document.getElementById('footer-expand-btn');
+      // Two buttons sharing one state: the top one (under "Univers") is
+      // always there to open the panel; the bottom one lives inside the
+      // panel itself, so it only comes into view once the panel has slid
+      // open (same clip/slide animation as the rest of the panel - no
+      // separate code needed to make it "arrive" at the bottom) and closes
+      // it again from there, letting the panel slide back up.
+      const topBtn = document.getElementById('footer-expand-btn');
+      const bottomBtn = document.getElementById('footer-expand-btn-bottom');
       const panel = document.getElementById('footer-extra');
-      if (!btn || !panel) return;
-      btn.addEventListener('click', () => {
-        const isOpen = btn.getAttribute('aria-expanded') === 'true';
-        btn.setAttribute('aria-expanded', String(!isOpen));
-        panel.classList.toggle('is-open', !isOpen);
-      });
+      if (!topBtn || !bottomBtn || !panel) return;
+
+      const setOpen = (isOpen) => {
+        topBtn.setAttribute('aria-expanded', String(isOpen));
+        bottomBtn.setAttribute('aria-expanded', String(isOpen));
+        panel.classList.toggle('is-open', isOpen);
+      };
+
+      const toggle = () => setOpen(topBtn.getAttribute('aria-expanded') !== 'true');
+
+      topBtn.addEventListener('click', toggle);
+      bottomBtn.addEventListener('click', toggle);
     })();
   </script>
 
