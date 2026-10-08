@@ -7692,6 +7692,12 @@ a.hero-kicker:focus-visible {
   counter-reset: product;
 }
 
+/* Match the tighter spacing of the "EN CE MOMENT" product carousel
+   (.home-slider-track) instead of the wider default .product-grid gap. */
+.cards-grid {
+  gap: 12px;
+}
+
 .collection-page .product-grid {
   grid-template-columns: repeat(12, minmax(0, 1fr));
   column-gap: 18px;
