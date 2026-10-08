@@ -6873,7 +6873,11 @@ a.hero-kicker:focus-visible {
   margin: 0 auto;
   display: grid;
   grid-auto-flow: column;
-  grid-auto-columns: minmax(320px, 46vw);
+  /* minmax(min, vw-max) resolves to just the min here - this grid
+     overflows its container (that's the point, it scrolls), so there's
+     no spare space for a plain-length max to grow tracks into. max()
+     actually sizes each card at the vw value instead. */
+  grid-auto-columns: max(320px, 21vw);
   gap: 12px;
   overflow-x: auto;
   scroll-snap-type: x mandatory;
