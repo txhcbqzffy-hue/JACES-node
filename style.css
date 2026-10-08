@@ -8349,6 +8349,18 @@ img,
   padding-right: 34px;
 }
 
+/* Between two stacked highlight rows, match the 12px gap used inside
+   each row's own cards-grid instead of stacking their normal top/bottom
+   section padding (which left a visibly wider gap than the one between
+   images in the same row). */
+.section-highlight:has(+ .section-highlight) {
+  padding-bottom: 6px;
+}
+
+.section-highlight + .section-highlight {
+  padding-top: 6px;
+}
+
 .section-highlight .section-intro {
   max-width: 760px;
   margin: 0 0 20px;
