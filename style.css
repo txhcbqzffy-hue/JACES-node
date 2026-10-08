@@ -6873,7 +6873,7 @@ a.hero-kicker:focus-visible {
   margin: 0 auto;
   display: grid;
   grid-auto-flow: column;
-  grid-auto-columns: minmax(280px, 35vw);
+  grid-auto-columns: minmax(320px, 46vw);
   gap: 12px;
   overflow-x: auto;
   scroll-snap-type: x mandatory;
