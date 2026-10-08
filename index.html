@@ -613,19 +613,43 @@
       updateSliderButtons();
     }
 
+    const FEATURED_CACHE_KEY = 'jaces-featured-products-cache';
+    let renderedFeaturedIds = '';
+
+    function renderFeaturedProducts(section, track, products) {
+      const ids = products.map((product) => product.id).join(',');
+      if (ids === renderedFeaturedIds) return; // already showing these exact products, skip the reflow/flash
+      renderedFeaturedIds = ids;
+      track.innerHTML = '';
+      products.forEach((product) => track.appendChild(buildHomeSliderCard(product)));
+      section.hidden = false;
+      setupSlider();
+    }
+
     async function loadFeaturedProducts() {
       const section = document.querySelector('.home-slider-section');
       const track = document.querySelector('[data-slider-track]');
       if (!section || !track) return;
 
+      // Paint last visit's products immediately instead of leaving the
+      // whole section hidden until the fetch resolves - without this,
+      // "EN CE MOMENT" popped in a moment after everything else on the
+      // page, which read as a bug/missing content. Only trusted for an
+      // hour so stock/price changes still show up promptly.
+      try {
+        const cached = JSON.parse(localStorage.getItem(FEATURED_CACHE_KEY) || 'null');
+        const isFresh = cached && Date.now() - cached.cachedAt < 60 * 60 * 1000;
+        if (isFresh && Array.isArray(cached.products) && cached.products.length) {
+          renderFeaturedProducts(section, track, cached.products);
+        }
+      } catch (error) {}
+
       try {
         const products = await getProducts('nouveautes');
         if (!Array.isArray(products) || !products.length) return;
 
-        track.innerHTML = '';
-        products.forEach((product) => track.appendChild(buildHomeSliderCard(product)));
-        section.hidden = false;
-        setupSlider();
+        renderFeaturedProducts(section, track, products);
+        try { localStorage.setItem(FEATURED_CACHE_KEY, JSON.stringify({ products, cachedAt: Date.now() })); } catch (error) {}
       } catch (error) {
         console.error('Impossible de charger les produits en vedette:', error);
       }
