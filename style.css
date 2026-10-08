@@ -8850,11 +8850,6 @@ img,
   transition: color 0.18s;
 }
 
-.back-to-top-link svg {
-  width: 18px;
-  height: 12px;
-}
-
 .back-to-top-link:hover {
   color: rgba(17, 17, 17, 0.64);
 }
