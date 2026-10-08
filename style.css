@@ -8898,6 +8898,22 @@ img,
   transition: color 0.15s;
 }
 
+/* Sub-heading inside a footer column (e.g. "Catégorie" under
+   "Nouveautés") - mirrors the mega-menu's own submenu-title grouping so
+   the expanded footer panel stays organized instead of one flat list. */
+.footer-col-subtitle {
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: rgba(255, 255, 255, 0.4);
+  margin: 20px 0 10px;
+}
+
+.footer-col-subtitle:first-of-type {
+  margin-top: 0;
+}
+
 .footer-col a:hover {
   color: #ffffff;
 }
