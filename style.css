@@ -8974,19 +8974,27 @@ img,
    buttons) toggles an extra row of footer links closed by default, so
    the footer can carry a fuller sitemap without permanently taking up
    that much vertical space. */
+/* Slide open/closed instead of an instant show/hide: the wrapper animates
+   grid-template-rows between 0fr and 1fr (handles an unknown content
+   height, unlike max-height), and the inner panel clips to that row via
+   overflow:hidden so its own padding/border don't leak out while closed. */
+.footer-extra-wrap {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.35s ease;
+}
+
+.footer-extra-wrap.is-open {
+  grid-template-rows: 1fr;
+}
+
 .footer-cols-extra {
   grid-template-columns: repeat(4, minmax(0, 1fr));
   margin-top: 28px;
   padding-top: 28px;
   border-top: 1px solid rgba(255, 255, 255, 0.14);
-}
-
-/* .footer-cols sets display:grid unconditionally, which (being an author
-   rule) otherwise overrides the UA stylesheet's default [hidden]{display:
-   none} - without this, the hidden attribute alone didn't actually hide
-   the panel. */
-.footer-cols-extra[hidden] {
-  display: none;
+  overflow: hidden;
+  min-height: 0;
 }
 
 .footer-expand-btn {

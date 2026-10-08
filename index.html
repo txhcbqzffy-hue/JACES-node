@@ -431,8 +431,10 @@
       </div>
     </div>
 
-    <div class="footer-cols footer-cols-extra" id="footer-extra" hidden>
-      <div class="footer-col"><p class="footer-col-title">Mon espace</p><a href="index.html">Accueil</a><a href="mon-compte.html">Mon compte</a><a href="mes-favoris.html">Mes favoris</a><a href="panier.html">Panier</a><a href="produits.html">Tous les produits</a></div>
+    <div class="footer-extra-wrap" id="footer-extra">
+      <div class="footer-cols footer-cols-extra">
+        <div class="footer-col"><p class="footer-col-title">Mon espace</p><a href="index.html">Accueil</a><a href="mon-compte.html">Mon compte</a><a href="mes-favoris.html">Mes favoris</a><a href="panier.html">Panier</a><a href="produits.html">Tous les produits</a></div>
+      </div>
     </div>
 
     <p class="footer-note">Copyright © 2026 JACES. Tous droits réservés.</p>
@@ -446,7 +448,7 @@
       btn.addEventListener('click', () => {
         const isOpen = btn.getAttribute('aria-expanded') === 'true';
         btn.setAttribute('aria-expanded', String(!isOpen));
-        panel.hidden = isOpen;
+        panel.classList.toggle('is-open', !isOpen);
       });
     })();
   </script>
