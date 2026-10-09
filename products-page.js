@@ -49,7 +49,8 @@ const COLLAB_SLUG_TO_TOKEN = {
 // season tokens the collection page filters by ("ss26" / "aw26").
 const SEASON_SLUG_TO_TOKEN = {
   'printemps-ete-2026': 'ss26',
-  'automne-hiver-2026': 'aw26'
+  'automne-hiver-2026': 'aw26',
+  'capsules-limitees': 'capsules'
 };
 
 function getProductCollectionSeason(product) {
@@ -129,7 +130,7 @@ function formatPrice(price) {
 // these products no longer show any stock-based unavailability.
 function getNouveauteBadgeLabel(product) {
   const tags = Array.isArray(product.nouveauteTags) ? product.nouveauteTags : [];
-  if (tags.includes('drop')) return 'Drop';
+  if (tags.includes('drop')) return 'New';
   if (tags.includes('pieces-signature')) return 'Pièces signature';
   if (tags.includes('exclusivites')) return 'Exclusivités';
   if (tags.includes('editions-limitees')) return 'Éditions limitées';
@@ -138,7 +139,8 @@ function getNouveauteBadgeLabel(product) {
 
 const SEASON_BADGE_LABELS = {
   ss26: 'Printemps–Été 2026',
-  aw26: 'Automne–Hiver 2026'
+  aw26: 'Automne–Hiver 2026',
+  capsules: 'Capsules limitées'
 };
 
 function getSeasonBadgeLabel(product) {

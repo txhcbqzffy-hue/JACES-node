@@ -642,20 +642,42 @@
       });
     }
 
+    const SEASON_SLUG_TO_TOKEN = {
+      'printemps-ete-2026': 'ss26',
+      'automne-hiver-2026': 'aw26',
+      'capsules-limitees': 'capsules'
+    };
+
+    const SEASON_BADGE_LABELS = {
+      ss26: 'Printemps–Été 2026',
+      aw26: 'Automne–Hiver 2026',
+      capsules: 'Capsules limitées'
+    };
+
+    function getSeasonBadgeLabel(product) {
+      const filterTokens = Array.isArray(product?.filter_tokens) ? product.filter_tokens : [];
+      const seasonToken = filterTokens.map((token) => SEASON_SLUG_TO_TOKEN[token]).find(Boolean);
+      return SEASON_BADGE_LABELS[seasonToken] || '';
+    }
+
     function getNouveauteBadgeLabel(product) {
       const tags = Array.isArray(product.nouveauteTags) ? product.nouveauteTags : [];
-      if (tags.includes('drop')) return 'Drop';
+      if (tags.includes('drop')) return 'New';
       if (tags.includes('pieces-signature')) return 'Pièces signature';
       if (tags.includes('exclusivites')) return 'Exclusivités';
       if (tags.includes('editions-limitees')) return 'Éditions limitées';
       return '';
     }
 
+    function getCardBadgeLabel(product) {
+      return getNouveauteBadgeLabel(product) || getSeasonBadgeLabel(product);
+    }
+
     function buildHomeSliderCard(product) {
       const images = Array.isArray(product.images) ? product.images : [];
       const primarySrc = images[0]?.url || product.image_url || product.img || '';
       const secondarySrc = images[1]?.url || product.hover_image_url || primarySrc;
-      const badgeLabel = getNouveauteBadgeLabel(product);
+      const badgeLabel = getCardBadgeLabel(product);
       const sizes = sortSizes(Array.isArray(product.sizes) ? product.sizes.map((s) => String(s || '').trim()).filter(Boolean) : []);
       // Same rule as the collection/product pages: if the real sizes are all
       // part of the standard 34-44 range, show that whole range with the
