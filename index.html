@@ -397,15 +397,19 @@
     <div class="footer-trust">
       <div class="footer-trust-item">
         <p class="footer-trust-title">Livraison offerte</p>
-        <p class="footer-trust-sub">À partir de 200€ d'achat</p>
+        <p class="footer-trust-sub" id="footer-trust-shipping-sub">À partir de 79€ d'achat</p>
       </div>
       <div class="footer-trust-item">
-        <p class="footer-trust-title">Retours et échanges offerts</p>
-        <p class="footer-trust-sub">en France</p>
+        <p class="footer-trust-title">Retours &amp; Échanges</p>
+        <p class="footer-trust-sub">Gratuits sous 14 jours</p>
       </div>
       <div class="footer-trust-item">
         <p class="footer-trust-title">Paiement sécurisé</p>
-        <p class="footer-trust-sub">CB, Visa, Mastercard, Alma</p>
+        <p class="footer-trust-sub">PayPal, Alma</p>
+      </div>
+      <div class="footer-trust-item">
+        <p class="footer-trust-title">Une question ?</p>
+        <p class="footer-trust-sub">Réponse du SAV sous 24H</p>
       </div>
     </div>
 
@@ -499,6 +503,26 @@
 
       btn.addEventListener('click', toggle);
     })();
+  </script>
+
+  <script>
+    // Keeps the footer's "Livraison offerte" line in sync with whatever
+    // the topbar banner actually says, instead of a separately hardcoded
+    // number that could drift out of sync with it (the topbar text is
+    // admin-editable via site-content.js). Only touches the footer text
+    // when the banner matches the expected "Livraison offerte dès X€"
+    // shape - any other banner message (a sale, a holiday closure notice,
+    // etc.) leaves the footer's default text alone instead of showing
+    // something nonsensical.
+    window.syncFooterShippingTrust = function () {
+      const banner = document.getElementById('topbar-banner-text');
+      const sub = document.getElementById('footer-trust-shipping-sub');
+      if (!banner || !sub) return;
+      const match = banner.textContent.match(/Livraison offerte dès\s*([\d.,]+)\s*€/i);
+      if (!match) return;
+      sub.textContent = `À partir de ${match[1]}€ d'achat`;
+    };
+    window.syncFooterShippingTrust();
   </script>
 
   <script src="admin-products.js?v=202607292c"></script>

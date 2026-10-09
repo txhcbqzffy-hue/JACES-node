@@ -125,6 +125,7 @@
         document.querySelectorAll('#topbar-banner-text').forEach((el) => {
           el.textContent = content.banner_text;
         });
+        if (typeof window.syncFooterShippingTrust === 'function') window.syncFooterShippingTrust();
       }
 
       // Category-nav-strip thumbnails (Nouveautés/Collection/Collaborations/
