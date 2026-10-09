@@ -7333,6 +7333,16 @@ a.hero-kicker:focus-visible {
   text-shadow: none;
 }
 
+/* .submenu a sits inside .header .nav too, so the two page-scoped rules
+   above (same specificity, 3 classes + element) were winning over the
+   plain .submenu a rule by source order and flattening its softened
+   color back to solid black - these match that same specificity to
+   win back over them instead. */
+.collection-page-body .header .submenu a,
+.home-page .header .submenu a {
+  color: rgba(17, 17, 17, 0.72);
+}
+
 .collection-page-body .header .nav a::after {
   background: #111111;
 }
