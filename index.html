@@ -674,12 +674,26 @@
     const FEATURED_CACHE_KEY = 'jaces-featured-products-cache';
     let renderedFeaturedIds = '';
 
+    function buildSliderSpacer() {
+      const spacer = document.createElement('div');
+      spacer.className = 'home-slider-spacer';
+      spacer.setAttribute('aria-hidden', 'true');
+      return spacer;
+    }
+
     function renderFeaturedProducts(section, track, products) {
       const ids = products.map((product) => product.id).join(',');
       if (ids === renderedFeaturedIds) return; // already showing these exact products, skip the reflow/flash
       renderedFeaturedIds = ids;
       track.innerHTML = '';
+      track.appendChild(buildSliderSpacer());
       products.forEach((product) => track.appendChild(buildHomeSliderCard(product)));
+      // Explicit template (not just grid-auto-columns) so the leading
+      // spacer gets its own 26px track instead of stretching to the
+      // same width as the product cards - see the .home-slider-spacer
+      // comment in style.css for why a real grid item is needed here
+      // instead of plain padding/margin.
+      track.style.gridTemplateColumns = `26px repeat(${products.length}, var(--slider-card-size))`;
       section.hidden = false;
       setupSlider();
     }

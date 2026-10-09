@@ -6777,7 +6777,7 @@ a.hero-kicker:focus-visible {
 
 .home-slider-section {
   background: #ffffff;
-  padding: 34px 0 6px 26px;
+  padding: 34px 0 6px;
   position: relative;
 }
 
@@ -6790,6 +6790,7 @@ a.hero-kicker:focus-visible {
 .home-slider-header {
   max-width: 1800px;
   margin: 0 auto 18px;
+  padding-left: 26px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -6876,19 +6877,40 @@ a.hero-kicker:focus-visible {
   /* minmax(min, vw-max) resolves to just the min here - this grid
      overflows its container (that's the point, it scrolls), so there's
      no spare space for a plain-length max to grow tracks into. max()
-     actually sizes each card at the vw value instead. */
-  grid-auto-columns: max(320px, 21vw);
+     actually sizes each card at the vw value instead. Kept as a custom
+     property (not just grid-auto-columns) because the slider script
+     sets an explicit grid-template-columns once cards are rendered (see
+     .home-slider-spacer below) and needs the same card-sizing value
+     there too; the responsive override further down only has to change
+     this one variable instead of two separate rules. */
+  --slider-card-size: max(320px, 21vw);
+  grid-auto-columns: var(--slider-card-size);
   gap: 12px;
   overflow-x: auto;
   scroll-snap-type: x mandatory;
   padding-bottom: 8px;
-  /* Trailing space after the last card: the section itself sits flush
-     against the right viewport edge now, but without this the last
-     card's price text would end up touching that edge once scrolled
-     all the way over. Padding on a scrolling container's own end is
-     still part of its scrollable area, so this reserves room past the
-     last card without affecting where the track starts on the left. */
+  /* Trailing space after the last card: padding on a scrolling
+     container's own end is still part of its scrollable area, so it
+     scrolls away with the content instead of sitting fixed outside it
+     (unlike the section's own padding, which stays pinned on screen
+     regardless of scroll position). */
   padding-right: 26px;
+}
+
+/* Leading space before the first card mirrors the trailing padding, but
+   can't just be padding-left: with scroll-snap-type:x mandatory below,
+   a container's leading padding isn't a valid resting position - the
+   browser clamps the minimum reachable scrollLeft to the first snapped
+   card's own start, skipping straight past any padding/margin in front
+   of it. A real grid item that itself opts into snapping is the only
+   thing the snap engine will treat as a legitimate "start" position, so
+   the slider script (buildSliderSpacer) inserts an empty 26px-wide one
+   before the first card and sets an explicit grid-template-columns
+   (var(--slider-card-size) above) to size it, since plain
+   grid-auto-columns would otherwise stretch it to full card width. */
+.home-slider-spacer {
+  width: 26px;
+  scroll-snap-align: start;
 }
 
 .home-slider-track::-webkit-scrollbar {
@@ -7041,7 +7063,7 @@ a.hero-kicker:focus-visible {
   }
 
   .home-slider-track {
-    grid-auto-columns: minmax(260px, 84vw);
+    --slider-card-size: minmax(260px, 84vw);
   }
 
   .home-slider-meta h3,
