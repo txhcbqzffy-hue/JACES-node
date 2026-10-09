@@ -8999,20 +8999,19 @@ a.footer-trust-item:hover .footer-trust-title {
 .footer-newsletter {
   width: 530px;
   max-width: 530px;
-  text-align: right;
 }
 
 .footer-newsletter h3 {
   font-family: "Manrope", sans-serif;
-  font-size: 2.4rem;
+  font-size: 1.8rem;
   font-weight: 800;
-  line-height: 1.15;
+  line-height: 1.2;
   margin-bottom: 16px;
   letter-spacing: -0.02em;
 }
 
 .footer-newsletter p {
-  font-size: 1.05rem;
+  font-size: 0.92rem;
   color: rgba(17, 17, 17, 0.55);
   line-height: 1.6;
   margin-bottom: 26px;
