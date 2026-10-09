@@ -8931,9 +8931,6 @@ img,
   color: inherit;
 }
 
-a.footer-trust-item:hover .footer-trust-title {
-  text-decoration: underline;
-}
 
 .footer-trust-title {
   margin: 0 0 6px;
