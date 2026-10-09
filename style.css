@@ -6908,8 +6908,12 @@ a.hero-kicker:focus-visible {
    before the first card and sets an explicit grid-template-columns
    (var(--slider-card-size) above) to size it, since plain
    grid-auto-columns would otherwise stretch it to full card width. */
+/* 14px, not 26px: the grid's own 12px gap lands right after this
+   spacer and before the first card, so 14 + 12 = 26 total - same
+   visual gap as the header's padding-left: 26 above it, keeping the
+   title and the first card's left edge aligned. */
 .home-slider-spacer {
-  width: 26px;
+  width: 14px;
   scroll-snap-align: start;
 }
 
