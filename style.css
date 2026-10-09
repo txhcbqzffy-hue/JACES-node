@@ -8937,7 +8937,9 @@ img,
 }
 
 .footer-newsletter {
-  max-width: 442px;
+  width: 530px;
+  max-width: 530px;
+  margin-right: 40px;
 }
 
 .footer-newsletter h3 {
