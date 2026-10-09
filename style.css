@@ -9034,6 +9034,17 @@ img,
   white-space: nowrap;
 }
 
+.footer-credit a {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  transition: color 0.15s;
+}
+
+.footer-credit a:hover {
+  color: #111111;
+}
+
 /* "Show more" strip: a circular arrow (same style as the carousel nav
    buttons) toggles an extra row of footer links closed by default, so
    the footer can carry a fuller sitemap without permanently taking up
