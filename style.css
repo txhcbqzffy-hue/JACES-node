@@ -6371,6 +6371,14 @@ body.account-modal-open {
 
 .submenu-categories a {
   break-inside: avoid;
+  text-transform: none;
+}
+
+/* The collaborations nav item reuses .submenu-categories for its brand
+   names ("JACES × ...") instead of plain category names - those stay
+   uppercase like the rest of the mega-menu, unlike Robes/Tops/Sacs/etc. */
+.submenu-collabs a {
+  text-transform: uppercase;
 }
 
 
@@ -6384,7 +6392,6 @@ body.account-modal-open {
   border-radius: 0;
   position: relative;
   text-decoration: none;
-  text-transform: none;
   transition: color 0.2s ease;
 }
 
