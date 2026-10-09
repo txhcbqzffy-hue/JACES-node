@@ -9041,6 +9041,8 @@ a.footer-trust-item:hover .footer-trust-title {
   display: flex;
   align-items: stretch;
   border: 1px solid rgba(17, 17, 17, 0.64);
+  border-radius: 8px;
+  overflow: hidden;
 }
 
 .footer-newsletter-form input {
