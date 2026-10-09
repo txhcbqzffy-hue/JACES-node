@@ -11453,8 +11453,8 @@ h3,
    every width), and the default zoom stays inside each card instead of
    spilling a few px past those edges. */
 .section.section-highlight {
-  padding-left: 12px;
-  padding-right: 12px;
+  padding-left: 16px;
+  padding-right: 16px;
 }
 
 .section-highlight .card {
