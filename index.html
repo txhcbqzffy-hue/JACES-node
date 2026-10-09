@@ -889,28 +889,35 @@
       // unrelated stock photos for a few seconds (the real feed is a live
       // Instagram API call, not an instant one) before abruptly swapping to
       // the real @jaces.creation posts, which read as the section
-      // "disappearing and reappearing". Only trusted for an hour, matching
-      // the API's own s-maxage=3600: Instagram's media_url is a signed,
-      // time-limited CDN link, so an older cached one can have expired and
-      // would otherwise render as a broken/missing image until the fresh
-      // fetch below replaces it.
+      // "disappearing and reappearing". Used as-is with no freshness window
+      // and no automatic re-fetch once it exists, per explicit request: the
+      // feed should load once and then stay put across visits instead of
+      // silently reshuffling in the background. Note this means a cached
+      // post's media_url (a signed, time-limited Instagram CDN link) could
+      // eventually stop resolving - if that becomes visible as broken
+      // images, the fix is to shorten/reintroduce a freshness window here.
+      let hasUsableCache = false;
       try {
         const cached = JSON.parse(localStorage.getItem(IG_CACHE_KEY) || 'null');
-        const isFresh = cached && Date.now() - cached.cachedAt < 60 * 60 * 1000;
-        if (isFresh && Array.isArray(cached.posts) && cached.posts.length) renderInstagramPosts(cached.posts);
+        if (cached && Array.isArray(cached.posts) && cached.posts.length) {
+          renderInstagramPosts(cached.posts);
+          hasUsableCache = true;
+        }
       } catch (error) {}
 
-      // Swap the static placeholder posts for the real @jaces.creation feed.
-      // Left as-is on any failure (no token, API error, rate limit) so the
-      // section still looks complete instead of breaking.
-      fetch('/api/instagram-feed?limit=6')
-        .then((r) => r.json())
-        .then((data) => {
-          if (!data.ok || !Array.isArray(data.posts) || !data.posts.length) return;
-          renderInstagramPosts(data.posts);
-          try { localStorage.setItem(IG_CACHE_KEY, JSON.stringify({ posts: data.posts, cachedAt: Date.now() })); } catch (error) {}
-        })
-        .catch(() => {});
+      // Only hits the API the very first time (no cache yet) or after the
+      // cache was cleared - once a feed is cached, later visits reuse it
+      // as-is instead of fetching again.
+      if (!hasUsableCache) {
+        fetch('/api/instagram-feed?limit=6')
+          .then((r) => r.json())
+          .then((data) => {
+            if (!data.ok || !Array.isArray(data.posts) || !data.posts.length) return;
+            renderInstagramPosts(data.posts);
+            try { localStorage.setItem(IG_CACHE_KEY, JSON.stringify({ posts: data.posts, cachedAt: Date.now() })); } catch (error) {}
+          })
+          .catch(() => {});
+      }
     }
   </script>
   <script src="site-content.js?v=20260729b"></script>

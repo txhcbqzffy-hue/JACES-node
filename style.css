@@ -7008,9 +7008,10 @@ a.hero-kicker:focus-visible {
 }
 
 .home-slider-card .quick-buy-grid button {
+  position: relative;
   border: none;
   background: transparent;
-  padding: 0;
+  padding: 0 0 6px;
   margin: 0;
   color: #111111;
   font-size: 0.76rem;
@@ -7019,10 +7020,29 @@ a.hero-kicker:focus-visible {
   text-align: center;
 }
 
+/* Same "grows out from the middle" underline as the header nav's
+   hover state (see .nav a::after), instead of a plain text-decoration
+   underline. */
+.home-slider-card .quick-buy-grid button::after {
+  content: "";
+  position: absolute;
+  width: 0;
+  height: 0.8px;
+  background: #111111;
+  left: 50%;
+  bottom: 0;
+  transform: translateX(-50%);
+  transition: width 0.3s;
+}
+
 .home-slider-card .quick-buy-grid button:hover,
 .home-slider-card .quick-buy-grid button:focus-visible {
   font-weight: 700;
-  text-decoration: underline;
+}
+
+.home-slider-card .quick-buy-grid button:hover::after,
+.home-slider-card .quick-buy-grid button:focus-visible::after {
+  width: 14px;
 }
 
 .home-slider-card:hover .hover-sizes,
