@@ -8885,12 +8885,11 @@ img,
   gap: 40px;
 }
 
-/* Main footer row only has 3 columns now (Navigation moved into the
-   expandable panel) - without this override it'd inherit the 4-column
-   grid and leave a blank trailing track. */
-.footer-cols-main {
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-}
+/* Main row keeps the inherited 4-column template (not 3) on purpose,
+   even though it only has 3 columns of content: sharing the exact same
+   column tracks as .footer-cols-extra below is what makes JACES line up
+   under Collections and Mentions légales line up under Collaborations,
+   with the 4th track just left blank. */
 
 .footer-col-title {
   font-size: 0.78rem;
