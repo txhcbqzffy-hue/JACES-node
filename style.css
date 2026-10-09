@@ -8999,6 +8999,7 @@ a.footer-trust-item:hover .footer-trust-title {
 .footer-newsletter {
   width: 530px;
   max-width: 530px;
+  text-align: right;
 }
 
 .footer-newsletter h3 {
