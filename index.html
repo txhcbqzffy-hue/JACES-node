@@ -471,13 +471,6 @@
 
   <script>
     (function () {
-      // One button, sticky to the bottom of the screen while the footer is
-      // in view (see .footer-expand-btn's position:sticky) - unlike a
-      // plain in-flow button, this stays visually fixed in place no
-      // matter where you were scrolled when you clicked it, so the panel
-      // consistently looks like it unfolds upward from underneath it
-      // instead of that only working if you happened to already be at
-      // the very bottom of the page.
       const btn = document.getElementById('footer-expand-btn');
       const panel = document.getElementById('footer-extra');
       if (!btn || !panel) return;
