@@ -9064,9 +9064,16 @@ a.footer-trust-item:hover .footer-trust-title {
   color: #ffffff;
   border: none;
   padding: 13px 18px;
-  font-size: 1.14rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   cursor: pointer;
   transition: background 0.18s;
+}
+
+.footer-newsletter-form button svg {
+  width: 18px;
+  height: 13px;
 }
 
 .footer-newsletter-form button:hover {
