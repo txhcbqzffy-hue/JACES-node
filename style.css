@@ -9027,8 +9027,8 @@ a.footer-trust-item:hover .footer-trust-title {
   flex: 1;
   border: none;
   outline: none;
-  padding: 16px 21px;
-  font-size: 1.1rem;
+  padding: 13px 17px;
+  font-size: 0.88rem;
   background: #ffffff;
   color: #111111;
 }
@@ -9041,8 +9041,8 @@ a.footer-trust-item:hover .footer-trust-title {
   background: #111111;
   color: #ffffff;
   border: none;
-  padding: 16px 23px;
-  font-size: 1.43rem;
+  padding: 13px 18px;
+  font-size: 1.14rem;
   cursor: pointer;
   transition: background 0.18s;
 }
