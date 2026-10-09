@@ -8861,12 +8861,22 @@ img,
   padding: 56px 48px 28px;
 }
 
-.footer-main {
+.footer-top {
   display: grid;
   grid-template-columns: 1fr auto;
   gap: 64px;
   align-items: start;
   margin-bottom: 48px;
+}
+
+/* Holds the main + expandable link columns so their stacking is
+   independent of .footer-newsletter's height - without this, both lived
+   as siblings in .footer-top's single grid row, so the row's height (and
+   the gap before the expandable panel) was stretched by the much taller
+   newsletter column instead of following the short link columns. */
+.footer-links-block {
+  display: flex;
+  flex-direction: column;
 }
 
 .footer-cols {
@@ -9041,17 +9051,13 @@ img,
 
 .footer-cols-extra {
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  margin-top: 28px;
-  padding-top: 28px;
+  margin-top: 4px;
 }
 
-/* Sticky, not just in-flow: without this, the button's screen position
-   while open depended on where you happened to be scrolled when you
-   clicked it (right at the bottom already -> looked like it unfolded
-   upward; scrolled higher up -> the exact same DOM change just read as
-   ordinary top-to-bottom growth). Sticking it to the bottom of the
-   viewport while the footer is in view makes the panel consistently
-   unfold upward from underneath a button that visibly never moves. */
+/* Plain in-flow, not sticky: fixed to the PAGE (its position in the
+   document never changes), not to the viewport. It only looks pinned on
+   screen once you've scrolled all the way to the real bottom of the
+   page, because at that point there's nowhere left to scroll past it. */
 .footer-expand-btn {
   display: flex;
   align-items: center;
@@ -9065,8 +9071,6 @@ img,
   color: #111111;
   cursor: pointer;
   padding: 0;
-  position: sticky;
-  bottom: 24px;
   z-index: 2;
   transform: rotate(90deg);
   transition: transform 0.25s ease, background 0.18s ease;
@@ -9171,7 +9175,7 @@ img,
 @media (max-width: 1100px) {
   .section-story,
   .newsletter-card,
-  .footer-main,
+  .footer-top,
   .footer-cols {
     grid-template-columns: 1fr;
   }
