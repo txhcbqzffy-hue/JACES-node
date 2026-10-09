@@ -6828,7 +6828,7 @@ a.hero-kicker:focus-visible {
   height: 58px;
   border-radius: 50%;
   border: 1px solid rgba(17, 17, 17, 0.24);
-  background: #f5f2ec;
+  background: #ffffff;
   color: #111111;
   font-size: 0;
   line-height: 1;
@@ -8540,7 +8540,7 @@ img,
   height: 58px;
   border-radius: 50%;
   border: 1px solid rgba(17, 17, 17, 0.24);
-  background: #f5f2ec;
+  background: #ffffff;
   color: #111111;
   cursor: pointer;
   display: flex;
@@ -8943,8 +8943,8 @@ img,
 }
 
 .footer-newsletter p {
-  font-size: 1.08rem;
-  color: rgba(17, 17, 17, 0.75);
+  font-size: 0.9rem;
+  color: rgba(17, 17, 17, 0.55);
   line-height: 1.6;
   margin-bottom: 26px;
 }
@@ -8961,7 +8961,7 @@ img,
   outline: none;
   padding: 16px 21px;
   font-size: 1.1rem;
-  background: #f5f2ec;
+  background: #ffffff;
   color: #111111;
 }
 
@@ -9092,7 +9092,7 @@ img,
   margin: 24px 0;
   border-radius: 50%;
   border: 1px solid rgba(17, 17, 17, 0.24);
-  background: #f5f2ec;
+  background: #ffffff;
   color: #111111;
   cursor: pointer;
   padding: 0;
