@@ -9028,8 +9028,8 @@ a.footer-trust-item:hover .footer-trust-title {
   flex: 1;
   border: none;
   outline: none;
-  padding: 16px 21px;
-  font-size: 1.1rem;
+  padding: 11px 15px;
+  font-size: 0.77rem;
   background: #ffffff;
   color: #111111;
 }
@@ -9042,10 +9042,17 @@ a.footer-trust-item:hover .footer-trust-title {
   background: #111111;
   color: #ffffff;
   border: none;
-  padding: 16px 23px;
-  font-size: 1.43rem;
+  padding: 11px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   cursor: pointer;
   transition: background 0.18s;
+}
+
+.footer-newsletter-form button svg {
+  width: 18px;
+  height: 13px;
 }
 
 .footer-newsletter-form button:hover {
