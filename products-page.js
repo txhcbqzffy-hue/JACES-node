@@ -147,10 +147,25 @@ function getSeasonBadgeLabel(product) {
   return SEASON_BADGE_LABELS[getProductCollectionSeason(product)] || '';
 }
 
+const COLLAB_BADGE_LABELS = {
+  'maureen-di-carlo': 'JACES × Maureen Di Carlo',
+  'from-future': 'JACES × From Future',
+  hoka: 'JACES × Hoka',
+  'mamy-grand': 'JACES × Mamy Grand'
+};
+
+function getCollabBadgeLabel(product) {
+  const collabFilters = product?.filter_menus?.collaborations;
+  const slugs = Array.isArray(collabFilters) ? collabFilters.map((filter) => filter?.slug).filter(Boolean) : [];
+  const token = slugs.map((slug) => COLLAB_SLUG_TO_TOKEN[slug]).find(Boolean);
+  return COLLAB_BADGE_LABELS[token] || '';
+}
+
 // A product only ever gets one badge - Nouveautés tag takes priority since
-// a Nouveautés item is rarely also tagged with a Collection season.
+// a Nouveautés item is rarely also tagged with a Collection season or a
+// collaboration.
 function getCardBadgeLabel(product) {
-  return getNouveauteBadgeLabel(product) || getSeasonBadgeLabel(product);
+  return getNouveauteBadgeLabel(product) || getSeasonBadgeLabel(product) || getCollabBadgeLabel(product);
 }
 
 function buildProductCard(product, pageType) {

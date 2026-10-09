@@ -669,8 +669,29 @@
       return '';
     }
 
+    const COLLAB_SLUG_TO_TOKEN = {
+      'jaces-x-maureen-di-carlo': 'maureen-di-carlo',
+      'jaces-x-from-future': 'from-future',
+      'jaces-x-hoka': 'hoka',
+      'jaces-x-mamy-grand': 'mamy-grand'
+    };
+
+    const COLLAB_BADGE_LABELS = {
+      'maureen-di-carlo': 'JACES × Maureen Di Carlo',
+      'from-future': 'JACES × From Future',
+      hoka: 'JACES × Hoka',
+      'mamy-grand': 'JACES × Mamy Grand'
+    };
+
+    function getCollabBadgeLabel(product) {
+      const collabFilters = product?.filter_menus?.collaborations;
+      const slugs = Array.isArray(collabFilters) ? collabFilters.map((filter) => filter?.slug).filter(Boolean) : [];
+      const token = slugs.map((slug) => COLLAB_SLUG_TO_TOKEN[slug]).find(Boolean);
+      return COLLAB_BADGE_LABELS[token] || '';
+    }
+
     function getCardBadgeLabel(product) {
-      return getNouveauteBadgeLabel(product) || getSeasonBadgeLabel(product);
+      return getNouveauteBadgeLabel(product) || getSeasonBadgeLabel(product) || getCollabBadgeLabel(product);
     }
 
     function buildHomeSliderCard(product) {
