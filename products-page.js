@@ -131,6 +131,8 @@ function getNouveauteBadgeLabel(product) {
   const tags = Array.isArray(product.nouveauteTags) ? product.nouveauteTags : [];
   if (tags.includes('drop')) return 'Drop';
   if (tags.includes('pieces-signature')) return 'Pièces signature';
+  if (tags.includes('exclusivites')) return 'Exclusivités';
+  if (tags.includes('editions-limitees')) return 'Éditions limitées';
   return '';
 }
 
