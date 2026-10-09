@@ -11454,7 +11454,7 @@ h3,
    spilling a few px past those edges. */
 .section.section-highlight {
   padding-left: 20px;
-  padding-right: 15px;
+  padding-right: 12px;
 }
 
 .section-highlight .card {
