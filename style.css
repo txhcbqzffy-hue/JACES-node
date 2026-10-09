@@ -9051,7 +9051,7 @@ img,
 
 .footer-cols-extra {
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  margin-top: 4px;
+  margin-top: 32px;
 }
 
 /* Plain in-flow, not sticky: fixed to the PAGE (its position in the
