@@ -6384,7 +6384,7 @@ body.account-modal-open {
 
 .submenu a {
   display: block;
-  color: #111111;
+  color: rgba(17, 17, 17, 0.72);
   font-size: 0.89rem;
   line-height: 1.5;
   letter-spacing: 0.04em;
