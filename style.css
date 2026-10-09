@@ -8905,7 +8905,14 @@ img,
 }
 
 .footer-trust-item {
+  display: block;
   text-align: center;
+  text-decoration: none;
+  color: inherit;
+}
+
+a.footer-trust-item:hover .footer-trust-title {
+  text-decoration: underline;
 }
 
 .footer-trust-title {
@@ -9520,11 +9527,13 @@ h3,
 }
 
 .home-slider-meta h3 {
+  font-family: "Manrope", sans-serif;
   font-size: 0.76rem;
   font-weight: 500;
 }
 
 .home-slider-meta p {
+  font-family: "Manrope", sans-serif;
   font-size: 0.82rem;
   font-weight: 400;
 }
