@@ -7897,11 +7897,11 @@ a.hero-kicker:focus-visible {
   background: #111111;
   color: #ffffff;
   font-family: "Manrope", sans-serif;
-  font-size: 0.68rem;
+  font-size: 0.62rem;
   font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  padding: 6px 10px;
+  letter-spacing: 0.04em;
+  border-radius: 4px;
+  padding: 5px 9px;
   pointer-events: none;
 }
 
