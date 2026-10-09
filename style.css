@@ -6777,7 +6777,7 @@ a.hero-kicker:focus-visible {
 
 .home-slider-section {
   background: #ffffff;
-  padding: 34px 48px 6px;
+  padding: 34px 26px 6px;
   position: relative;
 }
 
@@ -11449,12 +11449,12 @@ h3,
 }
 
 /* Homepage highlight photos line up exactly with the "EN CE MOMENT"
-   products above them (same side gutters as .home-slider-section, at
+   products above them (same 26px side gutters as .home-slider-section, at
    every width), and the default zoom stays inside each card instead of
    spilling a few px past those edges. */
 .section.section-highlight {
-  padding-left: 48px;
-  padding-right: 48px;
+  padding-left: 26px;
+  padding-right: 26px;
 }
 
 .section-highlight .card {
