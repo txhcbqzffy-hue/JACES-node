@@ -6777,7 +6777,7 @@ a.hero-kicker:focus-visible {
 
 .home-slider-section {
   background: #ffffff;
-  padding: 34px 26px 6px;
+  padding: 34px 16px 6px;
   position: relative;
 }
 
@@ -11453,8 +11453,8 @@ h3,
    every width), and the default zoom stays inside each card instead of
    spilling a few px past those edges. */
 .section.section-highlight {
-  padding-left: 26px;
-  padding-right: 26px;
+  padding-left: 16px;
+  padding-right: 16px;
 }
 
 .section-highlight .card {
