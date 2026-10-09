@@ -6384,6 +6384,7 @@ body.account-modal-open {
   border-radius: 0;
   position: relative;
   text-decoration: none;
+  text-transform: none;
   transition: color 0.2s ease;
 }
 
