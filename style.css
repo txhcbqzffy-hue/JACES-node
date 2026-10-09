@@ -6377,7 +6377,7 @@ body.account-modal-open {
 /* The collaborations nav item reuses .submenu-categories for its brand
    names ("JACES × ...") instead of plain category names - those stay
    uppercase like the rest of the mega-menu, unlike Robes/Tops/Sacs/etc. */
-.submenu-collabs a {
+.submenu-categories.submenu-collabs a {
   text-transform: uppercase;
 }
 
@@ -6392,7 +6392,20 @@ body.account-modal-open {
   border-radius: 0;
   position: relative;
   text-decoration: none;
+  text-transform: none;
   transition: color 0.2s ease;
+}
+
+/* Sentence case is the default for every mega-menu link now, except
+   this explicit set that stays uppercase: the 3 Collection-season
+   links, the 4 Nouveautés-tag links, and "Créations exclusives" (the
+   collaborations brand names have their own .submenu-collabs rule). */
+.submenu a[href*="nouveauteTag="],
+.submenu a[href*="collection=ss26"],
+.submenu a[href*="collection=aw26"],
+.submenu a[href*="collection=capsules"],
+.submenu a[href*="collabView=exclusives"] {
+  text-transform: uppercase;
 }
 
 .submenu a:hover,
