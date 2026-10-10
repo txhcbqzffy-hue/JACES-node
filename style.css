@@ -511,6 +511,22 @@ main {
   flex-shrink: 0;
 }
 
+/* Page/category/size suggestions (not an actual product, so no photo) -
+   an arrow glyph instead of a blank box, to read as "go here" rather
+   than "image missing". */
+.search-result-shortcut-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 44px;
+}
+
+.search-result-shortcut-icon::after {
+  content: "→";
+  font-size: 1.1rem;
+  color: rgba(17, 17, 17, 0.45);
+}
+
 .search-result-meta {
   display: flex;
   flex-direction: column;
