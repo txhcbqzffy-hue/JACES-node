@@ -10,6 +10,7 @@ const healthHandler = require('../api/health');
 const adminProductsHandler = require('../api/admin-products');
 const siteContentHandler = require('../api/site-content');
 const instagramFeedHandler = require('../api/instagram-feed');
+const searchAlertsHandler = require('../api/search-alerts');
 
 const app = express();
 
@@ -60,6 +61,14 @@ app.post('/api/site-content', async (req, res) => {
 
 app.get('/api/instagram-feed', async (req, res) => {
   return instagramFeedHandler(req, res);
+});
+
+app.get('/api/search-alerts', async (req, res) => {
+  return searchAlertsHandler(req, res);
+});
+
+app.post('/api/search-alerts', async (req, res) => {
+  return searchAlertsHandler(req, res);
 });
 
 app.get('/api/products/:id', async (req, res) => {

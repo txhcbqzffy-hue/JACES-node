@@ -476,10 +476,36 @@ main {
 }
 
 .search-results-empty {
-  margin: 0;
-  padding: 16px 14px;
+  padding: 24px 48px;
+  text-align: center;
+}
+
+.search-results-empty-text {
+  margin: 0 0 14px;
   font-size: 0.85rem;
   color: rgba(17, 17, 17, 0.55);
+}
+
+.search-alert-btn {
+  border: 1px solid rgba(17, 17, 17, 0.64);
+  background: #ffffff;
+  color: #111111;
+  font-family: "Manrope", sans-serif;
+  font-size: 0.82rem;
+  padding: 10px 20px;
+  cursor: pointer;
+  transition: background 0.18s, color 0.18s;
+}
+
+.search-alert-btn:hover,
+.search-alert-btn:focus-visible {
+  background: #111111;
+  color: #ffffff;
+}
+
+.search-alert-btn:disabled {
+  opacity: 0.55;
+  cursor: default;
 }
 
 .search-result-item {

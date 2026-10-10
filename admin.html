@@ -405,6 +405,7 @@
       <button type="button" class="nav-item active" data-section="produits" data-label="Produits"><span class="nav-label">Produits</span></button>
       <button type="button" class="nav-item" data-section="vignettes" data-label="Vignettes"><span class="nav-label">Vignettes</span></button>
       <button type="button" class="nav-item" data-section="marketing" data-label="Marketing"><span class="nav-label">Marketing</span><span class="nav-badge" id="marketing-badge" hidden>0</span></button>
+      <button type="button" class="nav-item" data-section="alertes" data-label="Alertes recherche"><span class="nav-label">Alertes recherche</span><span class="nav-badge" id="alertes-badge" hidden>0</span></button>
       <button type="button" class="nav-item" data-section="commandes" data-label="Commandes"><span class="nav-label">Commandes</span></button>
       <button type="button" class="nav-item" data-section="clients" data-label="Clients"><span class="nav-label">Clients</span></button>
       <button type="button" class="nav-item" data-section="parametres" data-label="Paramètres"><span class="nav-label">Paramètres</span></button>
@@ -796,6 +797,14 @@
         <div id="influencer-list" style="max-height:440px;overflow-y:auto;border:1px solid #e8e2d6;border-radius:8px;"></div>
       </div>
     </div>
+    <div id="section-alertes" class="section-panel" hidden>
+      <div class="card">
+        <h2>Alertes recherche</h2>
+        <p class="step-help-note">Recherches qui n'ont donné aucun résultat et pour lesquelles un client connecté a demandé à être alerté - un signal de demande pour un produit qu'on ne vend pas (encore).</p>
+        <p class="status-msg" id="alertes-status"></p>
+        <div id="alertes-list" style="max-height:600px;overflow-y:auto;border:1px solid #e8e2d6;border-radius:8px;"></div>
+      </div>
+    </div>
     <div id="section-parametres" class="section-panel" hidden>
       <div class="card">
         <h2>Consentement cookies</h2>
@@ -920,6 +929,7 @@ document.querySelectorAll('.nav-item').forEach((btn) => {
       loadMarketingSection();
     }
     if (btn.dataset.section === 'parametres') { loadCookieStats(); checkCookiePagesDeployment(); }
+    if (btn.dataset.section === 'alertes') loadAlertesSection();
   });
 });
 
@@ -1869,6 +1879,53 @@ async function loadMarketingSection() {
   marketingLoaded = true;
   await Promise.all([loadRestockTemplate(), loadSubscribers()]);
 }
+
+async function loadAlertesSection() {
+  const listEl = document.getElementById('alertes-list');
+  const statusEl = document.getElementById('alertes-status');
+  const badgeEl = document.getElementById('alertes-badge');
+  try {
+    const res = await fetch('/api/search-alerts');
+    const data = await res.json();
+    if (!res.ok) throw new Error((data && data.error) || 'Erreur');
+
+    if (badgeEl) {
+      badgeEl.hidden = !data.length;
+      badgeEl.textContent = String(data.length);
+    }
+
+    if (!data.length) {
+      listEl.innerHTML = '<p style="padding:12px;margin:0;color:#8a8175;">Aucune alerte pour le moment.</p>';
+      statusEl.textContent = '';
+      return;
+    }
+
+    listEl.innerHTML = data.map((row) => {
+      const createdDate = new Date(row.created_at);
+      const date = createdDate.toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric' }) + ' à ' + createdDate.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+      return `
+        <div style="padding:14px 16px;border-bottom:1px solid #f0ebe0;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;">
+          <div>
+            <strong>« ${escapeHtml(row.query)} »</strong>
+            <div style="font-size:0.82rem;color:#8a8175;margin-top:4px;">
+              ✉ <a href="https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(row.email)}" target="_blank" rel="noopener" style="color:inherit;text-decoration:underline;">${escapeHtml(row.email)}</a>
+              ${row.first_name ? ` · ${escapeHtml(row.first_name)}` : ''}
+            </div>
+          </div>
+          <span style="font-size:0.78rem;color:#8a8175;white-space:nowrap;">${date}</span>
+        </div>
+      `;
+    }).join('');
+    statusEl.textContent = '';
+  } catch (error) {
+    listEl.innerHTML = '';
+    statusEl.textContent = /could not find the table/i.test(error.message)
+      ? 'Table "search_alerts" introuvable.'
+      : `Erreur : ${error.message}`;
+  }
+}
+
+loadAlertesSection();
 
 let filtersByMenu = {};
 let editingId = null;
