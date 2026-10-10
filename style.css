@@ -467,11 +467,7 @@ main {
   display: none;
   position: fixed;
   inset: 0;
-  background: rgba(17, 17, 17, 0.35);
-  /* Below .header (110) and .topbar (120), not above them - otherwise
-     the overlay dims the header/topbar themselves instead of just the
-     page content behind the search bar. Still above ordinary page
-     content and below .search-panel/.search-results (240). */
+  background: transparent;
   z-index: 105;
 }
 
