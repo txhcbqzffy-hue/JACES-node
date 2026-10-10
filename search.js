@@ -102,6 +102,25 @@
     panel.addEventListener('submit', function (event) {
       event.preventDefault();
     });
+
+    // Dims the page behind the full-width search bar while it's open.
+    // Watches .search-panel's own class instead of hooking the
+    // open/close logic each page already has inline, so this works
+    // without touching that per-page script.
+    var overlay = document.getElementById('search-overlay');
+    var trigger = document.getElementById('search-trigger');
+    if (overlay) {
+      var syncOverlay = function () {
+        overlay.classList.toggle('open', panel.classList.contains('open'));
+      };
+      new MutationObserver(syncOverlay).observe(panel, { attributes: true, attributeFilter: ['class'] });
+      syncOverlay();
+
+      overlay.addEventListener('click', function () {
+        panel.classList.remove('open');
+        if (trigger) trigger.setAttribute('aria-expanded', 'false');
+      });
+    }
   }
 
   if (document.readyState === 'loading') {

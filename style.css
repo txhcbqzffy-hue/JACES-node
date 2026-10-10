@@ -419,34 +419,60 @@ main {
   flex-shrink: 0;
 }
 
+/* Full-width bar flush under the whole header (topbar + logo row + nav),
+   same "sit right at the header's bottom edge" offset .submenu uses,
+   not a small dropdown anchored to the button. */
 .search-panel {
-  position: absolute;
-  top: calc(100% + 10px);
+  position: fixed;
+  top: calc(36px + var(--site-header-top-pad-y, 12px) + var(--site-logo-size, 48px) + var(--site-header-top-pad-bottom, 6px) + 63px - 4px);
   left: 0;
-  width: min(460px, 74vw);
+  right: 0;
+  width: 100%;
   display: none;
   align-items: center;
   gap: 10px;
   background: #ffffff;
-  border: 1px solid rgba(17, 17, 17, 0.14);
-  padding: 10px 12px;
+  border-top: 1px solid rgba(17, 17, 17, 0.14);
+  padding: 16px 48px;
   box-shadow: 0 18px 36px rgba(17, 17, 17, 0.12);
   z-index: 240;
 }
 
 /* Predictive search dropdown - sits right under .search-panel, same
-   width, only shown once there's a query (search.js toggles [hidden]). */
+   full width, only shown once there's a query (search.js toggles
+   [hidden]). */
 .search-results {
-  position: absolute;
-  top: calc(100% + 10px + 50px);
+  position: fixed;
+  top: calc(36px + var(--site-header-top-pad-y, 12px) + var(--site-logo-size, 48px) + var(--site-header-top-pad-bottom, 6px) + 63px - 4px + 58px);
   left: 0;
-  width: min(460px, 74vw);
+  right: 0;
+  width: 100%;
   max-height: min(420px, 60vh);
   overflow-y: auto;
   background: #ffffff;
-  border: 1px solid rgba(17, 17, 17, 0.14);
   box-shadow: 0 18px 36px rgba(17, 17, 17, 0.12);
   z-index: 240;
+}
+
+.search-result-item {
+  padding-left: 48px;
+  padding-right: 48px;
+}
+
+/* Dims the rest of the page while the search bar is open, same pattern
+   as .fav-overlay/.cart-overlay. Toggled by search.js, which watches
+   .search-panel's class instead of duplicating each page's own
+   open/close script. */
+.search-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(17, 17, 17, 0.35);
+  z-index: 230;
+}
+
+.search-overlay.open {
+  display: block;
 }
 
 .search-results-empty {
