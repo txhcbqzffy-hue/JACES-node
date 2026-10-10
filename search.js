@@ -1,8 +1,9 @@
 (function () {
   'use strict';
 
-  var MAX_RESULTS = 8;
+  var MAX_RESULTS = 10;
   var SIZE_VALUES = ['34', '36', '38', '40', '42', '44'];
+  var NUMERIC_SIZE_ORDER = SIZE_VALUES;
 
   var PAGES = [
     { label: 'Nouveautés', href: 'nouveautes.html' },
@@ -160,20 +161,34 @@
       return loadingPromise;
     }
 
-    function productResultHtml(product, matchedLabel) {
-      var img = product.image_url || product.img || '';
-      var price = formatPrice(product.price);
-      var name = escapeHtml(product.name || '');
-      // Shows which label matched (e.g. "Printemps–Été 2026") alongside the
-      // price when that's why this product came up, not just its name.
-      var subtitle = matchedLabel ? (escapeHtml(matchedLabel) + ' · ' + price) : price;
-      var imgMarkup = img
-        ? '<img src="' + escapeHtml(img) + '" alt="" loading="lazy">'
-        : '<span class="search-result-noimg"></span>';
-      return '<a class="search-result-item" href="detail-produit.html?id=' + encodeURIComponent(product.id) + '">'
-        + imgMarkup
-        + '<span class="search-result-meta"><span class="search-result-name">' + name + '</span><span class="search-result-price">' + subtitle + '</span></span>'
-        + '</a>';
+    // Same card markup/classes as the homepage's "EN CE MOMENT" carousel
+    // (buildHomeSliderCard in index.html) - reuses all its existing CSS
+    // (hover image swap, size chips on hover) and the product badge
+    // (New/season/collab) for free, instead of the plain list row.
+    function productCardHtml(product, matchedLabel) {
+      var images = Array.isArray(product.images) ? product.images : [];
+      var primarySrc = (images[0] && images[0].url) || product.image_url || product.img || '';
+      var secondarySrc = (images[1] && images[1].url) || product.hover_image_url || primarySrc;
+      var badgeLabel = matchedLabel || getProductLabels(product)[0] || '';
+      var sizes = (Array.isArray(product.sizes) ? product.sizes : []).map(function (s) { return String(s || '').trim(); }).filter(Boolean);
+      var isNumericSizeSubset = sizes.length > 0 && sizes.every(function (s) { return NUMERIC_SIZE_ORDER.indexOf(s) !== -1; });
+      var displaySizes = isNumericSizeSubset ? NUMERIC_SIZE_ORDER : sizes;
+      var quickBuyMarkup = displaySizes.length
+        ? '<div class="quick-buy-grid">' + displaySizes.map(function (size) {
+          var isAvailable = sizes.indexOf(size) !== -1;
+          return '<button type="button" class="' + (isAvailable ? '' : 'is-disabled') + '">' + escapeHtml(size) + '</button>';
+        }).join('') + '</div>'
+        : '';
+
+      return '<article class="home-slider-card search-product-card">'
+        + '<a class="home-slider-media" href="detail-produit.html?id=' + encodeURIComponent(product.id || '') + '" aria-label="Voir ' + escapeHtml(product.name || 'ce produit') + '">'
+        + (badgeLabel ? '<span class="product-card-badge">' + escapeHtml(badgeLabel) + '</span>' : '')
+        + (primarySrc ? '<img class="home-slider-image-primary" src="' + escapeHtml(primarySrc) + '" alt="' + escapeHtml(product.name || 'Produit JACES') + '" loading="lazy">' : '')
+        + (secondarySrc ? '<img class="home-slider-image-secondary" src="' + escapeHtml(secondarySrc) + '" alt="" loading="lazy">' : '')
+        + (quickBuyMarkup ? '<div class="hover-sizes" aria-hidden="true">' + quickBuyMarkup + '</div>' : '')
+        + '</a>'
+        + '<div class="home-slider-meta"><h3>' + escapeHtml(product.name || 'Produit JACES') + '</h3><p>' + formatPrice(product.price) + '</p></div>'
+        + '</article>';
     }
 
     // Pages/categories/sizes render the same way as a product result (icon
@@ -276,10 +291,7 @@
         ? [shortcutResultHtml('collection.html?taille=' + encodeURIComponent(sizeQueryDigits), 'Taille ' + sizeQueryDigits, 'Voir tous les produits')]
         : [];
 
-      var shortcutCount = pageMatches.length + categoryMatches.length + sizeMatches.length;
-      var productSlots = Math.max(1, MAX_RESULTS - shortcutCount);
-
-      var productMatches = products
+      var allProductMatches = products
         .map(function (product) {
           var nameScore = matchScore(product.name, q);
           var bestLabel = null;
@@ -295,19 +307,32 @@
           return { product: product, score: Math.min(nameScore, labelScore), matchedLabel: matchedLabel };
         })
         .filter(function (m) { return m.score !== Infinity; })
-        .sort(function (a, b) { return a.score - b.score; })
-        .slice(0, productSlots)
-        .map(function (m) { return productResultHtml(m.product, m.matchedLabel); });
+        .sort(function (a, b) { return a.score - b.score; });
 
-      var allHtml = pageMatches.concat(categoryMatches, sizeMatches, productMatches);
+      var shortcutsHtml = pageMatches.concat(categoryMatches, sizeMatches).join('');
+      var productCount = allProductMatches.length;
 
-      if (!allHtml.length) {
+      if (!shortcutsHtml && !productCount) {
         renderNoResults(rawQuery);
         resultsBox.hidden = false;
         return;
       }
 
-      resultsBox.innerHTML = allHtml.join('');
+      var productsHtml = '';
+      if (productCount) {
+        var shown = allProductMatches.slice(0, MAX_RESULTS);
+        var cardsHtml = shown.map(function (m) { return productCardHtml(m.product, m.matchedLabel); }).join('');
+        // Only a real "see the rest" link once there are more matches than
+        // fit in the row - otherwise every product shown is already all
+        // of them, so a trailing card would be redundant.
+        var viewAllHtml = productCount > shown.length
+          ? '<a class="search-product-card search-product-viewall" href="produits.html"><span>Tout voir<br><strong>(' + productCount + ')</strong></span></a>'
+          : '';
+        productsHtml = '<div class="search-products-header"><span>Produits (' + productCount + ')</span></div>'
+          + '<div class="search-products-track">' + cardsHtml + viewAllHtml + '</div>';
+      }
+
+      resultsBox.innerHTML = (shortcutsHtml ? '<div class="search-shortcuts">' + shortcutsHtml + '</div>' : '') + productsHtml;
       resultsBox.hidden = false;
     }
 

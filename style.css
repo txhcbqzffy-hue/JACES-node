@@ -573,6 +573,56 @@ main {
   color: rgba(17, 17, 17, 0.55);
 }
 
+/* Page/category/size shortcuts sit above the product cards, in their
+   own block so the border between result rows doesn't bleed into the
+   product section below it. */
+.search-shortcuts .search-result-item:last-child {
+  border-bottom: 1px solid rgba(17, 17, 17, 0.08);
+}
+
+.search-products-header {
+  padding: 18px 48px 10px;
+  border-top: 1px solid rgba(17, 17, 17, 0.08);
+  font-size: 0.85rem;
+  color: #111111;
+}
+
+/* Same "EN CE MOMENT" card look (.home-slider-card, reused as-is) in a
+   horizontally scrolling row instead of a grid, so a search can surface
+   more matches than fit in the dropdown's width without ever wrapping. */
+.search-products-track {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  padding: 2px 48px 24px;
+  scroll-snap-type: x proximity;
+}
+
+.search-product-card {
+  flex: 0 0 180px;
+  scroll-snap-align: start;
+}
+
+.search-product-viewall {
+  flex: 0 0 180px;
+  aspect-ratio: 4 / 5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  background: #f5f2ec;
+  color: #111111;
+  text-decoration: none;
+  font-size: 0.85rem;
+  line-height: 1.5;
+  transition: background 0.18s;
+}
+
+.search-product-viewall:hover,
+.search-product-viewall:focus-visible {
+  background: #eae6dd;
+}
+
 .search-panel.open {
   display: flex;
 }
