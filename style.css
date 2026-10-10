@@ -402,6 +402,9 @@ main {
 }
 
 .search-trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   border: none;
   background: transparent;
   color: inherit;
@@ -410,6 +413,10 @@ main {
   cursor: pointer;
   padding: 0;
   letter-spacing: 0.01em;
+}
+
+.search-trigger svg {
+  flex-shrink: 0;
 }
 
 .search-panel {
