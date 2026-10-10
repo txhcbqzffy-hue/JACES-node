@@ -443,7 +443,7 @@ main {
    [hidden]). */
 .search-results {
   position: fixed;
-  top: calc(36px + var(--site-header-top-pad-y, 12px) + var(--site-logo-size, 48px) + var(--site-header-top-pad-bottom, 6px) + 63px - 4px + 58px);
+  top: calc(36px + var(--site-header-top-pad-y, 12px) + var(--site-logo-size, 48px) + var(--site-header-top-pad-bottom, 6px) + 63px - 4px + 49.5px);
   left: 0;
   right: 0;
   width: 100%;
@@ -599,7 +599,6 @@ main {
   gap: 12px;
   overflow-x: auto;
   padding: 2px 48px 24px;
-  scroll-snap-type: x proximity;
 }
 
 /* Sized so exactly 5.5 cards fit the track's width - the half-card
