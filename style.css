@@ -602,13 +602,16 @@ main {
   scroll-snap-type: x proximity;
 }
 
+/* Sized so exactly 5.5 cards fit the track's width - the half-card
+   peeking at the edge is the "scroll for more" cue, not a fixed 180px
+   that happens to fit a different count depending on viewport width. */
 .search-product-card {
-  flex: 0 0 180px;
+  flex: 0 0 calc((100% - 5 * 12px) / 5.5);
   scroll-snap-align: start;
 }
 
 .search-product-viewall {
-  flex: 0 0 180px;
+  flex: 0 0 calc((100% - 5 * 12px) / 5.5);
   aspect-ratio: 4 / 5;
   display: flex;
   align-items: center;
