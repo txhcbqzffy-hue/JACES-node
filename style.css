@@ -434,6 +434,77 @@ main {
   z-index: 240;
 }
 
+/* Predictive search dropdown - sits right under .search-panel, same
+   width, only shown once there's a query (search.js toggles [hidden]). */
+.search-results {
+  position: absolute;
+  top: calc(100% + 10px + 50px);
+  left: 0;
+  width: min(460px, 74vw);
+  max-height: min(420px, 60vh);
+  overflow-y: auto;
+  background: #ffffff;
+  border: 1px solid rgba(17, 17, 17, 0.14);
+  box-shadow: 0 18px 36px rgba(17, 17, 17, 0.12);
+  z-index: 240;
+}
+
+.search-results-empty {
+  margin: 0;
+  padding: 16px 14px;
+  font-size: 0.85rem;
+  color: rgba(17, 17, 17, 0.55);
+}
+
+.search-result-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  text-decoration: none;
+  color: inherit;
+  border-bottom: 1px solid rgba(17, 17, 17, 0.08);
+  transition: background 0.15s;
+}
+
+.search-result-item:last-child {
+  border-bottom: none;
+}
+
+.search-result-item:hover,
+.search-result-item:focus-visible {
+  background: #f5f2ec;
+}
+
+.search-result-item img,
+.search-result-noimg {
+  width: 44px;
+  height: 56px;
+  object-fit: cover;
+  background: #f0ede6;
+  flex-shrink: 0;
+}
+
+.search-result-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.search-result-name {
+  font-size: 0.85rem;
+  color: #111111;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.search-result-price {
+  font-size: 0.8rem;
+  color: rgba(17, 17, 17, 0.55);
+}
+
 .search-panel.open {
   display: flex;
 }
@@ -11394,7 +11465,10 @@ h3,
     display: none;
   }
 
-  /* "Recherche" becomes a magnifier icon next to the burger. */
+  /* "Recherche" becomes a magnifier icon next to the burger. The inline
+     svg icon (added for desktop, next to the "Recherche" label) is
+     hidden here since this background-image one already covers it, and
+     font-size:0 alone wouldn't hide an explicitly-sized svg element. */
   .search-trigger {
     width: 40px;
     height: 40px;
@@ -11402,9 +11476,21 @@ h3,
     background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23111' stroke-width='1.5' stroke-linecap='round'%3E%3Ccircle cx='11' cy='11' r='7'/%3E%3Cline x1='16.5' y1='16.5' x2='21' y2='21'/%3E%3C/svg%3E") center / 21px no-repeat;
   }
 
+  .search-trigger svg {
+    display: none;
+  }
+
   .search-panel {
     position: fixed;
     top: var(--jaces-header-offset, 100px);
+    left: 12px;
+    right: 12px;
+    width: auto;
+  }
+
+  .search-results {
+    position: fixed;
+    top: calc(var(--jaces-header-offset, 100px) + 50px);
     left: 12px;
     right: 12px;
     width: auto;
