@@ -5,23 +5,6 @@
   var SIZE_VALUES = ['34', '36', '38', '40', '42', '44'];
   var NUMERIC_SIZE_ORDER = SIZE_VALUES;
 
-  var PAGES = [
-    { label: 'Nouveautés', href: 'nouveautes.html' },
-    { label: 'Collections', href: 'collection.html' },
-    { label: 'Collaborations', href: 'collaborations.html' },
-    { label: 'Accessoires', href: 'accessoires.html' },
-    { label: 'Défilé', href: 'defile.html' },
-    { label: 'Univers', href: 'univers.html' }
-  ];
-
-  var CATEGORIES = [
-    { label: 'Robes', slug: 'robes' },
-    { label: 'Tops', slug: 'tops' },
-    { label: 'Jupes', slug: 'jupes' },
-    { label: 'Pantalons', slug: 'pantalons' },
-    { label: 'Vestes', slug: 'vestes' },
-    { label: 'Accessoires', slug: 'accessoires' }
-  ];
 
   // Same labels as the product card badges (index.html/products-page.js) -
   // lets a query like "collections" or "printemps" surface the actual
@@ -267,30 +250,6 @@
         return;
       }
 
-      var pageMatches = PAGES
-        .map(function (page) { return { page: page, score: matchScore(page.label, q) }; })
-        .filter(function (m) { return m.score !== Infinity; })
-        .sort(function (a, b) { return a.score - b.score; })
-        .slice(0, 2)
-        .map(function (m) {
-          return shortcutResultHtml(m.page.href, m.page.label, 'Voir la page');
-        });
-
-      var categoryMatches = CATEGORIES
-        .map(function (cat) { return { cat: cat, score: matchScore(cat.label, q) }; })
-        .filter(function (m) { return m.score !== Infinity; })
-        .sort(function (a, b) { return a.score - b.score; })
-        .slice(0, 2)
-        .map(function (m) {
-          return shortcutResultHtml('collection.html?category=' + encodeURIComponent(m.cat.slug), m.cat.label, 'Voir tous les produits');
-        });
-
-      // Bare size ("36") or "taille 36" both work.
-      var sizeQueryDigits = q.replace(/^taille\s*/, '');
-      var sizeMatches = SIZE_VALUES.indexOf(sizeQueryDigits) !== -1
-        ? [shortcutResultHtml('collection.html?taille=' + encodeURIComponent(sizeQueryDigits), 'Taille ' + sizeQueryDigits, 'Voir tous les produits')]
-        : [];
-
       var allProductMatches = products
         .map(function (product) {
           var nameScore = matchScore(product.name, q);
@@ -309,30 +268,25 @@
         .filter(function (m) { return m.score !== Infinity; })
         .sort(function (a, b) { return a.score - b.score; });
 
-      var shortcutsHtml = pageMatches.concat(categoryMatches, sizeMatches).join('');
       var productCount = allProductMatches.length;
 
-      if (!shortcutsHtml && !productCount) {
+      if (!productCount) {
         renderNoResults(rawQuery);
         resultsBox.hidden = false;
         return;
       }
 
-      var productsHtml = '';
-      if (productCount) {
-        var shown = allProductMatches.slice(0, MAX_RESULTS);
-        var cardsHtml = shown.map(function (m) { return productCardHtml(m.product, m.matchedLabel); }).join('');
-        // Only a real "see the rest" link once there are more matches than
-        // fit in the row - otherwise every product shown is already all
-        // of them, so a trailing card would be redundant.
-        var viewAllHtml = productCount > shown.length
-          ? '<a class="search-product-card search-product-viewall" href="produits.html"><span>Tout voir<br><strong>(' + productCount + ')</strong></span></a>'
-          : '';
-        productsHtml = '<div class="search-products-header"><span>Produits (' + productCount + ')</span></div>'
-          + '<div class="search-products-track">' + cardsHtml + viewAllHtml + '</div>';
-      }
+      var shown = allProductMatches.slice(0, MAX_RESULTS);
+      var cardsHtml = shown.map(function (m) { return productCardHtml(m.product, m.matchedLabel); }).join('');
+      // Only a real "see the rest" link once there are more matches than
+      // fit in the row - otherwise every product shown is already all
+      // of them, so a trailing card would be redundant.
+      var viewAllHtml = productCount > shown.length
+        ? '<a class="search-product-card search-product-viewall" href="produits.html"><span>Tout voir<br><strong>(' + productCount + ')</strong></span></a>'
+        : '';
 
-      resultsBox.innerHTML = (shortcutsHtml ? '<div class="search-shortcuts">' + shortcutsHtml + '</div>' : '') + productsHtml;
+      resultsBox.innerHTML = '<div class="search-products-header"><span>Produits (' + productCount + ')</span></div>'
+        + '<div class="search-products-track">' + cardsHtml + viewAllHtml + '</div>';
       resultsBox.hidden = false;
     }
 
