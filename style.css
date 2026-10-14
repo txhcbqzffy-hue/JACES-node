@@ -11881,7 +11881,7 @@ h3,
 }
 
 /* Editorial banner title uses the same typeface as the hero's main title
-   ("La couleur, sous toutes ses formes."). */
+   ("La vie en couleurs."). */
 /* Wider than the old 7ch so the new, longer title sits on 2-3 lines
    instead of one word per line. */
 .editorial-hero .editorial-content h2 {
@@ -12063,4 +12063,10 @@ h3,
 .fav-panel:not(.open),
 .cart-panel:not(.open) {
   box-shadow: none;
+}
+
+/* Keep the slogan's italic half together on narrow screens:
+   "La vie / en couleurs." rather than "La vie en / couleurs." */
+.home-page .hero h1 em {
+  white-space: nowrap;
 }
