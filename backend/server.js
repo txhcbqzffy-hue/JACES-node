@@ -10,7 +10,7 @@ const healthHandler = require('../api/health');
 const adminProductsHandler = require('../api/admin-products');
 const siteContentHandler = require('../api/site-content');
 const instagramFeedHandler = require('../api/instagram-feed');
-const searchAlertsHandler = require('../api/search-alerts');
+const searchAlertsHandler = require('../lib/searchAlerts');
 
 const app = express();
 

@@ -1,4 +1,5 @@
 const { createClient } = require('@supabase/supabase-js');
+const searchAlertsHandler = require('../lib/searchAlerts');
 
 function getSupabase() {
   const url = process.env.SUPABASE_URL || 'https://uxhzrobxhumreuntxrzw.supabase.co';
@@ -14,6 +15,12 @@ function isValidEmail(value) {
 }
 
 module.exports = async function handler(req, res) {
+  // /api/search-alerts is rewritten here (see vercel.json) to stay under
+  // the Hobby plan's 12-function limit.
+  if (req.query && req.query.kind === 'search-alerts') {
+    return searchAlertsHandler(req, res);
+  }
+
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
