@@ -11957,11 +11957,22 @@ h3,
   white-space: nowrap;
 }
 
-/* The quick-buy size row is a mouse-hover affordance. On touch screens a
-   tap counts as :hover/:focus-within, so the row of sizes flashed over
-   the card right as you tapped through to the product. */
+/* Quick-buy sizes and the second-photo swap are mouse-hover effects. On
+   touch screens a tap or long-press counts as :hover/:focus-within, so the
+   sizes flashed over the card and the photo swapped to the lazy-loaded
+   second view - often still blank, hence a white card while holding it. */
 @media (hover: none) {
   .hover-sizes {
     display: none !important;
+  }
+
+  .home-slider-image-primary,
+  .product-image-primary {
+    visibility: visible !important;
+  }
+
+  .home-slider-image-secondary,
+  .product-image-secondary {
+    visibility: hidden !important;
   }
 }
