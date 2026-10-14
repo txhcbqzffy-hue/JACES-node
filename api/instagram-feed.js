@@ -86,9 +86,10 @@ module.exports = async function handler(req, res) {
         timestamp: item.timestamp
       }));
 
-    // Cache at the edge for an hour - recent posts don't change minute to
-    // minute, and this keeps us well clear of Instagram's rate limits.
-    res.setHeader('Cache-Control', 's-maxage=3600, stale-while-revalidate=86400');
+    // Cache at the edge for 15 minutes - recent posts don't change minute
+    // to minute, and this keeps us well clear of Instagram's rate limits,
+    // while new posts / hand-added collabs still show up quickly.
+    res.setHeader('Cache-Control', 's-maxage=900, stale-while-revalidate=86400');
     return res.status(200).json({ ok: true, posts: mergeByDate(posts, extraPosts, limit) });
   } catch (error) {
     const posts = mergeByDate([], extraPosts, limit);
