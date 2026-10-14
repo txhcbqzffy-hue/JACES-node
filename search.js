@@ -310,24 +310,42 @@
       event.preventDefault();
     });
 
-    // Dims the page behind the full-width search bar while it's open.
-    // Watches .search-panel's own class instead of hooking the
-    // open/close logic each page already has inline, so this works
-    // without touching that per-page script.
+    // Dims the page behind the full-width search bar while it's open, and
+    // keeps the results dropdown tied to the bar. Watches .search-panel's
+    // own class instead of hooking the open/close logic each page already
+    // has inline, so this works without touching that per-page script.
+    // The results box is a separate fixed element, so without this it
+    // stayed on screen after the bar was closed (click outside, Esc...),
+    // leaving product cards floating over the page and swallowing touches.
     var overlay = document.getElementById('search-overlay');
     var trigger = document.getElementById('search-trigger');
-    if (overlay) {
-      var syncOverlay = function () {
-        overlay.classList.toggle('open', panel.classList.contains('open'));
-      };
-      new MutationObserver(syncOverlay).observe(panel, { attributes: true, attributeFilter: ['class'] });
-      syncOverlay();
+    var syncWithPanel = function () {
+      var isOpen = panel.classList.contains('open');
+      if (overlay) overlay.classList.toggle('open', isOpen);
+      if (!isOpen) {
+        resultsBox.hidden = true;
+      } else if (input.value.trim()) {
+        loadProducts().then(function () { renderResults(input.value); });
+      }
+    };
+    new MutationObserver(syncWithPanel).observe(panel, { attributes: true, attributeFilter: ['class'] });
+    syncWithPanel();
 
-      overlay.addEventListener('click', function () {
-        panel.classList.remove('open');
-        if (trigger) trigger.setAttribute('aria-expanded', 'false');
-      });
-    }
+    var closePanel = function () {
+      panel.classList.remove('open');
+      if (trigger) trigger.setAttribute('aria-expanded', 'false');
+    };
+
+    if (overlay) overlay.addEventListener('click', closePanel);
+
+    // Leaving the page (e.g. tapping a result) with the search still open
+    // meant that, when the browser restored the page from its back/forward
+    // cache, it came back with the bar and results still open on top.
+    // Always come back to a clean page instead.
+    window.addEventListener('pagehide', closePanel);
+    window.addEventListener('pageshow', function (event) {
+      if (event.persisted) closePanel();
+    });
   }
 
   if (document.readyState === 'loading') {
