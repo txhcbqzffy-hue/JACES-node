@@ -7435,6 +7435,54 @@ a.hero-kicker:focus-visible {
   }
 }
 
+/* justify-content: center on a scrolling row cuts off its start as soon as
+   it overflows (the first circles can't be scrolled back into view).
+   Auto margins centre it the same way while it fits, and fall back to a
+   normal left-aligned scroll once it doesn't. */
+.category-nav-track {
+  justify-content: flex-start;
+}
+
+.category-nav-track > :first-child {
+  margin-left: auto;
+}
+
+.category-nav-track > :last-child {
+  margin-right: auto;
+}
+
+@media (max-width: 560px) {
+  .category-nav-strip {
+    padding: 14px 0 6px;
+  }
+
+  .category-nav-track {
+    gap: 2px;
+    padding: 0 10px 4px;
+    scroll-padding: 0 10px;
+  }
+
+  .cat-nav-arrow {
+    display: none;
+  }
+
+  .cat-nav-item {
+    width: 72px;
+    gap: 6px;
+    padding: 4px 2px 2px;
+  }
+
+  .cat-nav-circle {
+    width: 60px;
+    height: 60px;
+  }
+
+  .cat-nav-item span {
+    font-size: 0.66rem;
+    min-height: 0;
+  }
+}
+
 .collection-page-body .header {
   background: #ffffff;
 }
@@ -11891,37 +11939,104 @@ h3,
     min-height: 0;
   }
 
-  .collection-page .filter-bar-top {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 10px;
+  /* Taille / Couleur / Matière / Trier as one row of four slim, light
+     buttons instead of heavy black-bordered boxes stacked on two rows. */
+  .collection-page .filter-bar-luxury {
+    margin-bottom: 8px;
+    padding: 6px 0;
   }
 
-  .collection-page .filter-pills {
-    flex-wrap: nowrap;
+  .collection-page .filter-bar-top {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 6px;
   }
 
+  .collection-page .filter-pills {
+    display: contents;
+  }
+
   .collection-page .filter-pill-wrap {
-    flex: 1 1 0;
     min-width: 0;
   }
 
   .collection-page .filter-pill {
     width: 100%;
+    height: 34px;
     justify-content: center;
-    padding: 9px 6px;
+    gap: 4px;
+    padding: 0 4px;
+    border: 1px solid rgba(17, 17, 17, 0.2);
+    color: rgba(17, 17, 17, 0.8);
+    font-size: 0.64rem;
+    font-weight: 500;
+    letter-spacing: 0.06em;
   }
 
-  /* Last pill's dropdown would open past the right edge of the screen. */
-  .collection-page .filter-pill-wrap:last-child .filter-dropdown {
-    left: auto;
+  .collection-page .filter-pill .pill-arrow {
+    font-size: 8px;
+  }
+
+  .collection-page .filter-pill:hover,
+  .collection-page .filter-pill.active,
+  .collection-page .filter-pill.open {
+    color: #ffffff;
+  }
+
+  /* Dropdowns open full width under the whole row instead of hanging off
+     their own (narrow) pill and running into the screen edge. */
+  .collection-page .filter-bar-top {
+    position: relative;
+  }
+
+  .collection-page .filter-pill-wrap {
+    position: static;
+  }
+
+  .collection-page .filter-dropdown {
+    left: 0;
     right: 0;
+    top: calc(100% + 6px);
+    max-width: none;
+    padding: 14px 16px;
+    border-width: 1px;
+    box-shadow: 0 12px 24px rgba(17, 17, 17, 0.14);
   }
 
-  .collection-page .product-sort-row,
+  /* The select keeps a 16px font so iOS doesn't zoom the page when it's
+     tapped, and is scaled down to match the pills visually. */
+  .collection-page .product-sort-row {
+    position: relative;
+    min-width: 0;
+    height: 34px;
+    margin: 0;
+  }
+
   .collection-page .product-sort-row select {
-    width: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: calc(100% / 0.7);
+    height: calc(34px / 0.7);
+    transform: scale(0.7);
+    transform-origin: top left;
+    padding: 0 26px 0 12px;
+    border: 1.43px solid rgba(17, 17, 17, 0.22);
+    background-position: right 12px center;
+    background-size: 14px 14px;
+    line-height: calc(34px / 0.7);
+    color: rgba(17, 17, 17, 0.8);
+    font-size: 16px;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+  }
+
+  .collection-page .filter-bar-meta {
+    margin-top: 0;
+  }
+
+  .collection-page .filter-count {
+    font-size: 10px;
   }
 }
 
