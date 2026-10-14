@@ -11935,6 +11935,19 @@ h3,
 
   /* 4 reassurance items on one row squeezed each title to one word per
      line ("Une / question / ?") - 2x2 grid instead. */
+  /* Copyright + credit side by side squeezed the copyright to one word
+     per line while the nowrap credit ran into the right edge. */
+  .footer-bottom {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+  }
+
+  .footer-credit {
+    text-align: left;
+    white-space: normal;
+  }
+
   .footer-trust {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 22px 16px;
@@ -12021,6 +12034,26 @@ h3,
   .collection-page .product-sort-row,
   .collection-page .product-sort-row select {
     width: 100%;
+  }
+}
+
+/* Product page on phones/tablets: --detail-main-pad-x drops to 0 so the
+   gallery can run edge to edge, but that also left the breadcrumb, the
+   product copy (name, sizes, add to cart, details) and the fit/quality
+   band flush against the screen edges. Gutter everything except the
+   gallery. */
+@media (max-width: 900px) {
+  .product-detail-breadcrumb,
+  .product-detail-copy,
+  .product-detail-insights-band,
+  .product-detail-alternatives {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+
+  .product-detail-breadcrumb {
+    row-gap: 4px;
+    column-gap: 8px;
   }
 }
 

@@ -819,6 +819,27 @@
     // real product data and stay deferred to applyOriginContext below.
     if (origin.isExplicit) applyTopNavActiveState(origin);
 
+    // Same idea for the main image: listing-card links already carry it in
+    // the URL, so show it right away instead of a blank page while both
+    // API fetches below resolve - the full render replaces this shell.
+    const previewImage = queryProduct ? normalizeMediaUrl(queryProduct.img) : '';
+    if (previewImage && !shell.childElementCount) {
+      const top = document.createElement('div');
+      top.className = 'product-detail-top';
+      const gallery = document.createElement('div');
+      gallery.className = 'product-detail-gallery';
+      const figure = document.createElement('figure');
+      figure.className = 'product-detail-media-block product-detail-media-primary';
+      const img = document.createElement('img');
+      img.className = 'product-detail-image';
+      img.src = previewImage;
+      img.alt = queryName;
+      figure.appendChild(img);
+      gallery.appendChild(figure);
+      top.appendChild(gallery);
+      shell.appendChild(top);
+    }
+
     let allProducts = [];
     let product = null;
 
