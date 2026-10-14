@@ -214,9 +214,55 @@
     });
   }
 
+  // Phones: each footer link column collapses into a tap-to-open row
+  // (styled in style.css under the same 720px breakpoint) instead of
+  // stacking every link of every column into one very long list.
+  const FOOTER_ACCORDION_QUERY = window.matchMedia('(max-width: 720px)');
+
+  function initFooterAccordions() {
+    const titles = document.querySelectorAll('.footer .footer-col > .footer-col-title');
+    if (!titles.length) return;
+
+    const sync = () => {
+      const enabled = FOOTER_ACCORDION_QUERY.matches;
+      titles.forEach((title) => {
+        const col = title.parentElement;
+        if (enabled) {
+          title.setAttribute('role', 'button');
+          title.setAttribute('tabindex', '0');
+          title.setAttribute('aria-expanded', String(col.classList.contains('is-open')));
+        } else {
+          col.classList.remove('is-open');
+          title.removeAttribute('role');
+          title.removeAttribute('tabindex');
+          title.removeAttribute('aria-expanded');
+        }
+      });
+    };
+
+    const toggle = (title) => {
+      if (!FOOTER_ACCORDION_QUERY.matches) return;
+      const isOpen = title.parentElement.classList.toggle('is-open');
+      title.setAttribute('aria-expanded', String(isOpen));
+    };
+
+    titles.forEach((title) => {
+      title.addEventListener('click', () => toggle(title));
+      title.addEventListener('keydown', (event) => {
+        if (event.key !== 'Enter' && event.key !== ' ') return;
+        event.preventDefault();
+        toggle(title);
+      });
+    });
+
+    sync();
+    FOOTER_ACCORDION_QUERY.addEventListener('change', sync);
+  }
+
   function init() {
     initMobileDrawer();
     initMobileMegaMenu();
+    initFooterAccordions();
     updateHeaderOffset();
     window.addEventListener('resize', updateHeaderOffset);
     window.addEventListener('load', updateHeaderOffset);

@@ -11976,3 +11976,123 @@ h3,
     visibility: hidden !important;
   }
 }
+
+/* MOBILE FOOTER
+   Stacked, every column's links made the footer ~1600px tall on a phone.
+   Newsletter first, then one tap-to-open row per link column (toggled by
+   mobile-menu.js), with the desktop-only "show more" arrow folded in:
+   the extra columns simply become more rows. */
+@media (max-width: 720px) {
+  .footer {
+    padding: 32px 20px 24px;
+  }
+
+  .footer-trust {
+    gap: 18px 12px;
+    padding: 20px 14px;
+    margin-bottom: 32px;
+  }
+
+  .footer-trust-title {
+    font-size: 0.84rem;
+    margin-bottom: 4px;
+  }
+
+  .footer-trust-sub {
+    font-size: 0.74rem;
+  }
+
+  .footer-top {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    margin-bottom: 24px;
+  }
+
+  .footer-newsletter {
+    order: -1;
+    margin-bottom: 32px;
+  }
+
+  .footer-newsletter h3 {
+    font-size: 1.3rem;
+    margin-bottom: 8px;
+  }
+
+  .footer-newsletter p {
+    font-size: 0.84rem;
+    margin-bottom: 16px;
+  }
+
+  .footer-newsletter-instagram {
+    width: 40px;
+    height: 40px;
+    margin-top: 16px;
+  }
+
+  .footer-links-block {
+    width: 100%;
+  }
+
+  .footer-cols,
+  .footer-cols-extra {
+    grid-template-columns: 1fr;
+    gap: 0;
+    margin-top: 0;
+  }
+
+  .footer-extra-wrap {
+    grid-template-rows: 1fr;
+  }
+
+  .footer-expand-btn {
+    display: none;
+  }
+
+  .footer-col {
+    border-top: 1px solid rgba(17, 17, 17, 0.1);
+  }
+
+  .footer-cols-extra .footer-col:last-child {
+    border-bottom: 1px solid rgba(17, 17, 17, 0.1);
+  }
+
+  .footer-col-title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 0;
+    padding: 16px 0;
+    color: #111111;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .footer-col-title::after {
+    content: "+";
+    font-size: 1.1rem;
+    font-weight: 400;
+    letter-spacing: 0;
+    line-height: 1;
+  }
+
+  .footer-col.is-open .footer-col-title::after {
+    content: "\2212";
+  }
+
+  .footer-col:not(.is-open) > :not(.footer-col-title) {
+    display: none;
+  }
+
+  .footer-col.is-open {
+    padding-bottom: 10px;
+  }
+
+  .footer-col a {
+    margin-bottom: 12px;
+  }
+
+  .footer-bottom {
+    padding-top: 0;
+  }
+}
