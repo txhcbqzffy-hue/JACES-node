@@ -153,6 +153,17 @@
         });
       }
 
+      // Homepage category cards (Pantalons, Tops, ...) reuse the same
+      // product photos picked in admin for the Nouveautés thumbnails, so a
+      // category shows the same piece everywhere. Only the photo is shared:
+      // the thumbnail's crop/zoom is tuned for a small circle, not these
+      // tall cards.
+      document.querySelectorAll('.card-highlight[data-category]').forEach((card) => {
+        const url = content[`nouveautes_thumb_${card.dataset.category}`];
+        const img = card.querySelector('img');
+        if (url && img && img.getAttribute('src') !== url) img.src = url;
+      });
+
       // Homepage hero - only exists on index.html (body.home-page), no-op
       // elsewhere. Admin can configure up to 4 slides (home_hero_slide_1..4
       // + a _duration in seconds for each, default 15s); with none set, the
