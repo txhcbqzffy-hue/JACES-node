@@ -49,7 +49,9 @@ const COLLAB_SLUG_TO_TOKEN = {
 // season tokens the collection page filters by ("ss26" / "aw26").
 const SEASON_SLUG_TO_TOKEN = {
   'printemps-ete-2026': 'ss26',
+  'printemps-ete-2027': 'ss26',
   'automne-hiver-2026': 'aw26',
+  'automne-hiver-2027': 'aw26',
   'capsules-limitees': 'capsules'
 };
 

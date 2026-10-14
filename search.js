@@ -12,7 +12,9 @@
   // just a generic price, so it's clear why that product showed up.
   var SEASON_SLUG_TO_TOKEN = {
     'printemps-ete-2026': 'ss26',
+    'printemps-ete-2027': 'ss26',
     'automne-hiver-2026': 'aw26',
+    'automne-hiver-2027': 'aw26',
     'capsules-limitees': 'capsules'
   };
   var SEASON_LABELS = {
@@ -164,7 +166,7 @@
         : '';
 
       return '<article class="home-slider-card search-product-card">'
-        + '<a class="home-slider-media" href="detail-produit.html?id=' + encodeURIComponent(product.id || '') + '" aria-label="Voir ' + escapeHtml(product.name || 'ce produit') + '">'
+        + '<a class="home-slider-media" href="detail-produit.html?id=' + encodeURIComponent(product.id || '') + (primarySrc ? '&img=' + encodeURIComponent(primarySrc) : '') + '" aria-label="Voir ' + escapeHtml(product.name || 'ce produit') + '">'
         + (badgeLabel ? '<span class="product-card-badge">' + escapeHtml(badgeLabel) + '</span>' : '')
         + (primarySrc ? '<img class="home-slider-image-primary" src="' + escapeHtml(primarySrc) + '" alt="' + escapeHtml(product.name || 'Produit JACES') + '" loading="lazy">' : '')
         + (secondarySrc ? '<img class="home-slider-image-secondary" src="' + escapeHtml(secondarySrc) + '" alt="" loading="lazy">' : '')

@@ -11956,3 +11956,12 @@ h3,
 .home-page .hero h1 em {
   white-space: nowrap;
 }
+
+/* The quick-buy size row is a mouse-hover affordance. On touch screens a
+   tap counts as :hover/:focus-within, so the row of sizes flashed over
+   the card right as you tapped through to the product. */
+@media (hover: none) {
+  .hover-sizes {
+    display: none !important;
+  }
+}

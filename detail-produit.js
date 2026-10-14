@@ -376,7 +376,9 @@
   // module with that one.
   const SEASON_SLUG_TO_TOKEN = {
     'printemps-ete-2026': 'ss26',
-    'automne-hiver-2026': 'aw26'
+    'printemps-ete-2027': 'ss26',
+    'automne-hiver-2026': 'aw26',
+    'automne-hiver-2027': 'aw26'
   };
 
   // Both take a plain slug (the SAME one resolved for the breadcrumb's
