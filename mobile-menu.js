@@ -259,10 +259,28 @@
     FOOTER_ACCORDION_QUERY.addEventListener('change', sync);
   }
 
+  // On phones the catalogue sort select is invisible over a styled label
+  // (see style.css); keep that label showing the chosen option, in a
+  // short form that fits the narrow button.
+  const SORT_SHORT_LABELS = { 'price-asc': 'Prix ↑', 'price-desc': 'Prix ↓', 'name-asc': 'A–Z' };
+
+  function initSortLabels() {
+    document.querySelectorAll('.product-sort-row select').forEach((select) => {
+      const row = select.closest('.product-sort-row');
+      const sync = () => {
+        const option = select.options[select.selectedIndex];
+        row.dataset.label = SORT_SHORT_LABELS[select.value] || (option ? option.textContent.trim() : '');
+      };
+      select.addEventListener('change', sync);
+      sync();
+    });
+  }
+
   function init() {
     initMobileDrawer();
     initMobileMegaMenu();
     initFooterAccordions();
+    initSortLabels();
     updateHeaderOffset();
     window.addEventListener('resize', updateHeaderOffset);
     window.addEventListener('load', updateHeaderOffset);
