@@ -11917,3 +11917,117 @@ h3,
   background: #111111;
   color: #ffffff;
 }
+
+/* MOBILE FIXES
+   .footer-newsletter is a fixed 450px wide for the desktop footer row,
+   which on a ~390px phone pushed the whole page wider than the screen
+   (white strip on the right, header icons cut off). */
+@media (max-width: 720px) {
+  .footer-newsletter {
+    width: 100%;
+    max-width: 450px;
+  }
+
+  .footer-cols-extra {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 28px 20px;
+  }
+
+  /* 4 reassurance items on one row squeezed each title to one word per
+     line ("Une / question / ?") - 2x2 grid instead. */
+  .footer-trust {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 22px 16px;
+    padding: 24px 18px;
+  }
+
+  /* Instagram strip: the generic .section padding (60px 20px) stacked
+     on the header's own 20px inset left a big white gap above and the
+     header text misaligned with the posts. Edge-to-edge track instead,
+     with the inset moved inside the scroller so posts line up with the
+     header and the next one peeks in from the right. */
+  .instagram-section {
+    padding: 28px 0 8px;
+  }
+
+  .editorial-hero {
+    margin-bottom: 0;
+  }
+
+  .instagram-carousel {
+    grid-auto-columns: 78vw;
+    gap: 8px;
+    padding: 0 20px;
+    scroll-padding: 0 20px;
+    box-sizing: border-box;
+  }
+
+  .instagram-btn {
+    width: 42px;
+    height: 42px;
+  }
+}
+
+/* Catalogue pages on phones: the desktop 48px side padding plus a
+   single-column grid left wide white margins and one huge card per
+   screen. Tighter gutters, 2 columns, and the filter pills on one row
+   with the sort select full width underneath. */
+@media (max-width: 560px) {
+  .collection-page .section {
+    padding-left: 14px;
+    padding-right: 14px;
+  }
+
+  .collection-page .product-grid,
+  .collection-page .product-grid.is-category-filtered,
+  .collection-page .product-grid:has(.collection-card.hidden) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 10px;
+    row-gap: 26px;
+  }
+
+  .collection-page .product-card img {
+    min-height: 0;
+  }
+
+  .collection-page .filter-bar-top {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+
+  .collection-page .filter-pills {
+    flex-wrap: nowrap;
+    gap: 6px;
+  }
+
+  .collection-page .filter-pill-wrap {
+    flex: 1 1 0;
+    min-width: 0;
+  }
+
+  .collection-page .filter-pill {
+    width: 100%;
+    justify-content: center;
+    padding: 9px 6px;
+  }
+
+  /* Last pill's dropdown would open past the right edge of the screen. */
+  .collection-page .filter-pill-wrap:last-child .filter-dropdown {
+    left: auto;
+    right: 0;
+  }
+
+  .collection-page .product-sort-row,
+  .collection-page .product-sort-row select {
+    width: 100%;
+  }
+}
+
+/* The closed favourites/cart drawers sit just off-screen (translateX(100%))
+   but their box-shadow still bled ~30px back into view, leaving a grey
+   fade down the right edge of every page on phones. */
+.fav-panel:not(.open),
+.cart-panel:not(.open) {
+  box-shadow: none;
+}
