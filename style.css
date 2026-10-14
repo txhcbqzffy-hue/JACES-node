@@ -5236,64 +5236,6 @@ body.account-modal-open {
   margin-bottom: 0;
 }
 
-.product-detail-fit-meters {
-  display: grid;
-  gap: 26px;
-  padding-top: 6px;
-}
-
-.product-detail-fit-meter {
-  display: grid;
-  gap: 10px;
-}
-
-.product-detail-fit-meter-title {
-  margin: 0;
-  color: #111111;
-  font-family: "Manrope", sans-serif;
-  font-size: 0.86rem;
-  font-weight: 700;
-}
-
-.product-detail-fit-meter-track {
-  position: relative;
-  height: 8px;
-  border-radius: 999px;
-  background: #ffffff;
-}
-
-.product-detail-fit-meter-dot {
-  position: absolute;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  width: 14px;
-  height: 14px;
-  border-radius: 999px;
-  background: #111111;
-}
-
-.product-detail-fit-meter-labels {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  align-items: center;
-}
-
-.product-detail-fit-meter-labels span {
-  color: #111111;
-  font-family: "Manrope", sans-serif;
-  font-size: 0.78rem;
-  font-weight: 500;
-  line-height: 1.2;
-}
-
-.product-detail-fit-meter-labels span:nth-child(2) {
-  text-align: center;
-}
-
-.product-detail-fit-meter-labels span:nth-child(3) {
-  text-align: right;
-}
-
 .product-card-linkable {
   cursor: pointer;
 }
@@ -5530,8 +5472,7 @@ body.account-modal-open {
 .product-detail-size-section,
 .product-detail-actions,
 .product-detail-info,
-.product-detail-accordions,
-.product-detail-fit-meters {
+.product-detail-accordions {
   width: 100%;
 }
 
@@ -5567,28 +5508,6 @@ body.account-modal-open {
   padding: 54px var(--detail-main-pad-x) 18px;
   border-top: 1px solid rgba(17, 17, 17, 0.08);
   background: #ffffff;
-}
-
-.product-detail-insights-band {
-  grid-column: 1 / -1;
-  margin-top: 24px;
-  border-top: 1px solid rgba(17, 17, 17, 0.08);
-  border-bottom: 1px solid rgba(17, 17, 17, 0.08);
-  padding: 22px 0;
-  display: grid;
-  grid-template-columns: minmax(0, 420px);
-}
-
-.product-detail-insights-col {
-  min-width: 0;
-}
-
-.product-detail-insights-col--fit .product-detail-fit-meters {
-  margin-top: 4px;
-}
-
-.product-detail-insights-col--fit .product-detail-fit-meter {
-  gap: 10px;
 }
 
 
@@ -9105,37 +9024,6 @@ img,
   }
 }
 
-.back-to-top-bar {
-  border-top: none;
-  border-bottom: none;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  min-height: 150px;
-  padding: 0;
-  background: #ffffff;
-}
-
-.back-to-top-link {
-  display: inline-flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 10px;
-  text-decoration: none;
-  color: #111111;
-  font-family: "Manrope", sans-serif;
-  font-size: 0.76rem;
-  font-weight: 700;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  transition: color 0.18s;
-}
-
-.back-to-top-link:hover {
-  color: rgba(17, 17, 17, 0.64);
-}
-
 .footer {
   background: #ffffff;
   color: #111111;
@@ -12038,14 +11926,12 @@ h3,
 }
 
 /* Product page on phones/tablets: --detail-main-pad-x drops to 0 so the
-   gallery can run edge to edge, but that also left the breadcrumb, the
-   product copy (name, sizes, add to cart, details) and the fit/quality
-   band flush against the screen edges. Gutter everything except the
-   gallery. */
+   gallery can run edge to edge, but that also left the breadcrumb and
+   the product copy (name, sizes, add to cart, details) flush against the
+   screen edges. Gutter everything except the gallery. */
 @media (max-width: 900px) {
   .product-detail-breadcrumb,
   .product-detail-copy,
-  .product-detail-insights-band,
   .product-detail-alternatives {
     padding-left: 20px;
     padding-right: 20px;
