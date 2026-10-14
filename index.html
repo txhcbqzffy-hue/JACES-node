@@ -795,8 +795,12 @@
       } catch (error) {}
 
       try {
-        const products = await getProducts('nouveautes');
-        if (!Array.isArray(products) || !products.length) return;
+        const allNouveautes = await getProducts('nouveautes');
+        if (!Array.isArray(allNouveautes)) return;
+        // products.hide_from_home_slider keeps a Nouveautés piece off this
+        // carousel while it still shows on the Nouveautés pages.
+        const products = allNouveautes.filter((product) => !product.hide_from_home_slider);
+        if (!products.length) return;
 
         renderFeaturedProducts(section, track, products);
         try { localStorage.setItem(FEATURED_CACHE_KEY, JSON.stringify({ products, cachedAt: Date.now() })); } catch (error) {}
