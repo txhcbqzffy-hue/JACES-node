@@ -158,7 +158,7 @@
       // category shows the same piece everywhere. Only the photo is shared:
       // the thumbnail's crop/zoom is tuned for a small circle, not these
       // tall cards.
-      document.querySelectorAll('.card-highlight[data-category]').forEach((card) => {
+      document.querySelectorAll('.card-highlight[data-category]:not([data-product-linked])').forEach((card) => {
         const url = content[`nouveautes_thumb_${card.dataset.category}`];
         const img = card.querySelector('img');
         if (url && img && img.getAttribute('src') !== url) img.src = url;

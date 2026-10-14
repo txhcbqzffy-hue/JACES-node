@@ -325,13 +325,6 @@
           </div>
         </article>
 
-        <article class="card card-highlight" data-category="vestes">
-          <img src="https://res.cloudinary.com/dnplvtg6h/image/upload/v1785274040/jaces/vignettes/tgeurehb4ueecjitzwnt.png" alt="Vestes" loading="lazy">
-          <div class="card-body">
-            <h3 class="card-highlight-title">Vestes</h3>
-            <a class="card-highlight-link" href="collection.html?category=vestes">Découvrir</a>
-          </div>
-        </article>
 
         <article class="card card-highlight" data-category="accessoires">
           <img src="https://res.cloudinary.com/dnplvtg6h/image/upload/v1785317006/jaces/vignettes/sh8gu1lgcs15w5upojpr.png" alt="Accessoires" loading="lazy">
@@ -759,7 +752,43 @@
       return spacer;
     }
 
+    // Homepage category cards (Pantalons, Tops, Jupes, Robes...) show a
+    // random photo of a random EN CE MOMENT piece of that category and
+    // link straight to it. Picked once per page load (from whichever of
+    // the cached/fresh product lists arrives first) so the photo doesn't
+    // swap a second time. Categories with no such piece (e.g. Vestes)
+    // keep their admin thumbnail and catalogue link.
+    let highlightCardsLinked = false;
+    function linkHighlightCards(products) {
+      if (highlightCardsLinked || !Array.isArray(products) || !products.length) return;
+      highlightCardsLinked = true;
+      const pickRandom = (list) => list[Math.floor(Math.random() * list.length)];
+      document.querySelectorAll('.card-highlight[data-category]').forEach((card) => {
+        const category = card.dataset.category;
+        const matches = products.filter((product) => String(product.category || '').trim().toLowerCase() === category);
+        if (!matches.length) return;
+        const product = pickRandom(matches);
+        const imageUrls = (Array.isArray(product.images) ? product.images : [])
+          .map((image) => image && image.url)
+          .filter(Boolean);
+        const imageUrl = imageUrls.length ? pickRandom(imageUrls) : '';
+        const img = card.querySelector('img');
+        if (img && imageUrl) {
+          img.src = imageUrl;
+          img.alt = product.name || '';
+        }
+        const link = card.querySelector('.card-highlight-link');
+        if (link) {
+          link.href = `detail-produit.html?id=${encodeURIComponent(product.id || '')}${imageUrls[0] ? `&img=${encodeURIComponent(imageUrls[0])}` : ''}`;
+          link.setAttribute('aria-label', `Découvrir ${product.name || ''}`);
+        }
+        // Tells site-content.js not to put the admin thumbnail back.
+        card.dataset.productLinked = 'true';
+      });
+    }
+
     function renderFeaturedProducts(section, track, products) {
+      linkHighlightCards(products);
       const ids = products.map((product) => product.id).join(',');
       if (ids === renderedFeaturedIds) return; // already showing these exact products, skip the reflow/flash
       renderedFeaturedIds = ids;

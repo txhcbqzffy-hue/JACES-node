@@ -12233,3 +12233,24 @@ h3,
     padding-top: 0;
   }
 }
+
+/* A homepage highlight row with only 2 cards (e.g. Robes + Accessoires
+   once Vestes was removed) spans 2 wider columns instead of leaving an
+   empty third slot; 6/7 keeps the same height as a 3-card row's 4/7. */
+@media (min-width: 921px) {
+  .section-highlight .cards-grid:has(> .card:nth-child(2):last-child) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .section-highlight .cards-grid:has(> .card:nth-child(2):last-child) .card {
+    aspect-ratio: 6 / 7;
+  }
+}
+
+/* Single-column cards on phones: a fixed height so the random product
+   photo (portrait or landscape) can't make one card taller than another. */
+@media (max-width: 920px) {
+  .section-highlight .card {
+    height: 520px;
+  }
+}
