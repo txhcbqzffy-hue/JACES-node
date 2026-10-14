@@ -604,30 +604,12 @@
     };
   }
 
+  // Only a real, entered composition/subtitle is shown. The old fallback
+  // guessed one from words in the product name ("top" -> "100% Laine
+  // Merinos", "pantalon" -> "Laine melangee"...), which showed false
+  // compositions (e.g. wool on a tulle top).
   function getProductDetailSubtitle(product) {
-    const customSubtitle = String(product?.subtitle || '').trim();
-    if (customSubtitle) return customSubtitle;
-
-    const name = String(product?.name || '').toLowerCase();
-    if (name.includes('top')) {
-      return '100% Laine Merinos - Certifiee RWS';
-    }
-    if (name.includes('pantalon') || name.includes('short') || name.includes('jean')) {
-      return 'Laine melangee - Doublure signee JACES';
-    }
-    if (name.includes('veste')) {
-      return 'Laine melangee - Doublure signee JACES';
-    }
-    if (name.includes('robe') || name.includes('jupe')) {
-      return 'Crepe signature - Finition fluide';
-    }
-    if (name.includes('top')) {
-      return 'Coton premium - Coupe structuree';
-    }
-    if (name.includes('boucle') || name.includes('creole') || name.includes('collier') || name.includes('bijou') || name.includes('sac') || name.includes('ceinture') || name.includes('mule') || name.includes('sandale') || name.includes('chaussure')) {
-      return 'Laiton dore - Finition polie';
-    }
-    return 'Matiere premium - Finition signature JACES';
+    return String(product?.subtitle || '').trim();
   }
 
   function clampSingleLineText(text, maxLength) {
@@ -1041,7 +1023,7 @@
             <h1>${product.name}</h1>
             <p class="product-detail-price">${formatPrice(product.price)}</p>
           </div>
-          <p class="product-detail-subtitle">${detailSubtitle}</p>
+          ${detailSubtitle ? `<p class="product-detail-subtitle">${detailSubtitle}</p>` : ''}
         </div>
         <div class="product-detail-sticky-region js-product-detail-sticky-region">
           <div class="product-detail-sticky-panel js-product-detail-scroll-panel">
