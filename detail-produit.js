@@ -216,7 +216,7 @@
     const entry = menu === 'collaborations' ? pickRealCollaborationEntry(entries) : (Array.isArray(entries) ? entries[0] : null);
     if (!entry?.slug) return origin;
     // Build on top of the modifier link (season/tag) when one exists, so
-    // clicking "Robes" from "Collection / Automne-Hiver 2026 / Robes /
+    // clicking "Robes" from "Collection / Automne-Hiver 2027 / Robes /
     // <product>" lands on collection.html?collection=aw26&category=robes -
     // keeping the season filter - instead of losing it.
     const baseUrl = origin.modifierUrl || origin.url || 'collection.html';
@@ -367,7 +367,7 @@
   // it has no idea what page it's rendered on when arriving on
   // detail-produit.html, so it never highlights anything here. Mirror that
   // same "submenu-link-active" class here, based on the product's real
-  // season classification, so e.g. a product tagged Automne-Hiver 2026
+  // season classification, so e.g. a product tagged Automne-Hiver 2027
   // shows that submenu entry in rose while viewing the product itself.
   // Filters store the long-form slug (e.g. "automne-hiver-2026") but the
   // submenu links (and every other page's own season filtering) use the
@@ -467,7 +467,7 @@
       'collection.html': [
         '<div>',
         '  <a href="collection.html?collection=ss26">Printemps–Été 2027</a>',
-        '  <a href="collection.html?collection=aw26">Automne–Hiver 2026</a>',
+        '  <a href="collection.html?collection=aw26">Automne–Hiver 2027</a>',
         '  <a href="collection.html?category=all" class="underline-link">Toutes les collections</a>',
         '</div>',
         '<div class="submenu-categories">',
@@ -986,7 +986,7 @@
     const relatedProducts = getRelatedProducts(product, resolvedOrigin, allProducts);
     const isAdminTechnicalReference = /^admin-/i.test(String(product.id || '').trim());
     const nouveauteTagsForBadge = Array.isArray(product.nouveauteTags) ? product.nouveauteTags : [];
-    const SEASON_BADGE_LABELS = { ss26: 'Printemps–Été 2027', aw26: 'Automne–Hiver 2026' };
+    const SEASON_BADGE_LABELS = { ss26: 'Printemps–Été 2027', aw26: 'Automne–Hiver 2027' };
     const filterTokensForBadge = Array.isArray(product.filter_tokens) ? product.filter_tokens : [];
     const seasonTokenForBadge = filterTokensForBadge.map((token) => SEASON_SLUG_TO_TOKEN[token]).find(Boolean);
     const nouveauteBadgeLabel = nouveauteTagsForBadge.includes('drop') ? 'Drop'

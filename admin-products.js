@@ -248,7 +248,7 @@
 
     function getCollectionSeasonLabel(season) {
       if (season === 'ss26') return 'Printemps-Ete 2027';
-      if (season === 'aw26') return 'Automne-Hiver 2026';
+      if (season === 'aw26') return 'Automne-Hiver 2027';
       return 'Toutes saisons';
     }
 
@@ -595,7 +595,7 @@
         + '      <label for="admin-collection-season">Saison collection</label>'
         + '      <select id="admin-collection-season">'
         + '        <option value="ss26">Printemps-Été 2027</option>'
-        + '        <option value="aw26">Automne-Hiver 2026</option>'
+        + '        <option value="aw26">Automne-Hiver 2027</option>'
         + '      </select>'
         + '    </div>'
         + '    <div class="admin-field" id="admin-collaboration-exclusive-field" style="display:none">'

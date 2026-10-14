@@ -139,7 +139,7 @@ function getNouveauteBadgeLabel(product) {
 
 const SEASON_BADGE_LABELS = {
   ss26: 'Printemps–Été 2027',
-  aw26: 'Automne–Hiver 2026',
+  aw26: 'Automne–Hiver 2027',
   capsules: 'Capsules limitées'
 };
 
