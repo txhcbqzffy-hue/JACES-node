@@ -262,7 +262,7 @@
           }
 
           if (pageName === 'collection.html') {
-            // Only Printemps–Été 2026 / Automne–Hiver 2026 (or, absent any
+            // Only Printemps–Été 2027 / Automne–Hiver 2026 (or, absent any
             // season, "Toutes les collections") may be highlighted here —
             // category pills (Robes, Tops, ...) never get the active style,
             // whether picked from an on-page pill or the mega-menu.

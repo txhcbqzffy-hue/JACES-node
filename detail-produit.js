@@ -466,7 +466,7 @@
       ].join(''),
       'collection.html': [
         '<div>',
-        '  <a href="collection.html?collection=ss26">Printemps–Été 2026</a>',
+        '  <a href="collection.html?collection=ss26">Printemps–Été 2027</a>',
         '  <a href="collection.html?collection=aw26">Automne–Hiver 2026</a>',
         '  <a href="collection.html?category=all" class="underline-link">Toutes les collections</a>',
         '</div>',
@@ -986,7 +986,7 @@
     const relatedProducts = getRelatedProducts(product, resolvedOrigin, allProducts);
     const isAdminTechnicalReference = /^admin-/i.test(String(product.id || '').trim());
     const nouveauteTagsForBadge = Array.isArray(product.nouveauteTags) ? product.nouveauteTags : [];
-    const SEASON_BADGE_LABELS = { ss26: 'Printemps–Été 2026', aw26: 'Automne–Hiver 2026' };
+    const SEASON_BADGE_LABELS = { ss26: 'Printemps–Été 2027', aw26: 'Automne–Hiver 2026' };
     const filterTokensForBadge = Array.isArray(product.filter_tokens) ? product.filter_tokens : [];
     const seasonTokenForBadge = filterTokensForBadge.map((token) => SEASON_SLUG_TO_TOKEN[token]).find(Boolean);
     const nouveauteBadgeLabel = nouveauteTagsForBadge.includes('drop') ? 'Drop'

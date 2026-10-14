@@ -16,7 +16,7 @@
     'capsules-limitees': 'capsules'
   };
   var SEASON_LABELS = {
-    ss26: 'Printemps–Été 2026',
+    ss26: 'Printemps–Été 2027',
     aw26: 'Automne–Hiver 2026',
     capsules: 'Capsules limitées'
   };
