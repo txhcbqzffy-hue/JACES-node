@@ -229,7 +229,15 @@ module.exports = async function handler(req, res) {
       }
     }
 
-    let productsQuery = supabase.from('products').select('*');
+    // Explicit display order (products.sort_order, nulls - e.g. products
+    // just added in admin - last, newest first among those). Without an
+    // ORDER BY, Postgres returned rows in physical storage order, which
+    // reshuffled the catalogue whenever a product was edited.
+    let productsQuery = supabase
+      .from('products')
+      .select('*')
+      .order('sort_order', { ascending: true, nullsFirst: false })
+      .order('created_at', { ascending: false });
     if (requestedId) {
       productsQuery = productsQuery.eq('id', requestedId);
     }
