@@ -249,6 +249,16 @@ async function loadPageProducts() {
     const pageType = getPageType();
     const products = await getProducts(pageType);
     window.__JACES_PRODUCTS_CACHE = Array.isArray(products) ? products : [];
+    // detail-produit.js builds its breadcrumb from the product's
+    // filter_menus; leave them behind so the product page can draw it
+    // instantly instead of after its own API round-trip.
+    try {
+      const menusById = {};
+      window.__JACES_PRODUCTS_CACHE.forEach((product) => {
+        if (product?.id && product.filter_menus) menusById[product.id] = product.filter_menus;
+      });
+      sessionStorage.setItem('jaces-filter-menus', JSON.stringify(menusById));
+    } catch {}
     const visibleProducts = getVisibleProducts(products, pageType);
 
     productGrid.hidden = false;

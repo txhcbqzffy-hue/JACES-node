@@ -328,7 +328,8 @@
 
     applyTopNavActiveState(origin);
 
-    if (breadcrumbOrigin) {
+    if (breadcrumbOrigin && !breadcrumbOrigin.dataset.restoreBound) {
+      breadcrumbOrigin.dataset.restoreBound = '1';
       breadcrumbOrigin.addEventListener('click', (event) => {
         if (event.defaultPrevented) return;
         if (event.button !== 0) return;
@@ -824,13 +825,31 @@
       shell.appendChild(top);
     }
 
+    // The breadcrumb only needs the product's name and filter_menus: draw
+    // it straight away from what the listing page left in sessionStorage,
+    // else as soon as the single-product fetch lands - not after the whole
+    // catalogue (the slower /api/products) has loaded too.
+    let breadcrumbProduct = null;
+    const showBreadcrumbFor = (candidate) => {
+      if (breadcrumbProduct || !candidate?.filter_menus) return;
+      breadcrumbProduct = candidate;
+      const early = resolveOriginFromProduct(candidate, origin);
+      applyOriginContext(withCategoryDeepLink(withModifierDeepLink(early, candidate), candidate), candidate.name);
+    };
+    try {
+      const cachedMenus = JSON.parse(sessionStorage.getItem('jaces-filter-menus') || '{}')[getProductId()];
+      if (cachedMenus && queryName) showBreadcrumbFor({ name: queryName, filter_menus: cachedMenus });
+    } catch {}
+
     let allProducts = [];
     let product = null;
 
     try {
+      const productPromise = fetchProductFromApi(getProductId());
+      productPromise.then(showBreadcrumbFor, () => {});
       const [apiProducts, apiProduct] = await Promise.all([
         fetchProductsFromApi(),
-        fetchProductFromApi(getProductId())
+        productPromise
       ]);
 
       allProducts = Array.isArray(apiProducts) ? apiProducts.map(normalizeApiProduct) : [];
@@ -996,24 +1015,32 @@
       return `<div class="quick-buy-grid">${buttonsHtml}</div>`;
     };
 
+    // A single-photo product repeats it as the second view: the mobile
+    // carousel hides that repeat, so the favourite heart moves onto the
+    // first photo instead.
+    const secondaryIsRepeat = gallery.secondaryImage === gallery.primaryImage;
+    const favoriteButtonHtml = `<button class="product-favorite product-detail-favorite${isFavorite ? ' active' : ''}" id="detail-product-favorite" type="button" aria-label="${isFavorite ? 'Retirer des favoris' : 'Ajouter aux favoris'}" title="${isFavorite ? 'Retirer des favoris' : 'Ajouter aux favoris'}">
+            <svg class="heart-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+          </button>`;
+    const isSinglePhoto = new Set([gallery.primaryImage, gallery.secondaryImage, gallery.tertiaryImage, gallery.quaternaryImage].filter(Boolean)).size <= 1;
+
     shell.innerHTML = `
       <div class="product-detail-top">
-        <div class="product-detail-gallery">
+        <div class="product-detail-gallery${isSinglePhoto ? ' is-single' : ''}">
         <figure class="product-detail-media-block product-detail-media-primary">
           ${nouveauteBadgeLabel ? `<span class="product-card-badge">${nouveauteBadgeLabel}</span>` : ''}
           ${gallery.primaryImage ? `<img class="product-detail-image" src="${gallery.primaryImage}" alt="${product.name}">` : '<div class="favorites-card-placeholder product-detail-placeholder"></div>'}
           ${gallery.caption ? `<figcaption class="product-detail-caption">${gallery.caption}</figcaption>` : ''}
+          ${secondaryIsRepeat ? favoriteButtonHtml : ''}
         </figure>
-        <figure class="product-detail-media-block product-detail-media-secondary">
-          <button class="product-favorite product-detail-favorite${isFavorite ? ' active' : ''}" id="detail-product-favorite" type="button" aria-label="${isFavorite ? 'Retirer des favoris' : 'Ajouter aux favoris'}" title="${isFavorite ? 'Retirer des favoris' : 'Ajouter aux favoris'}">
-            <svg class="heart-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-          </button>
+        <figure class="product-detail-media-block product-detail-media-secondary${secondaryIsRepeat ? ' is-repeat' : ''}">
+          ${secondaryIsRepeat ? '' : favoriteButtonHtml}
           ${gallery.secondaryImage ? `<img class="product-detail-image product-detail-image-secondary" src="${gallery.secondaryImage}" alt="${product.name} vue d&eacute;tail">` : '<div class="favorites-card-placeholder product-detail-placeholder"></div>'}
         </figure>
-        <figure class="product-detail-media-block product-detail-media-tertiary">
+        <figure class="product-detail-media-block product-detail-media-tertiary${gallery.tertiaryImage === gallery.primaryImage || gallery.tertiaryImage === gallery.secondaryImage ? ' is-repeat' : ''}">
           ${gallery.tertiaryImage ? `<img class="product-detail-image product-detail-image-tertiary" src="${gallery.tertiaryImage}" alt="${product.name} vue compl&eacute;mentaire">` : '<div class="favorites-card-placeholder product-detail-placeholder"></div>'}
         </figure>
-        <figure class="product-detail-media-block product-detail-media-quaternary">
+        <figure class="product-detail-media-block product-detail-media-quaternary${[gallery.primaryImage, gallery.secondaryImage, gallery.tertiaryImage].includes(gallery.quaternaryImage) ? ' is-repeat' : ''}">
           ${gallery.quaternaryImage ? `<img class="product-detail-image product-detail-image-quaternary" src="${gallery.quaternaryImage}" alt="${product.name} seconde vue compl&eacute;mentaire">` : '<div class="favorites-card-placeholder product-detail-placeholder"></div>'}
         </figure>
         </div>

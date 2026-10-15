@@ -12254,3 +12254,39 @@ h3,
     height: 520px;
   }
 }
+
+/* Product page on phones/tablets: the photos scroll sideways (swipe,
+   snapping one per screen, with a peek of the next) instead of stacking
+   down the page. The desktop 2x2 grid repeats photo 1/2 to fill its
+   empty cells - those repeats are dropped from the carousel. */
+@media (max-width: 900px) {
+  .product-detail-gallery {
+    display: flex;
+    gap: 4px;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .product-detail-gallery::-webkit-scrollbar {
+    display: none;
+  }
+
+  .product-detail-gallery > .product-detail-media-block {
+    flex: 0 0 88%;
+    min-height: 0;
+    scroll-snap-align: start;
+  }
+
+  .product-detail-gallery > .product-detail-media-block.is-repeat {
+    display: none;
+  }
+
+  /* Instant preview (single photo) before the full render. */
+  .product-detail-gallery > .product-detail-media-block:only-child,
+  .product-detail-gallery.is-single > .product-detail-media-block {
+    flex-basis: 100%;
+  }
+}
