@@ -293,7 +293,7 @@
           <img src="https://res.cloudinary.com/dnplvtg6h/image/upload/v1785316921/jaces/vignettes/zzqsxuxsv5relsxjkzx9.png" alt="Pantalons" loading="lazy">
           <div class="card-body">
             <h3 class="card-highlight-title">Pantalons</h3>
-            <a class="card-highlight-link" href="collection.html?category=pantalons">Découvrir</a>
+            <a class="card-highlight-link" href="nouveautes.html?category=pantalons">Découvrir</a>
           </div>
         </article>
 
@@ -301,7 +301,7 @@
           <img src="https://res.cloudinary.com/dnplvtg6h/image/upload/v1785273714/jaces/vignettes/jmigkxhoupgdow41sj0i.png" alt="Tops" loading="lazy">
           <div class="card-body">
             <h3 class="card-highlight-title">Tops</h3>
-            <a class="card-highlight-link" href="collection.html?category=tops">Découvrir</a>
+            <a class="card-highlight-link" href="nouveautes.html?category=tops">Découvrir</a>
           </div>
         </article>
 
@@ -309,7 +309,7 @@
           <img src="https://res.cloudinary.com/dnplvtg6h/image/upload/v1785316794/jaces/vignettes/tyy3enljcmzabjy7aqvq.png" alt="Jupes" loading="lazy">
           <div class="card-body">
             <h3 class="card-highlight-title">Jupes</h3>
-            <a class="card-highlight-link" href="collection.html?category=jupes">Découvrir</a>
+            <a class="card-highlight-link" href="nouveautes.html?category=jupes">Découvrir</a>
           </div>
         </article>
       </div>
@@ -321,7 +321,7 @@
           <img src="https://res.cloudinary.com/dnplvtg6h/image/upload/v1785316363/jaces/vignettes/punhfp1d8i93f8psrcvv.png" alt="Robes" loading="lazy">
           <div class="card-body">
             <h3 class="card-highlight-title">Robes</h3>
-            <a class="card-highlight-link" href="collection.html?category=robes">Découvrir</a>
+            <a class="card-highlight-link" href="nouveautes.html?category=robes">Découvrir</a>
           </div>
         </article>
 
@@ -330,7 +330,7 @@
           <img src="https://res.cloudinary.com/dnplvtg6h/image/upload/v1785317006/jaces/vignettes/sh8gu1lgcs15w5upojpr.png" alt="Accessoires" loading="lazy">
           <div class="card-body">
             <h3 class="card-highlight-title">Accessoires</h3>
-            <a class="card-highlight-link" href="accessoires.html">Découvrir</a>
+            <a class="card-highlight-link" href="nouveautes.html?category=accessoires">Découvrir</a>
           </div>
         </article>
       </div>
@@ -753,11 +753,11 @@
     }
 
     // Homepage category cards (Pantalons, Tops, Jupes, Robes...) show a
-    // random photo of a random EN CE MOMENT piece of that category and
-    // link straight to it. Picked once per page load (from whichever of
-    // the cached/fresh product lists arrives first) so the photo doesn't
-    // swap a second time. Categories with no such piece (e.g. Vestes)
-    // keep their admin thumbnail and catalogue link.
+    // random photo of a random EN CE MOMENT piece of that category; the
+    // card itself opens that category in Nouveautés (static href). Picked
+    // once per page load (from whichever of the cached/fresh product lists
+    // arrives first) so the photo doesn't swap a second time. Categories
+    // with no such piece keep their admin thumbnail.
     let highlightCardsLinked = false;
     function linkHighlightCards(products) {
       if (highlightCardsLinked || !Array.isArray(products) || !products.length) return;
@@ -776,11 +776,6 @@
         if (img && imageUrl) {
           img.src = imageUrl;
           img.alt = product.name || '';
-        }
-        const link = card.querySelector('.card-highlight-link');
-        if (link) {
-          link.href = `detail-produit.html?id=${encodeURIComponent(product.id || '')}${imageUrls[0] ? `&img=${encodeURIComponent(imageUrls[0])}` : ''}${imageUrls.slice(1, 4).map((url, i) => `&${['secondaryImg', 'tertiaryImg', 'quaternaryImg'][i]}=${encodeURIComponent(url)}`).join('')}`;
-          link.setAttribute('aria-label', `Découvrir ${product.name || ''}`);
         }
         // Tells site-content.js not to put the admin thumbnail back.
         card.dataset.productLinked = 'true';

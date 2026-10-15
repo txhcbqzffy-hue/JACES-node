@@ -237,6 +237,33 @@ function buildEmptyState(message) {
   `;
 }
 
+// Each listing page filters its own cards (category strip, size/colour
+// pills...) by toggling .hidden on them. When a filter leaves none
+// visible, show the same "Aucun produit" block (with the way back to the
+// homepage) as an empty catalogue, instead of a blank grid.
+function watchFilteredEmptyState(productGrid) {
+  let scheduled = false;
+  const sync = () => {
+    scheduled = false;
+    const cards = Array.from(productGrid.children).filter((child) => !child.classList.contains('product-grid-empty'));
+    const allHidden = cards.length > 0 && cards.every((card) => card.classList.contains('hidden'));
+    const emptyBlock = productGrid.querySelector('.product-grid-empty[data-filter-empty]');
+    if (allHidden && !emptyBlock) {
+      productGrid.insertAdjacentHTML('beforeend', buildEmptyState('Aucun produit pour le moment'));
+      productGrid.lastElementChild.setAttribute('data-filter-empty', '');
+    } else if (!allHidden && emptyBlock) {
+      emptyBlock.remove();
+    }
+  };
+  const schedule = () => {
+    if (scheduled) return;
+    scheduled = true;
+    requestAnimationFrame(sync);
+  };
+  new MutationObserver(schedule).observe(productGrid, { childList: true, subtree: true, attributes: true, attributeFilter: ['class'] });
+  schedule();
+}
+
 function getVisibleProducts(products, pageType) {
   return Array.isArray(products) ? products : [];
 }
@@ -280,6 +307,7 @@ async function loadPageProducts() {
     }
 
     window.dispatchEvent(new CustomEvent('jaces:products-loaded', { detail: { products: visibleProducts, pageType } }));
+    watchFilteredEmptyState(productGrid);
   } catch (error) {
     console.error('Impossible de charger les produits API:', error);
     productGrid.hidden = false;
