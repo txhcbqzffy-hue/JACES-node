@@ -76,7 +76,7 @@
       '      <p><strong>Données collectées</strong> : e-mail et vos préférences (nouveaux produits / actualités).</p>',
       '      <p><strong>Pourquoi</strong> : vous envoyer les e-mails correspondant à ce que vous avez coché, rien d’autre.</p>',
       '      <p><strong>Qui y a accès</strong> : Supabase (hébergement, UE) et Brevo (envoi des e-mails). Jamais revendu à des tiers.</p>',
-      '      <p><strong>Vos droits</strong> : accès, rectification, suppression à tout moment - un lien de désinscription est présent dans chaque e-mail, ou écrivez à <a href="mailto:benjamin.peral18@gmail.com">benjamin.peral18@gmail.com</a>.</p>',
+      '      <p><strong>Vos droits</strong> : accès, rectification, suppression à tout moment - un lien de désinscription est présent dans chaque e-mail, ou écrivez à <a href="mailto:jaces@gmail.com">jaces@gmail.com</a>.</p>',
       '    </div>',
       '  </form>',
       '</div>'
@@ -102,7 +102,23 @@
 
     requestAnimationFrame(() => overlay.classList.add('open'));
 
+    // The page behind must not scroll while the popup is open. overflow:
+    // hidden alone doesn't stop iOS Safari, so the body is pinned in place
+    // (position: fixed at the current offset) and put back on close.
+    const scrollY = window.scrollY;
+    const bodyStyle = document.body.style;
+    const previousBodyStyle = { position: bodyStyle.position, top: bodyStyle.top, left: bodyStyle.left, right: bodyStyle.right, overflow: bodyStyle.overflow };
+    Object.assign(bodyStyle, { position: 'fixed', top: `-${scrollY}px`, left: '0', right: '0', overflow: 'hidden' });
+    let scrollLocked = true;
+    function unlockScroll() {
+      if (!scrollLocked) return;
+      scrollLocked = false;
+      Object.assign(bodyStyle, previousBodyStyle);
+      window.scrollTo({ top: scrollY, behavior: 'instant' });
+    }
+
     function close() {
+      unlockScroll();
       overlay.classList.remove('open');
       window.setTimeout(() => overlay.remove(), 250);
     }
