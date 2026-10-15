@@ -109,6 +109,12 @@
     if (!isPaused) scheduleNext();
   }
 
+  // Admin-uploaded thumbnails are untransformed full-size PNGs (~1.4 MB
+  // each); ask Cloudinary for a WebP/AVIF at the displayed width instead.
+  function sizedCloudinaryUrl(url, width) {
+    return String(url).replace(/(res\.cloudinary\.com\/[^/]+\/image\/upload\/)(v\d+\/)/, `$1f_auto,q_auto,c_limit,w_${width}/$2`);
+  }
+
   fetch('/api/site-content')
     .then((res) => (res.ok ? res.json() : null))
     .then((content) => {
@@ -145,7 +151,7 @@
           if (!url) return;
           const img = item.querySelector('.cat-nav-circle img');
           if (!img) return;
-          img.src = url;
+          img.src = sizedCloudinaryUrl(url, 300);
           const position = content[`${pagePrefix}_thumb_${item.dataset.category}_position`];
           if (position) img.style.objectPosition = position;
           const zoom = content[`${pagePrefix}_thumb_${item.dataset.category}_zoom`];
@@ -161,7 +167,8 @@
       document.querySelectorAll('.card-highlight[data-category]:not([data-product-linked])').forEach((card) => {
         const url = content[`nouveautes_thumb_${card.dataset.category}`];
         const img = card.querySelector('img');
-        if (url && img && img.getAttribute('src') !== url) img.src = url;
+        const sized = url ? sizedCloudinaryUrl(url, 900) : '';
+        if (sized && img && img.getAttribute('src') !== sized) img.src = sized;
       });
 
       // Homepage hero - only exists on index.html (body.home-page), no-op

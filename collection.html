@@ -257,7 +257,8 @@
               if (!url) return;
               var img = item.querySelector('.cat-nav-circle img');
               if (!img) return;
-              img.src = url;
+              // Admin uploads are full-size PNGs (~1.4 MB) for a 100px circle.
+              img.src = url.replace(/(res\.cloudinary\.com\/[^/]+\/image\/upload\/)(v\d+\/)/, '$1f_auto,q_auto,c_limit,w_300/$2');
               var position = cached['collection_thumb_' + item.dataset.category + '_position'];
               if (position) img.style.objectPosition = position;
               var zoom = cached['collection_thumb_' + item.dataset.category + '_zoom'];

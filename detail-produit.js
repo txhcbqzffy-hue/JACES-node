@@ -1156,8 +1156,11 @@
       ` : ''}
     `;
 
+    // Matched on the Cloudinary file, not the size variant: listing cards
+    // pass a smaller (already cached) rendition than the w_1600 stored one.
+    const mediaKey = (url) => String(url || '').replace(/(\/image\/upload\/)(?:[a-z]{1,3}_[^/]*\/)*/, '$1');
     shell.querySelectorAll('.product-detail-gallery img').forEach((image) => {
-      const index = previewImages.findIndex((preview) => preview.src === image.src);
+      const index = previewImages.findIndex((preview) => mediaKey(preview.src) === mediaKey(image.src));
       if (index < 0) return;
       const [preview] = previewImages.splice(index, 1);
       preview.className = image.className;

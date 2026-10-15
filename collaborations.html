@@ -199,10 +199,10 @@
     <section class="category-nav-strip" aria-label="Partenaires collaboration">
       <div class="category-nav-track" id="category-nav-track">
         <a href="#collection-page-title" class="cat-nav-item active" data-category="all"><div class="cat-nav-circle"><img src="https://images.unsplash.com/photo-1483985988355-763728e1935b?q=80&w=400" alt="Tout voir"></div><span>Tout voir</span></a>
-        <a href="#collab-maureen-di-carlo" class="cat-nav-item" data-category="maureen-di-carlo"><div class="cat-nav-circle"><img src="https://images.unsplash.com/photo-1551488831-00ddcb6c6bd3?q=80&w=800" alt="JACES x Maureen Di Carlo"></div><span>JACES × Maureen Di Carlo</span></a>
-        <a href="#collab-from-future" class="cat-nav-item" data-category="from-future"><div class="cat-nav-circle"><img src="https://images.unsplash.com/photo-1485230895905-ec40ba36b9bc?q=80&w=800" alt="JACES x From Future"></div><span>JACES × From Future</span></a>
-        <a href="#collab-hoka" class="cat-nav-item" data-category="hoka"><div class="cat-nav-circle"><img src="https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?q=80&w=800" alt="JACES x Hoka"></div><span>JACES × Hoka</span></a>
-        <a href="#collab-mamy-grand" class="cat-nav-item" data-category="mamy-grand"><div class="cat-nav-circle"><img src="https://images.unsplash.com/photo-1496747611176-843222e1e57c?q=80&w=800" alt="JACES x Mamy Grand"></div><span>JACES × Mamy Grand</span></a>
+        <a href="#collab-maureen-di-carlo" class="cat-nav-item" data-category="maureen-di-carlo"><div class="cat-nav-circle"><img src="https://images.unsplash.com/photo-1551488831-00ddcb6c6bd3?q=80&w=300" alt="JACES x Maureen Di Carlo"></div><span>JACES × Maureen Di Carlo</span></a>
+        <a href="#collab-from-future" class="cat-nav-item" data-category="from-future"><div class="cat-nav-circle"><img src="https://images.unsplash.com/photo-1485230895905-ec40ba36b9bc?q=80&w=300" alt="JACES x From Future"></div><span>JACES × From Future</span></a>
+        <a href="#collab-hoka" class="cat-nav-item" data-category="hoka"><div class="cat-nav-circle"><img src="https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?q=80&w=300" alt="JACES x Hoka"></div><span>JACES × Hoka</span></a>
+        <a href="#collab-mamy-grand" class="cat-nav-item" data-category="mamy-grand"><div class="cat-nav-circle"><img src="https://images.unsplash.com/photo-1496747611176-843222e1e57c?q=80&w=300" alt="JACES x Mamy Grand"></div><span>JACES × Mamy Grand</span></a>
       </div>
       <script>
         (function () {
@@ -214,7 +214,8 @@
               if (!url) return;
               var img = item.querySelector('.cat-nav-circle img');
               if (!img) return;
-              img.src = url;
+              // Admin uploads are full-size PNGs (~1.4 MB) for a 100px circle.
+              img.src = url.replace(/(res\.cloudinary\.com\/[^/]+\/image\/upload\/)(v\d+\/)/, '$1f_auto,q_auto,c_limit,w_300/$2');
               var position = cached['collaborations_thumb_' + item.dataset.category + '_position'];
               if (position) img.style.objectPosition = position;
               var zoom = cached['collaborations_thumb_' + item.dataset.category + '_zoom'];

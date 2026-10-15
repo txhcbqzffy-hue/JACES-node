@@ -170,11 +170,23 @@ function getCardBadgeLabel(product) {
   return getNouveauteBadgeLabel(product) || getSeasonBadgeLabel(product) || getCollabBadgeLabel(product);
 }
 
+// Keeps any other stored transformation (e.g. e_background_removal) and
+// chains the resize after it; only the standard w_1600 step is swapped.
+function cardSizedUrl(url) {
+  const match = String(url || '').match(/^(https:\/\/res\.cloudinary\.com\/[^/]+\/image\/upload\/)((?:[a-z]{1,3}_[^/]*\/)*)(.*)$/);
+  if (!match) return url;
+  const steps = match[2].split('/').filter((step) => step && step !== 'f_auto,q_auto,c_limit,w_1600');
+  return match[1] + steps.concat('f_auto,q_auto,c_limit,w_900').join('/') + '/' + match[3];
+}
+
 function buildProductCard(product, pageType) {
   const card = document.createElement('article');
   const images = Array.isArray(product.images) ? product.images : [];
-  const mainImage = normalizeMediaUrl(images[0]?.url || product.image_url || product.img || '');
-  const hoverImage = normalizeMediaUrl(images[1]?.url || product.hover_image_url || product.secondaryImg || mainImage);
+  // Product photos are stored at w_1600 (~210 KB each) - far more than a
+  // card needs. 900px stays sharp on phones, and the product page opened
+  // from this card shows these same (cached) files in its instant preview.
+  const mainImage = cardSizedUrl(normalizeMediaUrl(images[0]?.url || product.image_url || product.img || ''));
+  const hoverImage = cardSizedUrl(normalizeMediaUrl(images[1]?.url || product.hover_image_url || product.secondaryImg || mainImage));
   const colors = Array.isArray(product.colors) ? product.colors.map((color) => String(color || '').trim()).filter(Boolean) : [];
   const sizes = sortSizes(Array.isArray(product.sizes) ? product.sizes.map((size) => String(size || '').trim()).filter(Boolean) : []);
   // Same rule as the product detail page: if the real sizes are all part of

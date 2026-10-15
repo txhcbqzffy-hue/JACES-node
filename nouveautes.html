@@ -211,43 +211,43 @@
       <div class="category-nav-track" id="category-nav-track">
         <a href="#product-grid" class="cat-nav-item active" data-category="all">
           <div class="cat-nav-circle">
-            <img src="https://images.unsplash.com/photo-1551488831-00ddcb6c6bd3?q=80&w=800" alt="Nouveautés" loading="eager">
+            <img src="https://images.unsplash.com/photo-1551488831-00ddcb6c6bd3?q=80&w=300" alt="Nouveautés" loading="eager">
           </div>
           <span>Tout voir</span>
         </a>
         <a href="#product-grid" class="cat-nav-item" data-category="robes">
           <div class="cat-nav-circle">
-            <img src="https://images.unsplash.com/photo-1496747611176-843222e1e57c?q=80&w=800" alt="Robes" loading="eager">
+            <img src="https://images.unsplash.com/photo-1496747611176-843222e1e57c?q=80&w=300" alt="Robes" loading="eager">
           </div>
           <span>Robes</span>
         </a>
         <a href="#product-grid" class="cat-nav-item" data-category="tops">
           <div class="cat-nav-circle">
-            <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=800" alt="Tops" loading="lazy">
+            <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=300" alt="Tops" loading="lazy">
           </div>
           <span>Tops</span>
         </a>
         <a href="#product-grid" class="cat-nav-item" data-category="jupes">
           <div class="cat-nav-circle">
-            <img src="https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?q=80&w=800" alt="Jupes" loading="lazy">
+            <img src="https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?q=80&w=300" alt="Jupes" loading="lazy">
           </div>
           <span>Jupes</span>
         </a>
         <a href="#product-grid" class="cat-nav-item" data-category="pantalons">
           <div class="cat-nav-circle">
-            <img src="https://images.unsplash.com/photo-1509631179647-0177331693ae?q=80&w=800" alt="Pantalons" loading="lazy">
+            <img src="https://images.unsplash.com/photo-1509631179647-0177331693ae?q=80&w=300" alt="Pantalons" loading="lazy">
           </div>
           <span>Pantalons</span>
         </a>
         <a href="#product-grid" class="cat-nav-item" data-category="vestes">
           <div class="cat-nav-circle">
-            <img src="https://images.unsplash.com/photo-1485230895905-ec40ba36b9bc?q=80&w=800" alt="Vestes" loading="lazy">
+            <img src="https://images.unsplash.com/photo-1485230895905-ec40ba36b9bc?q=80&w=300" alt="Vestes" loading="lazy">
           </div>
           <span>Vestes</span>
         </a>
           <a href="#product-grid" class="cat-nav-item" data-category="accessoires">
             <div class="cat-nav-circle">
-              <img src="https://images.unsplash.com/photo-1572635196237-14b3f281503f?q=80&w=800" alt="Accessoires" loading="lazy">
+              <img src="https://images.unsplash.com/photo-1572635196237-14b3f281503f?q=80&w=300" alt="Accessoires" loading="lazy">
             </div>
             <span>Accessoires</span>
           </a>
@@ -262,7 +262,8 @@
               if (!url) return;
               var img = item.querySelector('.cat-nav-circle img');
               if (!img) return;
-              img.src = url;
+              // Admin uploads are full-size PNGs (~1.4 MB) for a 100px circle.
+              img.src = url.replace(/(res\.cloudinary\.com\/[^/]+\/image\/upload\/)(v\d+\/)/, '$1f_auto,q_auto,c_limit,w_300/$2');
               var position = cached['nouveautes_thumb_' + item.dataset.category + '_position'];
               if (position) img.style.objectPosition = position;
               var zoom = cached['nouveautes_thumb_' + item.dataset.category + '_zoom'];
