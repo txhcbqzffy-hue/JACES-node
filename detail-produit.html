@@ -150,9 +150,12 @@
         // Gallery + badge + heart
         var shell = document.getElementById('product-detail-shell');
         var seen = {};
+        // Same per-photo classes as the full render (photo 2 is framed from
+        // the top there - without it here it shifted once the page loaded).
+        var IMAGE_CLASSES = { img: '', secondaryImg: ' product-detail-image-secondary', tertiaryImg: ' product-detail-image-tertiary', quaternaryImg: ' product-detail-image-quaternary' };
         var images = ['img', 'secondaryImg', 'tertiaryImg', 'quaternaryImg']
-          .map(function (key) { return (params.get(key) || '').trim(); })
-          .filter(function (url) { if (!url || seen[url]) return false; seen[url] = true; return true; });
+          .map(function (key) { return { key: key, url: (params.get(key) || '').trim() }; })
+          .filter(function (image) { if (!image.url || seen[image.url]) return false; seen[image.url] = true; return true; });
         if (shell && images.length) {
           var tags = slugsOf('nouveautes');
           var season = slugsOf('collections').map(function (slug) { return SEASON[slug]; }).filter(Boolean)[0];
@@ -169,10 +172,10 @@
           var heart = '<button class="product-favorite product-detail-favorite' + (isFavorite ? ' active' : '') + '" type="button" aria-label="' + heartLabel + '" title="' + heartLabel + '"><svg class="heart-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button>';
           var alt = esc(params.get('name'));
           shell.innerHTML = '<div class="product-detail-top"><div class="product-detail-gallery' + (images.length === 1 ? ' is-single' : '') + '">'
-            + images.map(function (url, index) {
+            + images.map(function (image, index) {
               return '<figure class="product-detail-media-block">'
                 + (index ? '' : (badge ? '<span class="product-card-badge">' + esc(badge) + '</span>' : ''))
-                + '<img class="product-detail-image" src="' + esc(url) + '" alt="' + alt + '"' + (index ? '' : ' fetchpriority="high"') + '>'
+                + '<img class="product-detail-image' + IMAGE_CLASSES[image.key] + '" src="' + esc(image.url) + '" alt="' + alt + '"' + (index ? '' : ' fetchpriority="high"') + '>'
                 + (index ? '' : heart)
                 + '</figure>';
             }).join('')
