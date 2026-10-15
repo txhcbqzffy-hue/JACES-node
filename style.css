@@ -12299,3 +12299,16 @@ h3,
 .section-highlight .card-highlight[data-category].is-photo-ready > img {
   opacity: 1;
 }
+
+/* Brand/info pages (CGU, CGV, contact, politique, retours, univers,
+   défilé, partenariat...) still reserved 400px on phones for the old
+   three-row nav, leaving a ~300px blank above the content. Reserve the
+   header's real height instead, like every other page. */
+@media (max-width: 900px) {
+  .collaboration-page .brand-page,
+  .defile-page .brand-page,
+  .univers-page .brand-page,
+  .accessoires-page .brand-page {
+    padding-top: var(--jaces-header-offset, 100px);
+  }
+}
