@@ -155,6 +155,8 @@
 
   async function maybeShowPopup() {
     if (document.querySelector('.newsletter-popup-overlay')) return;
+    // Already shown by the first-visit timer or the exit intent: once only.
+    if (wasRecentlyShown()) return;
     if (await isAlreadyConfirmedSubscriber()) {
       markSubscribed();
       return;
@@ -173,18 +175,30 @@
   }
 
   function initExitIntentPopup() {
-    // Touch devices have no cursor to detect leaving through - a timed
-    // popup there would just feel like a random interruption.
-    const isTouchDevice = window.matchMedia('(hover: none), (pointer: coarse)').matches;
-    if (isTouchDevice) return;
     if (isAlreadySubscribedLocally()) return;
     if (wasRecentlyShown()) return;
 
+    // First visit (or 7+ days since it was last shown), every device: show
+    // it a few seconds after the cookie banner has been answered, so the two
+    // never stack - or a few seconds after load when consent is already set.
+    const FIRST_VISIT_DELAY_MS = 4000;
+    const consent = window.JacesConsent;
+    if (consent && typeof consent.get === 'function' && !consent.get() && typeof consent.onChange === 'function') {
+      let armed = false;
+      consent.onChange(() => {
+        if (armed) return;
+        armed = true;
+        window.setTimeout(maybeShowPopup, FIRST_VISIT_DELAY_MS);
+      });
+    } else {
+      window.setTimeout(maybeShowPopup, FIRST_VISIT_DELAY_MS);
+    }
+
+    // Touch devices have no cursor to detect leaving through.
+    const isTouchDevice = window.matchMedia('(hover: none), (pointer: coarse)').matches;
+    if (isTouchDevice) return;
+
     window.setTimeout(armExitIntent, DELAY_MS);
-    // Exit-intent via mouseout is notoriously unreliable across browsers
-    // (Safari in particular often never fires it) - a time-based fallback
-    // guarantees visitors who stick around actually see the offer.
-    window.setTimeout(maybeShowPopup, 25000);
   }
 
   // The footer newsletter form (present on most pages) is a lighter,
