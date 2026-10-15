@@ -12288,3 +12288,14 @@ h3,
     flex-basis: 100%;
   }
 }
+
+/* Homepage category cards: photo hidden until index.html has picked the
+   EN CE MOMENT piece to show (see revealHighlightCards). */
+.section-highlight .card-highlight[data-category] > img {
+  opacity: 0;
+  transition: opacity 0.35s ease;
+}
+
+.section-highlight .card-highlight[data-category].is-photo-ready > img {
+  opacity: 1;
+}

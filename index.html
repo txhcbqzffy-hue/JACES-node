@@ -785,7 +785,17 @@
         // Tells site-content.js not to put the admin thumbnail back.
         card.dataset.productLinked = 'true';
       });
+      revealHighlightCards();
     }
+
+    // The cards' photos stay hidden (style.css) until the product list has
+    // picked theirs - otherwise a first visit (no cached list, e.g. from
+    // the QR code) showed the old placeholder thumbnails for several
+    // seconds before they swapped. Revealed anyway if the list never comes.
+    function revealHighlightCards() {
+      document.querySelectorAll('.card-highlight[data-category]').forEach((card) => card.classList.add('is-photo-ready'));
+    }
+    setTimeout(revealHighlightCards, 8000);
 
     function renderFeaturedProducts(section, track, products) {
       linkHighlightCards(products);
@@ -829,11 +839,12 @@
         // products.hide_from_home_slider keeps a Nouveautés piece off this
         // carousel while it still shows on the Nouveautés pages.
         const products = allNouveautes.filter((product) => !product.hide_from_home_slider);
-        if (!products.length) return;
+        if (!products.length) { revealHighlightCards(); return; }
 
         renderFeaturedProducts(section, track, products);
         try { localStorage.setItem(FEATURED_CACHE_KEY, JSON.stringify({ products, cachedAt: Date.now() })); } catch (error) {}
       } catch (error) {
+        revealHighlightCards();
         console.error('Impossible de charger les produits en vedette:', error);
       }
     }

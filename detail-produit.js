@@ -1020,9 +1020,8 @@
       return `<div class="quick-buy-grid">${buttonsHtml}</div>`;
     };
 
-    // A single-photo product repeats it as the second view: the mobile
-    // carousel hides that repeat, so the favourite heart moves onto the
-    // first photo instead.
+    // A single-photo product repeats it as the second view, which the
+    // mobile carousel hides.
     const secondaryIsRepeat = gallery.secondaryImage === gallery.primaryImage;
     const favoriteButtonHtml = `<button class="product-favorite product-detail-favorite${isFavorite ? ' active' : ''}" id="detail-product-favorite" type="button" aria-label="${isFavorite ? 'Retirer des favoris' : 'Ajouter aux favoris'}" title="${isFavorite ? 'Retirer des favoris' : 'Ajouter aux favoris'}">
             <svg class="heart-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
@@ -1036,10 +1035,9 @@
           ${nouveauteBadgeLabel ? `<span class="product-card-badge">${nouveauteBadgeLabel}</span>` : ''}
           ${gallery.primaryImage ? `<img class="product-detail-image" src="${gallery.primaryImage}" alt="${product.name}">` : '<div class="favorites-card-placeholder product-detail-placeholder"></div>'}
           ${gallery.caption ? `<figcaption class="product-detail-caption">${gallery.caption}</figcaption>` : ''}
-          ${secondaryIsRepeat ? favoriteButtonHtml : ''}
+          ${favoriteButtonHtml}
         </figure>
         <figure class="product-detail-media-block product-detail-media-secondary${secondaryIsRepeat ? ' is-repeat' : ''}">
-          ${secondaryIsRepeat ? '' : favoriteButtonHtml}
           ${gallery.secondaryImage ? `<img class="product-detail-image product-detail-image-secondary" src="${gallery.secondaryImage}" alt="${product.name} vue d&eacute;tail">` : '<div class="favorites-card-placeholder product-detail-placeholder"></div>'}
         </figure>
         <figure class="product-detail-media-block product-detail-media-tertiary${gallery.tertiaryImage === gallery.primaryImage || gallery.tertiaryImage === gallery.secondaryImage ? ' is-repeat' : ''}">
