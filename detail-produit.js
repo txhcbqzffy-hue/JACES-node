@@ -804,31 +804,8 @@
     // real product data and stay deferred to applyOriginContext below.
     if (origin.isExplicit) applyTopNavActiveState(origin);
 
-    // Same idea for the main image: listing-card links already carry it in
-    // the URL, so show it right away instead of a blank page while both
-    // API fetches below resolve - the full render replaces this shell.
-    const previewImage = queryProduct ? normalizeMediaUrl(queryProduct.img) : '';
-    if (previewImage && !shell.childElementCount) {
-      const top = document.createElement('div');
-      top.className = 'product-detail-top';
-      const gallery = document.createElement('div');
-      gallery.className = 'product-detail-gallery';
-      // Same width as the full render's first slide (see .is-single), so
-      // the photo doesn't visibly shrink when the carousel replaces it.
-      const previewImages = [queryProduct.img, queryProduct.secondaryImg, queryProduct.tertiaryImg, queryProduct.quaternaryImg]
-        .map(normalizeMediaUrl).filter(Boolean);
-      if (new Set(previewImages).size <= 1) gallery.classList.add('is-single');
-      const figure = document.createElement('figure');
-      figure.className = 'product-detail-media-block product-detail-media-primary';
-      const img = document.createElement('img');
-      img.className = 'product-detail-image';
-      img.src = previewImage;
-      img.alt = queryName;
-      figure.appendChild(img);
-      gallery.appendChild(figure);
-      top.appendChild(gallery);
-      shell.appendChild(top);
-    }
+    // The instant gallery preview is drawn by an inline script in
+    // detail-produit.html; the full render below replaces it.
 
     // The breadcrumb only needs the product's name and filter_menus: draw
     // it straight away from what the listing page left in sessionStorage,
@@ -1028,6 +1005,11 @@
           </button>`;
     const isSinglePhoto = new Set([gallery.primaryImage, gallery.secondaryImage, gallery.tertiaryImage, gallery.quaternaryImage].filter(Boolean)).size <= 1;
 
+    // Photos already on screen in the instant preview (inline script in
+    // detail-produit.html): moved into the full render below rather than
+    // re-created, so they don't blink while being decoded again.
+    const previewImages = [...shell.querySelectorAll('.product-detail-gallery img')];
+
     shell.innerHTML = `
       <div class="product-detail-top">
         <div class="product-detail-gallery${isSinglePhoto ? ' is-single' : ''}">
@@ -1164,6 +1146,15 @@
         </section>
       ` : ''}
     `;
+
+    shell.querySelectorAll('.product-detail-gallery img').forEach((image) => {
+      const index = previewImages.findIndex((preview) => preview.src === image.src);
+      if (index < 0) return;
+      const [preview] = previewImages.splice(index, 1);
+      preview.className = image.className;
+      preview.alt = image.alt;
+      image.replaceWith(preview);
+    });
 
     const relatedTrack = shell.querySelector('[data-detail-related-track]');
     const relatedPrevBtn = shell.querySelector('[data-detail-related-prev]');
