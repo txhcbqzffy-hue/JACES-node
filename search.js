@@ -166,7 +166,7 @@
         : '';
 
       return '<article class="home-slider-card search-product-card">'
-        + '<a class="home-slider-media" href="detail-produit.html?id=' + encodeURIComponent(product.id || '') + (primarySrc ? '&img=' + encodeURIComponent(primarySrc) : '') + (secondarySrc && secondarySrc !== primarySrc ? '&secondaryImg=' + encodeURIComponent(secondarySrc) : '') + '" aria-label="Voir ' + escapeHtml(product.name || 'ce produit') + '">'
+        + '<a class="home-slider-media" href="detail-produit.html?id=' + encodeURIComponent(product.id || '') + (product.name ? '&name=' + encodeURIComponent(product.name) : '') + (primarySrc ? '&img=' + encodeURIComponent(primarySrc) : '') + (secondarySrc && secondarySrc !== primarySrc ? '&secondaryImg=' + encodeURIComponent(secondarySrc) : '') + '" aria-label="Voir ' + escapeHtml(product.name || 'ce produit') + '">'
         + (badgeLabel ? '<span class="product-card-badge">' + escapeHtml(badgeLabel) + '</span>' : '')
         + (primarySrc ? '<img class="home-slider-image-primary" src="' + escapeHtml(primarySrc) + '" alt="' + escapeHtml(product.name || 'Produit JACES') + '" loading="lazy">' : '')
         + (secondarySrc ? '<img class="home-slider-image-secondary" src="' + escapeHtml(secondarySrc) + '" alt="" loading="lazy">' : '')

@@ -835,6 +835,15 @@
       ]);
 
       allProducts = Array.isArray(apiProducts) ? apiProducts.map(normalizeApiProduct) : [];
+      // Feeds the instant breadcrumb/badge of the next product page opened
+      // from here (inline script in detail-produit.html).
+      try {
+        const menusById = JSON.parse(sessionStorage.getItem('jaces-filter-menus') || '{}');
+        allProducts.forEach((candidate) => {
+          if (candidate?.id && candidate.filter_menus) menusById[candidate.id] = candidate.filter_menus;
+        });
+        sessionStorage.setItem('jaces-filter-menus', JSON.stringify(menusById));
+      } catch (error) {}
       const normalizedApiProduct = apiProduct ? normalizeApiProduct(apiProduct) : null;
 
       const productByName = !normalizedApiProduct && queryName
@@ -974,7 +983,7 @@
     const SEASON_BADGE_LABELS = { ss26: 'Printemps–Été 2027', aw26: 'Automne–Hiver 2027' };
     const filterTokensForBadge = Array.isArray(product.filter_tokens) ? product.filter_tokens : [];
     const seasonTokenForBadge = filterTokensForBadge.map((token) => SEASON_SLUG_TO_TOKEN[token]).find(Boolean);
-    const nouveauteBadgeLabel = nouveauteTagsForBadge.includes('drop') ? 'Drop'
+    const nouveauteBadgeLabel = nouveauteTagsForBadge.includes('drop') ? 'Printemps–Été 2027'
       : nouveauteTagsForBadge.includes('pieces-signature') ? 'Pièces signature'
       : SEASON_BADGE_LABELS[seasonTokenForBadge] || '';
     const getQuickBuyMarkup = (entryProduct) => {

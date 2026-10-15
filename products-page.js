@@ -280,7 +280,7 @@ async function loadPageProducts() {
     // filter_menus; leave them behind so the product page can draw it
     // instantly instead of after its own API round-trip.
     try {
-      const menusById = {};
+      const menusById = JSON.parse(sessionStorage.getItem('jaces-filter-menus') || '{}');
       window.__JACES_PRODUCTS_CACHE.forEach((product) => {
         if (product?.id && product.filter_menus) menusById[product.id] = product.filter_menus;
       });

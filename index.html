@@ -704,7 +704,7 @@
       card.dataset.productId = String(product.id || '');
       card.dataset.size = sizes.join(' ');
       card.innerHTML = `
-        <a class="home-slider-media" href="detail-produit.html?id=${encodeURIComponent(product.id || '')}${primarySrc ? `&img=${encodeURIComponent(primarySrc)}` : ''}${secondarySrc && secondarySrc !== primarySrc ? `&secondaryImg=${encodeURIComponent(secondarySrc)}` : ''}" aria-label="Voir ${product.name || 'ce produit'}">
+        <a class="home-slider-media" href="detail-produit.html?id=${encodeURIComponent(product.id || '')}${product.name ? `&name=${encodeURIComponent(product.name)}` : ''}${primarySrc ? `&img=${encodeURIComponent(primarySrc)}` : ''}${secondarySrc && secondarySrc !== primarySrc ? `&secondaryImg=${encodeURIComponent(secondarySrc)}` : ''}" aria-label="Voir ${product.name || 'ce produit'}">
           ${badgeLabel ? `<span class="product-card-badge">${badgeLabel}</span>` : ''}
           ${primarySrc ? `<img class="home-slider-image-primary" src="${primarySrc}" alt="${product.name || 'Produit JACES'}" loading="lazy">` : ''}
           ${secondarySrc ? `<img class="home-slider-image-secondary" src="${secondarySrc}" alt="${product.name || 'Produit JACES'} vue 2" loading="lazy">` : ''}
@@ -794,6 +794,15 @@
 
     function renderFeaturedProducts(section, track, products) {
       linkHighlightCards(products);
+      // Lets detail-produit.html draw the breadcrumb/badge instantly (see
+      // the same cache in products-page.js).
+      try {
+        const menusById = JSON.parse(sessionStorage.getItem('jaces-filter-menus') || '{}');
+        products.forEach((product) => {
+          if (product?.id && product.filter_menus) menusById[product.id] = product.filter_menus;
+        });
+        sessionStorage.setItem('jaces-filter-menus', JSON.stringify(menusById));
+      } catch (error) {}
       const ids = products.map((product) => product.id).join(',');
       if (ids === renderedFeaturedIds) return; // already showing these exact products, skip the reflow/flash
       renderedFeaturedIds = ids;

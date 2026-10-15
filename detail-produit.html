@@ -122,25 +122,115 @@
 
     <div id="product-detail-shell" class="product-detail-shell"></div>
     <script>
-      // Instant gallery preview, drawn as soon as the HTML is parsed - not
-      // after the ~10 scripts below have loaded (that wait was a blank
-      // flash on every click). Uses the photos the clicked card put in the
-      // URL, so the whole carousel is there at once; detail-produit.js
-      // replaces it with the full render (same photos, same layout).
+      // Instant preview, run as soon as the HTML is parsed - not after the
+      // ~10 scripts below have loaded (that wait was a blank flash, then the
+      // heart/badge/breadcrumb popping in late). Draws the photos the
+      // clicked card put in the URL, the badge + heart on photo 1, and the
+      // breadcrumb from the product's filter menus cached by an earlier page
+      // (sessionStorage 'jaces-filter-menus'). detail-produit.js then does
+      // the full render (same content, same layout) and keeps the photos.
       (function () {
-        var shell = document.getElementById('product-detail-shell');
         var params = new URLSearchParams(window.location.search);
+        var esc = function (value) { return String(value || '').replace(/[&<>"]/g, function (c) { return '&#' + c.charCodeAt(0) + ';'; }); };
+        var menus = null;
+        try { menus = JSON.parse(sessionStorage.getItem('jaces-filter-menus') || '{}')[params.get('id') || ''] || null; } catch (e) {}
+        var slugsOf = function (menu) { return ((menus && menus[menu]) || []).map(function (entry) { return entry && entry.slug; }).filter(Boolean); };
+        var SEASON = { 'printemps-ete-2026': 'ss26', 'printemps-ete-2027': 'ss26', 'automne-hiver-2026': 'aw26', 'automne-hiver-2027': 'aw26' };
+        var SEASON_LABELS = { ss26: 'Printemps–Été 2027', aw26: 'Automne–Hiver 2027' };
+
+        // Gallery + badge + heart
+        var shell = document.getElementById('product-detail-shell');
         var seen = {};
         var images = ['img', 'secondaryImg', 'tertiaryImg', 'quaternaryImg']
           .map(function (key) { return (params.get(key) || '').trim(); })
           .filter(function (url) { if (!url || seen[url]) return false; seen[url] = true; return true; });
-        if (!shell || !images.length) return;
-        var alt = (params.get('name') || '').replace(/[&<>"]/g, function (c) { return '&#' + c.charCodeAt(0) + ';'; });
-        shell.innerHTML = '<div class="product-detail-top"><div class="product-detail-gallery' + (images.length === 1 ? ' is-single' : '') + '">'
-          + images.map(function (url, index) {
-            return '<figure class="product-detail-media-block"><img class="product-detail-image" src="' + url.replace(/"/g, '&quot;') + '" alt="' + alt + '"' + (index ? '' : ' fetchpriority="high"') + '></figure>';
-          }).join('')
-          + '</div></div>';
+        if (shell && images.length) {
+          var tags = slugsOf('nouveautes');
+          var season = slugsOf('collections').map(function (slug) { return SEASON[slug]; }).filter(Boolean)[0];
+          var badge = !menus ? '' : tags.indexOf('drop') >= 0 ? 'Printemps–Été 2027'
+            : tags.indexOf('pieces-signature') >= 0 ? 'Pièces signature' : (SEASON_LABELS[season] || '');
+          var isFavorite = false;
+          try {
+            var session = JSON.parse(localStorage.getItem('jaces-account-session') || 'null');
+            var email = String((session && session.email) || '').trim().toLowerCase();
+            isFavorite = JSON.parse(localStorage.getItem('jaces-favorites:' + (email || 'guest')) || '[]')
+              .some(function (item) { return item && String(item.id) === params.get('id'); });
+          } catch (e) {}
+          var heartLabel = isFavorite ? 'Retirer des favoris' : 'Ajouter aux favoris';
+          var heart = '<button class="product-favorite product-detail-favorite' + (isFavorite ? ' active' : '') + '" type="button" aria-label="' + heartLabel + '" title="' + heartLabel + '"><svg class="heart-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button>';
+          var alt = esc(params.get('name'));
+          shell.innerHTML = '<div class="product-detail-top"><div class="product-detail-gallery' + (images.length === 1 ? ' is-single' : '') + '">'
+            + images.map(function (url, index) {
+              return '<figure class="product-detail-media-block">'
+                + (index ? '' : (badge ? '<span class="product-card-badge">' + esc(badge) + '</span>' : ''))
+                + '<img class="product-detail-image" src="' + esc(url) + '" alt="' + alt + '"' + (index ? '' : ' fetchpriority="high"') + '>'
+                + (index ? '' : heart)
+                + '</figure>';
+            }).join('')
+            + '</div></div>';
+        }
+
+        // Breadcrumb - same rules as detail-produit.js (resolveOriginFromProduct,
+        // withModifierDeepLink, withCategoryDeepLink), minus collaborations.
+        var name = params.get('name');
+        if (!menus || !name) return;
+        var ORIGINS = {
+          categories: ['collection', 'Collections', 'collection.html'],
+          accessoires: ['accessoires', 'Accessoires', 'accessoires.html'],
+          collaborations: ['collaboration', 'Collaborations', 'collaborations.html'],
+          nouveautes_categories: ['nouveautes', 'Nouveautés', 'nouveautes.html'],
+          nouveautes: ['nouveautes', 'Nouveautés', 'nouveautes.html']
+        };
+        var isExplicit = params.has('origin') || params.has('originNav');
+        var key = params.get('origin') || params.get('originNav') || 'collection';
+        var label = params.get('originLabel') || 'Collection';
+        var url = params.get('originUrl') || 'collection.html';
+        if (!isExplicit) {
+          var menu = ['categories', 'accessoires', 'collaborations', 'nouveautes_categories', 'nouveautes']
+            .filter(function (m) { return menus[m] && menus[m].length; })[0];
+          if (menu) { key = ORIGINS[menu][0]; label = ORIGINS[menu][1]; url = ORIGINS[menu][2]; }
+        }
+        if (key === 'collaboration') return;
+        var join = function (base, param, value) { return base + (base.indexOf('?') >= 0 ? '&' : '?') + param + '=' + encodeURIComponent(value); };
+        var modifier = null;
+        var modifierConfig = { nouveautes: ['nouveautes', 'nouveauteTag'], collection: ['collections', 'collection'] }[key];
+        if (modifierConfig) {
+          var mapSlug = function (slug) { return key === 'collection' ? (SEASON[slug] || slug) : slug; };
+          var entries = menus[modifierConfig[0]] || [];
+          var base = url || (key === 'nouveautes' ? 'nouveautes.html' : 'collection.html');
+          if (isExplicit) {
+            var explicitSlug = params.get(modifierConfig[1]);
+            if (explicitSlug && explicitSlug !== 'all') {
+              var matched = entries.filter(function (e) { return e && (e.slug === explicitSlug || mapSlug(e.slug) === explicitSlug); })[0];
+              modifier = { label: (matched && matched.label) || explicitSlug, url: join(base, modifierConfig[1], explicitSlug) };
+            }
+          } else {
+            var entry = key === 'nouveautes' ? entries.filter(function (e) { return e && e.slug !== 'tout-voir'; })[0] : entries[0];
+            if (entry && entry.slug) modifier = { label: entry.label || entry.slug, url: join(base, modifierConfig[1], mapSlug(entry.slug)) };
+          }
+        }
+        var categoryMenu = { collection: 'categories', accessoires: 'accessoires', nouveautes: 'nouveautes_categories' }[key];
+        var categoryEntry = categoryMenu && menus[categoryMenu] && menus[categoryMenu][0];
+        var set = function (id, text, href) {
+          var el = document.getElementById(id);
+          if (!el) return;
+          el.textContent = text;
+          if (href) el.setAttribute('href', href);
+        };
+        var show = function (id, visible) {
+          ['', '-sep'].forEach(function (suffix) { var el = document.getElementById(id + suffix); if (el) el.hidden = !visible; });
+        };
+        set('product-detail-breadcrumb-current', name);
+        set('product-detail-breadcrumb-origin', label, url);
+        if (modifier) set('product-detail-breadcrumb-modifier', modifier.label, modifier.url);
+        show('product-detail-breadcrumb-modifier', !!modifier);
+        if (categoryEntry && categoryEntry.slug) {
+          set('product-detail-breadcrumb-category', categoryEntry.label || categoryEntry.slug,
+            join((modifier && modifier.url) || url || 'collection.html', 'category', categoryEntry.slug));
+        }
+        show('product-detail-breadcrumb-category', !!(categoryEntry && categoryEntry.slug));
+        var nav = document.querySelector('.product-detail-breadcrumb');
+        if (nav) nav.classList.remove('is-loading');
       })();
     </script>
   </main>
