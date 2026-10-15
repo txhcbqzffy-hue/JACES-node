@@ -12284,8 +12284,6 @@ h3,
     display: none;
   }
 
-  /* Instant preview (single photo) before the full render. */
-  .product-detail-gallery > .product-detail-media-block:only-child,
   .product-detail-gallery.is-single > .product-detail-media-block {
     flex-basis: 100%;
   }

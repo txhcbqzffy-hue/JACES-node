@@ -813,6 +813,11 @@
       top.className = 'product-detail-top';
       const gallery = document.createElement('div');
       gallery.className = 'product-detail-gallery';
+      // Same width as the full render's first slide (see .is-single), so
+      // the photo doesn't visibly shrink when the carousel replaces it.
+      const previewImages = [queryProduct.img, queryProduct.secondaryImg, queryProduct.tertiaryImg, queryProduct.quaternaryImg]
+        .map(normalizeMediaUrl).filter(Boolean);
+      if (new Set(previewImages).size <= 1) gallery.classList.add('is-single');
       const figure = document.createElement('figure');
       figure.className = 'product-detail-media-block product-detail-media-primary';
       const img = document.createElement('img');
