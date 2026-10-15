@@ -280,48 +280,78 @@ function getVisibleProducts(products, pageType) {
   return Array.isArray(products) ? products : [];
 }
 
+// Last product list per page (an hour at most): shown straight away on the
+// next visit - the photos are already in the browser cache - then replaced
+// by the fresh list only if it changed. Without it, coming back to a page
+// waited ~1s on the API before even creating the cards.
+const PRODUCTS_CACHE_PREFIX = 'jaces-products-cache:';
+const PRODUCTS_CACHE_MAX_AGE = 60 * 60 * 1000;
+let renderedProductsJson = '';
+let emptyStateWatched = false;
+
+function renderPageProducts(productGrid, products, pageType) {
+  const json = JSON.stringify(products);
+  if (json === renderedProductsJson) return;
+  renderedProductsJson = json;
+
+  window.__JACES_PRODUCTS_CACHE = Array.isArray(products) ? products : [];
+  // detail-produit.js builds its breadcrumb from the product's
+  // filter_menus; leave them behind so the product page can draw it
+  // instantly instead of after its own API round-trip.
+  try {
+    const menusById = JSON.parse(sessionStorage.getItem('jaces-filter-menus') || '{}');
+    window.__JACES_PRODUCTS_CACHE.forEach((product) => {
+      if (product?.id && product.filter_menus) menusById[product.id] = product.filter_menus;
+    });
+    sessionStorage.setItem('jaces-filter-menus', JSON.stringify(menusById));
+  } catch {}
+  const visibleProducts = getVisibleProducts(products, pageType);
+
+  productGrid.hidden = false;
+  productGrid.innerHTML = '';
+
+  if (!visibleProducts.length) {
+    productGrid.innerHTML = buildEmptyState('Aucun produit pour le moment');
+    window.dispatchEvent(new CustomEvent('jaces:products-loaded', { detail: { products: [], pageType } }));
+    return;
+  }
+
+  visibleProducts.forEach((product) => {
+    productGrid.appendChild(buildProductCard(product, pageType));
+  });
+
+  const countNode = document.querySelector('.filter-count');
+  if (countNode) {
+    countNode.textContent = `${visibleProducts.length} produits`;
+  }
+
+  window.dispatchEvent(new CustomEvent('jaces:products-loaded', { detail: { products: visibleProducts, pageType } }));
+  if (!emptyStateWatched) {
+    emptyStateWatched = true;
+    watchFilteredEmptyState(productGrid);
+  }
+}
+
 async function loadPageProducts() {
   const productGrid = document.querySelector('.product-grid');
   if (!productGrid) return;
 
+  const pageType = getPageType();
+  const cacheKey = PRODUCTS_CACHE_PREFIX + (pageType || 'all');
   try {
-    const pageType = getPageType();
+    const cached = JSON.parse(localStorage.getItem(cacheKey) || 'null');
+    if (cached && Date.now() - cached.cachedAt < PRODUCTS_CACHE_MAX_AGE && Array.isArray(cached.products)) {
+      renderPageProducts(productGrid, cached.products, pageType);
+    }
+  } catch {}
+
+  try {
     const products = await getProducts(pageType);
-    window.__JACES_PRODUCTS_CACHE = Array.isArray(products) ? products : [];
-    // detail-produit.js builds its breadcrumb from the product's
-    // filter_menus; leave them behind so the product page can draw it
-    // instantly instead of after its own API round-trip.
-    try {
-      const menusById = JSON.parse(sessionStorage.getItem('jaces-filter-menus') || '{}');
-      window.__JACES_PRODUCTS_CACHE.forEach((product) => {
-        if (product?.id && product.filter_menus) menusById[product.id] = product.filter_menus;
-      });
-      sessionStorage.setItem('jaces-filter-menus', JSON.stringify(menusById));
-    } catch {}
-    const visibleProducts = getVisibleProducts(products, pageType);
-
-    productGrid.hidden = false;
-    productGrid.innerHTML = '';
-
-    if (!visibleProducts.length) {
-      productGrid.innerHTML = buildEmptyState('Aucun produit pour le moment');
-      window.dispatchEvent(new CustomEvent('jaces:products-loaded', { detail: { products: [], pageType } }));
-      return;
-    }
-
-    visibleProducts.forEach((product) => {
-      productGrid.appendChild(buildProductCard(product, pageType));
-    });
-
-    const countNode = document.querySelector('.filter-count');
-    if (countNode) {
-      countNode.textContent = `${visibleProducts.length} produits`;
-    }
-
-    window.dispatchEvent(new CustomEvent('jaces:products-loaded', { detail: { products: visibleProducts, pageType } }));
-    watchFilteredEmptyState(productGrid);
+    renderPageProducts(productGrid, products, pageType);
+    try { localStorage.setItem(cacheKey, JSON.stringify({ products, cachedAt: Date.now() })); } catch {}
   } catch (error) {
     console.error('Impossible de charger les produits API:', error);
+    if (renderedProductsJson) return; // keep the cached list on screen
     productGrid.hidden = false;
     productGrid.innerHTML = buildEmptyState('Impossible de charger le catalogue Supabase');
   }
