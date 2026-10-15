@@ -1,5 +1,18 @@
 (function () {
   const STORAGE_KEY = 'jaces-cookie-consent';
+
+  // Test link: any page opened with ?reset forgets this browser's cookie
+  // choice and newsletter-popup state, so both show again (runs before
+  // newsletter-popup.js, which is loaded right after this file).
+  try {
+    const url = new URL(window.location.href);
+    if (url.searchParams.has('reset')) {
+      ['jaces-cookie-consent', 'jaces-newsletter-popup-shown', 'jaces-newsletter-subscribed']
+        .forEach((key) => window.localStorage.removeItem(key));
+      url.searchParams.delete('reset');
+      window.history.replaceState(window.history.state, '', url.pathname + url.search + url.hash);
+    }
+  } catch (error) { /* storage blocked - nothing to reset */ }
   const GA_MEASUREMENT_ID = 'G-Z2K1QHLX8S';
 
   let gaLoaded = false;
