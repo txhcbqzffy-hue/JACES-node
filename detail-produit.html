@@ -110,6 +110,15 @@
 
 
   <main class="product-detail-main">
+    <script>
+      // Final top spacing right away (same formula as detail-produit.js's
+      // updateStickyTop), instead of the CSS default followed by two later
+      // corrections from scripts - the breadcrumb visibly jumped each time.
+      (function () {
+        var header = document.querySelector('.header');
+        if (header) document.currentScript.parentElement.style.paddingTop = (Math.ceil(header.getBoundingClientRect().bottom) + 8) + 'px';
+      })();
+    </script>
     <nav class="product-detail-breadcrumb is-loading" aria-label="Fil d'Ariane">
       <a href="collection.html" id="product-detail-breadcrumb-origin">Collections</a>
       <span aria-hidden="true" id="product-detail-breadcrumb-modifier-sep" hidden> / </span>
